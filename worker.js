@@ -72,9 +72,11 @@ export default {
       const base = isFootballData ? FOOTBALLDATA_BASE : API_BASE;
       const targetUrl = base + "/" + apiPath + url.search;
       const isStandings = /(^|\/)standings$/.test(apiPath);
+      const isLive = url.searchParams.get("live") === "all";
       const cacheUrl = new URL(url.toString());
       // Yeni anahtar, önceki 12 saatlik puan tablosu kayıtlarını devre dışı bırakır.
       if (isStandings) cacheUrl.searchParams.set("__mam_cache", "standings-v2");
+      if (isLive) cacheUrl.searchParams.set("__mam_cache", "live-v1");
       const cacheKey = new Request(cacheUrl.toString(), { method: "GET" });
 
       let cache = null;
@@ -120,7 +122,7 @@ export default {
         headers: responseHeaders
       });
 
-      if (upstream.ok && cache) {
+      if (upstream.ok && cache && !isLive) {
         const cacheHeaders = new Headers(response.headers);
         cacheHeaders.set("Cache-Control", "public, max-age=" + (isStandings ? STANDINGS_CACHE_SECONDS : CACHE_SECONDS));
 
