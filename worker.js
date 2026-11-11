@@ -2,6 +2,7 @@ const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
 const API_BASE = "https://v3.football.api-sports.io";
 const FOOTBALLDATA_BASE = "https://api.football-data.org/v4";
 const CACHE_SECONDS = 43200;
+const STANDINGS_CACHE_SECONDS = 300;
 
 export default {
   async fetch(request, env) {
@@ -70,7 +71,11 @@ export default {
 
       const base = isFootballData ? FOOTBALLDATA_BASE : API_BASE;
       const targetUrl = base + "/" + apiPath + url.search;
-      const cacheKey = new Request(url.toString(), { method: "GET" });
+      const isStandings = /(^|\/)standings$/.test(apiPath);
+      const cacheUrl = new URL(url.toString());
+      // Yeni anahtar, önceki 12 saatlik puan tablosu kayıtlarını devre dışı bırakır.
+      if (isStandings) cacheUrl.searchParams.set("__mam_cache", "standings-v2");
+      const cacheKey = new Request(cacheUrl.toString(), { method: "GET" });
 
       let cache = null;
 
@@ -117,7 +122,7 @@ export default {
 
       if (upstream.ok && cache) {
         const cacheHeaders = new Headers(response.headers);
-        cacheHeaders.set("Cache-Control", "public, max-age=" + CACHE_SECONDS);
+        cacheHeaders.set("Cache-Control", "public, max-age=" + (isStandings ? STANDINGS_CACHE_SECONDS : CACHE_SECONDS));
 
         const cacheCopy = new Response(response.clone().body, {
           status: response.status,
