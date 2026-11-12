@@ -17,15 +17,38 @@ async function saveDailyArchive(env, scheduledTime) {
   const date = new Date(scheduledTime || Date.now());
   date.setUTCDate(date.getUTCDate() - 1);
   const day = date.toISOString().slice(0, 10);
-  const upstream = await fetch(API_BASE + "/fixtures?date=" + day, {
-    headers: { "x-apisports-key": env.API_FOOTBALL_KEY }
-  });
-  if (!upstream.ok) throw new Error("API-Football archive request failed: HTTP " + upstream.status);
-  const payload = await upstream.json();
-  if (payload.errors && Object.keys(payload.errors).length) {
-    throw new Error("API-Football archive error: " + JSON.stringify(payload.errors));
+  let fixtures = [];
+  let primaryError = "";
+  try {
+    const upstream = await fetch(API_BASE + "/fixtures?date=" + day, {
+      headers: { "x-apisports-key": env.API_FOOTBALL_KEY }
+    });
+    if (!upstream.ok) throw new Error("HTTP " + upstream.status);
+    const payload = await upstream.json();
+    if (payload.errors && Object.keys(payload.errors).length) {
+      throw new Error(JSON.stringify(payload.errors));
+    }
+    fixtures = Array.isArray(payload.response) ? payload.response : [];
+  } catch (error) {
+    primaryError = String(error && error.message ? error.message : error);
+    if (!env.FOOTBALLDATA_API_KEY) throw new Error("API-Football failed (" + primaryError + "); FOOTBALLDATA_API_KEY missing");
+    const fallback = await fetch(FOOTBALLDATA_BASE + "/matches?dateFrom=" + day + "&dateTo=" + day, {
+      headers: { "X-Auth-Token": env.FOOTBALLDATA_API_KEY }
+    });
+    if (!fallback.ok) throw new Error("API-Football failed (" + primaryError + "); Football-data.org HTTP " + fallback.status);
+    const data = await fallback.json();
+    fixtures = (data.matches || []).map(match => ({
+      fixture: { id: match.id, date: match.utcDate, status: { short: ["FINISHED","AWARDED"].includes(match.status) ? "FT" : match.status } },
+      league: { id: match.competition?.id, name: match.competition?.name, country: match.area?.name },
+      teams: {
+        home: { id: match.homeTeam?.id, name: match.homeTeam?.name },
+        away: { id: match.awayTeam?.id, name: match.awayTeam?.name }
+      },
+      goals: { home: match.score?.fullTime?.home, away: match.score?.fullTime?.away },
+      score: null,
+      statistics: null
+    }));
   }
-  const fixtures = Array.isArray(payload.response) ? payload.response : [];
   const grouped = new Map();
   for (const item of fixtures) {
     const status = String(item.fixture?.status?.short || "");
