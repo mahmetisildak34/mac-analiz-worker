@@ -538,7 +538,7 @@ export default {
       const targetUrl = base + "/" + apiPath + url.search;
       const isStandings = /(^|\/)standings$/.test(apiPath);
       const isLive = url.searchParams.get("live") === "all";
-      const isLiveStats = apiPath === "fixtures/statistics";
+      const isLiveStats = apiPath === "fixtures/statistics" || (isESPN && apiPath === "summary");
       const cacheUrl = new URL(url.toString());
       // Yeni anahtar, önceki 12 saatlik puan tablosu kayıtlarını devre dışı bırakır.
       if (isStandings) cacheUrl.searchParams.set("__mam_cache", "standings-v2");
