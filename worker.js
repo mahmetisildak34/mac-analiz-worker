@@ -13,7 +13,6 @@ function normalizeTeamName(value) {
 
 async function saveDailyArchive(env, scheduledTime) {
   if (!env.MAM_KV) throw new Error("MAM_KV KV binding is missing");
-  if (!env.API_FOOTBALL_KEY) throw new Error("API_FOOTBALL_KEY secret is missing");
   const date = new Date(scheduledTime || Date.now());
   date.setUTCDate(date.getUTCDate() - 1);
   const day = date.toISOString().slice(0, 10);
@@ -41,6 +40,7 @@ async function saveDailyArchive(env, scheduledTime) {
     }));
   };
   try {
+    if (!env.API_FOOTBALL_KEY) throw new Error("API_FOOTBALL_KEY secret is missing; trying fallback provider");
     const upstream = await fetch(API_BASE + "/fixtures?date=" + day, {
       headers: { "x-apisports-key": env.API_FOOTBALL_KEY }
     });
@@ -54,13 +54,9 @@ async function saveDailyArchive(env, scheduledTime) {
     primaryError = String(error && error.message ? error.message : error);
   }
 
-  // A successful HTTP response with zero fixtures (or no completed scorelines)
-  // is not useful archive data. Try the secondary provider in that case too.
-  const hasCompletedScore = fixtures.some(item =>
-    ["FT", "AET", "PEN"].includes(String(item.fixture?.status?.short || "")) &&
-    item.goals?.home != null && item.goals?.away != null
-  );
-  if (!hasCompletedScore) {
+  // Always try the secondary provider when configured. Merge by match identity
+  // later so it fills gaps even when the primary provider returned some matches.
+  if (env.FOOTBALLDATA_API_KEY) {
     try {
       const fallbackFixtures = await loadFootballDataFallback();
       if (fallbackFixtures.length) fixtures = [...fixtures, ...fallbackFixtures];
@@ -69,6 +65,8 @@ async function saveDailyArchive(env, scheduledTime) {
         throw new Error("API-Football failed (" + (primaryError || "no completed fixtures") + "); fallback failed (" + String(fallbackError?.message || fallbackError) + ")");
       }
     }
+  } else if (!fixtures.length) {
+    throw new Error("No usable provider: " + (primaryError || "API-Football returned no fixtures") + "; FOOTBALLDATA_API_KEY secret is missing");
   }
   const grouped = new Map();
   for (const item of fixtures) {
@@ -111,16 +109,31 @@ async function saveDailyArchive(env, scheduledTime) {
     await env.MAM_KV.put(storageKey, JSON.stringify(history), { expirationTtl: 400 * 24 * 60 * 60 });
     savedTeams++;
   }
+  const completedFixtures = fixtures.filter(x => ["FT","AET","PEN"].includes(String(x.fixture?.status?.short||"")) && x.goals?.home != null && x.goals?.away != null).length;
   await env.MAM_KV.put("archive:last-run", JSON.stringify({
-    date: day, completedFixtures: fixtures.filter(x => ["FT","AET","PEN"].includes(String(x.fixture?.status?.short||""))).length,
-    teamsUpdated: savedTeams, updatedAt: new Date().toISOString()
+    date: day, completedFixtures, teamsUpdated: savedTeams, updatedAt: new Date().toISOString(),
+    providers: [env.API_FOOTBALL_KEY ? "API-Football" : null, env.FOOTBALLDATA_API_KEY ? "Football-data.org" : null].filter(Boolean)
   }), { expirationTtl: 400 * 24 * 60 * 60 });
-  return { date: day, teamsUpdated: savedTeams, fixturesReceived: fixtures.length };
+  await env.MAM_KV.delete("archive:last-error");
+  return { date: day, teamsUpdated: savedTeams, fixturesReceived: fixtures.length, completedFixtures };
 }
 
 export default {
   async scheduled(controller, env, ctx) {
-    await saveDailyArchive(env, controller?.scheduledTime || Date.now());
+    try {
+      const result = await saveDailyArchive(env, controller?.scheduledTime || Date.now());
+      if (ctx?.waitUntil) ctx.waitUntil(Promise.resolve(result));
+    } catch (error) {
+      if (env.MAM_KV) {
+        try {
+          await env.MAM_KV.put("archive:last-error", JSON.stringify({
+            at: new Date().toISOString(),
+            message: String(error && error.message ? error.message : error)
+          }), { expirationTtl: 400 * 24 * 60 * 60 });
+        } catch (_) {}
+      }
+      throw error;
+    }
   },
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
@@ -167,6 +180,28 @@ export default {
         return new Response("Invalid API path", {
           status: 400,
           headers: cors
+        });
+      }
+
+      if (path === "archive/status") {
+        if (!env.MAM_KV) {
+          return new Response(JSON.stringify({ error: "MAM_KV KV binding is missing" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const [lastRun, lastError, teamKeys] = await Promise.all([
+          env.MAM_KV.get("archive:last-run", "json"),
+          env.MAM_KV.get("archive:last-error", "json"),
+          env.MAM_KV.list({ prefix: "history:", limit: 1000 })
+        ]);
+        return new Response(JSON.stringify({
+          ok: Boolean(lastRun) && !lastError,
+          lastRun: lastRun || null,
+          lastError: lastError || null,
+          archivedTeamsListed: teamKeys.keys.length,
+          moreTeams: Boolean(teamKeys.list_complete === false)
+        }), {
+          status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
         });
       }
 
