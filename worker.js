@@ -230,8 +230,8 @@ export default {
           "uefa.champions","uefa.europa","uefa.europa.conf",
           "uefa.nations","fifa.friendly","fifa.worldq"
         ];
-        const batchSize = 4;
-        const batch = Math.max(0, Math.min(3, Number(url.searchParams.get("batch") || 0)));
+        const batchSize = 2;
+        const batch = Math.max(0, Math.min(7, Number(url.searchParams.get("batch") || 0)));
         const batchLeagues = leagues.slice(batch * batchSize, (batch + 1) * batchSize);
         const now = new Date();
         const endDate = now.toISOString().slice(0,10);
@@ -333,7 +333,7 @@ export default {
         }
         const summary = {
           at: new Date().toISOString(), source: "ESPN monthly league scoreboards",
-          range: { start, end }, batch, batchesTotal: 4, leaguesInBatch: batchLeagues,
+          range: { start, end }, batch, batchesTotal: 8, leaguesInBatch: batchLeagues,
           monthsRequested: months, leaguesProcessed: results.length,
           teamsUpdated: savedTeams, matchesProcessed: savedMatches, results
         };
