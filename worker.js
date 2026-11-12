@@ -170,7 +170,7 @@ export default {
     const cors = {
       "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
       "Access-Control-Allow-Methods": "GET, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
       "Access-Control-Max-Age": "86400",
       "Vary": "Origin"
     };
@@ -231,6 +231,13 @@ export default {
         return new Response("Invalid API path", {
           status: 400,
           headers: cors
+        });
+      }
+
+      const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\\s+/i, "") || "";
+      if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
+        return new Response(JSON.stringify({ error: "Authentication required" }), {
+          status: 401, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
         });
       }
 
