@@ -220,7 +220,7 @@ export default {
           "tur.1","sco.1","usa.1","bra.1","arg.1","mex.1","jpn.1",
           "aus.1","chn.1","uefa.nations","fifa.friendly","fifa.worldq"
         ]);
-        if (!allowedLeagues.has(league) || !/^\\d+$/.test(teamId) || !teamName.trim()) {
+        if (!allowedLeagues.has(league) || !/^\d+$/.test(teamId) || !teamName.trim()) {
           return new Response(JSON.stringify({ error: "Valid league, numeric teamId and teamName are required" }), {
             status: 400, headers: { ...cors, "Content-Type": "application/json" }
           });
@@ -230,7 +230,7 @@ export default {
         const payload = await upstream.json();
         const events = Array.isArray(payload.events) ? payload.events : [];
         const normalize = value => String(value || "").normalize("NFD").toLowerCase()
-          .replace(/[\\u0300-\\u036f]/g, "").replace(/ı/g, "i")
+          .replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i")
           .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
         const target = normalize(teamName);
         const matches = [];
