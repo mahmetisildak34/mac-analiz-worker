@@ -19,6 +19,27 @@ async function saveDailyArchive(env, scheduledTime) {
   const day = date.toISOString().slice(0, 10);
   let fixtures = [];
   let primaryError = "";
+  const loadFootballDataFallback = async () => {
+    if (!env.FOOTBALLDATA_API_KEY) {
+      throw new Error("FOOTBALLDATA_API_KEY secret is missing");
+    }
+    const fallback = await fetch(FOOTBALLDATA_BASE + "/matches?dateFrom=" + day + "&dateTo=" + day, {
+      headers: { "X-Auth-Token": env.FOOTBALLDATA_API_KEY }
+    });
+    if (!fallback.ok) throw new Error("Football-data.org HTTP " + fallback.status);
+    const data = await fallback.json();
+    return (data.matches || []).map(match => ({
+      fixture: { id: match.id, date: match.utcDate, status: { short: ["FINISHED","AWARDED"].includes(match.status) ? "FT" : match.status } },
+      league: { id: match.competition?.id, name: match.competition?.name, country: match.area?.name },
+      teams: {
+        home: { id: match.homeTeam?.id, name: match.homeTeam?.name },
+        away: { id: match.awayTeam?.id, name: match.awayTeam?.name }
+      },
+      goals: { home: match.score?.fullTime?.home, away: match.score?.fullTime?.away },
+      score: null,
+      statistics: null
+    }));
+  };
   try {
     const upstream = await fetch(API_BASE + "/fixtures?date=" + day, {
       headers: { "x-apisports-key": env.API_FOOTBALL_KEY }
@@ -31,23 +52,23 @@ async function saveDailyArchive(env, scheduledTime) {
     fixtures = Array.isArray(payload.response) ? payload.response : [];
   } catch (error) {
     primaryError = String(error && error.message ? error.message : error);
-    if (!env.FOOTBALLDATA_API_KEY) throw new Error("API-Football failed (" + primaryError + "); FOOTBALLDATA_API_KEY missing");
-    const fallback = await fetch(FOOTBALLDATA_BASE + "/matches?dateFrom=" + day + "&dateTo=" + day, {
-      headers: { "X-Auth-Token": env.FOOTBALLDATA_API_KEY }
-    });
-    if (!fallback.ok) throw new Error("API-Football failed (" + primaryError + "); Football-data.org HTTP " + fallback.status);
-    const data = await fallback.json();
-    fixtures = (data.matches || []).map(match => ({
-      fixture: { id: match.id, date: match.utcDate, status: { short: ["FINISHED","AWARDED"].includes(match.status) ? "FT" : match.status } },
-      league: { id: match.competition?.id, name: match.competition?.name, country: match.area?.name },
-      teams: {
-        home: { id: match.homeTeam?.id, name: match.homeTeam?.name },
-        away: { id: match.awayTeam?.id, name: match.awayTeam?.name }
-      },
-      goals: { home: match.score?.fullTime?.home, away: match.score?.fullTime?.away },
-      score: null,
-      statistics: null
-    }));
+  }
+
+  // A successful HTTP response with zero fixtures (or no completed scorelines)
+  // is not useful archive data. Try the secondary provider in that case too.
+  const hasCompletedScore = fixtures.some(item =>
+    ["FT", "AET", "PEN"].includes(String(item.fixture?.status?.short || "")) &&
+    item.goals?.home != null && item.goals?.away != null
+  );
+  if (!hasCompletedScore) {
+    try {
+      const fallbackFixtures = await loadFootballDataFallback();
+      if (fallbackFixtures.length) fixtures = [...fixtures, ...fallbackFixtures];
+    } catch (fallbackError) {
+      if (!fixtures.length) {
+        throw new Error("API-Football failed (" + (primaryError || "no completed fixtures") + "); fallback failed (" + String(fallbackError?.message || fallbackError) + ")");
+      }
+    }
   }
   const grouped = new Map();
   for (const item of fixtures) {
