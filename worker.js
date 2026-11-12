@@ -218,6 +218,96 @@ export default {
         });
       }
 
+      if (path === "archive/backfill-all") {
+        if (!env.MAM_KV) {
+          return new Response(JSON.stringify({ error: "MAM_KV KV binding is missing" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const leagues = [
+          "eng.1","esp.1","ger.1","ita.1","fra.1",
+          "tur.1","ned.1","por.1","bel.1","sco.1",
+          "uefa.champions","uefa.europa","uefa.europa.conf",
+          "uefa.nations","fifa.friendly","fifa.worldq"
+        ];
+        const now = new Date();
+        const end = now.toISOString().slice(0,10).replace(/-/g,"");
+        const startDate = new Date(Date.UTC(now.getUTCFullYear(), 6, 1));
+        const start = startDate.toISOString().slice(0,10).replace(/-/g,"");
+        const results = [];
+        let savedMatches = 0;
+        let savedTeams = 0;
+        for (const league of leagues) {
+          try {
+            const response = await fetch(ESPN_BASE + "/" + league + "/scoreboard?dates=" + start + "-" + end + "&limit=1000");
+            if (!response.ok) {
+              results.push({ league, ok: false, error: "ESPN HTTP " + response.status });
+              continue;
+            }
+            const payload = await response.json();
+            const events = Array.isArray(payload.events) ? payload.events : [];
+            const grouped = new Map();
+            let leagueMatches = 0;
+            for (const event of events) {
+              const competition = event.competitions?.[0];
+              const competitors = competition?.competitors || [];
+              const home = competitors.find(x => x.homeAway === "home");
+              const away = competitors.find(x => x.homeAway === "away");
+              if (!home || !away) continue;
+              const state = String(competition.status?.type?.state || event.status?.type?.state || "").toLowerCase();
+              const completed = competition.status?.type?.completed === true || event.status?.type?.completed === true || state === "post";
+              if (!completed) continue;
+              const scoreValue = value => Number(value && typeof value === "object" ? (value.value ?? value.displayValue) : value);
+              const homeScore = scoreValue(home.score), awayScore = scoreValue(away.score);
+              if (!Number.isFinite(homeScore) || !Number.isFinite(awayScore)) continue;
+              const match = {
+                fixture: { id: event.id, date: event.date || competition.date, status: { short: "FT" } },
+                league: { id: league, name: payload.leagues?.[0]?.name || league },
+                teams: {
+                  home: { id: Number(home.team?.id) || null, name: home.team?.displayName || home.team?.name || "" },
+                  away: { id: Number(away.team?.id) || null, name: away.team?.displayName || away.team?.name || "" }
+                },
+                goals: { home: homeScore, away: awayScore },
+                score: null, statistics: null
+              };
+              for (const teamName of [match.teams.home.name, match.teams.away.name]) {
+                const key = normalizeTeamName(teamName);
+                if (!key) continue;
+                if (!grouped.has(key)) grouped.set(key, []);
+                grouped.get(key).push(match);
+              }
+              leagueMatches++;
+            }
+            for (const [teamKey, matches] of grouped) {
+              const key = "history:" + teamKey;
+              const previous = await env.MAM_KV.get(key, "json") || [];
+              const merged = new Map();
+              for (const item of [...previous, ...matches]) {
+                const id = [String(item.fixture?.date || "").slice(0,10), normalizeTeamName(item.teams?.home?.name), normalizeTeamName(item.teams?.away?.name)].join("|");
+                merged.set(id, item);
+              }
+              const history = [...merged.values()].sort((a,b) => new Date(b.fixture.date)-new Date(a.fixture.date)).slice(0,30);
+              await env.MAM_KV.put(key, JSON.stringify(history), { expirationTtl: 400*24*60*60 });
+              savedTeams++;
+            }
+            savedMatches += leagueMatches;
+            results.push({ league, ok: true, events: events.length, completedMatches: leagueMatches, teams: grouped.size });
+          } catch (error) {
+            results.push({ league, ok: false, error: String(error?.message || error) });
+          }
+        }
+        const summary = {
+          at: new Date().toISOString(), source: "ESPN league scoreboards",
+          range: { start, end }, leaguesProcessed: results.length,
+          teamsUpdated: savedTeams, matchesProcessed: savedMatches, results
+        };
+        await env.MAM_KV.put("archive:last-run", JSON.stringify(summary), { expirationTtl: 400*24*60*60 });
+        await env.MAM_KV.delete("archive:last-error");
+        return new Response(JSON.stringify({ ok: results.some(x => x.ok), ...summary }), {
+          status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+        });
+      }
+
       if (path === "archive/espn-backfill") {
         if (!env.MAM_KV) {
           return new Response(JSON.stringify({ error: "MAM_KV KV binding is missing" }), {
