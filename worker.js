@@ -231,24 +231,53 @@ export default {
           "uefa.nations","fifa.friendly","fifa.worldq"
         ];
         const now = new Date();
-        const end = now.toISOString().slice(0,10).replace(/-/g,"");
+        const endDate = now.toISOString().slice(0,10);
         const startDate = new Date(Date.UTC(now.getUTCFullYear(), 6, 1));
         const start = startDate.toISOString().slice(0,10).replace(/-/g,"");
+        const end = endDate.replace(/-/g,"");
+        const months = [];
+        const cursor = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), 1));
+        const lastMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+        while (cursor <= lastMonth) {
+          months.push(cursor.toISOString().slice(0,7).replace(/-/g,""));
+          cursor.setUTCMonth(cursor.getUTCMonth() + 1);
+        }
         const results = [];
+        const allEventsByLeague = await Promise.all(leagues.map(async league => {
+          const monthResults = await Promise.all(months.map(async month => {
+            try {
+              const response = await fetch(ESPN_BASE + "/" + league + "/scoreboard?dates=" + month + "&limit=1000", {
+                headers: { "Accept": "application/json" }
+              });
+              if (!response.ok) return { month, ok: false, error: "ESPN HTTP " + response.status };
+              const payload = await response.json();
+              return { month, ok: true, events: Array.isArray(payload.events) ? payload.events : [] };
+            } catch (error) {
+              return { month, ok: false, error: String(error?.message || error) };
+            }
+          }));
+          const failed = monthResults.filter(x => !x.ok);
+          const unique = new Map();
+          for (const item of monthResults) {
+            for (const event of item.events || []) {
+              if (event?.id) unique.set(String(event.id), event);
+            }
+          }
+          return { league, monthResults, failed, events: [...unique.values()] };
+        }));
         let savedMatches = 0;
         let savedTeams = 0;
-        for (const league of leagues) {
+        for (const entry of allEventsByLeague) {
           try {
-            const response = await fetch(ESPN_BASE + "/" + league + "/scoreboard?dates=" + start + "-" + end + "&limit=1000");
-            if (!response.ok) {
-              results.push({ league, ok: false, error: "ESPN HTTP " + response.status });
+            if (entry.failed.length === months.length) {
+              results.push({ league: entry.league, ok: false, error: entry.failed[0]?.error || "All monthly ESPN requests failed" });
               continue;
             }
-            const payload = await response.json();
-            const events = Array.isArray(payload.events) ? payload.events : [];
             const grouped = new Map();
             let leagueMatches = 0;
-            for (const event of events) {
+            for (const event of entry.events) {
+              const eventDate = String(event.date || "").slice(0,10);
+              if (!eventDate || eventDate < startDate.toISOString().slice(0,10) || eventDate > endDate) continue;
               const competition = event.competitions?.[0];
               const competitors = competition?.competitors || [];
               const home = competitors.find(x => x.homeAway === "home");
@@ -260,17 +289,19 @@ export default {
               const scoreValue = value => Number(value && typeof value === "object" ? (value.value ?? value.displayValue) : value);
               const homeScore = scoreValue(home.score), awayScore = scoreValue(away.score);
               if (!Number.isFinite(homeScore) || !Number.isFinite(awayScore)) continue;
+              const homeName = home.team?.displayName || home.team?.name || home.team?.shortDisplayName || "";
+              const awayName = away.team?.displayName || away.team?.name || away.team?.shortDisplayName || "";
               const match = {
                 fixture: { id: event.id, date: event.date || competition.date, status: { short: "FT" } },
-                league: { id: league, name: payload.leagues?.[0]?.name || league },
+                league: { id: entry.league, name: entry.league },
                 teams: {
-                  home: { id: Number(home.team?.id) || null, name: home.team?.displayName || home.team?.name || "" },
-                  away: { id: Number(away.team?.id) || null, name: away.team?.displayName || away.team?.name || "" }
+                  home: { id: Number(home.team?.id) || null, name: homeName },
+                  away: { id: Number(away.team?.id) || null, name: awayName }
                 },
                 goals: { home: homeScore, away: awayScore },
                 score: null, statistics: null
               };
-              for (const teamName of [match.teams.home.name, match.teams.away.name]) {
+              for (const teamName of [homeName, awayName]) {
                 const key = normalizeTeamName(teamName);
                 if (!key) continue;
                 if (!grouped.has(key)) grouped.set(key, []);
@@ -291,14 +322,18 @@ export default {
               savedTeams++;
             }
             savedMatches += leagueMatches;
-            results.push({ league, ok: true, events: events.length, completedMatches: leagueMatches, teams: grouped.size });
+            results.push({
+              league, ok: entry.failed.length === 0,
+              events: entry.events.length, completedMatches: leagueMatches, teams: grouped.size,
+              monthErrors: entry.failed
+            });
           } catch (error) {
-            results.push({ league, ok: false, error: String(error?.message || error) });
+            results.push({ league: entry.league, ok: false, error: String(error?.message || error) });
           }
         }
         const summary = {
-          at: new Date().toISOString(), source: "ESPN league scoreboards",
-          range: { start, end }, leaguesProcessed: results.length,
+          at: new Date().toISOString(), source: "ESPN monthly league scoreboards",
+          range: { start, end }, monthsRequested: months, leaguesProcessed: results.length,
           teamsUpdated: savedTeams, matchesProcessed: savedMatches, results
         };
         await env.MAM_KV.put("archive:last-run", JSON.stringify(summary), { expirationTtl: 400*24*60*60 });
