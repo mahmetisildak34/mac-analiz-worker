@@ -230,6 +230,9 @@ export default {
           "uefa.champions","uefa.europa","uefa.europa.conf",
           "uefa.nations","fifa.friendly","fifa.worldq"
         ];
+        const batchSize = 4;
+        const batch = Math.max(0, Math.min(3, Number(url.searchParams.get("batch") || 0)));
+        const batchLeagues = leagues.slice(batch * batchSize, (batch + 1) * batchSize);
         const now = new Date();
         const endDate = now.toISOString().slice(0,10);
         const startDate = new Date(Date.UTC(now.getUTCFullYear(), 6, 1));
@@ -243,39 +246,36 @@ export default {
           cursor.setUTCMonth(cursor.getUTCMonth() + 1);
         }
         const results = [];
-        const allEventsByLeague = await Promise.all(leagues.map(async league => {
-          const monthResults = await Promise.all(months.map(async month => {
-            try {
-              const response = await fetch(ESPN_BASE + "/" + league + "/scoreboard?dates=" + month + "&limit=1000", {
-                headers: { "Accept": "application/json" }
-              });
-              if (!response.ok) return { month, ok: false, error: "ESPN HTTP " + response.status };
-              const payload = await response.json();
-              return { month, ok: true, events: Array.isArray(payload.events) ? payload.events : [] };
-            } catch (error) {
-              return { month, ok: false, error: String(error?.message || error) };
-            }
-          }));
-          const failed = monthResults.filter(x => !x.ok);
-          const unique = new Map();
-          for (const item of monthResults) {
-            for (const event of item.events || []) {
-              if (event?.id) unique.set(String(event.id), event);
-            }
-          }
-          return { league, monthResults, failed, events: [...unique.values()] };
-        }));
         let savedMatches = 0;
         let savedTeams = 0;
-        for (const entry of allEventsByLeague) {
+        for (const league of batchLeagues) {
           try {
-            if (entry.failed.length === months.length) {
-              results.push({ league: entry.league, ok: false, error: entry.failed[0]?.error || "All monthly ESPN requests failed" });
+            const monthResults = await Promise.all(months.map(async month => {
+              try {
+                const response = await fetch(ESPN_BASE + "/" + league + "/scoreboard?dates=" + month + "&limit=1000", {
+                  headers: { "Accept": "application/json" }
+                });
+                if (!response.ok) return { month, ok: false, error: "ESPN HTTP " + response.status };
+                const payload = await response.json();
+                return { month, ok: true, events: Array.isArray(payload.events) ? payload.events : [] };
+              } catch (error) {
+                return { month, ok: false, error: String(error?.message || error) };
+              }
+            }));
+            const failed = monthResults.filter(x => !x.ok);
+            const unique = new Map();
+            for (const item of monthResults) {
+              for (const event of item.events || []) {
+                if (event?.id) unique.set(String(event.id), event);
+              }
+            }
+            if (failed.length === months.length) {
+              results.push({ league, ok: false, error: failed[0]?.error || "All monthly ESPN requests failed" });
               continue;
             }
             const grouped = new Map();
             let leagueMatches = 0;
-            for (const event of entry.events) {
+            for (const event of unique.values()) {
               const eventDate = String(event.date || "").slice(0,10);
               if (!eventDate || eventDate < startDate.toISOString().slice(0,10) || eventDate > endDate) continue;
               const competition = event.competitions?.[0];
@@ -293,7 +293,7 @@ export default {
               const awayName = away.team?.displayName || away.team?.name || away.team?.shortDisplayName || "";
               const match = {
                 fixture: { id: event.id, date: event.date || competition.date, status: { short: "FT" } },
-                league: { id: entry.league, name: entry.league },
+                league: { id: league, name: league },
                 teams: {
                   home: { id: Number(home.team?.id) || null, name: homeName },
                   away: { id: Number(away.team?.id) || null, name: awayName }
@@ -323,21 +323,26 @@ export default {
             }
             savedMatches += leagueMatches;
             results.push({
-              league, ok: entry.failed.length === 0,
-              events: entry.events.length, completedMatches: leagueMatches, teams: grouped.size,
-              monthErrors: entry.failed
+              league, ok: failed.length === 0,
+              events: unique.size, completedMatches: leagueMatches, teams: grouped.size,
+              monthErrors: failed
             });
           } catch (error) {
-            results.push({ league: entry.league, ok: false, error: String(error?.message || error) });
+            results.push({ league, ok: false, error: String(error?.message || error) });
           }
         }
         const summary = {
           at: new Date().toISOString(), source: "ESPN monthly league scoreboards",
-          range: { start, end }, monthsRequested: months, leaguesProcessed: results.length,
+          range: { start, end }, batch, batchesTotal: 4, leaguesInBatch: batchLeagues,
+          monthsRequested: months, leaguesProcessed: results.length,
           teamsUpdated: savedTeams, matchesProcessed: savedMatches, results
         };
         await env.MAM_KV.put("archive:last-run", JSON.stringify(summary), { expirationTtl: 400*24*60*60 });
-        await env.MAM_KV.delete("archive:last-error");
+        if (results.some(x => !x.ok)) {
+          await env.MAM_KV.put("archive:last-error", JSON.stringify({ at: summary.at, batch, results: results.filter(x => !x.ok) }), { expirationTtl: 400*24*60*60 });
+        } else {
+          await env.MAM_KV.delete("archive:last-error");
+        }
         return new Response(JSON.stringify({ ok: results.some(x => x.ok), ...summary }), {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
         });
