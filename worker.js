@@ -194,11 +194,24 @@ export default {
           env.MAM_KV.get("archive:last-error", "json"),
           env.MAM_KV.list({ prefix: "history:", limit: 1000 })
         ]);
+        let archivedMatchesTotal = 0;
+        let teamsWithMatches = 0;
+        let emptyTeamKeys = 0;
+        for (const item of teamKeys.keys) {
+          const rows = await env.MAM_KV.get(item.name, "json") || [];
+          const count = Array.isArray(rows) ? rows.length : 0;
+          archivedMatchesTotal += count;
+          if (count > 0) teamsWithMatches++;
+          else emptyTeamKeys++;
+        }
         return new Response(JSON.stringify({
           ok: Boolean(lastRun) && !lastError,
           lastRun: lastRun || null,
           lastError: lastError || null,
           archivedTeamsListed: teamKeys.keys.length,
+          teamsWithMatches,
+          emptyTeamKeys,
+          archivedMatchesTotal,
           moreTeams: Boolean(teamKeys.list_complete === false)
         }), {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
@@ -272,7 +285,18 @@ export default {
         const history = [...combined.values()]
           .sort((a,b) => new Date(b.fixture.date) - new Date(a.fixture.date))
           .slice(0, 30);
-        await env.MAM_KV.put(key, JSON.stringify(history), { expirationTtl: 400 * 24 * 60 * 60 });
+        if (history.length) {
+          await env.MAM_KV.put(key, JSON.stringify(history), { expirationTtl: 400 * 24 * 60 * 60 });
+        }
+        const runInfo = {
+          at: new Date().toISOString(),
+          source: "ESPN team schedule",
+          team: teamName,
+          fetched: matches.length,
+          archived: history.length
+        };
+        await env.MAM_KV.put("archive:last-run", JSON.stringify(runInfo));
+        await env.MAM_KV.delete("archive:last-error");
         return new Response(JSON.stringify({
           ok: true, team: teamName, fetched: matches.length, archived: history.length,
           latest: history[0]?.fixture?.date || null, source: "ESPN team schedule"
