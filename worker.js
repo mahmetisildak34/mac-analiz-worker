@@ -539,11 +539,13 @@ export default {
       const isStandings = /(^|\/)standings$/.test(apiPath);
       const isLive = url.searchParams.get("live") === "all";
       const isLiveStats = apiPath === "fixtures/statistics" || (isESPN && apiPath === "summary");
+      const isLineupData = apiPath === "fixtures/lineups" || apiPath === "fixtures/players";
       const cacheUrl = new URL(url.toString());
       // Yeni anahtar, önceki 12 saatlik puan tablosu kayıtlarını devre dışı bırakır.
       if (isStandings) cacheUrl.searchParams.set("__mam_cache", "standings-v2");
       if (isLive) cacheUrl.searchParams.set("__mam_cache", "live-v1");
       if (isLiveStats) cacheUrl.searchParams.set("__mam_cache", "live-stats-v1");
+      if (isLineupData) cacheUrl.searchParams.set("__mam_cache", "lineups-v1");
       const cacheKey = new Request(cacheUrl.toString(), { method: "GET" });
 
       let cache = null;
@@ -593,7 +595,7 @@ export default {
 
       if (upstream.ok && cache && !isLive) {
         const cacheHeaders = new Headers(response.headers);
-        const responseCacheSeconds = isESPN && apiPath === "summary" ? 300 : isLiveStats ? 60 : isESPN ? 900 : isStandings ? STANDINGS_CACHE_SECONDS : CACHE_SECONDS;
+        const responseCacheSeconds = isLineupData ? 300 : isESPN && apiPath === "summary" ? 300 : isLiveStats ? 60 : isESPN ? 900 : isStandings ? STANDINGS_CACHE_SECONDS : CACHE_SECONDS;
         cacheHeaders.set("Cache-Control", "public, max-age=" + responseCacheSeconds);
 
         const cacheCopy = new Response(response.clone().body, {
