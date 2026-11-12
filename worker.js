@@ -593,7 +593,8 @@ export default {
 
       if (upstream.ok && cache && !isLive) {
         const cacheHeaders = new Headers(response.headers);
-        cacheHeaders.set("Cache-Control", "public, max-age=" + (isLiveStats ? 60 : isESPN ? 900 : isStandings ? STANDINGS_CACHE_SECONDS : CACHE_SECONDS));
+        const responseCacheSeconds = isESPN && apiPath === "summary" ? 300 : isLiveStats ? 60 : isESPN ? 900 : isStandings ? STANDINGS_CACHE_SECONDS : CACHE_SECONDS;
+        cacheHeaders.set("Cache-Control", "public, max-age=" + responseCacheSeconds);
 
         const cacheCopy = new Response(response.clone().body, {
           status: response.status,
