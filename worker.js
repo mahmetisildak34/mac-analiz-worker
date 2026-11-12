@@ -173,7 +173,7 @@ export default {
       const path = url.pathname.replace(/^\/api\//, "");
 
       const isESPN = path.startsWith("espn/");
-      const validESPNPath = /^espn\/[a-zA-Z0-9._-]+\/(?:scoreboard|teams|teams\/[0-9]+\/schedule)$/.test(path);
+      const validESPNPath = /^espn\/[a-zA-Z0-9._-]+\/(?:scoreboard|summary|teams|teams\/[0-9]+\/schedule)$/.test(path) && ( !path.endsWith("/summary") || /^\d+$/.test(url.searchParams.get("event") || "") );
       const validStandardPath = /^[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)*$/.test(path);
 
       if (!(isESPN ? validESPNPath : validStandardPath)) {
