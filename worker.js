@@ -195,7 +195,7 @@ export default {
       return new Response(JSON.stringify({ token, expiresIn: 90 * 24 * 60 * 60 }), { status: 200, headers });
     }
     if (url.pathname === "/auth/check" && request.method === "GET") {
-      const token = request.headers.get("Authorization")?.replace(/^Bearer\\s+/i, "") || "";
+      const token = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
       const ok = await verifySessionToken(token, env.SESSION_SECRET);
       return new Response(JSON.stringify({ ok }), { status: ok ? 200 : 401, headers });
     }
@@ -234,7 +234,7 @@ export default {
         });
       }
 
-      const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\\s+/i, "") || "";
+      const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
       if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
         return new Response(JSON.stringify({ error: "Authentication required" }), {
           status: 401, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
