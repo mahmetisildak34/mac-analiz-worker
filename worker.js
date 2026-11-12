@@ -235,7 +235,7 @@ export default {
         const batchLeagues = leagues.slice(batch * batchSize, (batch + 1) * batchSize);
         const now = new Date();
         const endDate = now.toISOString().slice(0,10);
-        const startDate = new Date(Date.UTC(now.getUTCFullYear(), 6, 1));
+        const startDate = new Date(Date.UTC(now.getUTCFullYear() - 1, 6, 1));
         const start = startDate.toISOString().slice(0,10).replace(/-/g,"");
         const end = endDate.replace(/-/g,"");
         const months = [];
