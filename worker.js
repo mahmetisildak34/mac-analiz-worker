@@ -245,7 +245,9 @@ export default {
           if (!completed) continue;
           const homeName = home.team?.displayName || home.team?.name || home.team?.shortDisplayName || "";
           const awayName = away.team?.displayName || away.team?.name || away.team?.shortDisplayName || "";
-          if (normalize(homeName) !== target && normalize(awayName) !== target) continue;
+          const homeIsTarget = Number(home.team?.id) === Number(teamId) || normalize(homeName) === target;
+          const awayIsTarget = Number(away.team?.id) === Number(teamId) || normalize(awayName) === target;
+          if (homeIsTarget === awayIsTarget) continue;
           const scoreValue = value => Number(value && typeof value === "object" ? (value.value ?? value.displayValue) : value);
           const homeScore = scoreValue(home.score), awayScore = scoreValue(away.score);
           if (!Number.isFinite(homeScore) || !Number.isFinite(awayScore)) continue;
@@ -253,8 +255,8 @@ export default {
             fixture: { id: event.id, date: event.date || competition.date, status: { short: "FT" } },
             league: { id: league, name: payload.leagues?.[0]?.name || league },
             teams: {
-              home: { id: Number(home.team?.id) || null, name: homeName },
-              away: { id: Number(away.team?.id) || null, name: awayName }
+              home: { id: Number(home.team?.id) || null, name: homeIsTarget ? teamName : homeName },
+              away: { id: Number(away.team?.id) || null, name: awayIsTarget ? teamName : awayName }
             },
             goals: { home: homeScore, away: awayScore },
             score: null, statistics: null
