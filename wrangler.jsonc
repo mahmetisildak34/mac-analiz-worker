@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "odd-sunset-6c83",
+  "main": "worker.js",
+  "compatibility_date": "2026-11-12",
+  "observability": {
+    "enabled": true
+  },
+  "kv_namespaces": [
+    {
+      "binding": "MAM_KV",
+      "id": "4de80ce8f698470e833d9773d6724b94"
+    }
+  ],
+  "triggers": {
+    "crons": ["0 3 * * *"]
+  }
+}
