@@ -538,10 +538,12 @@ export default {
       const targetUrl = base + "/" + apiPath + url.search;
       const isStandings = /(^|\/)standings$/.test(apiPath);
       const isLive = url.searchParams.get("live") === "all";
+      const isLiveStats = apiPath === "fixtures/statistics";
       const cacheUrl = new URL(url.toString());
       // Yeni anahtar, önceki 12 saatlik puan tablosu kayıtlarını devre dışı bırakır.
       if (isStandings) cacheUrl.searchParams.set("__mam_cache", "standings-v2");
       if (isLive) cacheUrl.searchParams.set("__mam_cache", "live-v1");
+      if (isLiveStats) cacheUrl.searchParams.set("__mam_cache", "live-stats-v1");
       const cacheKey = new Request(cacheUrl.toString(), { method: "GET" });
 
       let cache = null;
@@ -591,7 +593,7 @@ export default {
 
       if (upstream.ok && cache && !isLive) {
         const cacheHeaders = new Headers(response.headers);
-        cacheHeaders.set("Cache-Control", "public, max-age=" + (isESPN ? 900 : isStandings ? STANDINGS_CACHE_SECONDS : CACHE_SECONDS));
+        cacheHeaders.set("Cache-Control", "public, max-age=" + (isLiveStats ? 60 : isESPN ? 900 : isStandings ? STANDINGS_CACHE_SECONDS : CACHE_SECONDS));
 
         const cacheCopy = new Response(response.clone().body, {
           status: response.status,
