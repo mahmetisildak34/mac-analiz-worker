@@ -205,6 +205,78 @@ export default {
         });
       }
 
+      if (path === "archive/espn-backfill") {
+        if (!env.MAM_KV) {
+          return new Response(JSON.stringify({ error: "MAM_KV KV binding is missing" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const league = url.searchParams.get("league") || "";
+        const teamId = url.searchParams.get("teamId") || "";
+        const teamName = url.searchParams.get("teamName") || "";
+        const allowedLeagues = new Set([
+          "eng.1","esp.1","ger.1","ita.1","fra.1","uefa.champions",
+          "uefa.europa","uefa.europa.conf","por.1","ned.1","bel.1",
+          "tur.1","sco.1","usa.1","bra.1","arg.1","mex.1","jpn.1",
+          "aus.1","chn.1","uefa.nations","fifa.friendly","fifa.worldq"
+        ]);
+        if (!allowedLeagues.has(league) || !/^\\d+$/.test(teamId) || !teamName.trim()) {
+          return new Response(JSON.stringify({ error: "Valid league, numeric teamId and teamName are required" }), {
+            status: 400, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const upstream = await fetch(ESPN_BASE + "/" + league + "/teams/" + teamId + "/schedule");
+        if (!upstream.ok) throw new Error("ESPN schedule HTTP " + upstream.status);
+        const payload = await upstream.json();
+        const events = Array.isArray(payload.events) ? payload.events : [];
+        const normalize = value => String(value || "").normalize("NFD").toLowerCase()
+          .replace(/[\\u0300-\\u036f]/g, "").replace(/ı/g, "i")
+          .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+        const target = normalize(teamName);
+        const matches = [];
+        for (const event of events) {
+          const competition = event.competitions?.[0];
+          const competitors = competition?.competitors || [];
+          const home = competitors.find(x => x.homeAway === "home");
+          const away = competitors.find(x => x.homeAway === "away");
+          if (!home || !away) continue;
+          const state = String(competition.status?.type?.state || event.status?.type?.state || "").toLowerCase();
+          const completed = competition.status?.type?.completed === true || event.status?.type?.completed === true || state === "post";
+          if (!completed) continue;
+          const homeName = home.team?.displayName || home.team?.name || home.team?.shortDisplayName || "";
+          const awayName = away.team?.displayName || away.team?.name || away.team?.shortDisplayName || "";
+          if (normalize(homeName) !== target && normalize(awayName) !== target) continue;
+          const scoreValue = value => Number(value && typeof value === "object" ? (value.value ?? value.displayValue) : value);
+          const homeScore = scoreValue(home.score), awayScore = scoreValue(away.score);
+          if (!Number.isFinite(homeScore) || !Number.isFinite(awayScore)) continue;
+          matches.push({
+            fixture: { id: event.id, date: event.date || competition.date, status: { short: "FT" } },
+            league: { id: league, name: payload.leagues?.[0]?.name || league },
+            teams: {
+              home: { id: Number(home.team?.id) || null, name: homeName },
+              away: { id: Number(away.team?.id) || null, name: awayName }
+            },
+            goals: { home: homeScore, away: awayScore },
+            score: null, statistics: null
+          });
+        }
+        const key = "history:" + normalizeTeamName(teamName);
+        const previous = await env.MAM_KV.get(key, "json") || [];
+        const combined = new Map();
+        for (const match of [...previous, ...matches]) {
+          const id = [String(match.fixture?.date || "").slice(0,10), normalizeTeamName(match.teams?.home?.name), normalizeTeamName(match.teams?.away?.name)].join("|");
+          combined.set(id, match);
+        }
+        const history = [...combined.values()]
+          .sort((a,b) => new Date(b.fixture.date) - new Date(a.fixture.date))
+          .slice(0, 30);
+        await env.MAM_KV.put(key, JSON.stringify(history), { expirationTtl: 400 * 24 * 60 * 60 });
+        return new Response(JSON.stringify({
+          ok: true, team: teamName, fetched: matches.length, archived: history.length,
+          latest: history[0]?.fixture?.date || null, source: "ESPN team schedule"
+        }), { status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" } });
+      }
+
       if (path === "archive/team") {
         if (!env.MAM_KV) {
           return new Response(JSON.stringify({ error: "MAM_KV KV binding is missing" }), {
