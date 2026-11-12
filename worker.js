@@ -5,6 +5,36 @@ const ESPN_BASE = "https://site.api.espn.com/apis/site/v2/sports/soccer";
 const CACHE_SECONDS = 43200;
 const STANDINGS_CACHE_SECONDS = 300;
 
+async function verifySessionToken(token, secret) {
+  if (!token || !secret) return false;
+  const parts = token.split(".");
+  if (parts.length !== 2) return false;
+  const [payload, signature] = parts;
+  const key = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["verify"]
+  );
+  let sig;
+  try {
+    sig = Uint8Array.from(atob(signature.replace(/-/g, "+").replace(/_/g, "/")), c => c.charCodeAt(0));
+    const data = JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")));
+    if (!data.exp || data.exp < Date.now() || data.v !== 1) return false;
+  } catch (_) { return false; }
+  return crypto.subtle.verify("HMAC", key, sig, new TextEncoder().encode(payload));
+}
+
+async function createSessionToken(secret) {
+  const payload = btoa(JSON.stringify({ v: 1, exp: Date.now() + 90 * 24 * 60 * 60 * 1000 }))
+    .replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
+  const key = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+  );
+  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payload));
+  const signature = btoa(String.fromCharCode(...new Uint8Array(sig)))
+    .replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
+  return payload + "." + signature;
+}
+
+
 function normalizeTeamName(value) {
   return String(value || "").normalize("NFD").toLowerCase()
     .replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i")
@@ -147,6 +177,27 @@ export default {
 
     if (origin && origin !== ALLOWED_ORIGIN) {
       return new Response("Origin not allowed", { status: 403 });
+    }
+
+
+    const headers = { ...cors, "Content-Type": "application/json; charset=utf-8" };
+    const url = new URL(request.url);
+    if (url.pathname === "/auth/login" && request.method === "POST") {
+      if (!env.SITE_PASSWORD || !env.SESSION_SECRET) {
+        return new Response(JSON.stringify({ error: "Authentication secrets are not configured" }), { status: 503, headers });
+      }
+      let body = {};
+      try { body = await request.json(); } catch (_) {}
+      if (typeof body.password !== "string" || body.password !== env.SITE_PASSWORD) {
+        return new Response(JSON.stringify({ error: "Wrong password" }), { status: 401, headers });
+      }
+      const token = await createSessionToken(env.SESSION_SECRET);
+      return new Response(JSON.stringify({ token, expiresIn: 90 * 24 * 60 * 60 }), { status: 200, headers });
+    }
+    if (url.pathname === "/auth/check" && request.method === "GET") {
+      const token = request.headers.get("Authorization")?.replace(/^Bearer\\s+/i, "") || "";
+      const ok = await verifySessionToken(token, env.SESSION_SECRET);
+      return new Response(JSON.stringify({ ok }), { status: ok ? 200 : 401, headers });
     }
 
     if (request.method === "OPTIONS") {
