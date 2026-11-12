@@ -360,7 +360,7 @@ export default {
         const allowedLeagues = new Set([
           "eng.1","esp.1","ger.1","ita.1","fra.1","uefa.champions",
           "uefa.europa","uefa.europa.conf","por.1","ned.1","bel.1",
-          "tur.1","sco.1","usa.1","bra.1","arg.1","mex.1","jpn.1",
+          "tur.1","sco.1","esp.copa_del_rey","usa.1","bra.1","arg.1","mex.1","jpn.1",
           "aus.1","chn.1","uefa.nations","fifa.friendly","fifa.worldq"
         ]);
         if (!allowedLeagues.has(league) || !/^\d+$/.test(teamId) || !teamName.trim()) {
