@@ -5,7 +5,79 @@ const ESPN_BASE = "https://site.api.espn.com/apis/site/v2/sports/soccer";
 const CACHE_SECONDS = 43200;
 const STANDINGS_CACHE_SECONDS = 300;
 
+function normalizeTeamName(value) {
+  return String(value || "").normalize("NFD").toLowerCase()
+    .replace(/[\\u0300-\\u036f]/g, "").replace(/ı/g, "i")
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
+}
+
+async function saveDailyArchive(env, scheduledTime) {
+  if (!env.MAM_KV) throw new Error("MAM_KV KV binding is missing");
+  if (!env.API_FOOTBALL_KEY) throw new Error("API_FOOTBALL_KEY secret is missing");
+  const date = new Date(scheduledTime || Date.now());
+  date.setUTCDate(date.getUTCDate() - 1);
+  const day = date.toISOString().slice(0, 10);
+  const upstream = await fetch(API_BASE + "/fixtures?date=" + day, {
+    headers: { "x-apisports-key": env.API_FOOTBALL_KEY }
+  });
+  if (!upstream.ok) throw new Error("API-Football archive request failed: HTTP " + upstream.status);
+  const payload = await upstream.json();
+  if (payload.errors && Object.keys(payload.errors).length) {
+    throw new Error("API-Football archive error: " + JSON.stringify(payload.errors));
+  }
+  const fixtures = Array.isArray(payload.response) ? payload.response : [];
+  const grouped = new Map();
+  for (const item of fixtures) {
+    const status = String(item.fixture?.status?.short || "");
+    if (!["FT", "AET", "PEN"].includes(status)) continue;
+    if (item.goals?.home == null || item.goals?.away == null) continue;
+    const match = {
+      fixture: { id: item.fixture?.id, date: item.fixture?.date, status: { short: status } },
+      league: { id: item.league?.id, name: item.league?.name, country: item.league?.country },
+      teams: {
+        home: { id: item.teams?.home?.id, name: item.teams?.home?.name },
+        away: { id: item.teams?.away?.id, name: item.teams?.away?.name }
+      },
+      goals: { home: item.goals.home, away: item.goals.away },
+      score: item.score || null,
+      statistics: null
+    };
+    for (const teamName of [match.teams.home.name, match.teams.away.name]) {
+      const key = normalizeTeamName(teamName);
+      if (!key) continue;
+      if (!grouped.has(key)) grouped.set(key, []);
+      grouped.get(key).push(match);
+    }
+  }
+  let savedTeams = 0;
+  for (const [teamKey, matches] of grouped) {
+    const storageKey = "history:" + teamKey;
+    let previous = [];
+    try {
+      previous = await env.MAM_KV.get(storageKey, "json") || [];
+    } catch (_) {}
+    const combined = new Map();
+    for (const match of [...previous, ...matches]) {
+      const id = [String(match.fixture?.date || "").slice(0, 10), match.teams?.home?.name, match.teams?.away?.name].join("|");
+      combined.set(id, match);
+    }
+    const history = [...combined.values()]
+      .sort((a, b) => new Date(b.fixture.date) - new Date(a.fixture.date))
+      .slice(0, 30);
+    await env.MAM_KV.put(storageKey, JSON.stringify(history), { expirationTtl: 400 * 24 * 60 * 60 });
+    savedTeams++;
+  }
+  await env.MAM_KV.put("archive:last-run", JSON.stringify({
+    date: day, completedFixtures: fixtures.filter(x => ["FT","AET","PEN"].includes(String(x.fixture?.status?.short||""))).length,
+    teamsUpdated: savedTeams, updatedAt: new Date().toISOString()
+  }), { expirationTtl: 400 * 24 * 60 * 60 });
+  return { date: day, teamsUpdated: savedTeams, fixturesReceived: fixtures.length };
+}
+
 export default {
+  async scheduled(controller, env, ctx) {
+    await saveDailyArchive(env, controller?.scheduledTime || Date.now());
+  },
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
     const cors = {
@@ -51,6 +123,25 @@ export default {
         return new Response("Invalid API path", {
           status: 400,
           headers: cors
+        });
+      }
+
+      if (path === "archive/team") {
+        if (!env.MAM_KV) {
+          return new Response(JSON.stringify({ error: "MAM_KV KV binding is missing" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const teamName = url.searchParams.get("name") || "";
+        const key = normalizeTeamName(teamName);
+        if (!key) {
+          return new Response(JSON.stringify({ error: "A team name is required" }), {
+            status: 400, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const matches = await env.MAM_KV.get("history:" + key, "json") || [];
+        return new Response(JSON.stringify({ response: matches, source: "Cloudflare daily archive" }), {
+          status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
         });
       }
 
