@@ -1,6 +1,7 @@
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
 const API_BASE = "https://v3.football.api-sports.io";
 const FOOTBALLDATA_BASE = "https://api.football-data.org/v4";
+const ESPN_BASE = "https://site.api.espn.com/apis/site/v2/sports/soccer";
 const CACHE_SECONDS = 43200;
 const STANDINGS_CACHE_SECONDS = 300;
 
@@ -42,7 +43,11 @@ export default {
 
       const path = url.pathname.replace(/^\/api\//, "");
 
-      if (!/^[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)*$/.test(path)) {
+      const isESPN = path.startsWith("espn/");
+      const validESPNPath = /^espn\/[a-zA-Z0-9._-]+\/scoreboard$/.test(path);
+      const validStandardPath = /^[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)*$/.test(path);
+
+      if (!(isESPN ? validESPNPath : validStandardPath)) {
         return new Response("Invalid API path", {
           status: 400,
           headers: cors
@@ -50,15 +55,19 @@ export default {
       }
 
       const isFootballData = path.startsWith("football-data/");
-      const apiPath = isFootballData
-        ? path.slice("football-data/".length)
-        : path;
+      const apiPath = isESPN
+        ? path.slice("espn/".length)
+        : isFootballData
+          ? path.slice("football-data/".length)
+          : path;
 
-      const apiKey = isFootballData
-        ? env.FOOTBALLDATA_API_KEY
-        : env.API_FOOTBALL_KEY;
+      const apiKey = isESPN
+        ? null
+        : isFootballData
+          ? env.FOOTBALLDATA_API_KEY
+          : env.API_FOOTBALL_KEY;
 
-      if (!apiKey) {
+      if (!isESPN && !apiKey) {
         return new Response(JSON.stringify({
           error: isFootballData
             ? "FOOTBALLDATA_API_KEY secret is missing"
@@ -69,7 +78,7 @@ export default {
         });
       }
 
-      const base = isFootballData ? FOOTBALLDATA_BASE : API_BASE;
+      const base = isESPN ? ESPN_BASE : isFootballData ? FOOTBALLDATA_BASE : API_BASE;
       const targetUrl = base + "/" + apiPath + url.search;
       const isStandings = /(^|\/)standings$/.test(apiPath);
       const isLive = url.searchParams.get("live") === "all";
@@ -101,9 +110,11 @@ export default {
         cache = null;
       }
 
-      const upstreamHeaders = isFootballData
-        ? { "X-Auth-Token": apiKey }
-        : { "x-apisports-key": apiKey };
+      const upstreamHeaders = isESPN
+        ? { "Accept": "application/json" }
+        : isFootballData
+          ? { "X-Auth-Token": apiKey }
+          : { "x-apisports-key": apiKey };
 
       const upstream = await fetch(targetUrl, {
         method: "GET",
@@ -124,7 +135,7 @@ export default {
 
       if (upstream.ok && cache && !isLive) {
         const cacheHeaders = new Headers(response.headers);
-        cacheHeaders.set("Cache-Control", "public, max-age=" + (isStandings ? STANDINGS_CACHE_SECONDS : CACHE_SECONDS));
+        cacheHeaders.set("Cache-Control", "public, max-age=" + (isESPN ? 900 : isStandings ? STANDINGS_CACHE_SECONDS : CACHE_SECONDS));
 
         const cacheCopy = new Response(response.clone().body, {
           status: response.status,
