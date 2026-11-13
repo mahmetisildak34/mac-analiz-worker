@@ -161,7 +161,7 @@ export default {
       return new Response(null, { status: 204, headers: cors });
     }
 
-    if (request.method !== "GET") {
+    if (request.method !== "GET" && !(request.method === "POST" && url.pathname === "/api/archive/matches")) {
       return new Response(JSON.stringify({ error: "Method not allowed" }), {
         status: 405,
         headers: { ...cors, "Content-Type": "application/json" }
@@ -197,6 +197,96 @@ export default {
       if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
         return new Response(JSON.stringify({ error: "Authentication required" }), {
           status: 401, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+        });
+      }
+
+      if (path === "archive/matches" && request.method === "POST") {
+        if (!env.DB) {
+          return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        let body;
+        try { body = await request.json(); }
+        catch (_) {
+          return new Response(JSON.stringify({ error: "Invalid JSON body" }), {
+            status: 400, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const incoming = Array.isArray(body?.matches) ? body.matches.slice(0, 250) : [];
+        if (!incoming.length) {
+          return new Response(JSON.stringify({ ok: true, saved: 0, skipped: 0 }), {
+            status: 200, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const sql = `INSERT INTO matches
+          (source, fixture_id, league_id, league_name, country, kickoff, status,
+           home_team_id, home_team, away_team_id, away_team, home_goals, away_goals,
+           statistics_json, raw_json)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          ON CONFLICT(source, fixture_id) DO UPDATE SET
+           league_id=excluded.league_id, league_name=excluded.league_name,
+           country=excluded.country, kickoff=excluded.kickoff, status=excluded.status,
+           home_team_id=excluded.home_team_id, home_team=excluded.home_team,
+           away_team_id=excluded.away_team_id, away_team=excluded.away_team,
+           home_goals=excluded.home_goals, away_goals=excluded.away_goals,
+           statistics_json=excluded.statistics_json, raw_json=excluded.raw_json,
+           updated_at=CURRENT_TIMESTAMP`;
+        const statements = [];
+        let skipped = 0;
+        for (const m of incoming) {
+          const fixture = m?.fixture || {};
+          const teams = m?.teams || {};
+          const home = teams.home || {};
+          const away = teams.away || {};
+          const league = m?.league || {};
+          const kickoff = String(fixture.date || m?.kickoff || "");
+          const homeName = String(home.name || m?.home_team || "").trim();
+          const awayName = String(away.name || m?.away_team || "").trim();
+          if (!kickoff || !homeName || !awayName) { skipped++; continue; }
+          const rawId = fixture.id ?? m?.fixture_id ?? "";
+          const fixtureId = String(rawId || (kickoff + "-" + normalizeTeamName(homeName) + "-" + normalizeTeamName(awayName))).slice(0, 120);
+          const source = String(m?.mamSource || m?._source || m?.source || "app").slice(0, 60);
+          const leagueId = String(league.id ?? body?.leagueId ?? "unknown").slice(0, 40);
+          const status = String(fixture.status?.short || m?.status || "UNK").slice(0, 30);
+          const homeGoals = m?.goals?.home == null ? null : Number(m.goals.home);
+          const awayGoals = m?.goals?.away == null ? null : Number(m.goals.away);
+          statements.push(env.DB.prepare(sql).bind(
+            source, fixtureId, leagueId,
+            String(league.name || m?.league_name || "").slice(0, 120),
+            String(league.country || m?.country || "").slice(0, 80),
+            kickoff.slice(0, 40), status,
+            home.id == null ? null : String(home.id).slice(0, 40), homeName.slice(0, 120),
+            away.id == null ? null : String(away.id).slice(0, 40), awayName.slice(0, 120),
+            Number.isFinite(homeGoals) ? homeGoals : null,
+            Number.isFinite(awayGoals) ? awayGoals : null,
+            m?.statistics == null ? null : JSON.stringify(m.statistics),
+            JSON.stringify(m)
+          ));
+        }
+        let saved = 0;
+        for (let i = 0; i < statements.length; i += 50) {
+          const results = await env.DB.batch(statements.slice(i, i + 50));
+          saved += results.reduce((sum, result) => sum + (Number(result?.meta?.changes) || 0), 0);
+        }
+        return new Response(JSON.stringify({ ok: true, received: incoming.length, saved, skipped }), {
+          status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+        });
+      }
+
+      if (path === "archive/d1-status") {
+        if (!env.DB) {
+          return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const total = await env.DB.prepare("SELECT COUNT(*) AS total FROM matches").first();
+        const bySource = await env.DB.prepare("SELECT source, COUNT(*) AS total FROM matches GROUP BY source ORDER BY source").all();
+        return new Response(JSON.stringify({
+          ok: true, total: Number(total?.total || 0),
+          sources: Array.isArray(bySource?.results) ? bySource.results : []
+        }), {
+          status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
         });
       }
 
