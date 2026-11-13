@@ -45,9 +45,68 @@ function normalizeTeamName(value) {
 // Historical matches are served read-only from existing KV data and the app's CSV/ESPN fallbacks.
 
 export default {
-  // KV ücretsiz yazma kotası koruması: günlük otomatik arşiv yazımı duraklatıldı.
-  async scheduled() {
-    return;
+  // Daily TFF fixture sync: one KV write per run, keeping free-tier writes low.
+  async scheduled(event, env, ctx) {
+    if (!env.MAM_KV) return;
+    const now = new Date();
+    const fixtures = [];
+    const seen = new Set();
+    const decode = value => String(value || "")
+      .replace(/&nbsp;|&#160;/gi, " ")
+      .replace(/&amp;/gi, "&")
+      .replace(/&quot;/gi, '"')
+      .replace(/&#39;|&apos;/gi, "'")
+      .replace(/&uuml;/gi, "ü").replace(/&Uuml;/g, "Ü")
+      .replace(/&ouml;/gi, "ö").replace(/&Ouml;/g, "Ö")
+      .replace(/&ccedil;/gi, "ç").replace(/&Ccedil;/g, "Ç")
+      .replace(/&gbreve;/gi, "ğ").replace(/&Gbreve;/g, "Ğ")
+      .replace(/&scedil;/gi, "ş").replace(/&Scedil;/g, "Ş")
+      .replace(/&inodot;/gi, "ı").replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)));
+    const cleanTeam = value => decode(value).replace(/\s+/g, " ").replace(/\s*\.\s*/g, ".").trim();
+    for (let start = 1; start <= 34; start += 4) {
+      const batch = [];
+      for (let round = start; round < Math.min(start + 4, 35); round++) {
+        batch.push((async () => {
+          const response = await fetch("https://www.tff.org/Default.aspx?hafta=" + round + "&pageID=198", {
+            headers: { "Accept": "text/html", "User-Agent": "Mozilla/5.0 MaçAnalizMerkezi/1.0" }
+          });
+          if (!response.ok) throw new Error("TFF hafta " + round + " HTTP " + response.status);
+          const html = await response.text();
+          const text = decode(html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, " ")
+            .replace(/<[^>]+>/g, " ").replace(/\s+/g, " "));
+          const re = /(\d{2})\.(\d{2})\.(\d{4})\s+(\d{2}:\d{2})\s+(.+?)\s+-\s+(.+?)(?=\s+Detaylar|\s+\d{2}\.\d{2}\.\d{4}|$)/g;
+          let match;
+          while ((match = re.exec(text)) !== null) {
+            const [, day, month, year, time, homeRaw, awayRaw] = match;
+            const home = cleanTeam(homeRaw), away = cleanTeam(awayRaw);
+            if (!home || !away || home.length > 70 || away.length > 70) continue;
+            const iso = year + "-" + month + "-" + day + "T" + time + ":00+03:00";
+            const timestamp = Date.parse(iso);
+            if (!Number.isFinite(timestamp) || timestamp < now.getTime() - 3 * 60 * 60 * 1000) continue;
+            const id = "tff-" + year + month + day + "-" + normalizeTeamName(home) + "-" + normalizeTeamName(away);
+            if (seen.has(id)) continue;
+            seen.add(id);
+            fixtures.push({
+              fixture: { id, date: iso, status: { short: "NS", elapsed: null } },
+              league: { id: 203, name: "Trendyol Süper Lig", country: "Türkiye", round: round + ". Hafta" },
+              teams: { home: { id: null, name: home }, away: { id: null, name: away } },
+              goals: { home: null, away: null },
+              _source: "TFF"
+            });
+          }
+        })());
+      }
+      const results = await Promise.allSettled(batch);
+      if (results.some(result => result.status === "rejected")) {
+        // Do not replace a valid previous snapshot with a partial scrape.
+        throw new Error("TFF fikstür taramasında hafta hatası: " + results.filter(x => x.status === "rejected").map(x => x.reason?.message || "bilinmeyen hata").join("; "));
+      }
+    }
+    fixtures.sort((a, b) => Date.parse(a.fixture.date) - Date.parse(b.fixture.date));
+    if (fixtures.length < 9) throw new Error("TFF taramasında beklenen sayıda gelecek maç bulunamadı: " + fixtures.length);
+    const snapshot = { source: "TFF", season: "2026/2027", updatedAt: new Date().toISOString(), count: fixtures.length, fixtures };
+    await env.MAM_KV.put("superlig:fixtures:2026-27", JSON.stringify(snapshot));
+    await env.MAM_KV.put("superlig:fixtures:last-sync", JSON.stringify({ updatedAt: snapshot.updatedAt, count: fixtures.length, source: "TFF" }));
   },
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
@@ -122,6 +181,23 @@ export default {
       if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
         return new Response(JSON.stringify({ error: "Authentication required" }), {
           status: 401, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+        });
+      }
+
+      if (path === "superlig/fixtures") {
+        if (!env.MAM_KV) {
+          return new Response(JSON.stringify({ error: "MAM_KV KV binding is missing" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const snapshot = await env.MAM_KV.get("superlig:fixtures:2026-27", "json");
+        if (!snapshot || !Array.isArray(snapshot.fixtures)) {
+          return new Response(JSON.stringify({ error: "TFF fikstür senkronizasyonu henüz çalışmadı" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        return new Response(JSON.stringify(snapshot), {
+          status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "public, max-age=300" }
         });
       }
 
