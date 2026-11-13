@@ -41,11 +41,26 @@ function normalizeTeamName(value) {
     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
 }
 
+// Safe, additive D1 indexes: they speed up league/date archive reads and status checks.
+// CREATE INDEX IF NOT EXISTS leaves every existing match row untouched.
+async function ensureArchiveIndexes(env) {
+  if (!env.DB) return;
+  await env.DB.prepare(
+    "CREATE INDEX IF NOT EXISTS idx_matches_league_kickoff ON matches (league_id, kickoff)"
+  ).run();
+  await env.DB.prepare(
+    "CREATE INDEX IF NOT EXISTS idx_matches_status_kickoff ON matches (status, kickoff)"
+  ).run();
+  await env.DB.prepare(
+    "CREATE INDEX IF NOT EXISTS idx_matches_updated_at ON matches (updated_at)"
+  ).run();
+}
+
 // KV archive writes are intentionally disabled on the free tier.
 // Historical matches are served read-only from existing KV data and the app's CSV/ESPN fallbacks.
 
 
-async function syncEspnFixturesToD1(env, lookAheadDays = 6, maxRequests = 35) {
+async function syncEspnFixturesToD1(env, lookAheadDays = 14, maxRequests = 40) {
   if (!env.DB || !env.MAM_KV) return { saved: 0, failed: 0, complete: false, reason: "DB or MAM_KV binding missing" };
   // ESPN scoreboard coverage mirrors the app's supported ESPN fallback competitions.
   // Keep league IDs aligned with the app so every archived row is queryable by league.
@@ -243,8 +258,11 @@ export default {
     const isHourlySync = !isDailySync;
     if (env.DB) {
       try {
-        // Daily run leaves room for the 34 TFF fetches below; hourly runs have no TFF scrape.
-        await syncEspnFixturesToD1(env, isHourlySync ? 1 : 6, isHourlySync ? 40 : 10);
+        // Additive indexes improve archive queries without modifying or deleting stored matches.
+        await ensureArchiveIndexes(env);
+        // Keep a rolling 14-day window across all configured ESPN competitions.
+        // The 15-minute cron processes 40 league/date jobs per run to stay within free-tier limits.
+        await syncEspnFixturesToD1(env, 14, isHourlySync ? 40 : 10);
       } catch (archiveError) {
         console.log('ESPN D1 archive sync error', String(archiveError?.message || archiveError));
       }
