@@ -101,7 +101,6 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     ["4","uefa.euro","UEFA European Championship","Europe"],
     ["5","uefa.nations","UEFA Nations League","Europe"],
     ["6","caf.nations","Africa Cup of Nations","Africa"],
-    ["9","conmebol.copa_america","Copa América","South America"],
     ["15","fifa.cwc","FIFA Club World Cup","World"],
     ["307","ksa.1","Saudi Pro League","Saudi Arabia"]
   ];
@@ -260,7 +259,7 @@ export default {
       try {
         // Additive indexes improve archive queries without modifying or deleting stored matches.
         await ensureArchiveIndexes(env);
-        // Keep a rolling 14-day window across all configured ESPN competitions.
+        // Keep a rolling 45-day history plus 14 days of upcoming fixtures across configured ESPN competitions.
         // The 15-minute cron processes 40 league/date jobs per run to stay within free-tier limits.
         await syncEspnFixturesToD1(env, 45, 14, isHourlySync ? 40 : 10);
       } catch (archiveError) {
@@ -459,7 +458,7 @@ export default {
       // Read-only match archive and aggregate diagnostics are public.
       // Writes and all other private routes still require a signed-in session.
       const publicArchiveRead = request.method === "GET" &&
-        (path === "archive/d1-status" || path === "archive/matches");
+        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches");
       if (!publicArchiveRead) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
         if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
@@ -467,6 +466,29 @@ export default {
             status: 401, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
           });
         }
+      }
+
+      if (path === "archive/sync-status" && request.method === "GET") {
+        if (!env.MAM_KV) {
+          return new Response(JSON.stringify({ error: "MAM_KV KV binding is missing" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const state = await env.MAM_KV.get("mam:espn-sync-state:v2", "json");
+        const jobs = Array.isArray(state?.jobs) ? state.jobs.length : 0;
+        const cursor = Number(state?.cursor || 0);
+        return new Response(JSON.stringify({
+          ok: true,
+          active: jobs > 0 && cursor < jobs,
+          createdAt: state?.createdAt || null,
+          totalJobs: jobs,
+          processedJobs: Math.min(cursor, jobs),
+          remainingJobs: Math.max(0, jobs - cursor),
+          progressPercent: jobs ? Math.round(Math.min(cursor, jobs) / jobs * 1000) / 10 : 100,
+          note: jobs ? "ESPN archive backfill is in progress" : "No pending ESPN archive batch"
+        }), {
+          status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+        });
       }
 
       if (path === "archive/matches" && request.method === "GET") {
