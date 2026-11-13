@@ -564,11 +564,20 @@ export default {
             status: 503, headers: { ...cors, "Content-Type": "application/json" }
           });
         }
-        const total = await env.DB.prepare("SELECT COUNT(*) AS total FROM matches").first();
-        const bySource = await env.DB.prepare("SELECT source, COUNT(*) AS total FROM matches GROUP BY source ORDER BY source").all();
+        const [total, bySource, byLeague, byStatus, latest] = await Promise.all([
+          env.DB.prepare("SELECT COUNT(*) AS total FROM matches").first(),
+          env.DB.prepare("SELECT source, COUNT(*) AS total FROM matches GROUP BY source ORDER BY source").all(),
+          env.DB.prepare("SELECT league_id AS leagueId, league_name AS leagueName, country, COUNT(*) AS total, SUM(CASE WHEN status IN ('LIVE','1H','2H','HT','ET','P','INT') THEN 1 ELSE 0 END) AS live, SUM(CASE WHEN status IN ('FT','AET','PEN') AND home_goals IS NOT NULL AND away_goals IS NOT NULL THEN 1 ELSE 0 END) AS finished FROM matches GROUP BY league_id, league_name, country ORDER BY total DESC LIMIT 100").all(),
+          env.DB.prepare("SELECT status, COUNT(*) AS total FROM matches GROUP BY status ORDER BY total DESC").all(),
+          env.DB.prepare("SELECT MAX(updated_at) AS lastUpdated FROM matches").first()
+        ]);
         return new Response(JSON.stringify({
-          ok: true, total: Number(total?.total || 0),
-          sources: Array.isArray(bySource?.results) ? bySource.results : []
+          ok: true,
+          total: Number(total?.total || 0),
+          lastUpdated: latest?.lastUpdated || null,
+          sources: Array.isArray(bySource?.results) ? bySource.results : [],
+          leagues: Array.isArray(byLeague?.results) ? byLeague.results : [],
+          statuses: Array.isArray(byStatus?.results) ? byStatus.results : []
         }), {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
         });
