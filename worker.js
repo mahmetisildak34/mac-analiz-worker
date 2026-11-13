@@ -106,7 +106,6 @@ export default {
     if (fixtures.length < 9) throw new Error("TFF taramasında beklenen sayıda gelecek maç bulunamadı: " + fixtures.length);
     const snapshot = { source: "TFF", season: "2026/2027", updatedAt: new Date().toISOString(), count: fixtures.length, fixtures };
     await env.MAM_KV.put("superlig:fixtures:2026-27", JSON.stringify(snapshot));
-    await env.MAM_KV.put("superlig:fixtures:last-sync", JSON.stringify({ updatedAt: snapshot.updatedAt, count: fixtures.length, source: "TFF" }));
   },
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
