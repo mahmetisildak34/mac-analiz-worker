@@ -64,16 +64,17 @@ export default {
       .replace(/&inodot;/gi, "ı").replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)));
     const cleanTeam = value => {
       const raw = decode(value).replace(/\s+/g, " ").replace(/\s*\.\s*/g, ".").trim();
-      const key = normalizeTeamName(raw).replace(/-as$/, "");
+      const key = normalizeTeamName(raw).replace(/-a-s$/, "").replace(/-as$/, "");
       const aliases = {
-        "galatasaray-as": "Galatasaray", "fenerbahce-as": "Fenerbahçe",
-        "besiktas-as": "Beşiktaş", "samsunspor-as": "Samsunspor",
-        "kasimpasa-as": "Kasımpaşa", "trabzonspor-as": "Trabzonspor",
+        "galatasaray": "Galatasaray", "fenerbahce": "Fenerbahçe",
+        "besiktas": "Beşiktaş", "samsunspor": "Samsunspor",
+        "kasimpasa": "Kasımpaşa", "trabzonspor": "Trabzonspor",
         "genclerbirligi": "Gençlerbirliği", "tumosankonyaspor": "Konyaspor",
-        "corendon-alanyaspor": "Alanyaspor", "caykurrizespor-as": "Çaykur Rizespor",
-        "gaziantepfutbolkulubu-as": "Gaziantep FK", "amed sportif faaliyetler": "Amedspor",
-        "amedsportiffaaliyetler": "Amedspor", "arcacorumfk": "Çorum FK",
-        "erzurumspor-fk": "Erzurum BB", "istanbul-basaksehir-fk": "Başakşehir"
+        "corendon-alanyaspor": "Alanyaspor", "caykur-rizespor": "Çaykur Rizespor",
+        "gaziantep-futbol-kulubu": "Gaziantep FK", "amed-sportif-faaliyetler": "Amedspor",
+        "arca-corum-fk": "Çorum FK", "erzurumspor-fk": "Erzurum BB",
+        "istanbul-basaksehir-fk": "Başakşehir", "goztepe": "Göztepe",
+        "eyupspor": "Eyüpspor", "kocaelispor": "Kocaelispor"
       };
       return aliases[key] || raw.replace(/\s+A\.Ş\.$/i, "").trim();
     };
