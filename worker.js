@@ -44,9 +44,92 @@ function normalizeTeamName(value) {
 // KV archive writes are intentionally disabled on the free tier.
 // Historical matches are served read-only from existing KV data and the app's CSV/ESPN fallbacks.
 
+
+async function syncEspnFixturesToD1(env) {
+  if (!env.DB) return { saved: 0, failed: 0 };
+  const leagues = [
+    ["39","eng.1","Premier League","England"],["140","esp.1","La Liga","Spain"],
+    ["143","esp.copa_del_rey","Copa del Rey","Spain"],["78","ger.1","Bundesliga","Germany"],
+    ["135","ita.1","Serie A","Italy"],["61","fra.1","Ligue 1","France"],
+    ["2","uefa.champions","UEFA Champions League","Europe"],["3","uefa.europa","UEFA Europa League","Europe"],
+    ["848","uefa.europa.conf","UEFA Conference League","Europe"],["94","por.1","Primeira Liga","Portugal"],
+    ["88","ned.1","Eredivisie","Netherlands"],["144","bel.1","Belgian Pro League","Belgium"],
+    ["203","tur.1","Süper Lig","Türkiye"],["179","sco.1","Scottish Premiership","Scotland"],
+    ["253","usa.1","MLS","USA"],["71","bra.1","Brasileirão","Brazil"],
+    ["128","arg.1","Liga Profesional","Argentina"],["262","mex.1","Liga MX","Mexico"],
+    ["98","jpn.1","J1 League","Japan"],["188","aus.1","A-League","Australia"],
+    ["169","chn.1","Chinese Super League","China"]
+  ];
+  const dates = [];
+  const base = new Date();
+  base.setUTCHours(12, 0, 0, 0);
+  for (let offset = -1; offset <= 6; offset++) {
+    const d = new Date(base);
+    d.setUTCDate(d.getUTCDate() + offset);
+    dates.push(d.toISOString().slice(0, 10).replace(/-/g, ""));
+  }
+  const jobs = [];
+  for (const league of leagues) for (const date of dates) jobs.push({ league, date });
+  const rows = [];
+  let failed = 0;
+  let cursor = 0;
+  const worker = async () => {
+    while (cursor < jobs.length) {
+      const job = jobs[cursor++];
+      const [leagueId, slug, leagueName, country] = job.league;
+      try {
+        const response = await fetch("https://site.api.espn.com/apis/site/v2/sports/soccer/" + slug + "/scoreboard?dates=" + job.date + "&limit=500", { headers: { "Accept": "application/json" } });
+        if (!response.ok) throw new Error("ESPN HTTP " + response.status);
+        const payload = await response.json();
+        for (const event of (Array.isArray(payload.events) ? payload.events : [])) {
+          const competition = (event.competitions || [])[0] || {};
+          const competitors = competition.competitors || [];
+          const home = competitors.find(x => x.homeAway === "home") || {};
+          const away = competitors.find(x => x.homeAway === "away") || {};
+          const homeName = String(home.team?.displayName || home.team?.name || "").trim();
+          const awayName = String(away.team?.displayName || away.team?.name || "").trim();
+          if (!homeName || !awayName || !event.id || !event.date) continue;
+          const type = event.status?.type || competition.status?.type || {};
+          const state = String(type.state || "").toLowerCase();
+          const status = type.completed === true || state === "post" ? "FT" : (state === "in" || state === "live") ? "LIVE" : "NS";
+          const score = value => value == null || value === "" ? null : (Number.isFinite(Number(value)) ? Number(value) : null);
+          rows.push({
+            source: "ESPN", fixtureId: "espn-" + slug + "-" + String(event.id),
+            leagueId, leagueName, country, kickoff: String(event.date), status,
+            homeId: home.team?.id == null ? null : String(home.team.id), homeName,
+            awayId: away.team?.id == null ? null : String(away.team.id), awayName,
+            homeGoals: score(home.score), awayGoals: score(away.score), raw: JSON.stringify(event)
+          });
+        }
+      } catch (error) {
+        failed++;
+        console.log("ESPN archive sync failed", slug, job.date, String(error?.message || error));
+      }
+    }
+  };
+  await Promise.all(Array.from({ length: 6 }, worker));
+  if (!rows.length) return { saved: 0, failed };
+  const sql = "INSERT INTO matches (source, fixture_id, league_id, league_name, country, kickoff, status, home_team_id, home_team, away_team_id, away_team, home_goals, away_goals, statistics_json, raw_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(source, fixture_id) DO UPDATE SET league_id=excluded.league_id, league_name=excluded.league_name, country=excluded.country, kickoff=excluded.kickoff, status=excluded.status, home_team_id=excluded.home_team_id, home_team=excluded.home_team, away_team_id=excluded.away_team_id, away_team=excluded.away_team, home_goals=excluded.home_goals, away_goals=excluded.away_goals, raw_json=excluded.raw_json, updated_at=CURRENT_TIMESTAMP";
+  let saved = 0;
+  for (let i = 0; i < rows.length; i += 50) {
+    const statements = rows.slice(i, i + 50).map(m => env.DB.prepare(sql).bind(
+      m.source, m.fixtureId, m.leagueId, m.leagueName, m.country, m.kickoff, m.status,
+      m.homeId, m.homeName, m.awayId, m.awayName, m.homeGoals, m.awayGoals, null, m.raw
+    ));
+    const result = await env.DB.batch(statements);
+    saved += result.reduce((sum, item) => sum + (Number(item?.meta?.changes) || 0), 0);
+  }
+  console.log("ESPN D1 archive sync complete", { saved, failed, leagues: leagues.length, dates: dates.length });
+  return { saved, failed };
+}
+
 export default {
   // Daily TFF fixture sync: one KV write per run, keeping free-tier writes low.
   async scheduled(event, env, ctx) {
+    if (env.DB) {
+      try { await syncEspnFixturesToD1(env); }
+      catch (archiveError) { console.log('ESPN D1 archive sync error', String(archiveError?.message || archiveError)); }
+    }
     if (!env.MAM_KV) return;
     const now = new Date();
     const fixtures = [];
