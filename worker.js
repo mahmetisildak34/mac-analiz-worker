@@ -181,10 +181,12 @@ export default {
       const path = url.pathname.replace(/^\/api\//, "");
 
       const isESPN = path.startsWith("espn/");
+      const isFixtureDownload = path.startsWith("fixturesdownload/");
       const validESPNPath = /^espn\/[a-zA-Z0-9._-]+\/(?:scoreboard|summary|standings|teams|teams\/[0-9]+\/schedule)$/.test(path) && ( !path.endsWith("/summary") || /^\d+$/.test(url.searchParams.get("event") || "") );
+      const validFixtureDownloadPath = /^fixturesdownload\/(?:champions-league|europa-league|conference-league)-20(?:24|25|26)$/.test(path);
       const validStandardPath = /^[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)*$/.test(path);
 
-      if (!(isESPN ? validESPNPath : validStandardPath)) {
+      if (!(isESPN ? validESPNPath : isFixtureDownload ? validFixtureDownloadPath : validStandardPath)) {
         return new Response("Invalid API path", {
           status: 400,
           headers: cors
@@ -280,9 +282,11 @@ export default {
         ? path.slice("espn/".length)
         : isFootballData
           ? path.slice("football-data/".length)
-          : path;
+          : isFixtureDownload
+            ? path.slice("fixturesdownload/".length)
+            : path;
 
-      const apiKey = isESPN
+      const apiKey = isESPN || isFixtureDownload
         ? null
         : isFootballData
           ? env.FOOTBALLDATA_API_KEY
@@ -300,7 +304,7 @@ export default {
       }
 
       const isESPNStandings = isESPN && apiPath.endsWith("/standings");
-      const base = isESPNStandings ? "https://site.api.espn.com/apis/v2/sports/soccer" : isESPN ? ESPN_BASE : isFootballData ? FOOTBALLDATA_BASE : API_BASE;
+      const base = isFixtureDownload ? "https://fixturedownload.com/feed/json" : isESPNStandings ? "https://site.api.espn.com/apis/v2/sports/soccer" : isESPN ? ESPN_BASE : isFootballData ? FOOTBALLDATA_BASE : API_BASE;
       const targetUrl = base + "/" + apiPath + url.search;
       const isStandings = /(^|\/)standings$/.test(apiPath);
       const isLive = url.searchParams.get("live") === "all";
