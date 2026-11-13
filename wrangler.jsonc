@@ -12,6 +12,13 @@
       "id": "4de80ce8f698470e833d9773d6724b94"
     }
   ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "mac-analiz-arsiv",
+      "database_id": "b3103550-8f93-4109-8a24-e0095c49e666"
+    }
+  ],
   "triggers": {
     "crons": ["0 3 * * *"]
   }
