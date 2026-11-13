@@ -47,18 +47,48 @@ function normalizeTeamName(value) {
 
 async function syncEspnFixturesToD1(env, lookAheadDays = 6, maxRequests = 35) {
   if (!env.DB || !env.MAM_KV) return { saved: 0, failed: 0, complete: false, reason: "DB or MAM_KV binding missing" };
+  // ESPN scoreboard coverage mirrors the app's supported ESPN fallback competitions.
+  // Keep league IDs aligned with the app so every archived row is queryable by league.
   const leagues = [
-    ["39","eng.1","Premier League","England"],["140","esp.1","La Liga","Spain"],
-    ["143","esp.copa_del_rey","Copa del Rey","Spain"],["78","ger.1","Bundesliga","Germany"],
-    ["135","ita.1","Serie A","Italy"],["61","fra.1","Ligue 1","France"],
-    ["2","uefa.champions","UEFA Champions League","Europe"],["3","uefa.europa","UEFA Europa League","Europe"],
-    ["848","uefa.europa.conf","UEFA Conference League","Europe"],["94","por.1","Primeira Liga","Portugal"],
-    ["88","ned.1","Eredivisie","Netherlands"],["144","bel.1","Belgian Pro League","Belgium"],
-    ["203","tur.1","Süper Lig","Türkiye"],["179","sco.1","Scottish Premiership","Scotland"],
-    ["253","usa.1","MLS","USA"],["71","bra.1","Brasileirão","Brazil"],
-    ["128","arg.1","Liga Profesional","Argentina"],["262","mex.1","Liga MX","Mexico"],
-    ["98","jpn.1","J1 League","Japan"],["188","aus.1","A-League","Australia"],
-    ["169","chn.1","Chinese Super League","China"]
+    ["39","eng.1","Premier League","England"],
+    ["40","eng.2","Championship","England"],
+    ["45","eng.fa","FA Cup","England"],
+    ["48","eng.league_cup","EFL Cup","England"],
+    ["140","esp.1","La Liga","Spain"],
+    ["141","esp.2","La Liga 2","Spain"],
+    ["143","esp.copa_del_rey","Copa del Rey","Spain"],
+    ["78","ger.1","Bundesliga","Germany"],
+    ["79","ger.2","2. Bundesliga","Germany"],
+    ["81","ger.dfb_pokal","DFB Pokal","Germany"],
+    ["135","ita.1","Serie A","Italy"],
+    ["136","ita.2","Serie B","Italy"],
+    ["137","ita.coppa_italia","Coppa Italia","Italy"],
+    ["61","fra.1","Ligue 1","France"],
+    ["62","fra.2","Ligue 2","France"],
+    ["66","fra.coupe_de_france","Coupe de France","France"],
+    ["2","uefa.champions","UEFA Champions League","Europe"],
+    ["3","uefa.europa","UEFA Europa League","Europe"],
+    ["848","uefa.europa.conf","UEFA Conference League","Europe"],
+    ["94","por.1","Primeira Liga","Portugal"],
+    ["88","ned.1","Eredivisie","Netherlands"],
+    ["144","bel.1","Belgian Pro League","Belgium"],
+    ["203","tur.1","Süper Lig","Türkiye"],
+    ["204","tur.2","1. Lig","Türkiye"],
+    ["179","sco.1","Scottish Premiership","Scotland"],
+    ["253","usa.1","MLS","USA"],
+    ["71","bra.1","Brasileirão","Brazil"],
+    ["128","arg.1","Liga Profesional","Argentina"],
+    ["262","mex.1","Liga MX","Mexico"],
+    ["98","jpn.1","J1 League","Japan"],
+    ["188","aus.1","A-League","Australia"],
+    ["169","chn.1","Chinese Super League","China"],
+    ["1","fifa.world","FIFA World Cup","World"],
+    ["4","uefa.euro","UEFA European Championship","Europe"],
+    ["5","uefa.nations","UEFA Nations League","Europe"],
+    ["6","caf.nations","Africa Cup of Nations","Africa"],
+    ["9","conmebol.copa_america","Copa América","South America"],
+    ["15","fifa.cwc","FIFA Club World Cup","World"],
+    ["307","ksa.1","Saudi Pro League","Saudi Arabia"]
   ];
 
   const stateKey = "mam:espn-sync-state:v1";
