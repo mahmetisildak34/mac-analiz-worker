@@ -45,8 +45,8 @@ function normalizeTeamName(value) {
 // Historical matches are served read-only from existing KV data and the app's CSV/ESPN fallbacks.
 
 
-async function syncEspnFixturesToD1(env, lookAheadDays = 6) {
-  if (!env.DB) return { saved: 0, failed: 0 };
+async function syncEspnFixturesToD1(env, lookAheadDays = 6, maxRequests = 35) {
+  if (!env.DB || !env.MAM_KV) return { saved: 0, failed: 0, complete: false, reason: "DB or MAM_KV binding missing" };
   const leagues = [
     ["39","eng.1","Premier League","England"],["140","esp.1","La Liga","Spain"],
     ["143","esp.copa_del_rey","Copa del Rey","Spain"],["78","ger.1","Bundesliga","Germany"],
@@ -60,55 +60,69 @@ async function syncEspnFixturesToD1(env, lookAheadDays = 6) {
     ["98","jpn.1","J1 League","Japan"],["188","aus.1","A-League","Australia"],
     ["169","chn.1","Chinese Super League","China"]
   ];
-  const dates = [];
-  const base = new Date();
-  base.setUTCHours(12, 0, 0, 0);
-  for (let offset = -1; offset <= lookAheadDays; offset++) {
-    const d = new Date(base);
-    d.setUTCDate(d.getUTCDate() + offset);
-    dates.push(d.toISOString().slice(0, 10).replace(/-/g, ""));
+
+  const stateKey = "mam:espn-sync-state:v1";
+  let state = await env.MAM_KV.get(stateKey, "json");
+  if (!state || !Array.isArray(state.jobs) || !Number.isInteger(state.cursor) || state.cursor >= state.jobs.length) {
+    const dates = [];
+    const base = new Date();
+    base.setUTCHours(12, 0, 0, 0);
+    for (let offset = -1; offset <= lookAheadDays; offset++) {
+      const d = new Date(base);
+      d.setUTCDate(d.getUTCDate() + offset);
+      dates.push(d.toISOString().slice(0, 10).replace(/-/g, ""));
+    }
+    const jobs = [];
+    for (const league of leagues) for (const date of dates) jobs.push({ league, date, attempts: 0 });
+    state = { version: 1, jobs, cursor: 0, createdAt: new Date().toISOString() };
   }
-  const jobs = [];
-  for (const league of leagues) for (const date of dates) jobs.push({ league, date });
+
+  const batch = state.jobs.slice(state.cursor, state.cursor + Math.max(1, Math.min(40, maxRequests)));
   const rows = [];
+  const retryJobs = [];
   let failed = 0;
-  let cursor = 0;
-  const worker = async () => {
-    while (cursor < jobs.length) {
-      const job = jobs[cursor++];
-      const [leagueId, slug, leagueName, country] = job.league;
-      try {
-        const response = await fetch("https://site.api.espn.com/apis/site/v2/sports/soccer/" + slug + "/scoreboard?dates=" + job.date + "&limit=500", { headers: { "Accept": "application/json" } });
-        if (!response.ok) throw new Error("ESPN HTTP " + response.status);
-        const payload = await response.json();
-        for (const event of (Array.isArray(payload.events) ? payload.events : [])) {
-          const competition = (event.competitions || [])[0] || {};
-          const competitors = competition.competitors || [];
-          const home = competitors.find(x => x.homeAway === "home") || {};
-          const away = competitors.find(x => x.homeAway === "away") || {};
-          const homeName = String(home.team?.displayName || home.team?.name || "").trim();
-          const awayName = String(away.team?.displayName || away.team?.name || "").trim();
-          if (!homeName || !awayName || !event.id || !event.date) continue;
-          const type = event.status?.type || competition.status?.type || {};
-          const state = String(type.state || "").toLowerCase();
-          const status = type.completed === true || state === "post" ? "FT" : (state === "in" || state === "live") ? "LIVE" : "NS";
-          const score = value => value == null || value === "" ? null : (Number.isFinite(Number(value)) ? Number(value) : null);
-          rows.push({
-            source: "ESPN", fixtureId: "espn-" + slug + "-" + String(event.id),
-            leagueId, leagueName, country, kickoff: String(event.date), status,
-            homeId: home.team?.id == null ? null : String(home.team.id), homeName,
-            awayId: away.team?.id == null ? null : String(away.team.id), awayName,
-            homeGoals: score(home.score), awayGoals: score(away.score), raw: JSON.stringify(event)
-          });
-        }
-      } catch (error) {
-        failed++;
-        console.log("ESPN archive sync failed", slug, job.date, String(error?.message || error));
+
+  const fetchJob = async job => {
+    const [leagueId, slug, leagueName, country] = job.league;
+    try {
+      const response = await fetch(ESPN_BASE + "/" + slug + "/scoreboard?dates=" + job.date + "&limit=500", {
+        headers: { "Accept": "application/json" }
+      });
+      if (!response.ok) throw new Error("ESPN HTTP " + response.status);
+      const payload = await response.json();
+      for (const event of (Array.isArray(payload.events) ? payload.events : [])) {
+        const competition = (event.competitions || [])[0] || {};
+        const competitors = competition.competitors || [];
+        const home = competitors.find(x => x.homeAway === "home") || {};
+        const away = competitors.find(x => x.homeAway === "away") || {};
+        const homeName = String(home.team?.displayName || home.team?.name || "").trim();
+        const awayName = String(away.team?.displayName || away.team?.name || "").trim();
+        if (!homeName || !awayName || !event.id || !event.date) continue;
+        const type = event.status?.type || competition.status?.type || {};
+        const stateName = String(type.state || "").toLowerCase();
+        const status = type.completed === true || stateName === "post" ? "FT" : (stateName === "in" || stateName === "live") ? "LIVE" : "NS";
+        const score = value => value == null || value === "" ? null : (Number.isFinite(Number(value)) ? Number(value) : null);
+        rows.push({
+          source: "ESPN", fixtureId: "espn-" + slug + "-" + String(event.id),
+          leagueId, leagueName, country, kickoff: String(event.date), status,
+          homeId: home.team?.id == null ? null : String(home.team.id), homeName,
+          awayId: away.team?.id == null ? null : String(away.team.id), awayName,
+          homeGoals: score(home.score), awayGoals: score(away.score), raw: JSON.stringify(event)
+        });
       }
+    } catch (error) {
+      failed++;
+      const attempts = Number(job.attempts || 0);
+      if (attempts < 2) retryJobs.push({ ...job, attempts: attempts + 1 });
+      console.log("ESPN archive sync failed", slug, job.date, String(error?.message || error), "attempt", attempts + 1);
     }
   };
-  await Promise.all(Array.from({ length: 6 }, worker));
-  if (!rows.length) return { saved: 0, failed };
+
+  // Small concurrent groups keep the invocation comfortably below the Workers subrequest ceiling.
+  for (let i = 0; i < batch.length; i += 4) {
+    await Promise.all(batch.slice(i, i + 4).map(fetchJob));
+  }
+
   const sql = "INSERT INTO matches (source, fixture_id, league_id, league_name, country, kickoff, status, home_team_id, home_team, away_team_id, away_team, home_goals, away_goals, statistics_json, raw_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(source, fixture_id) DO UPDATE SET league_id=excluded.league_id, league_name=excluded.league_name, country=excluded.country, kickoff=excluded.kickoff, status=excluded.status, home_team_id=excluded.home_team_id, home_team=excluded.home_team, away_team_id=excluded.away_team_id, away_team=excluded.away_team, home_goals=excluded.home_goals, away_goals=excluded.away_goals, raw_json=excluded.raw_json, updated_at=CURRENT_TIMESTAMP";
   let saved = 0;
   for (let i = 0; i < rows.length; i += 50) {
@@ -119,17 +133,35 @@ async function syncEspnFixturesToD1(env, lookAheadDays = 6) {
     const result = await env.DB.batch(statements);
     saved += result.reduce((sum, item) => sum + (Number(item?.meta?.changes) || 0), 0);
   }
-  console.log("ESPN D1 archive sync complete", { saved, failed, leagues: leagues.length, dates: dates.length });
-  return { saved, failed };
+
+  state.cursor += batch.length;
+  if (retryJobs.length) state.jobs.push(...retryJobs);
+  const complete = state.cursor >= state.jobs.length;
+  if (complete) {
+    await env.MAM_KV.delete(stateKey);
+  } else {
+    await env.MAM_KV.put(stateKey, JSON.stringify(state));
+  }
+  console.log("ESPN D1 archive sync batch", {
+    saved, failed, processed: batch.length, totalJobs: state.jobs.length,
+    nextCursor: complete ? null : state.cursor, complete, retryQueued: retryJobs.length
+  });
+  if (complete) console.log("ESPN D1 archive sync complete", { saved, failed, leagues: leagues.length });
+  return { saved, failed, complete, processed: batch.length, nextCursor: complete ? null : state.cursor };
 }
 
 export default {
   // Daily TFF fixture sync: one KV write per run, keeping free-tier writes low.
   async scheduled(event, env, ctx) {
-    const isHourlySync = event?.cron === '0 * * * *' && new Date(event.scheduledTime).getUTCHours() !== 3;
+    const isDailySync = event?.cron === '0 3 * * *';
+    const isHourlySync = !isDailySync;
     if (env.DB) {
-      try { await syncEspnFixturesToD1(env, isHourlySync ? 1 : 6); }
-      catch (archiveError) { console.log('ESPN D1 archive sync error', String(archiveError?.message || archiveError)); }
+      try {
+        // Daily run leaves room for the 34 TFF fetches below; hourly runs have no TFF scrape.
+        await syncEspnFixturesToD1(env, isHourlySync ? 1 : 6, isHourlySync ? 35 : 10);
+      } catch (archiveError) {
+        console.log('ESPN D1 archive sync error', String(archiveError?.message || archiveError));
+      }
     }
     if (isHourlySync || !env.MAM_KV) return;
     const now = new Date();
