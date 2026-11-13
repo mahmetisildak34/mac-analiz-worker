@@ -427,7 +427,7 @@ export default {
       // Allow browser access without a session so archive health can be verified.
       const publicArchiveStatus = path === "archive/d1-status" && request.method === "GET";
       if (!publicArchiveStatus) {
-        const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\\s+/i, "") || "";
+        const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
         if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
           return new Response(JSON.stringify({ error: "Authentication required" }), {
             status: 401, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
