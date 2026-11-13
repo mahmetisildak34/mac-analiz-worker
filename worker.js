@@ -389,12 +389,16 @@ export default {
 
     const requestUrl = new URL(request.url);
     // Friendly root response: opening the Worker base URL should not produce "Invalid API path".
-    if (request.method === "GET" && requestUrl.pathname === "/") {
+    if (request.method === "GET" &&
+        (!requestUrl.pathname.startsWith("/api/") ||
+         requestUrl.pathname === "/api" ||
+         requestUrl.pathname === "/api/")) {
       return new Response(JSON.stringify({
         ok: true,
         service: "Maç Analiz Merkezi Worker",
+        requestPath: requestUrl.pathname,
         endpoints: ["/api/archive/d1-status", "/api/archive/matches?league=39&before=2026-11-13&limit=50"],
-        note: "Match reads are public; archive writes still require a valid session."
+        note: "Worker is online. Read-only archive endpoints are public; archive writes still require a valid session."
       }), { status: 200, headers });
     }
 
