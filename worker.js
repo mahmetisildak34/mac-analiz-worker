@@ -183,7 +183,7 @@ export default {
       const isESPN = path.startsWith("espn/");
       const isFixtureDownload = path.startsWith("fixturesdownload/");
       const validESPNPath = /^espn\/[a-zA-Z0-9._-]+\/(?:scoreboard|summary|standings|teams|teams\/[0-9]+\/schedule)$/.test(path) && ( !path.endsWith("/summary") || /^\d+$/.test(url.searchParams.get("event") || "") );
-      const validFixtureDownloadPath = /^fixturesdownload\/(?:champions-league|europa-league|conference-league)-20(?:24|25|26)$/.test(path);
+      const validFixtureDownloadPath = /^fixturesdownload\/(?:champions-league|europa-league|conference-league)-20(?:24|25|26|27)$/.test(path);
       const validStandardPath = /^[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)*$/.test(path);
 
       if (!(isESPN ? validESPNPath : isFixtureDownload ? validFixtureDownloadPath : validStandardPath)) {
