@@ -120,6 +120,31 @@ export default {
     fixtures.sort((a, b) => Date.parse(a.fixture.date) - Date.parse(b.fixture.date));
     if (fixtures.length < 9) throw new Error("TFF taramasında beklenen sayıda gelecek maç bulunamadı: " + fixtures.length);
     const snapshot = { source: "TFF", season: "2026/2027", updatedAt: new Date().toISOString(), count: fixtures.length, fixtures };
+    // D1 kalıcı fikstür arşivi: mevcut KV snapshot'ını koruyarak aynı maçları güvenli biçimde güncelle.
+    if (env.DB) {
+      try {
+        const sql = `INSERT INTO matches
+          (source, fixture_id, league_id, league_name, country, kickoff, status,
+           home_team_id, home_team, away_team_id, away_team, home_goals, away_goals,
+           statistics_json, raw_json)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          ON CONFLICT(source, fixture_id) DO UPDATE SET
+           league_id=excluded.league_id, league_name=excluded.league_name,
+           country=excluded.country, kickoff=excluded.kickoff, status=excluded.status,
+           home_team=excluded.home_team, away_team=excluded.away_team,
+           raw_json=excluded.raw_json, updated_at=CURRENT_TIMESTAMP`;
+        const statements = fixtures.map(m => env.DB.prepare(sql).bind(
+          "TFF", String(m.fixture.id), "203", "Trendyol Süper Lig", "Türkiye",
+          String(m.fixture.date), "NS", null, String(m.teams.home.name), null,
+          String(m.teams.away.name), null, null, null, JSON.stringify(m)
+        ));
+        for (let i = 0; i < statements.length; i += 50) {
+          await env.DB.batch(statements.slice(i, i + 50));
+        }
+      } catch (d1Error) {
+        // D1 geçici hata verse bile mevcut TFF KV fikstür servisi çalışmaya devam etsin.
+      }
+    }
     await env.MAM_KV.put("superlig:fixtures:2026-27", JSON.stringify(snapshot));
   },
   async fetch(request, env) {
@@ -161,7 +186,7 @@ export default {
       return new Response(null, { status: 204, headers: cors });
     }
 
-    if (request.method !== "GET" && !(request.method === "POST" && url.pathname === "/api/archive/matches")) {
+    if (request.method !== "GET" && !(request.method === "POST" && new URL(request.url).pathname === "/api/archive/matches")) {
       return new Response(JSON.stringify({ error: "Method not allowed" }), {
         status: 405,
         headers: { ...cors, "Content-Type": "application/json" }
