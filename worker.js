@@ -80,6 +80,9 @@ async function syncEspnFixturesToD1(env, lookAheadDays = 6, maxRequests = 35) {
   const batch = state.jobs.slice(state.cursor, state.cursor + Math.max(1, Math.min(40, maxRequests)));
   const rows = [];
   const retryJobs = [];
+  const summaryQueueKey = "mam:espn-summary-queue:v1";
+  let summaryQueue = await env.MAM_KV.get(summaryQueueKey, "json");
+  if (!Array.isArray(summaryQueue)) summaryQueue = [];
   let failed = 0;
 
   const fetchJob = async job => {
@@ -101,14 +104,21 @@ async function syncEspnFixturesToD1(env, lookAheadDays = 6, maxRequests = 35) {
         const type = event.status?.type || competition.status?.type || {};
         const stateName = String(type.state || "").toLowerCase();
         const status = type.completed === true || stateName === "post" ? "FT" : (stateName === "in" || stateName === "live") ? "LIVE" : "NS";
+        const fixtureId = "espn-" + slug + "-" + String(event.id);
         const score = value => value == null || value === "" ? null : (Number.isFinite(Number(value)) ? Number(value) : null);
         rows.push({
-          source: "ESPN", fixtureId: "espn-" + slug + "-" + String(event.id),
+          source: "ESPN", fixtureId,
           leagueId, leagueName, country, kickoff: String(event.date), status,
           homeId: home.team?.id == null ? null : String(home.team.id), homeName,
           awayId: away.team?.id == null ? null : String(away.team.id), awayName,
           homeGoals: score(home.score), awayGoals: score(away.score), raw: JSON.stringify(event)
         });
+        if (status === "LIVE" || status === "FT") {
+          const key = "ESPN:" + fixtureId;
+          if (!summaryQueue.some(item => item.key === key)) {
+            summaryQueue.push({ key, slug, fixtureId, eventId: String(event.id), attempts: 0 });
+          }
+        }
       }
     } catch (error) {
       failed++;
@@ -134,6 +144,41 @@ async function syncEspnFixturesToD1(env, lookAheadDays = 6, maxRequests = 35) {
     saved += result.reduce((sum, item) => sum + (Number(item?.meta?.changes) || 0), 0);
   }
 
+  // Fetch detailed box-score statistics for live and completed matches in small batches.
+  // Scoreboard sync remains the source of truth for status and goals; summaries enrich statistics_json.
+  const summaryBatch = summaryQueue.splice(0, 8);
+  const summaryRetries = [];
+  for (let i = 0; i < summaryBatch.length; i += 4) {
+    await Promise.all(summaryBatch.slice(i, i + 4).map(async item => {
+      try {
+        const response = await fetch(ESPN_BASE + "/" + item.slug + "/summary?event=" + encodeURIComponent(item.eventId), {
+          headers: { "Accept": "application/json" }
+        });
+        if (!response.ok) throw new Error("ESPN summary HTTP " + response.status);
+        const payload = await response.json();
+        const teams = Array.isArray(payload?.boxscore?.teams) ? payload.boxscore.teams : [];
+        const statistics = teams.map(team => ({
+          homeAway: team.homeAway || null,
+          team: team.team?.displayName || team.team?.name || null,
+          statistics: Array.isArray(team.statistics) ? team.statistics : []
+        }));
+        if (statistics.length) {
+          await env.DB.prepare(
+            "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ?"
+          ).bind(JSON.stringify({ teams: statistics, summaryAvailable: true }), item.fixtureId).run();
+        } else if (Number(item.attempts || 0) < 1) {
+          summaryRetries.push({ ...item, attempts: Number(item.attempts || 0) + 1 });
+        }
+      } catch (error) {
+        if (Number(item.attempts || 0) < 1) summaryRetries.push({ ...item, attempts: Number(item.attempts || 0) + 1 });
+        console.log("ESPN match statistics sync failed", item.fixtureId, String(error?.message || error));
+      }
+    }));
+  }
+  if (summaryRetries.length) summaryQueue.push(...summaryRetries);
+  if (summaryQueue.length > 500) summaryQueue = summaryQueue.slice(-500);
+  await env.MAM_KV.put(summaryQueueKey, JSON.stringify(summaryQueue));
+
   state.cursor += batch.length;
   if (retryJobs.length) state.jobs.push(...retryJobs);
   const complete = state.cursor >= state.jobs.length;
@@ -144,7 +189,8 @@ async function syncEspnFixturesToD1(env, lookAheadDays = 6, maxRequests = 35) {
   }
   console.log("ESPN D1 archive sync batch", {
     saved, failed, processed: batch.length, totalJobs: state.jobs.length,
-    nextCursor: complete ? null : state.cursor, complete, retryQueued: retryJobs.length
+    nextCursor: complete ? null : state.cursor, complete, retryQueued: retryJobs.length,
+    summariesProcessed: summaryBatch.length, summariesPending: summaryQueue.length
   });
   if (complete) console.log("ESPN D1 archive sync complete", { saved, failed, leagues: leagues.length });
   return { saved, failed, complete, processed: batch.length, nextCursor: complete ? null : state.cursor };
