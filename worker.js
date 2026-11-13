@@ -62,7 +62,21 @@ export default {
       .replace(/&gbreve;/gi, "ğ").replace(/&Gbreve;/g, "Ğ")
       .replace(/&scedil;/gi, "ş").replace(/&Scedil;/g, "Ş")
       .replace(/&inodot;/gi, "ı").replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)));
-    const cleanTeam = value => decode(value).replace(/\s+/g, " ").replace(/\s*\.\s*/g, ".").trim();
+    const cleanTeam = value => {
+      const raw = decode(value).replace(/\s+/g, " ").replace(/\s*\.\s*/g, ".").trim();
+      const key = normalizeTeamName(raw).replace(/-as$/, "");
+      const aliases = {
+        "galatasaray-as": "Galatasaray", "fenerbahce-as": "Fenerbahçe",
+        "besiktas-as": "Beşiktaş", "samsunspor-as": "Samsunspor",
+        "kasimpasa-as": "Kasımpaşa", "trabzonspor-as": "Trabzonspor",
+        "genclerbirligi": "Gençlerbirliği", "tumosankonyaspor": "Konyaspor",
+        "corendon-alanyaspor": "Alanyaspor", "caykurrizespor-as": "Çaykur Rizespor",
+        "gaziantepfutbolkulubu-as": "Gaziantep FK", "amed sportif faaliyetler": "Amedspor",
+        "amedsportiffaaliyetler": "Amedspor", "arcacorumfk": "Çorum FK",
+        "erzurumspor-fk": "Erzurum BB", "istanbul-basaksehir-fk": "Başakşehir"
+      };
+      return aliases[key] || raw.replace(/\s+A\.Ş\.$/i, "").trim();
+    };
     for (let start = 1; start <= 34; start += 4) {
       const batch = [];
       for (let round = start; round < Math.min(start + 4, 35); round++) {
