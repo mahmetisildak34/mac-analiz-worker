@@ -265,16 +265,19 @@ export default {
   },
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
+    // Allow the production GitHub Pages app and Cloudflare's own dashboard
+    // HTTP test panel. All other browser origins remain blocked.
+    const allowedOrigins = new Set([ALLOWED_ORIGIN, "https://dash.cloudflare.com"]);
     const cors = {
-      "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+      "Access-Control-Allow-Origin": origin && allowedOrigins.has(origin) ? origin : ALLOWED_ORIGIN,
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
       "Access-Control-Max-Age": "86400",
       "Vary": "Origin"
     };
 
-    if (origin && origin !== ALLOWED_ORIGIN) {
-      return new Response("Origin not allowed", { status: 403 });
+    if (origin && !allowedOrigins.has(origin)) {
+      return new Response("Origin not allowed", { status: 403, headers: cors });
     }
 
 
