@@ -292,7 +292,9 @@ export default {
           ? env.FOOTBALLDATA_API_KEY
           : env.API_FOOTBALL_KEY;
 
-      if (!isESPN && !apiKey) {
+      // ESPN and public FixtureDownload feeds do not require an API key.
+      // Only API-Football and football-data.org require their respective secrets.
+      if (!isESPN && !isFixtureDownload && !apiKey) {
         return new Response(JSON.stringify({
           error: isFootballData
             ? "FOOTBALLDATA_API_KEY secret is missing"
@@ -340,7 +342,7 @@ export default {
         cache = null;
       }
 
-      const upstreamHeaders = isESPN
+      const upstreamHeaders = (isESPN || isFixtureDownload)
         ? { "Accept": "application/json" }
         : isFootballData
           ? { "X-Auth-Token": apiKey }
