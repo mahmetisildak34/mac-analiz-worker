@@ -60,7 +60,7 @@ async function ensureArchiveIndexes(env) {
 // Historical matches are served read-only from existing KV data and the app's CSV/ESPN fallbacks.
 
 
-async function syncEspnFixturesToD1(env, lookAheadDays = 14, maxRequests = 40) {
+async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, maxRequests = 40) {
   if (!env.DB || !env.MAM_KV) return { saved: 0, failed: 0, complete: false, reason: "DB or MAM_KV binding missing" };
   // ESPN scoreboard coverage mirrors the app's supported ESPN fallback competitions.
   // Keep league IDs aligned with the app so every archived row is queryable by league.
@@ -106,13 +106,13 @@ async function syncEspnFixturesToD1(env, lookAheadDays = 14, maxRequests = 40) {
     ["307","ksa.1","Saudi Pro League","Saudi Arabia"]
   ];
 
-  const stateKey = "mam:espn-sync-state:v1";
+  const stateKey = "mam:espn-sync-state:v2";
   let state = await env.MAM_KV.get(stateKey, "json");
   if (!state || !Array.isArray(state.jobs) || !Number.isInteger(state.cursor) || state.cursor >= state.jobs.length) {
     const dates = [];
     const base = new Date();
     base.setUTCHours(12, 0, 0, 0);
-    for (let offset = -1; offset <= lookAheadDays; offset++) {
+    for (let offset = -Math.max(1, lookBackDays); offset <= lookAheadDays; offset++) {
       const d = new Date(base);
       d.setUTCDate(d.getUTCDate() + offset);
       dates.push(d.toISOString().slice(0, 10).replace(/-/g, ""));
@@ -262,7 +262,7 @@ export default {
         await ensureArchiveIndexes(env);
         // Keep a rolling 14-day window across all configured ESPN competitions.
         // The 15-minute cron processes 40 league/date jobs per run to stay within free-tier limits.
-        await syncEspnFixturesToD1(env, 14, isHourlySync ? 40 : 10);
+        await syncEspnFixturesToD1(env, 45, 14, isHourlySync ? 40 : 10);
       } catch (archiveError) {
         console.log('ESPN D1 archive sync error', String(archiveError?.message || archiveError));
       }
