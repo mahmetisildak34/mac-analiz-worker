@@ -713,7 +713,7 @@ export default {
       const base = isFixtureDownload ? "https://fixturedownload.com/feed/json" : isESPNStandings ? "https://site.api.espn.com/apis/v2/sports/soccer" : isESPN ? ESPN_BASE : isFootballData ? FOOTBALLDATA_BASE : API_BASE;
       const targetUrl = base + "/" + apiPath + url.search;
       const isStandings = /(^|\/)standings$/.test(apiPath);
-      const isLive = url.searchParams.get("live") === "all";
+      const isLive = url.searchParams.get("live") === "all" || (isFootballData && apiPath === "matches" && url.searchParams.get("status") === "LIVE");
       const isLiveStats = apiPath === "fixtures/statistics" || (isESPN && apiPath === "summary");
       const isLineupData = apiPath === "fixtures/lineups" || apiPath === "fixtures/players";
       const cacheUrl = new URL(url.toString());
