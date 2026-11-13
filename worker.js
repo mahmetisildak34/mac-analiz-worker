@@ -378,7 +378,7 @@ export default {
           try { raw = row.raw_json ? JSON.parse(row.raw_json) : null; } catch (_) {}
           const halftime = raw?.score?.halftime || raw?.score?.halfTime || null;
           return {
-            mamSource: "d1-archive",
+            source: row.source || "app",
             fixture: { id: row.fixture_id, date: row.kickoff, status: { short: row.status || "FT" } },
             league: { id: String(row.league_id), name: row.league_name || "", country: row.country || "" },
             teams: {
