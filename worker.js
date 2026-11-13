@@ -344,6 +344,60 @@ export default {
         });
       }
 
+      if (path === "archive/matches" && request.method === "GET") {
+        if (!env.DB) {
+          return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const leagueId = String(url.searchParams.get("league") || "").trim();
+        const before = String(url.searchParams.get("before") || new Date().toISOString()).slice(0, 40);
+        const limitValue = Number.parseInt(url.searchParams.get("limit") || "1500", 10);
+        const limit = Number.isFinite(limitValue) ? Math.max(1, Math.min(2000, limitValue)) : 1500;
+        if (!leagueId) {
+          return new Response(JSON.stringify({ error: "A league ID is required" }), {
+            status: 400, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const archived = await env.DB.prepare(`
+          SELECT source, fixture_id, league_id, league_name, country, kickoff, status,
+                 home_team_id, home_team, away_team_id, away_team, home_goals, away_goals,
+                 statistics_json, raw_json
+          FROM matches
+          WHERE league_id = ?
+            AND date(kickoff) < date(?)
+            AND home_goals IS NOT NULL
+            AND away_goals IS NOT NULL
+          ORDER BY datetime(kickoff) DESC
+          LIMIT ?
+        `).bind(leagueId, before, limit).all();
+        const matches = (Array.isArray(archived?.results) ? archived.results : []).map(row => {
+          let statistics = null;
+          let raw = null;
+          try { statistics = row.statistics_json ? JSON.parse(row.statistics_json) : null; } catch (_) {}
+          try { raw = row.raw_json ? JSON.parse(row.raw_json) : null; } catch (_) {}
+          const halftime = raw?.score?.halftime || raw?.score?.halfTime || null;
+          return {
+            mamSource: "d1-archive",
+            fixture: { id: row.fixture_id, date: row.kickoff, status: { short: row.status || "FT" } },
+            league: { id: String(row.league_id), name: row.league_name || "", country: row.country || "" },
+            teams: {
+              home: { id: row.home_team_id == null ? null : row.home_team_id, name: row.home_team || "" },
+              away: { id: row.away_team_id == null ? null : row.away_team_id, name: row.away_team || "" }
+            },
+            goals: { home: row.home_goals, away: row.away_goals },
+            score: halftime ? { halftime } : null,
+            statistics
+          };
+        });
+        return new Response(JSON.stringify({
+          ok: true, leagueId, count: matches.length, response: matches
+        }), {
+          status: 200,
+          headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "private, max-age=60" }
+        });
+      }
+
       if (path === "archive/matches" && request.method === "POST") {
         if (!env.DB) {
           return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
