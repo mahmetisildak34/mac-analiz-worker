@@ -45,7 +45,7 @@ function normalizeTeamName(value) {
 // Historical matches are served read-only from existing KV data and the app's CSV/ESPN fallbacks.
 
 
-async function syncEspnFixturesToD1(env) {
+async function syncEspnFixturesToD1(env, lookAheadDays = 6) {
   if (!env.DB) return { saved: 0, failed: 0 };
   const leagues = [
     ["39","eng.1","Premier League","England"],["140","esp.1","La Liga","Spain"],
@@ -63,7 +63,7 @@ async function syncEspnFixturesToD1(env) {
   const dates = [];
   const base = new Date();
   base.setUTCHours(12, 0, 0, 0);
-  for (let offset = -1; offset <= 6; offset++) {
+  for (let offset = -1; offset <= lookAheadDays; offset++) {
     const d = new Date(base);
     d.setUTCDate(d.getUTCDate() + offset);
     dates.push(d.toISOString().slice(0, 10).replace(/-/g, ""));
@@ -126,11 +126,12 @@ async function syncEspnFixturesToD1(env) {
 export default {
   // Daily TFF fixture sync: one KV write per run, keeping free-tier writes low.
   async scheduled(event, env, ctx) {
+    const isHourlySync = event?.cron === '0 * * * *' && new Date(event.scheduledTime).getUTCHours() !== 3;
     if (env.DB) {
-      try { await syncEspnFixturesToD1(env); }
+      try { await syncEspnFixturesToD1(env, isHourlySync ? 1 : 6); }
       catch (archiveError) { console.log('ESPN D1 archive sync error', String(archiveError?.message || archiveError)); }
     }
-    if (!env.MAM_KV) return;
+    if (isHourlySync || !env.MAM_KV) return;
     const now = new Date();
     const fixtures = [];
     const seen = new Set();
