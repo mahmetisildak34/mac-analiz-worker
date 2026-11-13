@@ -83,6 +83,10 @@ async function syncEspnFixturesToD1(env, lookAheadDays = 6, maxRequests = 35) {
   const summaryQueueKey = "mam:espn-summary-queue:v1";
   let summaryQueue = await env.MAM_KV.get(summaryQueueKey, "json");
   if (!Array.isArray(summaryQueue)) summaryQueue = [];
+  const summaryDoneKey = "mam:espn-summary-done:v1";
+  let summaryDone = await env.MAM_KV.get(summaryDoneKey, "json");
+  if (!Array.isArray(summaryDone)) summaryDone = [];
+  const summaryDoneSet = new Set(summaryDone);
   let failed = 0;
 
   const fetchJob = async job => {
@@ -115,7 +119,7 @@ async function syncEspnFixturesToD1(env, lookAheadDays = 6, maxRequests = 35) {
         });
         if (status === "LIVE" || status === "FT") {
           const key = "ESPN:" + fixtureId;
-          if (!summaryQueue.some(item => item.key === key)) {
+          if (!summaryDoneSet.has(key) && !summaryQueue.some(item => item.key === key)) {
             summaryQueue.push({ key, slug, fixtureId, eventId: String(event.id), attempts: 0 });
           }
         }
@@ -166,11 +170,15 @@ async function syncEspnFixturesToD1(env, lookAheadDays = 6, maxRequests = 35) {
           await env.DB.prepare(
             "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ?"
           ).bind(JSON.stringify({ teams: statistics, summaryAvailable: true }), item.fixtureId).run();
+          summaryDoneSet.add(item.key);
         } else if (Number(item.attempts || 0) < 1) {
           summaryRetries.push({ ...item, attempts: Number(item.attempts || 0) + 1 });
+        } else {
+          summaryDoneSet.add(item.key);
         }
       } catch (error) {
         if (Number(item.attempts || 0) < 1) summaryRetries.push({ ...item, attempts: Number(item.attempts || 0) + 1 });
+        else summaryDoneSet.add(item.key);
         console.log("ESPN match statistics sync failed", item.fixtureId, String(error?.message || error));
       }
     }));
@@ -178,6 +186,8 @@ async function syncEspnFixturesToD1(env, lookAheadDays = 6, maxRequests = 35) {
   if (summaryRetries.length) summaryQueue.push(...summaryRetries);
   if (summaryQueue.length > 500) summaryQueue = summaryQueue.slice(-500);
   await env.MAM_KV.put(summaryQueueKey, JSON.stringify(summaryQueue));
+  const doneList = Array.from(summaryDoneSet);
+  await env.MAM_KV.put(summaryDoneKey, JSON.stringify(doneList.slice(-3000)));
 
   state.cursor += batch.length;
   if (retryJobs.length) state.jobs.push(...retryJobs);
