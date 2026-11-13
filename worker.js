@@ -387,11 +387,22 @@ export default {
       return new Response(JSON.stringify({ ok }), { status: ok ? 200 : 401, headers });
     }
 
+    const requestUrl = new URL(request.url);
+    // Friendly root response: opening the Worker base URL should not produce "Invalid API path".
+    if (request.method === "GET" && requestUrl.pathname === "/") {
+      return new Response(JSON.stringify({
+        ok: true,
+        service: "Maç Analiz Merkezi Worker",
+        endpoints: ["/api/archive/d1-status", "/api/archive/matches?league=39&before=2026-11-13&limit=50"],
+        note: "Match reads are public; archive writes still require a valid session."
+      }), { status: 200, headers });
+    }
+
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: cors });
     }
 
-    if (request.method !== "GET" && !(request.method === "POST" && new URL(request.url).pathname === "/api/archive/matches")) {
+    if (request.method !== "GET" && !(request.method === "POST" && requestUrl.pathname === "/api/archive/matches")) {
       return new Response(JSON.stringify({ error: "Method not allowed" }), {
         status: 405,
         headers: { ...cors, "Content-Type": "application/json" }
@@ -423,10 +434,11 @@ export default {
         });
       }
 
-      // Aggregate D1 archive diagnostics are read-only and contain no match/user details.
-      // Allow browser access without a session so archive health can be verified.
-      const publicArchiveStatus = path === "archive/d1-status" && request.method === "GET";
-      if (!publicArchiveStatus) {
+      // Read-only match archive and aggregate diagnostics are public.
+      // Writes and all other private routes still require a signed-in session.
+      const publicArchiveRead = request.method === "GET" &&
+        (path === "archive/d1-status" || path === "archive/matches");
+      if (!publicArchiveRead) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
         if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
           return new Response(JSON.stringify({ error: "Authentication required" }), {
