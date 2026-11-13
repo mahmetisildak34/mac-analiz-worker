@@ -244,7 +244,7 @@ export default {
     if (env.DB) {
       try {
         // Daily run leaves room for the 34 TFF fetches below; hourly runs have no TFF scrape.
-        await syncEspnFixturesToD1(env, isHourlySync ? 1 : 6, isHourlySync ? 35 : 10);
+        await syncEspnFixturesToD1(env, isHourlySync ? 1 : 6, isHourlySync ? 40 : 10);
       } catch (archiveError) {
         console.log('ESPN D1 archive sync error', String(archiveError?.message || archiveError));
       }
