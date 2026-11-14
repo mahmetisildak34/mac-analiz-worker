@@ -1,4 +1,4 @@
-import { HISTORY_BACKFILL_KEY, buildHistoryBackfillState, runHistoryBackfillBatch, probeHistoryBackfillRange, runHistoryBackfillPilot } from "./history-backfill.js";
+import { HISTORY_BACKFILL_KEY, buildHistoryBackfillState, runHistoryBackfillBatch, probeHistoryBackfillRange, probeHistoryBackfillBatch, runHistoryBackfillPilot } from "./history-backfill.js";
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
 const API_BASE = "https://v3.football.api-sports.io";
 const FOOTBALLDATA_BASE = "https://api.football-data.org/v4";
@@ -676,7 +676,7 @@ export default {
       // Read-only match archive and aggregate diagnostics are public.
       // Writes and all other private routes still require a signed-in session.
       const publicArchiveRead = request.method === "GET" &&
-        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/quality-check" || path === "archive/live" || path === "archive/history-backfill/status" || path === "archive/history-backfill/probe" || path === "archive/history-backfill/pilot-status" ||
+        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/quality-check" || path === "archive/live" || path === "archive/history-backfill/status" || path === "archive/history-backfill/probe" || path === "archive/history-backfill/probe-batch" || path === "archive/history-backfill/pilot-status" ||
          (isESPN && path.endsWith("/summary") && /^\d+$/.test(url.searchParams.get("event") || "")));
       const previewPilotTrigger = (request.method === "GET" || request.method === "POST") &&
         path === "archive/history-backfill/pilot-run" &&
@@ -689,6 +689,18 @@ export default {
             status: 401, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
           });
         }
+      }
+
+      if (path === "archive/history-backfill/probe-batch" && request.method === "GET") {
+        const result = await probeHistoryBackfillBatch({
+          offset: Number(url.searchParams.get("offset") || 0),
+          limit: Number(url.searchParams.get("limit") || 5),
+          date: url.searchParams.get("date") || ""
+        });
+        const status = result.ok ? 200 : 400;
+        return new Response(JSON.stringify(result), {
+          status, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+        });
       }
 
       if (path === "archive/history-backfill/probe" && request.method === "GET") {
@@ -727,7 +739,7 @@ export default {
         if (url.hostname !== "feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev" || env.HISTORY_BACKFILL_PILOT_ENABLED !== "true") {
           return new Response("Pilot is available only on the enabled Preview deployment.", { status: 403, headers: { ...cors, "Content-Type": "text/plain; charset=utf-8" } });
         }
-        const html = "<!doctype html><html><meta name='viewport' content='width=device-width,initial-scale=1'><title>Preview history pilot</title><body style='font:16px system-ui;max-width:620px;margin:40px auto;padding:20px'><h2>Preview pilot — 1 Nov 2026</h2><p>This runs a fixed, three-league, seven-match-target test in the isolated Preview D1 staging table only. It does not touch production or the general history queue.</p><form method='POST' action='/api/archive/history-backfill/pilot-run'><button style='padding:14px 20px;font-size:17px'>Run Preview pilot</button></form></body></html>";
+        const html = "<!doctype html><html><meta name='viewport' content='width=device-width,initial-scale=1'><title>Preview history pilot</title><body style='font:16px system-ui;max-width:620px;margin:40px auto;padding:20px'><h2>Preview pilot — 1 Nov 2026</h2><p>This runs a fixed, four-league, eleven-match-target test in the isolated Preview D1 staging table only. It does not touch production or the general history queue.</p><form method='POST' action='/api/archive/history-backfill/pilot-run'><button style='padding:14px 20px;font-size:17px'>Run Preview pilot</button></form></body></html>";
         return new Response(html, { status: 200, headers: { ...cors, "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } });
       }
 
