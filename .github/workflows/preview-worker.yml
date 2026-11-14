@@ -7,6 +7,8 @@ on:
     paths:
       - "worker.js"
       - "history-backfill.js"
+      - "history-preview-runner.js"
+      - "wrangler.history-preview.jsonc"
       - "wrangler.jsonc"
       - "package.json"
       - ".github/workflows/preview-worker.yml"
@@ -151,6 +153,16 @@ jobs:
           echo "$summary" | jq '{event: .header.competitions[0].id, boxscoreTeams: (.boxscore.teams // [] | length), teams: [(.boxscore.teams // [])[] | {homeAway, team: (.team.displayName // .team.name), statisticsCount: ((.statistics // []) | length)}]}'
         env:
           PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Deploy dedicated Preview-only 15-minute history runner
+        run: |
+          set -euo pipefail
+          npx wrangler deploy --config wrangler.history-preview.jsonc
+          runner_status="$(curl --fail --show-error --silent "https://mam-nations-history-preview.<ACCOUNT_SUBDOMAIN>.workers.dev/status")"
+          printf '%s\\n' "$runner_status"
+          echo "$runner_status" | jq -e '.ok == true and .environment == "preview" and .scope == "uefa-nations-league" and .schedule == "*/15 * * * *"' >/dev/null
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
       - name: Publish Preview URL
         run: |
