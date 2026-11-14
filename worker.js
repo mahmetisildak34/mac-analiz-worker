@@ -678,7 +678,7 @@ export default {
       const publicArchiveRead = request.method === "GET" &&
         (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/quality-check" || path === "archive/live" || path === "archive/history-backfill/status" || path === "archive/history-backfill/probe" || path === "archive/history-backfill/pilot-status" ||
          (isESPN && path.endsWith("/summary") && /^\d+$/.test(url.searchParams.get("event") || "")));
-      const previewPilotTrigger = request.method === "POST" &&
+      const previewPilotTrigger = (request.method === "GET" || request.method === "POST") &&
         path === "archive/history-backfill/pilot-run" &&
         url.hostname === "feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev" &&
         env.HISTORY_BACKFILL_PILOT_ENABLED === "true";
