@@ -259,9 +259,11 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   if (!Array.isArray(summaryDone)) summaryDone = [];
   const summaryDoneSet = new Set(summaryDone);
 
-  // Recover older ESPN matches that were previously marked "done" without statistics.
-  // Requeue a small bounded batch each scheduled run so the backlog drains gradually.
-  if (summaryQueue.length < 80) {
+  // Keep the retry queue topped up without letting cooldown items block discovery.
+  // Refill toward 480 (hard cap 500) on every scheduled run, not only when below 80.
+  const summaryQueueBeforeDiscovery = summaryQueue.length;
+  let recoveredSummaryItems = 0;
+  if (summaryQueue.length < 480) {
     // Exclude items already waiting (including cooldown retries), otherwise the
     // same 40 newest missing-stat matches can block every older match indefinitely.
     const queuedFixtureIds = summaryQueue
@@ -290,6 +292,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
       summaryDoneSet.delete(key);
       if (!summaryQueue.some(item => item.key === key)) {
         summaryQueue.push({ key, slug, fixtureId, eventId, attempts: 0, retryAfter: 0 });
+        recoveredSummaryItems++;
       }
     }
   }
@@ -367,7 +370,17 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   summaryQueue = deferredSummaries;
   const summaryBatch = readySummaries;
   const summaryRetries = [];
-  const summaryRun = { ranAt: new Date().toISOString(), attempted: summaryBatch.length, fetchedWithStatistics: 0, noStatisticsReturned: 0, requestFailures: 0, saved: 0 };
+  const summaryRun = {
+    ranAt: new Date().toISOString(),
+    queueBeforeDiscovery: summaryQueueBeforeDiscovery,
+    recoveredFromD1: recoveredSummaryItems,
+    queueAfterDiscovery: summaryQueue.length,
+    attempted: summaryBatch.length,
+    fetchedWithStatistics: 0,
+    noStatisticsReturned: 0,
+    requestFailures: 0,
+    saved: 0
+  };
   for (let i = 0; i < summaryBatch.length; i += 4) {
     await Promise.all(summaryBatch.slice(i, i + 4).map(async item => {
       try {
