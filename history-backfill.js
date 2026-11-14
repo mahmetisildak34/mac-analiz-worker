@@ -284,7 +284,7 @@ export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
     const retryBatch = readyRetries.slice(0, batchLimit);
     const retryKeys = new Set(retryBatch.map(job => job.index));
     const newSlots = Math.max(0, batchLimit - retryBatch.length);
-    const newBatch = cursor < totalJobs ? getHistoryBackfillBatch({ ...state, cursor }, newSlots || (retryBatch.length ? 0 : batchLimit)) : [];
+    const newBatch = cursor < totalJobs && newSlots > 0 ? getHistoryBackfillBatch({ ...state, cursor }, newSlots) : [];
     const batch = [
       ...retryBatch.map(job => ({ ...job, isRetry: true })),
       ...newBatch.map((job, index) => ({ ...job, index: cursor + index, isRetry: false }))
