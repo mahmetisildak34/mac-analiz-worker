@@ -1045,7 +1045,14 @@ export default {
           leagues: Array.isArray(byLeague?.results) ? byLeague.results : [],
           statuses: Array.isArray(byStatus?.results) ? byStatus.results : []
         }), {
-          status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+          status: 200,
+          headers: {
+            ...cors,
+            "Content-Type": "application/json; charset=utf-8",
+            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+            "Pragma": "no-cache",
+            "Expires": "0"
+          }
         });
       }
 
