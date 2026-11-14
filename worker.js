@@ -107,7 +107,7 @@ function hasUsableStatistics(value) {
 // same normalized home/away names and kickoff within 10 minutes. Never overwrite
 // existing statistics or infer a match from league IDs alone.
 async function enrichExactCrossSourceMatches(env) {
-  if (!env.DB) return { checked: 0, updated: 0 };
+  if (!env.DB) return { checked: 0, updated: 0, reason: "DB binding missing" };
   const [sourceRows, missingRows] = await Promise.all([
     env.DB.prepare("SELECT fixture_id, kickoff, home_team, away_team, statistics_json FROM matches WHERE source = 'ESPN' AND statistics_json IS NOT NULL AND statistics_json != '' ORDER BY kickoff DESC LIMIT 2000").all(),
     env.DB.prepare("SELECT source, fixture_id, kickoff, home_team, away_team FROM matches WHERE source != 'ESPN' AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null') ORDER BY kickoff DESC LIMIT 3000").all()
@@ -115,8 +115,10 @@ async function enrichExactCrossSourceMatches(env) {
   const source = Array.isArray(sourceRows?.results) ? sourceRows.results : [];
   const missing = Array.isArray(missingRows?.results) ? missingRows.results : [];
   const index = new Map();
+  let usableEspnStats = 0;
   for (const row of source) {
     if (!hasUsableStatistics(row.statistics_json)) continue;
+    usableEspnStats++;
     const key = normalizeTeamName(row.home_team) + "|" + normalizeTeamName(row.away_team);
     if (!key || key === "|") continue;
     const time = Date.parse(row.kickoff || "");
@@ -126,26 +128,44 @@ async function enrichExactCrossSourceMatches(env) {
     index.set(key, list);
   }
   const updates = [];
+  let exactTeamMatches = 0;
+  let withinTimeWindow = 0;
   for (const row of missing) {
     const key = normalizeTeamName(row.home_team) + "|" + normalizeTeamName(row.away_team);
     const time = Date.parse(row.kickoff || "");
     if (!Number.isFinite(time)) continue;
     const candidates = index.get(key) || [];
+    if (candidates.length) exactTeamMatches++;
     let best = null, bestDelta = Infinity;
     for (const candidate of candidates) {
       const delta = Math.abs(candidate.time - time);
       if (delta <= 10 * 60 * 1000 && delta < bestDelta) { best = candidate; bestDelta = delta; }
     }
-    if (best) updates.push(env.DB.prepare(
-      "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = ? AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null')"
-    ).bind(best.statistics, row.source, row.fixture_id));
+    if (best) {
+      withinTimeWindow++;
+      updates.push(env.DB.prepare(
+        "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = ? AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null')"
+      ).bind(best.statistics, row.source, row.fixture_id));
+    }
   }
   let updated = 0;
   for (let i = 0; i < updates.length; i += 50) {
     const results = await env.DB.batch(updates.slice(i, i + 50));
     updated += results.reduce((sum, item) => sum + (Number(item?.meta?.changes) || 0), 0);
   }
-  return { checked: missing.length, updated };
+  const report = {
+    ranAt: new Date().toISOString(),
+    espnRowsScanned: source.length,
+    usableEspnStats,
+    nonEspnMissingRowsScanned: missing.length,
+    exactTeamMatches,
+    withinTenMinuteWindow: withinTimeWindow,
+    updateAttempts: updates.length,
+    updated
+  };
+  if (env.MAM_KV) await env.MAM_KV.put("mam:cross-source-stats:last:v1", JSON.stringify(report), { expirationTtl: 60 * 60 * 24 * 30 });
+  console.log("Cross-source statistics enrichment report", report);
+  return report;
 }
 
 // Safe, additive D1 indexes: they speed up league/date archive reads and status checks.
@@ -945,7 +965,7 @@ export default {
             status: 503, headers: { ...cors, "Content-Type": "application/json" }
           });
         }
-        const [total, statsCoverage, bySource, missingBySource, byLeague, byStatus, latest, summaryQueue] = await Promise.all([
+        const [total, statsCoverage, bySource, missingBySource, byLeague, byStatus, latest, summaryQueue, crossSourceStatsReport] = await Promise.all([
           env.DB.prepare("SELECT COUNT(*) AS total FROM matches").first(),
           env.DB.prepare("SELECT COUNT(*) AS total, SUM(CASE WHEN statistics_json IS NOT NULL AND statistics_json != '' AND statistics_json != 'null' AND (source != 'ESPN' OR CASE WHEN json_valid(statistics_json) = 1 THEN CASE WHEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) > 0 OR COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) > 0 THEN 1 ELSE 0 END ELSE 0 END = 1) THEN 1 ELSE 0 END) AS withStatistics FROM matches").first(),
           env.DB.prepare("SELECT source, COUNT(*) AS total FROM matches GROUP BY source ORDER BY source").all(),
@@ -953,7 +973,8 @@ export default {
           env.DB.prepare("SELECT league_id AS leagueId, league_name AS leagueName, country, COUNT(*) AS total, SUM(CASE WHEN status IN ('LIVE','1H','2H','HT','ET','P','INT') THEN 1 ELSE 0 END) AS live, SUM(CASE WHEN status IN ('FT','AET','PEN') AND home_goals IS NOT NULL AND away_goals IS NOT NULL THEN 1 ELSE 0 END) AS finished FROM matches GROUP BY league_id, league_name, country ORDER BY total DESC LIMIT 100").all(),
           env.DB.prepare("SELECT status, COUNT(*) AS total FROM matches GROUP BY status ORDER BY total DESC").all(),
           env.DB.prepare("SELECT MAX(updated_at) AS lastUpdated FROM matches").first(),
-          env.MAM_KV ? env.MAM_KV.get("mam:espn-summary-queue:v1", "json") : Promise.resolve([])
+          env.MAM_KV ? env.MAM_KV.get("mam:espn-summary-queue:v1", "json") : Promise.resolve([]),
+          env.MAM_KV ? env.MAM_KV.get("mam:cross-source-stats:last:v1", "json") : Promise.resolve(null)
         ]);
         const statsTotal = Number(statsCoverage?.total || 0);
         const statsWith = Number(statsCoverage?.withStatistics || 0);
@@ -977,6 +998,7 @@ export default {
             missingStatistics: Math.max(0, statsTotal - statsWith),
             coveragePercent: statsTotal ? Math.round(statsWith / statsTotal * 1000) / 10 : 0
           },
+          crossSourceStatisticsEnrichment: crossSourceStatsReport || null,
           pendingSummaryRetries: queueItems.length,
           summaryQueueStatus: {
             queued: queueItems.length,
