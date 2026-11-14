@@ -20,6 +20,27 @@
     }
   ],
   "triggers": {
-    "crons": ["0 3 * * *", "*/15 0-2,4-23 * * *"]
+    "crons": [
+      "0 3 * * *",
+      "*/15 0-2,4-23 * * *"
+    ]
+  },
+  "previews": {
+    "vars": {
+      "HISTORY_BACKFILL_PILOT_ENABLED": "true"
+    },
+    "kv_namespaces": [
+      {
+        "binding": "MAM_KV",
+        "id": "5e90bdd4b76c4a2eb7a88381966f0f3e"
+      }
+    ],
+    "d1_databases": [
+      {
+        "binding": "DB",
+        "database_name": "mac-analiz-preview",
+        "database_id": "704a5c24-491f-455f-b62a-23752083f085"
+      }
+    ]
   }
 }

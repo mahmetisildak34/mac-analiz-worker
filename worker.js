@@ -1,3 +1,4 @@
+import { HISTORY_BACKFILL_KEY, buildHistoryBackfillState, runHistoryBackfillBatch, probeHistoryBackfillRange, probeHistoryBackfillBatch, runHistoryBackfillPilot } from "./history-backfill.js";
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
 const API_BASE = "https://v3.football.api-sports.io";
 const FOOTBALLDATA_BASE = "https://api.football-data.org/v4";
@@ -483,6 +484,16 @@ export default {
         console.log("Cross-source statistics enrichment failed", report);
       }
     }
+    // Historical discovery advances only when its dedicated flag AND the
+    // separately authenticated queue state are enabled. Production remains off.
+    if (env.HISTORY_BACKFILL_ENABLED === "true") {
+      try {
+        const result = await runHistoryBackfillBatch(env);
+        console.log("Scheduled historical fixture backfill", result);
+      } catch (historyError) {
+        console.log("Scheduled historical fixture backfill failed", String(historyError?.message || historyError));
+      }
+    }
     if (isHourlySync || !env.MAM_KV) return;
     const now = new Date();
     const fixtures = [];
@@ -587,7 +598,7 @@ export default {
     const origin = request.headers.get("Origin") || "";
     // Allow the production GitHub Pages app and Cloudflare's own dashboard
     // HTTP test panel. All other browser origins remain blocked.
-    const allowedOrigins = new Set([ALLOWED_ORIGIN, "https://dash.cloudflare.com"]);
+    const allowedOrigins = new Set([ALLOWED_ORIGIN, "https://dash.cloudflare.com", "https://feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev"]);
     const cors = {
       "Access-Control-Allow-Origin": origin && allowedOrigins.has(origin) ? origin : ALLOWED_ORIGIN,
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
@@ -640,7 +651,7 @@ export default {
       return new Response(null, { status: 204, headers: cors });
     }
 
-    if (request.method !== "GET" && !(request.method === "POST" && requestUrl.pathname === "/api/archive/matches")) {
+    if (request.method !== "GET" && !(request.method === "POST" && (requestUrl.pathname === "/api/archive/matches" || requestUrl.pathname === "/api/archive/history-backfill/start" || requestUrl.pathname === "/api/archive/history-backfill/enable" || requestUrl.pathname === "/api/archive/history-backfill/run" || requestUrl.pathname === "/api/archive/history-backfill/pilot-run"))) {
       return new Response(JSON.stringify({ error: "Method not allowed" }), {
         status: 405,
         headers: { ...cors, "Content-Type": "application/json" }
@@ -675,15 +686,139 @@ export default {
       // Read-only match archive and aggregate diagnostics are public.
       // Writes and all other private routes still require a signed-in session.
       const publicArchiveRead = request.method === "GET" &&
-        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/quality-check" || path === "archive/live" ||
+        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/quality-check" || path === "archive/live" || path === "archive/history-backfill/status" || path === "archive/history-backfill/probe" || path === "archive/history-backfill/probe-batch" || path === "archive/history-backfill/pilot-status" ||
          (isESPN && path.endsWith("/summary") && /^\d+$/.test(url.searchParams.get("event") || "")));
-      if (!publicArchiveRead) {
+      const previewPilotTrigger = (request.method === "GET" || request.method === "POST") &&
+        path === "archive/history-backfill/pilot-run" &&
+        url.hostname === "feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev" &&
+        env.HISTORY_BACKFILL_PILOT_ENABLED === "true";
+      if (!publicArchiveRead && !previewPilotTrigger) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
         if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
           return new Response(JSON.stringify({ error: "Authentication required" }), {
             status: 401, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
           });
         }
+      }
+
+      if (path === "archive/history-backfill/probe-batch" && request.method === "GET") {
+        const result = await probeHistoryBackfillBatch({
+          offset: Number(url.searchParams.get("offset") || 0),
+          limit: Number(url.searchParams.get("limit") || 5),
+          date: url.searchParams.get("date") || ""
+        });
+        const status = result.ok ? 200 : 400;
+        return new Response(JSON.stringify(result), {
+          status, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+        });
+      }
+
+      if (path === "archive/history-backfill/probe" && request.method === "GET") {
+        const result = await probeHistoryBackfillRange({
+          leagueSlug: url.searchParams.get("league") || "eng.1",
+          dateFrom: url.searchParams.get("from") || "",
+          dateTo: url.searchParams.get("to") || ""
+        });
+        const status = result.ok ? 200 : result.status === "invalid-input" || result.status === "invalid-range" ? 400 : 502;
+        return new Response(JSON.stringify(result), {
+          status, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+        });
+      }
+
+      if (path === "archive/history-backfill/pilot-status" && request.method === "GET") {
+        if (!env.DB) return new Response(JSON.stringify({ ok: false, error: "D1 binding is missing." }), { status: 503, headers });
+        try {
+          const [total, byLeague, sample] = await Promise.all([
+            env.DB.prepare("SELECT COUNT(*) AS total, COUNT(DISTINCT fixture_id) AS uniqueFixtures FROM mam_history_backfill_matches WHERE source = 'ESPN' AND kickoff >= '2026-11-01' AND kickoff < '2026-11-02'").first(),
+            env.DB.prepare("SELECT league_name AS league, COUNT(*) AS matches FROM mam_history_backfill_matches WHERE source = 'ESPN' AND kickoff >= '2026-11-01' AND kickoff < '2026-11-02' GROUP BY league_name ORDER BY league_name").all(),
+            env.DB.prepare("SELECT fixture_id AS id, league_name AS league, home_team AS home, away_team AS away, kickoff, status, home_goals AS homeGoals, away_goals AS awayGoals FROM mam_history_backfill_matches WHERE source = 'ESPN' AND kickoff >= '2026-11-01' AND kickoff < '2026-11-02' ORDER BY league_name, kickoff LIMIT 10").all()
+          ]);
+          return new Response(JSON.stringify({
+            ok: true, scope: "Preview staging table only", date: "2026-11-01",
+            total: Number(total?.total || 0), uniqueFixtures: Number(total?.uniqueFixtures || 0),
+            byLeague: Array.isArray(byLeague?.results) ? byLeague.results : [],
+            sample: Array.isArray(sample?.results) ? sample.results : [],
+            note: "Read-only audit; live matches table and queue are not queried or changed."
+          }), { status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
+        } catch (error) {
+          return new Response(JSON.stringify({ ok: false, status: "staging-table-not-created", detail: String(error?.message || error).slice(0, 200) }), { status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
+        }
+      }
+
+      if (path === "archive/history-backfill/pilot-run" && request.method === "GET") {
+        if (url.hostname !== "feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev" || env.HISTORY_BACKFILL_PILOT_ENABLED !== "true") {
+          return new Response("Pilot is available only on the enabled Preview deployment.", { status: 403, headers: { ...cors, "Content-Type": "text/plain; charset=utf-8" } });
+        }
+        const html = "<!doctype html><html><meta name='viewport' content='width=device-width,initial-scale=1'><title>Preview history pilot</title><body style='font:16px system-ui;max-width:620px;margin:40px auto;padding:20px'><h2>Preview pilot — 1 Nov 2026</h2><p>This runs a fixed, four-league, eleven-match-target test in the isolated Preview D1 staging table only. It does not touch production or the general history queue.</p><form method='POST' action='/api/archive/history-backfill/pilot-run'><button style='padding:14px 20px;font-size:17px'>Run Preview pilot</button></form></body></html>";
+        return new Response(html, { status: 200, headers: { ...cors, "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } });
+      }
+
+      if (path === "archive/history-backfill/pilot-run" && request.method === "POST") {
+        if (env.HISTORY_BACKFILL_PILOT_ENABLED !== "true") {
+          return new Response(JSON.stringify({ ok: false, status: "pilot-disabled", error: "Pilot is not enabled in this Worker environment." }), { status: 403, headers });
+        }
+        if (!env.DB) {
+          return new Response(JSON.stringify({ ok: false, status: "unavailable", error: "D1 binding is required." }), { status: 503, headers });
+        }
+        const result = await runHistoryBackfillPilot(env);
+        const status = result.ok ? 200 : result.status === "pilot-disabled" ? 403 : result.status === "unavailable" ? 503 : 502;
+        return new Response(JSON.stringify(result), { status, headers });
+      }
+
+      if (path === "archive/history-backfill/enable" && request.method === "POST") {
+        if (env.HISTORY_BACKFILL_ENABLED !== "true") return new Response(JSON.stringify({ ok: false, error: "Historical processor feature flag is disabled." }), { status: 403, headers });
+        if (!env.MAM_KV || !env.DB) return new Response(JSON.stringify({ ok: false, error: "D1/KV bindings are required." }), { status: 503, headers });
+        const state = await env.MAM_KV.get(HISTORY_BACKFILL_KEY, "json");
+        if (!state) return new Response(JSON.stringify({ ok: false, error: "Historical queue has not been initialized." }), { status: 409, headers });
+        state.executionEnabled = true;
+        state.enabledAt = new Date().toISOString();
+        await env.MAM_KV.put(HISTORY_BACKFILL_KEY, JSON.stringify(state));
+        return new Response(JSON.stringify({ ok: true, executionEnabled: true, message: "Enabled only; no batch was run." }), { status: 200, headers });
+      }
+
+      if (path === "archive/history-backfill/run" && request.method === "POST") {
+        const result = await runHistoryBackfillBatch(env);
+        const status = ["disabled", "not-enabled"].includes(result.status) ? 403 : result.status === "locked" ? 409 : result.status === "unavailable" ? 503 : result.status === "not-initialized" ? 409 : 200;
+        return new Response(JSON.stringify(result), { status, headers });
+      }
+
+      if (path === "archive/history-backfill/status" && request.method === "GET") {
+        const state = env.MAM_KV ? await env.MAM_KV.get(HISTORY_BACKFILL_KEY, "json") : null;
+        const totalJobs = Number(state?.totalJobs || (Array.isArray(state?.jobs) ? state.jobs.length : 0));
+        const processedJobs = Math.min(Number(state?.cursor || 0), totalJobs);
+        return new Response(JSON.stringify({
+          ok: true, exists: Boolean(state), status: state?.status || "not-created",
+          createdAt: state?.createdAt || null, rangeStart: state?.rangeStart || null,
+          rangeEnd: state?.rangeEnd || null, seasonsRequested: state?.seasonsRequested || [],
+          leagueCount: state?.leagueCount || 0, totalJobs,
+          processedJobs, remainingJobs: Math.max(0, totalJobs - processedJobs),
+          progressPercent: totalJobs ? Math.round(processedJobs / totalJobs * 1000) / 10 : 0,
+          executionEnabled: Boolean(state?.executionEnabled && env.HISTORY_BACKFILL_ENABLED === "true"),
+          lastRunAt: state?.lastRunAt || null, lastBatch: state?.lastBatch || null,
+          note: "Historical fixtures are staged separately; live matches and the existing statistics queue are not modified."
+        }), { status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
+      }
+
+      if (path === "archive/history-backfill/start" && request.method === "POST") {
+        if (!env.MAM_KV) return new Response(JSON.stringify({ error: "MAM_KV KV binding is missing" }), { status: 503, headers });
+        const existing = await env.MAM_KV.get(HISTORY_BACKFILL_KEY, "json");
+        if (existing && Number(existing.totalJobs || (Array.isArray(existing.jobs) ? existing.jobs.length : 0)) > Number(existing.cursor || 0)) {
+          return new Response(JSON.stringify({
+            ok: false, alreadyExists: true, status: existing.status || "queued",
+            totalJobs: Number(existing.totalJobs || (Array.isArray(existing.jobs) ? existing.jobs.length : 0)), processedJobs: Math.min(Number(existing.cursor || 0), Number(existing.totalJobs || (Array.isArray(existing.jobs) ? existing.jobs.length : 0))),
+            message: "Existing historical queue preserved; no reset or overwrite performed."
+          }), { status: 409, headers });
+        }
+        const state = buildHistoryBackfillState();
+        await env.MAM_KV.put(HISTORY_BACKFILL_KEY, JSON.stringify(state));
+        return new Response(JSON.stringify({
+          ok: true, created: true, status: state.status, createdAt: state.createdAt,
+          rangeStart: state.rangeStart, rangeEnd: state.rangeEnd,
+          seasonsRequested: state.seasonsRequested, leagueCount: state.leagueCount,
+          totalJobs: state.totalJobs, processedJobs: 0, remainingJobs: state.totalJobs,
+          executionEnabled: false,
+          note: "Separate queue created. No ESPN API calls, match writes, deletions, or changes to existing queues were performed."
+        }), { status: 201, headers });
       }
 
       if (path === "archive/sync-status" && request.method === "GET") {
