@@ -194,7 +194,15 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
 
   // Fetch detailed box-score statistics for live and completed matches in small batches.
   // Scoreboard sync remains the source of truth for status and goals; summaries enrich statistics_json.
-  const summaryBatch = summaryQueue.splice(0, 8);
+  const nowMs = Date.now();
+  const readySummaries = [];
+  const deferredSummaries = [];
+  for (const item of summaryQueue) {
+    if (Number(item.retryAfter || 0) <= nowMs && readySummaries.length < 8) readySummaries.push(item);
+    else deferredSummaries.push(item);
+  }
+  summaryQueue = deferredSummaries;
+  const summaryBatch = readySummaries;
   const summaryRetries = [];
   for (let i = 0; i < summaryBatch.length; i += 4) {
     await Promise.all(summaryBatch.slice(i, i + 4).map(async item => {
@@ -216,13 +224,15 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
           ).bind(JSON.stringify({ teams: statistics, summaryAvailable: true }), item.fixtureId).run();
           summaryDoneSet.add(item.key);
         } else if (Number(item.attempts || 0) < 1) {
-          summaryRetries.push({ ...item, attempts: Number(item.attempts || 0) + 1 });
+          summaryRetries.push({ ...item, attempts: Number(item.attempts || 0) + 1, retryAfter: Date.now() + 15 * 60 * 1000 });
         } else {
-          summaryDoneSet.add(item.key);
+          // Do not permanently mark a match complete when ESPN has not supplied statistics.
+          // Cool down this item and retry it in a later scheduled run.
+          summaryRetries.push({ ...item, attempts: 0, retryAfter: Date.now() + 6 * 60 * 60 * 1000 });
         }
       } catch (error) {
-        if (Number(item.attempts || 0) < 1) summaryRetries.push({ ...item, attempts: Number(item.attempts || 0) + 1 });
-        else summaryDoneSet.add(item.key);
+        if (Number(item.attempts || 0) < 1) summaryRetries.push({ ...item, attempts: Number(item.attempts || 0) + 1, retryAfter: Date.now() + 15 * 60 * 1000 });
+        else summaryRetries.push({ ...item, attempts: 0, retryAfter: Date.now() + 6 * 60 * 60 * 1000 });
         console.log("ESPN match statistics sync failed", item.fixtureId, String(error?.message || error));
       }
     }));
@@ -662,16 +672,26 @@ export default {
             status: 503, headers: { ...cors, "Content-Type": "application/json" }
           });
         }
-        const [total, bySource, byLeague, byStatus, latest] = await Promise.all([
+        const [total, statsCoverage, bySource, byLeague, byStatus, latest, summaryQueue] = await Promise.all([
           env.DB.prepare("SELECT COUNT(*) AS total FROM matches").first(),
+          env.DB.prepare("SELECT COUNT(*) AS total, SUM(CASE WHEN statistics_json IS NOT NULL AND statistics_json != '' AND statistics_json != 'null' THEN 1 ELSE 0 END) AS withStatistics FROM matches").first(),
           env.DB.prepare("SELECT source, COUNT(*) AS total FROM matches GROUP BY source ORDER BY source").all(),
           env.DB.prepare("SELECT league_id AS leagueId, league_name AS leagueName, country, COUNT(*) AS total, SUM(CASE WHEN status IN ('LIVE','1H','2H','HT','ET','P','INT') THEN 1 ELSE 0 END) AS live, SUM(CASE WHEN status IN ('FT','AET','PEN') AND home_goals IS NOT NULL AND away_goals IS NOT NULL THEN 1 ELSE 0 END) AS finished FROM matches GROUP BY league_id, league_name, country ORDER BY total DESC LIMIT 100").all(),
           env.DB.prepare("SELECT status, COUNT(*) AS total FROM matches GROUP BY status ORDER BY total DESC").all(),
-          env.DB.prepare("SELECT MAX(updated_at) AS lastUpdated FROM matches").first()
+          env.DB.prepare("SELECT MAX(updated_at) AS lastUpdated FROM matches").first(),
+          env.MAM_KV ? env.MAM_KV.get("mam:espn-summary-queue:v1", "json") : Promise.resolve([])
         ]);
+        const statsTotal = Number(statsCoverage?.total || 0);
+        const statsWith = Number(statsCoverage?.withStatistics || 0);
         return new Response(JSON.stringify({
           ok: true,
           total: Number(total?.total || 0),
+          statistics: {
+            withStatistics: statsWith,
+            missingStatistics: Math.max(0, statsTotal - statsWith),
+            coveragePercent: statsTotal ? Math.round(statsWith / statsTotal * 1000) / 10 : 0
+          },
+          pendingSummaryRetries: Array.isArray(summaryQueue) ? summaryQueue.length : 0,
           lastUpdated: latest?.lastUpdated || null,
           sources: Array.isArray(bySource?.results) ? bySource.results : [],
           leagues: Array.isArray(byLeague?.results) ? byLeague.results : [],
