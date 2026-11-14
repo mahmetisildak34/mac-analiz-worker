@@ -177,3 +177,35 @@ test("pilot stays disabled unless its dedicated Preview flag is enabled", async 
   const result = await runHistoryBackfillPilot({});
   assert.equal(result.status, "pilot-disabled");
 });
+
+
+test("empty ESPN 200 responses do not advance the historical cursor", async () => {
+  let storedState = {
+    rangeStart: "2024-07-01", dayCount: 1, totalJobs: 3, cursor: 0,
+    executionEnabled: true, status: "queued"
+  };
+  const env = {
+    HISTORY_BACKFILL_ENABLED: "true",
+    MAM_KV: {
+      get: async () => storedState,
+      put: async (_key, value) => { storedState = JSON.parse(value); }
+    },
+    DB: {
+      prepare() {
+        return {
+          bind() { return this; },
+          run: async () => ({ meta: { changes: 1 } })
+        };
+      },
+      batch: async statements => statements.map(() => ({ meta: { changes: 1 } }))
+    }
+  };
+  const result = await runHistoryBackfillBatch(env, async () =>
+    new Response(JSON.stringify({ events: [] }), { status: 200 })
+  );
+  assert.equal(result.advanced, 0);
+  assert.equal(result.processedJobs, 0);
+  assert.equal(result.failures.length, 3);
+  assert.equal(storedState.cursor, 0);
+  assert.equal(storedState.status, "retry-needed");
+});
