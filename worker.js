@@ -626,10 +626,34 @@ export default {
           "SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team_id, home_team, away_team_id, away_team, home_goals, away_goals FROM matches WHERE " +
           filters.join(" AND ") + " ORDER BY datetime(kickoff) ASC LIMIT ?"
         ).bind(...binds).all();
-        const matches = (Array.isArray(result?.results) ? result.results : []).map(row => ({
+        const sourcePriority = source => {
+          const value = String(source || "").toLowerCase();
+          return value === "espn" ? 4 : value.includes("football-data") ? 3 : value === "api-football" ? 2 : 1;
+        };
+        const normalizeTeam = value => String(value || "").normalize("NFD").toLowerCase()
+          .replace(/[\\u0300-\\u036f]/g, "").replace(/ı/g, "i")
+          .replace(/[^a-z0-9]+/g, "").trim();
+        const countryForLeague = (leagueId, leagueName, country) => {
+          const id = String(leagueId || "");
+          const name = String(leagueName || "").toLowerCase();
+          // AFC U17 Asian Cup is a continental Asian competition, not a World competition.
+          if (id === "1012" || name.includes("afc u17 asian cup")) return "Asia";
+          return String(country || "");
+        };
+        const uniqueRows = new Map();
+        for (const row of (Array.isArray(result?.results) ? result.results : [])) {
+          const home = normalizeTeam(row.home_team), away = normalizeTeam(row.away_team);
+          const time = Date.parse(String(row.kickoff || ""));
+          const minute = Number.isFinite(time) ? Math.floor(time / 60000) : String(row.kickoff || "").slice(0, 16);
+          const signature = home && away ? [minute, home, away].join("|") : String(row.source) + "|" + String(row.fixture_id);
+          const previous = uniqueRows.get(signature);
+          if (!previous || sourcePriority(row.source) > sourcePriority(previous.source)) uniqueRows.set(signature, row);
+        }
+        const deduplicatedRows = Array.from(uniqueRows.values());
+        const matches = deduplicatedRows.map(row => ({
           source: row.source || "ESPN",
           fixture: { id: row.fixture_id, date: row.kickoff, status: { short: row.status || "NS" } },
-          league: { id: String(row.league_id), name: row.league_name || "", country: row.country || "" },
+          league: { id: String(row.league_id), name: row.league_name || "", country: countryForLeague(row.league_id, row.league_name, row.country) },
           teams: {
             home: { id: row.home_team_id == null ? null : row.home_team_id, name: row.home_team || "" },
             away: { id: row.away_team_id == null ? null : row.away_team_id, name: row.away_team || "" }
@@ -637,7 +661,7 @@ export default {
           goals: { home: row.home_goals, away: row.away_goals }
         }));
         return new Response(JSON.stringify({
-          ok: true, days, leagueId: leagueId || null, count: matches.length, response: matches
+          ok: true, days, leagueId: leagueId || null, count: matches.length, rawCount: Array.isArray(result?.results) ? result.results.length : 0, duplicatesSuppressed: (Array.isArray(result?.results) ? result.results.length : 0) - matches.length, response: matches
         }), {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
         });
