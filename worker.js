@@ -771,6 +771,9 @@ export default {
         let missingStatistics = 0;
         let validStatistics = 0;
         let invalidScoreCount = 0;
+        let invalidRecordCount = 0;
+        let completedWithoutScoreCount = 0;
+        let malformedStatisticsCount = 0;
         for (const row of rows) {
           const source = String(row.source || "unknown");
           sourceCounts[source] = (sourceCounts[source] || 0) + 1;
@@ -788,9 +791,11 @@ export default {
           const kickoffTime = Date.parse(kickoff);
           const status = String(row.status || "").toUpperCase();
           if (!home || !away || !kickoff || !Number.isFinite(kickoffTime) || !leagueName) {
+            invalidRecordCount++;
             if (invalidRecords.length < 100) invalidRecords.push({ source, fixtureId: row.fixture_id, leagueId, leagueName, kickoff, home: row.home_team, away: row.away_team });
           }
           if (["FT", "AET", "PEN"].includes(status) && (row.home_goals == null || row.away_goals == null)) {
+            completedWithoutScoreCount++;
             if (completedWithoutScore.length < 100) completedWithoutScore.push({ source, fixtureId: row.fixture_id, leagueId, kickoff, home: row.home_team, away: row.away_team, homeGoals: row.home_goals, awayGoals: row.away_goals });
           }
           if ((row.home_goals != null && (!Number.isFinite(Number(row.home_goals)) || Number(row.home_goals) < 0 || Number(row.home_goals) > 30)) ||
@@ -803,6 +808,7 @@ export default {
                 const parsed = JSON.parse(row.statistics_json);
                 usable = hasUsableStatistics(parsed);
               } catch (_) {
+                malformedStatisticsCount++;
                 if (malformedStatistics.length < 100) malformedStatistics.push({ source, fixtureId: row.fixture_id });
               }
             }
@@ -831,16 +837,17 @@ export default {
           ok: true, scope, days: scope === "upcoming" ? days : null,
           totalRecords, checked: rows.length, limit, truncated: rows.length < totalRecords,
           sourceCounts,
-          duplicateGroups: duplicates.length, duplicateRecords: duplicates,
+          duplicateGroups: Array.from(duplicateMap.values()).filter(group => group.length > 1).length,
+          duplicateRecords: duplicates,
           leagueIdsChecked: leagueMap.size, leagueInconsistencies,
-          invalidRecordCount: invalidRecords.length, invalidRecords,
-          completedWithoutScoreCount: completedWithoutScore.length, completedWithoutScore,
+          invalidRecordCount, invalidRecords,
+          completedWithoutScoreCount, completedWithoutScore,
           invalidScoreCount,
           eligibleMatchesChecked: validStatistics + missingStatistics,
           matchesWithUsableStatistics: validStatistics,
           missingStatisticsCount: missingStatistics,
           missingStatisticsBySource,
-          malformedStatisticsCount: malformedStatistics.length,
+          malformedStatisticsCount,
           malformedStatistics
         }), {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
