@@ -180,10 +180,10 @@ test("pilot stays disabled unless its dedicated Preview flag is enabled", async 
 });
 
 
-test("empty ESPN 200 responses do not advance the historical cursor", async () => {
+test("empty ESPN 200 responses are completed days and advance the cursor", async () => {
   let storedState = {
     rangeStart: "2024-07-01", dayCount: 1, totalJobs: 3, cursor: 0,
-    executionEnabled: true, status: "queued"
+    executionEnabled: true, status: "queued", retryJobs: [], deadLetters: []
   };
   const env = {
     HISTORY_BACKFILL_ENABLED: "true",
@@ -193,22 +193,53 @@ test("empty ESPN 200 responses do not advance the historical cursor", async () =
     },
     DB: {
       prepare() {
-        return {
-          bind() { return this; },
-          run: async () => ({ meta: { changes: 1 } })
-        };
+        return { bind() { return this; }, run: async () => ({ meta: { changes: 1 } }) };
+      },
+      batch: async statements => statements.map(() => ({ meta: { changes: 1 } }))
+    }
+  };
+  let requests = 0;
+  const result = await runHistoryBackfillBatch(env, async () => {
+    requests++;
+    return new Response(JSON.stringify({ events: [] }), { status: 200 });
+  });
+  assert.equal(requests, 3);
+  assert.equal(result.status, "complete");
+  assert.equal(result.advanced, 3);
+  assert.equal(result.successfulDays, 3);
+  assert.equal(result.emptyDays, 3);
+  assert.equal(result.failures.length, 0);
+  assert.equal(result.pendingRetries, 0);
+  assert.equal(storedState.cursor, 3);
+});
+
+test("upstream failures advance discovery and enter a delayed retry queue", async () => {
+  let storedState = {
+    rangeStart: "2024-07-01", dayCount: 1, totalJobs: 2, cursor: 0,
+    executionEnabled: true, status: "queued", retryJobs: [], deadLetters: []
+  };
+  const env = {
+    HISTORY_BACKFILL_ENABLED: "true",
+    MAM_KV: {
+      get: async () => storedState,
+      put: async (_key, value) => { storedState = JSON.parse(value); }
+    },
+    DB: {
+      prepare() {
+        return { bind() { return this; }, run: async () => ({ meta: { changes: 1 } }) };
       },
       batch: async statements => statements.map(() => ({ meta: { changes: 1 } }))
     }
   };
   const result = await runHistoryBackfillBatch(env, async () =>
-    new Response(JSON.stringify({ events: [] }), { status: 200 })
+    new Response("temporary failure", { status: 503 })
   );
-  assert.equal(result.advanced, 0);
-  assert.equal(result.processedJobs, 0);
-  assert.equal(result.failures.length, 3);
-  assert.equal(storedState.cursor, 0);
-  assert.equal(storedState.status, "retry-needed");
+  assert.equal(result.advanced, 2);
+  assert.equal(result.pendingRetries, 2);
+  assert.equal(result.failures.length, 2);
+  assert.equal(storedState.cursor, 2);
+  assert.equal(storedState.retryJobs.length, 2);
+  assert.ok(storedState.retryJobs.every(job => job.attempts === 1 && job.retryAfter > Date.now()));
 });
 
 
