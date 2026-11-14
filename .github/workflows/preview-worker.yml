@@ -80,6 +80,25 @@ jobs:
         env:
           PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
 
+      - name: Initialize isolated Nations League queue metadata (Preview only)
+        run: |
+          set -euo pipefail
+          code="$(curl --show-error --silent --output /tmp/queue-init.json --write-out '%{http_code}' -X POST "$PREVIEW_URL/api/archive/history-backfill/start?scope=nations-league")"
+          cat /tmp/queue-init.json
+          if [ "$code" = "201" ]; then
+            jq -e '.ok == true and .created == true and .executionEnabled == false' /tmp/queue-init.json >/dev/null
+          elif [ "$code" = "409" ]; then
+            jq -e '.alreadyExists == true' /tmp/queue-init.json >/dev/null
+          else
+            echo "Unexpected queue initialization HTTP status: $code" >&2
+            exit 1
+          fi
+          status="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/history-backfill/status?scope=nations-league")"
+          printf '%s\\n' "$status"
+          echo "$status" | jq -e '.ok == true and .exists == true and .executionEnabled == false and .totalJobs == 1839' >/dev/null
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
       - name: Probe historical Nations League coverage (read-only)
         run: |
           set -euo pipefail
