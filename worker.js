@@ -506,7 +506,8 @@ export default {
       // Read-only match archive and aggregate diagnostics are public.
       // Writes and all other private routes still require a signed-in session.
       const publicArchiveRead = request.method === "GET" &&
-        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/live");
+        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/live" ||
+         (isESPN && path.endsWith("/summary") && /^\d+$/.test(url.searchParams.get("event") || "")));
       if (!publicArchiveRead) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
         if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
