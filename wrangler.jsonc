@@ -20,6 +20,23 @@
     }
   ],
   "triggers": {
-    "crons": ["0 3 * * *", "*/15 0-2,4-23 * * *"]
+    "crons": [
+      "0 3 * * *",
+      "*/15 0-2,4-23 * * *"
+    ]
+  },
+  "previews": {
+    "d1_databases": [
+      {
+        "binding": "DB",
+        "database_id": "b3103550-8f93-4109-8a24-e0095c49e666"
+      }
+    ],
+    "kv_namespaces": [
+      {
+        "binding": "MAM_KV",
+        "id": "4de80ce8f698470e833d9773d6724b94"
+      }
+    ]
   }
 }
