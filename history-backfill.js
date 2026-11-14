@@ -2,6 +2,21 @@
 // Historical fixture discovery and staging are isolated from the live ESPN sync
 // and its existing statistics-recovery queue.
 export const HISTORY_BACKFILL_KEY = "mam:history-backfill-state:v1";
+export const NATIONS_LEAGUE_BACKFILL_KEY = "mam:nations-league-backfill-state:v1";
+export const NATIONS_LEAGUE_BACKFILL_LEAGUE = ["5", "uefa.nations", "UEFA Nations League", "Europe"];
+export function buildNationsLeagueBackfillState(now = new Date()) {
+  const rangeStart = "2022-06-01";
+  const rangeEnd = "2027-06-13";
+  const start = new Date(rangeStart + "T12:00:00.000Z");
+  const end = new Date(rangeEnd + "T12:00:00.000Z");
+  const dayCount = Math.floor((end.getTime() - start.getTime()) / 86400000) + 1;
+  return {
+    version: 1, scope: "uefa-nations-league", createdAt: now.toISOString(),
+    rangeStart, rangeEnd, dayCount, seasonsRequested: ["2022/23", "2024/25", "2026/27"],
+    leagueCount: 1, totalJobs: dayCount, cursor: 0, status: "queued", executionEnabled: false,
+    note: "Dedicated UEFA Nations League queue. ESPN fixture coverage must be audited; this queue does not modify live matches or the general archive."
+  };
+}
 const HISTORY_ESPN_BASE = "https://site.api.espn.com/apis/site/v2/sports/soccer";
 export const HISTORY_BACKFILL_START = "2024-07-01";
 
@@ -69,7 +84,7 @@ export function buildHistoryBackfillState(now = new Date()) {
 }
 
 // Generate only the requested slice; never materialize the entire multi-season queue.
-export function getHistoryBackfillBatch(state, limit = 20) {
+export function getHistoryBackfillBatch(state, limit = 20, leagues = HISTORY_BACKFILL_LEAGUES) {
   const start = new Date(state.rangeStart + "T12:00:00.000Z");
   const dayCount = Number(state.dayCount || 0);
   const totalJobs = Number(state.totalJobs || 0);
@@ -78,7 +93,7 @@ export function getHistoryBackfillBatch(state, limit = 20) {
   const safeLimit = Math.max(1, Math.min(50, Number(limit) || 20));
   const jobs = [];
   for (let index = cursor; index < Math.min(totalJobs, cursor + safeLimit); index++) {
-    const league = HISTORY_BACKFILL_LEAGUES[Math.floor(index / dayCount)];
+    const league = leagues[Math.floor(index / dayCount)];
     const day = new Date(start);
     day.setUTCDate(day.getUTCDate() + (index % dayCount));
     jobs.push({ league, date: day.toISOString().slice(0, 10).replace(/-/g, ""), attempts: 0 });
@@ -247,7 +262,7 @@ export async function runHistoryBackfillPilot(env, fetchImpl = fetch) {
 // Bounded processor: successful empty days count as completed coverage, while
 // transport/HTTP/schema failures enter a delayed retry queue. New discovery keeps
 // moving so one bad upstream day cannot block thousands of later dates.
-export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
+export async function runHistoryBackfillBatch(env, fetchImpl = fetch, options = {}) {
   if (env.HISTORY_BACKFILL_ENABLED !== "true") {
     return { ok: false, status: "disabled", reason: "Set HISTORY_BACKFILL_ENABLED=true only after isolated Preview verification." };
   }
@@ -255,7 +270,9 @@ export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
     return { ok: false, status: "unavailable", reason: "D1 and KV bindings are required." };
   }
 
-  const state = await env.MAM_KV.get(HISTORY_BACKFILL_KEY, "json");
+  const stateKey = options.stateKey || HISTORY_BACKFILL_KEY;
+  const leagues = options.leagues || HISTORY_BACKFILL_LEAGUES;
+  const state = await env.MAM_KV.get(stateKey, "json");
   if (!state || !Number.isInteger(Number(state.totalJobs)) || Number(state.totalJobs) < 1) {
     return { ok: false, status: "not-initialized" };
   }
@@ -298,7 +315,7 @@ export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
     const retryBatch = readyRetries.slice(0, batchLimit);
     const retryKeys = new Set(retryBatch.map(job => job.index));
     const newSlots = Math.max(0, batchLimit - retryBatch.length);
-    const newBatch = cursor < totalJobs && newSlots > 0 ? getHistoryBackfillBatch({ ...state, cursor }, newSlots) : [];
+    const newBatch = cursor < totalJobs && newSlots > 0 ? getHistoryBackfillBatch({ ...state, cursor }, newSlots, leagues) : [];
     const batch = [
       ...retryBatch.map(job => ({ ...job, isRetry: true })),
       ...newBatch.map((job, index) => ({ ...job, index: cursor + index, isRetry: false }))
@@ -306,7 +323,7 @@ export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
     if (!batch.length) {
       const nextState = { ...state, status: "retry-wait", lastRunAt: new Date().toISOString(),
         pendingRetries: pendingRetries.length, retryJobs: pendingRetries };
-      await env.MAM_KV.put(HISTORY_BACKFILL_KEY, JSON.stringify(nextState));
+      await env.MAM_KV.put(stateKey, JSON.stringify(nextState));
       return { ok: true, status: "retry-wait", processedJobs: cursor, totalJobs,
         pendingRetries: pendingRetries.length, nextRetryAt: new Date(Math.min(...pendingRetries.map(x => Number(x.retryAfter || now)))).toISOString() };
     }
