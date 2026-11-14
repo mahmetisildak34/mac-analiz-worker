@@ -307,7 +307,7 @@ export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
       await Promise.all(batch.slice(i, i + 3).map(async job => {
         const [leagueId, slug, leagueName, country] = job.league || [];
         try {
-          if (!slug || !/^\\d{8}$/.test(job.date)) throw new Error("Invalid league/date job");
+          if (!slug || !/^\d{8}$/.test(job.date)) throw new Error("Invalid league/date job");
           const response = await fetchImpl(HISTORY_ESPN_BASE + "/" + slug + "/scoreboard?dates=" + job.date + "&limit=500", {
             headers: { Accept: "application/json" }, signal: AbortSignal.timeout(12000)
           });
