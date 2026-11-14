@@ -1,4 +1,4 @@
-import { HISTORY_BACKFILL_KEY, buildHistoryBackfillState } from "./history-backfill.js";
+import { HISTORY_BACKFILL_KEY, buildHistoryBackfillState, runHistoryBackfillBatch } from "./history-backfill.js";
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
 const API_BASE = "https://v3.football.api-sports.io";
 const FOOTBALLDATA_BASE = "https://api.football-data.org/v4";
@@ -641,7 +641,7 @@ export default {
       return new Response(null, { status: 204, headers: cors });
     }
 
-    if (request.method !== "GET" && !(request.method === "POST" && (requestUrl.pathname === "/api/archive/matches" || requestUrl.pathname === "/api/archive/history-backfill/start"))) {
+    if (request.method !== "GET" && !(request.method === "POST" && (requestUrl.pathname === "/api/archive/matches" || requestUrl.pathname === "/api/archive/history-backfill/start" || requestUrl.pathname === "/api/archive/history-backfill/enable" || requestUrl.pathname === "/api/archive/history-backfill/run"))) {
       return new Response(JSON.stringify({ error: "Method not allowed" }), {
         status: 405,
         headers: { ...cors, "Content-Type": "application/json" }
@@ -685,6 +685,23 @@ export default {
             status: 401, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
           });
         }
+      }
+
+      if (path === "archive/history-backfill/enable" && request.method === "POST") {
+        if (env.HISTORY_BACKFILL_ENABLED !== "true") return new Response(JSON.stringify({ ok: false, error: "Historical processor feature flag is disabled." }), { status: 403, headers });
+        if (!env.MAM_KV || !env.DB) return new Response(JSON.stringify({ ok: false, error: "D1/KV bindings are required." }), { status: 503, headers });
+        const state = await env.MAM_KV.get(HISTORY_BACKFILL_KEY, "json");
+        if (!state) return new Response(JSON.stringify({ ok: false, error: "Historical queue has not been initialized." }), { status: 409, headers });
+        state.executionEnabled = true;
+        state.enabledAt = new Date().toISOString();
+        await env.MAM_KV.put(HISTORY_BACKFILL_KEY, JSON.stringify(state));
+        return new Response(JSON.stringify({ ok: true, executionEnabled: true, message: "Enabled only; no batch was run." }), { status: 200, headers });
+      }
+
+      if (path === "archive/history-backfill/run" && request.method === "POST") {
+        const result = await runHistoryBackfillBatch(env);
+        const status = result.status === "disabled" ? 403 : result.status === "locked" ? 409 : result.status === "unavailable" ? 503 : 200;
+        return new Response(JSON.stringify(result), { status, headers });
       }
 
       if (path === "archive/history-backfill/status" && request.method === "GET") {
