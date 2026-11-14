@@ -308,8 +308,10 @@ export default {
         // Additive indexes improve archive queries without modifying or deleting stored matches.
         await ensureArchiveIndexes(env);
         // Keep a rolling 45-day history plus 14 days of upcoming fixtures across configured ESPN competitions.
-        // The 15-minute cron processes 40 league/date jobs per run to stay within free-tier limits.
-        await syncEspnFixturesToD1(env, 45, 14, isHourlySync ? 40 : 10);
+        // Each invocation also fetches up to 16 ESPN match summaries.
+        // Keep scoreboard (24) + summary (16) fetches below the 50-subrequest
+        // Workers Free limit, preventing the summary queue from starving the archive sync.
+        await syncEspnFixturesToD1(env, 45, 14, isHourlySync ? 24 : 10);
       } catch (archiveError) {
         console.log('ESPN D1 archive sync error', String(archiveError?.message || archiveError));
       }
