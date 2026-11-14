@@ -26,6 +26,9 @@
     ]
   },
   "previews": {
+    "vars": {
+      "HISTORY_BACKFILL_PILOT_ENABLED": "true"
+    },
     "kv_namespaces": [
       {
         "binding": "MAM_KV",
