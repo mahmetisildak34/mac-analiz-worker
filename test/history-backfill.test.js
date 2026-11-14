@@ -158,7 +158,7 @@ test("pilot stages validated matches from all three leagues in one idempotent ba
     }],
     status: { type: { state: "post", completed: true } }
   });
-  const counts = { "eng.1": 1, "esp.1": 4, "ger.1": 2 };
+  const counts = { "eng.1": 1, "esp.1": 4, "ger.1": 2, "tur.1": 4 };
   const result = await runHistoryBackfillPilot(env, async url => {
     const slug = new URL(url).pathname.split("/").at(-2);
     return new Response(JSON.stringify({
@@ -166,9 +166,9 @@ test("pilot stages validated matches from all three leagues in one idempotent ba
     }), { status: 200 });
   });
   assert.equal(result.ok, true);
-  assert.equal(result.fetchedMatches, 7);
-  assert.equal(result.databaseChanges, 7);
-  assert.equal(batchRows.length, 7);
+  assert.equal(result.fetchedMatches, 11);
+  assert.equal(result.databaseChanges, 11);
+  assert.equal(batchRows.length, 11);
   assert.equal(createCalls, 1);
   assert.equal(result.status, "pilot-staged");
 });
