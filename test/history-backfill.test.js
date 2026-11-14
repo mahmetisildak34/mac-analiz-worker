@@ -294,7 +294,7 @@ test("Copa América uses ESPN's configured CONMEBOL slug", async () => {
   assert.match(requestedUrl, /\/soccer\/conmebol\.copa_america\/scoreboard\?/);
 });
 
-test("UEFA Nations League has a dedicated 2022–2027 queue isolated from the general archive", () => {
+test("UEFA Nations League queue covers the 2024 and 2026 editions only, isolated from the general archive", () => {
   const state = buildNationsLeagueBackfillState(new Date("2026-11-14T12:00:00.000Z"));
   assert.equal(state.scope, "uefa-nations-league");
   assert.equal(state.rangeStart, "2022-06-01");
@@ -307,7 +307,7 @@ test("UEFA Nations League has a dedicated 2022–2027 queue isolated from the ge
   const batch = getHistoryBackfillBatch(state, 3, [NATIONS_LEAGUE_BACKFILL_LEAGUE]);
   assert.equal(batch.length, 3);
   assert.ok(batch.every(job => job.league[1] === "uefa.nations"));
-  assert.deepEqual(batch.map(job => job.date), ["20220601", "20220602", "20220603"]);
+  assert.deepEqual(batch.map(job => job.date), ["20240905", "20240906", "20240907"]);
 });
 
 test("Nations League statistics queue initializes from completed staged fixtures only", async () => {
