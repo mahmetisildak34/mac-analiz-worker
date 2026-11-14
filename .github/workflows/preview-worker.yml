@@ -158,7 +158,7 @@ jobs:
         run: |
           set -euo pipefail
           npx wrangler deploy --config wrangler.history-preview.jsonc
-          runner_status="$(curl --fail --show-error --silent "https://mam-nations-history-preview.<ACCOUNT_SUBDOMAIN>.workers.dev/status")"
+          runner_status="$(curl --fail --show-error --silent "https://mam-nations-history-preview.m-ahmetisildak34.workers.dev/status")"
           printf '%s\\n' "$runner_status"
           echo "$runner_status" | jq -e '.ok == true and .environment == "preview" and .scope == "uefa-nations-league" and .schedule == "*/15 * * * *"' >/dev/null
         env:
