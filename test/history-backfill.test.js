@@ -203,7 +203,7 @@ test("empty ESPN 200 responses are completed days and advance the cursor", async
     requests++;
     return new Response(JSON.stringify({ events: [] }), { status: 200 });
   });
-  assert.equal(requests, 3);
+  assert.equal(requests, 3, JSON.stringify(result));
   assert.equal(result.status, "complete");
   assert.equal(result.advanced, 3);
   assert.equal(result.successfulDays, 3);
