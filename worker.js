@@ -408,9 +408,6 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   const doneList = Array.from(summaryDoneSet);
   await env.MAM_KV.put(summaryDoneKey, JSON.stringify(doneList.slice(-3000)));
 
-  const crossSourceStats = await enrichExactCrossSourceMatches(env);
-  if (crossSourceStats.updated) console.log("Exact cross-source statistics enrichment", crossSourceStats);
-
   state.cursor += batch.length;
   if (retryJobs.length) state.jobs.push(...retryJobs);
   const complete = state.cursor >= state.jobs.length;
@@ -447,6 +444,16 @@ export default {
         await syncEspnFixturesToD1(env, 45, 30, isHourlySync ? 24 : 10);
       } catch (archiveError) {
         console.log('ESPN D1 archive sync error', String(archiveError?.message || archiveError));
+      }
+      // Run cross-provider enrichment independently of ESPN backfill success.
+      // This guarantees a diagnostic report on every scheduled invocation.
+      try {
+        const crossSourceStats = await enrichExactCrossSourceMatches(env);
+        console.log("Scheduled cross-source statistics enrichment", crossSourceStats);
+      } catch (enrichmentError) {
+        const report = { ranAt: new Date().toISOString(), error: String(enrichmentError?.message || enrichmentError) };
+        if (env.MAM_KV) await env.MAM_KV.put("mam:cross-source-stats:last:v1", JSON.stringify(report), { expirationTtl: 60 * 60 * 24 * 30 });
+        console.log("Cross-source statistics enrichment failed", report);
       }
     }
     if (isHourlySync || !env.MAM_KV) return;
