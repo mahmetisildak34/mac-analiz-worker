@@ -458,9 +458,9 @@ export default {
         if (normalizedLeagueRows) console.log("Normalized league country metadata", { rows: normalizedLeagueRows });
         // Keep a rolling 45-day history plus 30 days of upcoming fixtures across configured ESPN competitions.
         // Each invocation also fetches up to 16 ESPN match summaries.
-        // Keep scoreboard (24) + summary (16) fetches below the 50-subrequest
-        // Workers Free limit, preventing the summary queue from starving the archive sync.
-        await syncEspnFixturesToD1(env, 45, 30, isHourlySync ? 24 : 10);
+        // Keep scoreboard (32) + summary (16) fetches at 48 total, below the 50-subrequest
+        // Workers Free limit while increasing archive throughput by one third.
+        await syncEspnFixturesToD1(env, 45, 30, isHourlySync ? 32 : 10);
       } catch (archiveError) {
         console.log('ESPN D1 archive sync error', String(archiveError?.message || archiveError));
       }
