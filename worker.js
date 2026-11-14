@@ -1017,7 +1017,7 @@ export default {
             eligibleMatches: Number(statsCoverage?.eligibleTotal || 0),
             eligibleWithStatistics: Number(statsCoverage?.eligibleWithStatistics || 0),
             eligibleMissingStatistics: Math.max(0, Number(statsCoverage?.eligibleTotal || 0) - Number(statsCoverage?.eligibleWithStatistics || 0)),
-            eligibleCoveragePercent: Number(statsCoverage?.eligibleTotal || 0) ? Math.round(Number(statsCoverage?.eligibleWithStatistics || 0) / Number(statsCoverage.eligibleTotal) * 1000) / 10 : 0 : 0
+            eligibleCoveragePercent: Number(statsCoverage?.eligibleTotal || 0) ? Math.round(Number(statsCoverage?.eligibleWithStatistics || 0) / Number(statsCoverage.eligibleTotal) * 1000) / 10 : 0
           },
           crossSourceStatisticsEnrichment: crossSourceStatsReport || null,
           espnSummaryLastRun: summaryLastRun || null,
