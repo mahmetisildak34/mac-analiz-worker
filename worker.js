@@ -1,4 +1,4 @@
-import { HISTORY_BACKFILL_KEY, buildHistoryBackfillState } from "./history-backfill.js";
+import { HISTORY_BACKFILL_KEY, buildHistoryBackfillState, getHistoryBackfillBatch } from "./history-backfill.js";
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
 const API_BASE = "https://v3.football.api-sports.io";
 const FOOTBALLDATA_BASE = "https://api.football-data.org/v4";
@@ -689,7 +689,7 @@ export default {
 
       if (path === "archive/history-backfill/status" && request.method === "GET") {
         const state = env.MAM_KV ? await env.MAM_KV.get(HISTORY_BACKFILL_KEY, "json") : null;
-        const totalJobs = Array.isArray(state?.jobs) ? state.jobs.length : 0;
+        const totalJobs = Number(state?.totalJobs || (Array.isArray(state?.jobs) ? state.jobs.length : 0));
         const processedJobs = Math.min(Number(state?.cursor || 0), totalJobs);
         return new Response(JSON.stringify({
           ok: true, exists: Boolean(state), status: state?.status || "not-created",
@@ -706,7 +706,7 @@ export default {
       if (path === "archive/history-backfill/start" && request.method === "POST") {
         if (!env.MAM_KV) return new Response(JSON.stringify({ error: "MAM_KV KV binding is missing" }), { status: 503, headers });
         const existing = await env.MAM_KV.get(HISTORY_BACKFILL_KEY, "json");
-        if (existing && Array.isArray(existing.jobs) && existing.cursor < existing.jobs.length) {
+        if (existing && Number(existing.totalJobs || (Array.isArray(existing.jobs) ? existing.jobs.length : 0)) > Number(existing.cursor || 0)) {
           return new Response(JSON.stringify({
             ok: false, alreadyExists: true, status: existing.status || "queued",
             totalJobs: existing.jobs.length, processedJobs: Number(existing.cursor || 0),
@@ -719,7 +719,7 @@ export default {
           ok: true, created: true, status: state.status, createdAt: state.createdAt,
           rangeStart: state.rangeStart, rangeEnd: state.rangeEnd,
           seasonsRequested: state.seasonsRequested, leagueCount: state.leagueCount,
-          totalJobs: state.jobs.length, processedJobs: 0, remainingJobs: state.jobs.length,
+          totalJobs: state.totalJobs, processedJobs: 0, remainingJobs: state.totalJobs,
           executionEnabled: false,
           note: "Separate queue created. No ESPN API calls, match writes, deletions, or changes to existing queues were performed."
         }), { status: 201, headers });
