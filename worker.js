@@ -1,4 +1,4 @@
-import { HISTORY_BACKFILL_KEY, buildHistoryBackfillState, runHistoryBackfillBatch } from "./history-backfill.js";
+import { HISTORY_BACKFILL_KEY, buildHistoryBackfillState, runHistoryBackfillBatch, probeHistoryBackfillRange } from "./history-backfill.js";
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
 const API_BASE = "https://v3.football.api-sports.io";
 const FOOTBALLDATA_BASE = "https://api.football-data.org/v4";
@@ -676,7 +676,7 @@ export default {
       // Read-only match archive and aggregate diagnostics are public.
       // Writes and all other private routes still require a signed-in session.
       const publicArchiveRead = request.method === "GET" &&
-        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/quality-check" || path === "archive/live" || path === "archive/history-backfill/status" ||
+        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/quality-check" || path === "archive/live" || path === "archive/history-backfill/status" || path === "archive/history-backfill/probe" ||
          (isESPN && path.endsWith("/summary") && /^\d+$/.test(url.searchParams.get("event") || "")));
       if (!publicArchiveRead) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
@@ -685,6 +685,18 @@ export default {
             status: 401, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
           });
         }
+      }
+
+      if (path === "archive/history-backfill/probe" && request.method === "GET") {
+        const result = await probeHistoryBackfillRange({
+          leagueSlug: url.searchParams.get("league") || "eng.1",
+          dateFrom: url.searchParams.get("from") || "",
+          dateTo: url.searchParams.get("to") || ""
+        });
+        const status = result.ok ? 200 : result.status === "invalid-input" || result.status === "invalid-range" ? 400 : 502;
+        return new Response(JSON.stringify(result), {
+          status, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+        });
       }
 
       if (path === "archive/history-backfill/enable" && request.method === "POST") {
