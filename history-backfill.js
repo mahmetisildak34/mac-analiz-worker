@@ -35,22 +35,36 @@ export function buildHistoryBackfillState(now = new Date()) {
   const start = new Date(HISTORY_BACKFILL_START + "T12:00:00.000Z");
   const end = new Date(now);
   end.setUTCHours(12, 0, 0, 0);
-  const jobs = [];
-  for (const league of HISTORY_BACKFILL_LEAGUES) {
-    for (const day = new Date(start); day <= end; day.setUTCDate(day.getUTCDate() + 1)) {
-      jobs.push({ league, date: day.toISOString().slice(0, 10).replace(/-/g, ""), attempts: 0 });
-    }
-  }
+  const dayCount = Math.floor((end.getTime() - start.getTime()) / 86400000) + 1;
   return {
     version: 1,
     createdAt: now.toISOString(),
     rangeStart: HISTORY_BACKFILL_START,
     rangeEnd: end.toISOString().slice(0, 10),
+    dayCount,
     seasonsRequested: ["2024/25", "2025/26", "2026/27"],
     leagueCount: HISTORY_BACKFILL_LEAGUES.length,
-    jobs,
+    totalJobs: HISTORY_BACKFILL_LEAGUES.length * dayCount,
     cursor: 0,
     status: "queued",
-    note: "Queue created only; execution is intentionally disabled until the isolated processor is reviewed and enabled."
+    executionEnabled: false,
+    note: "Compact queue metadata only. Jobs are generated deterministically in bounded batches; no match data is fetched or written."
   };
+}
+
+// Generate only the requested slice; never materialize the entire multi-season queue.
+export function getHistoryBackfillBatch(state, limit = 20) {
+  const start = new Date(state.rangeStart + "T12:00:00.000Z");
+  const dayCount = Number(state.dayCount || 0);
+  const totalJobs = Number(state.totalJobs || 0);
+  const cursor = Math.max(0, Number(state.cursor || 0));
+  const safeLimit = Math.max(1, Math.min(50, Number(limit) || 20));
+  const jobs = [];
+  for (let index = cursor; index < Math.min(totalJobs, cursor + safeLimit); index++) {
+    const league = HISTORY_BACKFILL_LEAGUES[Math.floor(index / dayCount)];
+    const day = new Date(start);
+    day.setUTCDate(day.getUTCDate() + (index % dayCount));
+    jobs.push({ league, date: day.toISOString().slice(0, 10).replace(/-/g, ""), attempts: 0 });
+  }
+  return jobs;
 }
