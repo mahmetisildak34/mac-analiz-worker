@@ -357,8 +357,14 @@ test("Nations League statistics processor stores raw summary and parsed team sta
   });
   assert.equal(result.statisticsFound, 1);
   assert.equal(result.noStatistics, 0);
-  assert.equal(saved.length, 1);
+  assert.equal(saved.length, 2);
+  assert.match(saved[0].sql, /INSERT INTO mam_history_backfill_statistics/);
   assert.equal(saved[0].values[0], "espn-uefa.nations-12345");
   assert.equal(saved[0].values[2], "statistics-found");
+  assert.match(saved[1].sql, /UPDATE mam_history_backfill_matches SET statistics_json/);
+  assert.deepEqual(saved[1].values, [JSON.stringify({ teams: [
+    { homeAway: "home", team: "Home", statistics: [{ name: "shots", displayValue: "12" }] },
+    { homeAway: "away", team: "Away", statistics: [{ name: "shots", displayValue: "8" }] }
+  ], summaryAvailable: true }), "espn-uefa.nations-12345"]);
   assert.equal(env.nextState.cursor, 1);
 });
