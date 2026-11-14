@@ -427,7 +427,7 @@ export async function runHistoryBackfillBatch(env, fetchImpl = fetch, options = 
       lastBatch: { requested: batch.length, newJobs: advancedNewJobs, successfulDays, emptyDays,
         saved, failures, pendingRetries: retryJobs.length, deadLetters: nextDeadLetters.length }
     };
-    await env.MAM_KV.put(HISTORY_BACKFILL_KEY, JSON.stringify(nextState));
+    await env.MAM_KV.put(stateKey, JSON.stringify(nextState));
     return {
       ok: true, status, requested: batch.length, advanced: advancedNewJobs,
       successfulDays, emptyDays, processedJobs: nextCursor, totalJobs,
