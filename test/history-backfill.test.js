@@ -19,6 +19,13 @@ test("history queue is compact metadata for 39 configured competitions", () => {
   assert.equal(state.executionEnabled, false);
 });
 
+test("popular leagues are processed before the remaining archive competitions", () => {
+  assert.deepEqual(
+    HISTORY_BACKFILL_LEAGUES.slice(0, 9).map(league => league[0]),
+    ["203", "39", "140", "78", "135", "61", "2", "3", "848"]
+  );
+});
+
 test("batch generation is bounded and deterministic", () => {
   const state = buildHistoryBackfillState(new Date("2026-11-14T12:00:00.000Z"));
   const batch = getHistoryBackfillBatch(state, 500);
