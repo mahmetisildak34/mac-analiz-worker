@@ -297,9 +297,9 @@ test("Copa América uses ESPN's configured CONMEBOL slug", async () => {
 test("UEFA Nations League queue covers the 2024 and 2026 editions only, isolated from the general archive", () => {
   const state = buildNationsLeagueBackfillState(new Date("2026-11-14T12:00:00.000Z"));
   assert.equal(state.scope, "uefa-nations-league");
-  assert.equal(state.rangeStart, "2022-06-01");
-  assert.equal(state.rangeEnd, "2027-06-13");
-  assert.deepEqual(state.seasonsRequested, ["2022/23", "2024/25", "2026/27"]);
+  assert.equal(state.rangeStart, "2024-09-05");
+  assert.equal(state.rangeEnd, "2026-11-14");
+  assert.deepEqual(state.seasonsRequested, ["2024/25", "2026/27"]);
   assert.equal(state.leagueCount, 1);
   assert.equal(state.totalJobs, state.dayCount);
   assert.equal(state.executionEnabled, false);
