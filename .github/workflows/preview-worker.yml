@@ -94,7 +94,7 @@ jobs:
             exit 1
           fi
           status="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/history-backfill/status?scope=nations-league")"
-          printf '%s\\n' "$status"
+          printf '%s\n' "$status"
           echo "$status" | jq -e '.ok == true and .exists == true and .executionEnabled == false and .totalJobs == 1839' >/dev/null
         env:
           PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
