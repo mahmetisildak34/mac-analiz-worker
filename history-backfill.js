@@ -263,7 +263,7 @@ export async function runHistoryBackfillPilot(env, fetchImpl = fetch) {
 // transport/HTTP/schema failures enter a delayed retry queue. New discovery keeps
 // moving so one bad upstream day cannot block thousands of later dates.
 export async function runHistoryBackfillBatch(env, fetchImpl = fetch, options = {}) {
-  if (env.HISTORY_BACKFILL_ENABLED !== "true") {
+  if (env.HISTORY_BACKFILL_ENABLED !== "true" && options.previewAuthorized !== true) {
     return { ok: false, status: "disabled", reason: "Set HISTORY_BACKFILL_ENABLED=true only after isolated Preview verification." };
   }
   if (!env.DB || !env.MAM_KV) {
