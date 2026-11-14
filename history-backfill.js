@@ -502,10 +502,13 @@ export async function runNationsLeagueStatisticsBatch(env, fetchImpl = fetch) {
     const retryBatch = readyRetries.slice(0, limit);
     const newSlots = Math.max(0, limit - retryBatch.length);
     const cursor = Math.max(0, Number(state.cursor || 0));
-    const rowsResult = newSlots > 0 && cursor < totalJobs
+    const retryIds = retryBatch.map(job => String(job.fixtureId || ""));
+    const retryFilter = retryIds.length ? " AND fixture_id NOT IN (" + retryIds.map(() => "?").join(",") + ")" : "";
+    const rowsResult = newSlots > 0
       ? await env.DB.prepare(
-          "SELECT fixture_id AS fixtureId, kickoff, status FROM mam_history_backfill_matches WHERE league_id = '5' AND source = 'ESPN' AND status IN ('FT','AET','PEN') ORDER BY kickoff, fixture_id LIMIT ? OFFSET ?"
-        ).bind(newSlots, cursor).all()
+          "SELECT m.fixture_id AS fixtureId, m.kickoff, m.status FROM mam_history_backfill_matches m WHERE m.league_id = '5' AND m.source = 'ESPN' AND m.status IN ('FT','AET','PEN') AND NOT EXISTS (SELECT 1 FROM mam_history_backfill_statistics s WHERE s.source = m.source AND s.fixture_id = m.fixture_id)" +
+          retryFilter + " ORDER BY m.kickoff, m.fixture_id LIMIT ?"
+        ).bind(...retryIds, newSlots).all()
       : { results: [] };
     const newFixtures = Array.isArray(rowsResult?.results) ? rowsResult.results : [];
     const fixtures = [
