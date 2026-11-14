@@ -96,6 +96,10 @@ export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
   await env.DB.prepare(
     "CREATE TABLE IF NOT EXISTS mam_history_backfill_lock (id INTEGER PRIMARY KEY CHECK (id = 1), owner TEXT, lease_until INTEGER NOT NULL DEFAULT 0)"
   ).run();
+  // Stage history separately so the live statistics-recovery queue cannot consume it.
+  await env.DB.prepare(
+    "CREATE TABLE IF NOT EXISTS mam_history_backfill_matches (source TEXT NOT NULL, fixture_id TEXT NOT NULL, league_id TEXT, league_name TEXT, country TEXT, kickoff TEXT, status TEXT, home_team_id TEXT, home_team TEXT, away_team_id TEXT, away_team TEXT, home_goals INTEGER, away_goals INTEGER, raw_json TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (source, fixture_id))"
+  ).run();
   await env.DB.prepare(
     "INSERT OR IGNORE INTO mam_history_backfill_lock (id, owner, lease_until) VALUES (1, '', 0)"
   ).run();
@@ -154,7 +158,7 @@ export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
       }));
     }
 
-    const sql = "INSERT INTO matches (source, fixture_id, league_id, league_name, country, kickoff, status, home_team_id, home_team, away_team_id, away_team, home_goals, away_goals, statistics_json, raw_json) VALUES ('ESPN', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?) ON CONFLICT(source, fixture_id) DO UPDATE SET league_id=excluded.league_id, league_name=excluded.league_name, country=excluded.country, kickoff=excluded.kickoff, status=CASE WHEN matches.status IN ('FT','AET','PEN') AND excluded.status='NS' THEN matches.status ELSE excluded.status END, home_team_id=COALESCE(excluded.home_team_id,matches.home_team_id), home_team=excluded.home_team, away_team_id=COALESCE(excluded.away_team_id,matches.away_team_id), away_team=excluded.away_team, home_goals=COALESCE(excluded.home_goals,matches.home_goals), away_goals=COALESCE(excluded.away_goals,matches.away_goals), raw_json=excluded.raw_json, updated_at=CURRENT_TIMESTAMP";
+    const sql = "INSERT INTO mam_history_backfill_matches (source, fixture_id, league_id, league_name, country, kickoff, status, home_team_id, home_team, away_team_id, away_team, home_goals, away_goals, raw_json) VALUES ('ESPN', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(source, fixture_id) DO UPDATE SET league_id=excluded.league_id, league_name=excluded.league_name, country=excluded.country, kickoff=excluded.kickoff, status=CASE WHEN mam_history_backfill_matches.status IN ('FT','AET','PEN') AND excluded.status='NS' THEN mam_history_backfill_matches.status ELSE excluded.status END, home_team_id=COALESCE(excluded.home_team_id,mam_history_backfill_matches.home_team_id), home_team=excluded.home_team, away_team_id=COALESCE(excluded.away_team_id,mam_history_backfill_matches.away_team_id), away_team=excluded.away_team, home_goals=COALESCE(excluded.home_goals,mam_history_backfill_matches.home_goals), away_goals=COALESCE(excluded.away_goals,mam_history_backfill_matches.away_goals), raw_json=excluded.raw_json, updated_at=CURRENT_TIMESTAMP";
     let saved = 0;
     for (let i = 0; i < rows.length; i += 50) {
       const statements = rows.slice(i, i + 50).map(row => env.DB.prepare(sql).bind(
