@@ -4,6 +4,9 @@ import {
   buildHistoryBackfillState,
   buildNationsLeagueBackfillState,
   NATIONS_LEAGUE_BACKFILL_LEAGUE,
+  buildNationsLeagueStatisticsState,
+  runNationsLeagueStatisticsBatch,
+  NATIONS_LEAGUE_STATISTICS_KEY,
   getHistoryBackfillBatch,
   runHistoryBackfillBatch,
   probeHistoryBackfillRange,
@@ -305,4 +308,57 @@ test("UEFA Nations League has a dedicated 2022–2027 queue isolated from the ge
   assert.equal(batch.length, 3);
   assert.ok(batch.every(job => job.league[1] === "uefa.nations"));
   assert.deepEqual(batch.map(job => job.date), ["20220601", "20220602", "20220603"]);
+});
+
+test("Nations League statistics queue initializes from completed staged fixtures only", async () => {
+  let stored = null;
+  const env = {
+    DB: { prepare: () => ({ first: async () => ({ total: 12 }) }) },
+    MAM_KV: { put: async (key, value) => { assert.equal(key, NATIONS_LEAGUE_STATISTICS_KEY); stored = JSON.parse(value); } }
+  };
+  const result = await buildNationsLeagueStatisticsState(env, new Date("2026-11-14T12:00:00Z"));
+  assert.equal(result.ok, true);
+  assert.equal(result.totalJobs, 12);
+  assert.equal(result.executionEnabled, false);
+  assert.equal(stored.scope, "uefa-nations-league-statistics");
+});
+
+test("Nations League statistics processor stays disabled unless explicitly enabled", async () => {
+  const result = await runNationsLeagueStatisticsBatch({});
+  assert.equal(result.status, "disabled");
+});
+
+test("Nations League statistics processor stores raw summary and parsed team stats in isolated table", async () => {
+  const saved = [];
+  const env = {
+    HISTORY_STATISTICS_ENABLED: "true",
+    MAM_KV: { get: async () => ({
+      totalJobs: 1, cursor: 0, executionEnabled: true, retryJobs: [],
+      statisticsFound: 0, noStatistics: 0
+    }), put: async (_key, value) => { env.nextState = JSON.parse(value); } },
+    DB: {
+      prepare(sql) {
+        return {
+          bind(...values) { this.values = values; return this; },
+          all: async () => ({ results: [{ fixtureId: "espn-uefa.nations-12345", kickoff: "2024-09-05T18:45:00Z", status: "FT" }] }),
+          run: async () => ({ meta: { changes: 0 } }),
+          sql
+        };
+      },
+      batch: async statements => { saved.push(...statements); return statements.map(() => ({ meta: { changes: 1 } })); }
+    }
+  };
+  const result = await runNationsLeagueStatisticsBatch(env, async url => {
+    assert.match(String(url), /uefa\.nations\/summary\?event=12345/);
+    return new Response(JSON.stringify({ boxscore: { teams: [
+      { homeAway: "home", team: { displayName: "Home" }, statistics: [{ name: "shots", displayValue: "12" }] },
+      { homeAway: "away", team: { displayName: "Away" }, statistics: [{ name: "shots", displayValue: "8" }] }
+    ] } }), { status: 200 });
+  });
+  assert.equal(result.statisticsFound, 1);
+  assert.equal(result.noStatistics, 0);
+  assert.equal(saved.length, 1);
+  assert.equal(saved[0].values[0], "espn-uefa.nations-12345");
+  assert.equal(saved[0].values[2], "statistics-found");
+  assert.equal(env.nextState.cursor, 1);
 });
