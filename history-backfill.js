@@ -119,6 +119,92 @@ export async function probeHistoryBackfillRange({ leagueSlug = "eng.1", dateFrom
   }
 }
 
+
+// Fixed, one-day pilot: three leagues already verified by the read-only probe.
+// It does not read or advance the general historical queue.
+export const HISTORY_BACKFILL_PILOT = {
+  date: "20261101",
+  leagues: [
+    ["39", "eng.1", "Premier League", "England"],
+    ["140", "esp.1", "La Liga", "Spain"],
+    ["78", "ger.1", "Bundesliga", "Germany"]
+  ]
+};
+
+export async function runHistoryBackfillPilot(env, fetchImpl = fetch) {
+  if (env.HISTORY_BACKFILL_PILOT_ENABLED !== "true") {
+    return { ok: false, status: "pilot-disabled", reason: "Pilot is disabled until explicitly enabled in isolated Preview." };
+  }
+  if (!env.DB) return { ok: false, status: "unavailable", reason: "Preview D1 binding is required." };
+
+  const rows = [];
+  const leagueResults = [];
+  for (const [leagueId, slug, leagueName, country] of HISTORY_BACKFILL_PILOT.leagues) {
+    try {
+      const response = await fetchImpl(HISTORY_ESPN_BASE + "/" + slug + "/scoreboard?dates=" + HISTORY_BACKFILL_PILOT.date + "&limit=500", {
+        headers: { Accept: "application/json" },
+        signal: AbortSignal.timeout(12000)
+      });
+      if (!response.ok) {
+        return { ok: false, status: "upstream-http-error", league: slug, httpStatus: response.status, saved: 0, note: "No D1 writes were made." };
+      }
+      const payload = await response.json();
+      if (!payload || !Array.isArray(payload.events) || payload.events.length === 0) {
+        return { ok: false, status: "empty-or-invalid-upstream", league: slug, saved: 0, note: "No D1 writes were made; an empty response is not treated as completed coverage." };
+      }
+      let accepted = 0;
+      for (const event of payload.events) {
+        const competition = (event.competitions || [])[0] || {};
+        const competitors = competition.competitors || [];
+        const home = competitors.find(item => item.homeAway === "home") || {};
+        const away = competitors.find(item => item.homeAway === "away") || {};
+        const homeName = String(home.team?.displayName || home.team?.name || "").trim();
+        const awayName = String(away.team?.displayName || away.team?.name || "").trim();
+        if (!event.id || !event.date || !homeName || !awayName) continue;
+        const eventDate = String(event.date).slice(0, 10).replace(/-/g, "");
+        if (eventDate !== HISTORY_BACKFILL_PILOT.date) continue;
+        const type = event.status?.type || competition.status?.type || {};
+        const phase = String(type.state || "").toLowerCase();
+        const status = type.completed === true || phase === "post" ? "FT" : (phase === "in" || phase === "live") ? "LIVE" : "NS";
+        const score = value => value == null || value === "" ? null : (Number.isFinite(Number(value)) ? Number(value) : null);
+        rows.push({
+          fixtureId: "espn-" + slug + "-" + String(event.id),
+          leagueId, leagueName, country, kickoff: String(event.date), status,
+          homeId: home.team?.id == null ? null : String(home.team.id), homeName,
+          awayId: away.team?.id == null ? null : String(away.team.id), awayName,
+          homeGoals: score(home.score), awayGoals: score(away.score), raw: JSON.stringify(event)
+        });
+        accepted++;
+      }
+      if (!accepted) {
+        return { ok: false, status: "invalid-events", league: slug, saved: 0, note: "No D1 writes were made; returned events did not pass validation." };
+      }
+      leagueResults.push({ league: leagueName, eventCount: payload.events.length, validMatches: accepted });
+    } catch (error) {
+      return { ok: false, status: "upstream-error", league: slug, detail: String(error?.message || error).slice(0, 200), saved: 0, note: "No D1 writes were made." };
+    }
+  }
+
+  await env.DB.prepare(
+    "CREATE TABLE IF NOT EXISTS mam_history_backfill_matches (source TEXT NOT NULL, fixture_id TEXT NOT NULL, league_id TEXT, league_name TEXT, country TEXT, kickoff TEXT, status TEXT, home_team_id TEXT, home_team TEXT, away_team_id TEXT, away_team TEXT, home_goals INTEGER, away_goals INTEGER, raw_json TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (source, fixture_id))"
+  ).run();
+
+  const sql = "INSERT INTO mam_history_backfill_matches (source, fixture_id, league_id, league_name, country, kickoff, status, home_team_id, home_team, away_team_id, away_team, home_goals, away_goals, raw_json) VALUES ('ESPN', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(source, fixture_id) DO UPDATE SET league_id=excluded.league_id, league_name=excluded.league_name, country=excluded.country, kickoff=excluded.kickoff, status=CASE WHEN mam_history_backfill_matches.status IN ('FT','AET','PEN') AND excluded.status='NS' THEN mam_history_backfill_matches.status ELSE excluded.status END, home_team_id=COALESCE(excluded.home_team_id,mam_history_backfill_matches.home_team_id), home_team=excluded.home_team, away_team_id=COALESCE(excluded.away_team_id,mam_history_backfill_matches.away_team_id), away_team=excluded.away_team, home_goals=COALESCE(excluded.home_goals,mam_history_backfill_matches.home_goals), away_goals=COALESCE(excluded.away_goals,mam_history_backfill_matches.away_goals), raw_json=excluded.raw_json, updated_at=CURRENT_TIMESTAMP";
+  const statements = rows.map(row => env.DB.prepare(sql).bind(
+    row.fixtureId, row.leagueId, row.leagueName, row.country, row.kickoff, row.status,
+    row.homeId, row.homeName, row.awayId, row.awayName, row.homeGoals, row.awayGoals, row.raw
+  ));
+  const results = await env.DB.batch(statements);
+  const changes = results.reduce((sum, item) => sum + (Number(item?.meta?.changes) || 0), 0);
+  return {
+    ok: true, status: "pilot-staged", date: HISTORY_BACKFILL_PILOT.date,
+    fetchedMatches: rows.length, databaseChanges: changes,
+    leagues: leagueResults,
+    idempotentKey: "ESPN source + league-scoped fixture ID",
+    note: "Preview staging only. Main matches table and general history queue were not modified."
+  };
+}
+
 // One manually-invoked, tightly bounded batch. The feature flag is deliberately
 // absent from source control; it must be explicitly set in the Worker environment.
 export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
