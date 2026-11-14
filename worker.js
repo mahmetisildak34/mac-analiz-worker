@@ -234,7 +234,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   const readySummaries = [];
   const deferredSummaries = [];
   for (const item of summaryQueue) {
-    if (Number(item.retryAfter || 0) <= nowMs && readySummaries.length < 8) readySummaries.push(item);
+    if (Number(item.retryAfter || 0) <= nowMs && readySummaries.length < 16) readySummaries.push(item);
     else deferredSummaries.push(item);
   }
   summaryQueue = deferredSummaries;
