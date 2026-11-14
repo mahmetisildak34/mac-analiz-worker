@@ -115,7 +115,14 @@ test("pilot refuses to write when any league returns empty events", async () => 
   };
   const result = await runHistoryBackfillPilot(env, async url => {
     const slug = new URL(url).pathname.split("/").at(-2);
-    return new Response(JSON.stringify({ events: slug === "ger.1" ? [] : [{ id: "1" }] }), { status: 200 });
+    const validEvent = {
+      id: "1", date: "2026-11-01T12:00:00Z",
+      competitions: [{ competitors: [
+        { homeAway: "home", team: { displayName: "Home FC" } },
+        { homeAway: "away", team: { displayName: "Away FC" } }
+      ] }]
+    };
+    return new Response(JSON.stringify({ events: slug === "ger.1" ? [] : [validEvent] }), { status: 200 });
   });
   assert.equal(result.status, "empty-or-invalid-upstream");
   assert.equal(result.saved, 0);
