@@ -121,7 +121,28 @@ export async function probeHistoryBackfillRange({ leagueSlug = "eng.1", dateFrom
 }
 
 
-// Fixed, one-day pilot: three leagues already verified by the read-only probe.
+// Read-only coverage audit in small batches to avoid stressing ESPN or Worker limits.
+export async function probeHistoryBackfillBatch({ offset = 0, limit = 5, date }, fetchImpl = fetch) {
+  const validDate = value => /^\\d{8}$/.test(String(value || "")) &&
+    !Number.isNaN(Date.parse(String(value).slice(0, 4) + "-" + String(value).slice(4, 6) + "-" + String(value).slice(6, 8) + "T00:00:00Z"));
+  if (!Number.isInteger(offset) || offset < 0 || offset >= HISTORY_BACKFILL_LEAGUES.length ||
+      !Number.isInteger(limit) || limit < 1 || limit > 5 || !validDate(date)) {
+    return { ok: false, status: "invalid-input", reason: "Use a valid date, offset, and limit from 1 to 5." };
+  }
+  const selected = HISTORY_BACKFILL_LEAGUES.slice(offset, offset + limit);
+  const results = await Promise.all(selected.map(league =>
+    probeHistoryBackfillRange({ leagueSlug: league[1], dateFrom: date, dateTo: date }, fetchImpl)
+  ));
+  const successCount = results.filter(result => result.ok).length;
+  return {
+    ok: true, status: "coverage-batch-complete", date, offset, requested: selected.length,
+    totalLeagues: HISTORY_BACKFILL_LEAGUES.length, successCount,
+    failureCount: results.length - successCount, results,
+    note: "Read-only coverage audit; no D1/KV writes and no queue progress."
+  };
+}
+
+// Fixed, one-day pilot: four leagues already verified by the read-only probe.
 // It does not read or advance the general historical queue.
 export const HISTORY_BACKFILL_PILOT = {
   date: "20261101",
