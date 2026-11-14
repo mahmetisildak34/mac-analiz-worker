@@ -709,7 +709,7 @@ export default {
         if (existing && Number(existing.totalJobs || (Array.isArray(existing.jobs) ? existing.jobs.length : 0)) > Number(existing.cursor || 0)) {
           return new Response(JSON.stringify({
             ok: false, alreadyExists: true, status: existing.status || "queued",
-            totalJobs: existing.jobs.length, processedJobs: Number(existing.cursor || 0),
+            totalJobs: Number(existing.totalJobs || (Array.isArray(existing.jobs) ? existing.jobs.length : 0)), processedJobs: Math.min(Number(existing.cursor || 0), Number(existing.totalJobs || (Array.isArray(existing.jobs) ? existing.jobs.length : 0))),
             message: "Existing historical queue preserved; no reset or overwrite performed."
           }), { status: 409, headers });
         }
