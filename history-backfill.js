@@ -76,7 +76,7 @@ export function getHistoryBackfillBatch(state, limit = 20) {
 // scoreboard range. It never touches D1, KV, or the historical queue.
 export async function probeHistoryBackfillRange({ leagueSlug = "eng.1", dateFrom, dateTo }, fetchImpl = fetch) {
   const league = HISTORY_BACKFILL_LEAGUES.find(item => item[1] === leagueSlug);
-  const validDate = value => /^\\d{8}$/.test(String(value || "")) &&
+  const validDate = value => /^\d{8}$/.test(String(value || "")) &&
     !Number.isNaN(Date.parse(String(value).slice(0, 4) + "-" + String(value).slice(4, 6) + "-" + String(value).slice(6, 8) + "T00:00:00Z"));
   if (!league || !validDate(dateFrom) || !validDate(dateTo)) {
     return { ok: false, status: "invalid-input", reason: "Use a configured ESPN league and YYYYMMDD dates." };
