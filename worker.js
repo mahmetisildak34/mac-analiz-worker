@@ -695,7 +695,14 @@ export default {
         path === "archive/history-backfill/pilot-run" &&
         url.hostname === "feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev" &&
         env.HISTORY_BACKFILL_PILOT_ENABLED === "true";
-      if (!publicArchiveRead && !previewPilotTrigger) {
+      // Allow only metadata initialization for the dedicated Nations League queue
+      // on the isolated Preview hostname. This cannot enable or execute a batch.
+      const previewNationsQueueInit = request.method === "POST" &&
+        path === "archive/history-backfill/start" &&
+        url.searchParams.get("scope") === "nations-league" &&
+        url.hostname === "feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev" &&
+        env.HISTORY_BACKFILL_PILOT_ENABLED === "true";
+      if (!publicArchiveRead && !previewPilotTrigger && !previewNationsQueueInit) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
         if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
           return new Response(JSON.stringify({ error: "Authentication required" }), {
