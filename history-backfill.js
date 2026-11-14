@@ -265,7 +265,11 @@ export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
           });
           if (!response.ok) throw new Error("ESPN HTTP " + response.status);
           const payload = await response.json();
-          for (const event of (Array.isArray(payload?.events) ? payload.events : [])) {
+          if (!payload || !Array.isArray(payload.events) || payload.events.length === 0) {
+            throw new Error("ESPN returned zero or invalid events; coverage is unknown and this job must be retried.");
+          }
+          let acceptedEvents = 0;
+          for (const event of payload.events) {
             const competition = (event.competitions || [])[0] || {};
             const competitors = competition.competitors || [];
             const home = competitors.find(item => item.homeAway === "home") || {};
@@ -284,6 +288,10 @@ export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
               awayId: away.team?.id == null ? null : String(away.team.id), awayName,
               homeGoals: score(home.score), awayGoals: score(away.score), raw: JSON.stringify(event)
             });
+            acceptedEvents++;
+          }
+          if (acceptedEvents === 0) {
+            throw new Error("ESPN events contained no valid fixtures; this job must be retried.");
           }
         } catch (error) {
           failures.push({ index: jobIndex, date: job.date, league: slug || null, error: String(error?.message || error) });
