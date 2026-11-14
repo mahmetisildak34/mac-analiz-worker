@@ -230,6 +230,9 @@ export async function runHistoryBackfillPilot(env, fetchImpl = fetch) {
 
 // One manually-invoked, tightly bounded batch. The feature flag is deliberately
 // absent from source control; it must be explicitly set in the Worker environment.
+// Bounded processor: successful empty days count as completed coverage, while
+// transport/HTTP/schema failures enter a delayed retry queue. New discovery keeps
+// moving so one bad upstream day cannot block thousands of later dates.
 export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
   if (env.HISTORY_BACKFILL_ENABLED !== "true") {
     return { ok: false, status: "disabled", reason: "Set HISTORY_BACKFILL_ENABLED=true only after isolated Preview verification." };
@@ -245,14 +248,19 @@ export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
   if (state.executionEnabled !== true) {
     return { ok: false, status: "not-enabled", reason: "Enable the queue explicitly before running a batch." };
   }
-  if (Number(state.cursor || 0) >= Number(state.totalJobs)) {
-    return { ok: true, status: "complete", processedJobs: Number(state.cursor || 0), totalJobs: Number(state.totalJobs) };
+
+  const cursor = Math.max(0, Number(state.cursor || 0));
+  const totalJobs = Number(state.totalJobs);
+  const pendingRetries = Array.isArray(state.retryJobs) ? state.retryJobs : [];
+  const deadLetters = Array.isArray(state.deadLetters) ? state.deadLetters : [];
+  if (cursor >= totalJobs && pendingRetries.length === 0) {
+    return { ok: true, status: deadLetters.length ? "needs-review" : "complete",
+      processedJobs: cursor, totalJobs, pendingRetries: 0, deadLetters: deadLetters.length };
   }
 
   await env.DB.prepare(
     "CREATE TABLE IF NOT EXISTS mam_history_backfill_lock (id INTEGER PRIMARY KEY CHECK (id = 1), owner TEXT, lease_until INTEGER NOT NULL DEFAULT 0)"
   ).run();
-  // Stage history separately so the live statistics-recovery queue cannot consume it.
   await env.DB.prepare(
     "CREATE TABLE IF NOT EXISTS mam_history_backfill_matches (source TEXT NOT NULL, fixture_id TEXT NOT NULL, league_id TEXT, league_name TEXT, country TEXT, kickoff TEXT, status TEXT, home_team_id TEXT, home_team TEXT, away_team_id TEXT, away_team TEXT, home_goals INTEGER, away_goals INTEGER, raw_json TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (source, fixture_id))"
   ).run();
@@ -262,34 +270,55 @@ export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
 
   const owner = crypto.randomUUID();
   const now = Date.now();
-  const leaseUntil = now + 120000;
   const claim = await env.DB.prepare(
     "UPDATE mam_history_backfill_lock SET owner = ?, lease_until = ? WHERE id = 1 AND lease_until < ?"
-  ).bind(owner, leaseUntil, now).run();
+  ).bind(owner, now + 180000, now).run();
   if (Number(claim?.meta?.changes || 0) !== 1) {
     return { ok: false, status: "locked", reason: "Another historical batch holds the D1 lease." };
   }
 
   try {
-    const cursor = Math.max(0, Number(state.cursor || 0));
-    const batch = getHistoryBackfillBatch(state, 4);
-    if (!batch.length) return { ok: false, status: "invalid-queue", cursor };
+    const batchLimit = 10;
+    const readyRetries = pendingRetries.filter(job => Number(job.retryAfter || 0) <= now)
+      .sort((a, b) => Number(a.retryAfter || 0) - Number(b.retryAfter || 0));
+    const retryBatch = readyRetries.slice(0, batchLimit);
+    const retryKeys = new Set(retryBatch.map(job => job.index));
+    const newSlots = Math.max(0, batchLimit - retryBatch.length);
+    const newBatch = cursor < totalJobs ? getHistoryBackfillBatch({ ...state, cursor }, newSlots || (retryBatch.length ? 0 : batchLimit)) : [];
+    const batch = [
+      ...retryBatch.map(job => ({ ...job, isRetry: true })),
+      ...newBatch.map((job, index) => ({ ...job, index: cursor + index, isRetry: false }))
+    ];
+    if (!batch.length) {
+      const nextState = { ...state, status: "retry-wait", lastRunAt: new Date().toISOString(),
+        pendingRetries: pendingRetries.length, retryJobs: pendingRetries };
+      await env.MAM_KV.put(HISTORY_BACKFILL_KEY, JSON.stringify(nextState));
+      return { ok: true, status: "retry-wait", processedJobs: cursor, totalJobs,
+        pendingRetries: pendingRetries.length, nextRetryAt: new Date(Math.min(...pendingRetries.map(x => Number(x.retryAfter || now)))).toISOString() };
+    }
 
     const rows = [];
     const failures = [];
-    for (let i = 0; i < batch.length; i += 2) {
-      await Promise.all(batch.slice(i, i + 2).map(async (job, offset) => {
-        const jobIndex = i + offset;
+    let emptyDays = 0;
+    let successfulDays = 0;
+    const completedRetryIndexes = new Set();
+    const failedRetryIndexes = new Set();
+    for (let i = 0; i < batch.length; i += 3) {
+      await Promise.all(batch.slice(i, i + 3).map(async job => {
         const [leagueId, slug, leagueName, country] = job.league || [];
         try {
-          if (!slug || !/^\d{8}$/.test(job.date)) throw new Error("Invalid league/date job");
+          if (!slug || !/^\\d{8}$/.test(job.date)) throw new Error("Invalid league/date job");
           const response = await fetchImpl(HISTORY_ESPN_BASE + "/" + slug + "/scoreboard?dates=" + job.date + "&limit=500", {
-            headers: { Accept: "application/json" }
+            headers: { Accept: "application/json" }, signal: AbortSignal.timeout(12000)
           });
           if (!response.ok) throw new Error("ESPN HTTP " + response.status);
           const payload = await response.json();
-          if (!payload || !Array.isArray(payload.events) || payload.events.length === 0) {
-            throw new Error("ESPN returned zero or invalid events; coverage is unknown and this job must be retried.");
+          if (!payload || !Array.isArray(payload.events)) throw new Error("ESPN response did not contain an events array");
+          if (payload.events.length === 0) {
+            emptyDays++;
+            successfulDays++;
+            if (job.isRetry) completedRetryIndexes.add(job.index);
+            return;
           }
           let acceptedEvents = 0;
           for (const event of payload.events) {
@@ -313,11 +342,15 @@ export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
             });
             acceptedEvents++;
           }
-          if (acceptedEvents === 0) {
-            throw new Error("ESPN events contained no valid fixtures; this job must be retried.");
-          }
+          if (!acceptedEvents) throw new Error("ESPN events contained no valid fixtures");
+          successfulDays++;
+          if (job.isRetry) completedRetryIndexes.add(job.index);
         } catch (error) {
-          failures.push({ index: jobIndex, date: job.date, league: slug || null, error: String(error?.message || error) });
+          const attempts = Number(job.attempts || 0) + 1;
+          const message = String(error?.message || error).slice(0, 240);
+          failures.push({ index: job.index, date: job.date, league: slug || null, attempts, error: message });
+          if (job.isRetry) failedRetryIndexes.add(job.index);
+          job.nextAttempts = attempts;
         }
       }));
     }
@@ -333,23 +366,42 @@ export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
       saved += result.reduce((sum, item) => sum + (Number(item?.meta?.changes) || 0), 0);
     }
 
-    // Advance only through the successful contiguous prefix. Later successful
-    // rows are safe to upsert again if an earlier date must be retried.
-    const firstFailure = failures.length ? Math.min(...failures.map(item => item.index)) : batch.length;
-    const advanced = Math.max(0, Math.min(batch.length, firstFailure));
-    const nextCursor = cursor + advanced;
+    const retryMap = new Map(pendingRetries.map(job => [job.index, job]));
+    for (const index of completedRetryIndexes) retryMap.delete(index);
+    const nextDeadLetters = [...deadLetters];
+    for (const failure of failures) {
+      const job = batch.find(item => item.index === failure.index);
+      const attempts = Number(job?.nextAttempts || failure.attempts);
+      if (attempts >= 5) {
+        retryMap.delete(failure.index);
+        nextDeadLetters.push({ index: failure.index, date: failure.date, league: failure.league,
+          attempts, error: failure.error, exhaustedAt: new Date().toISOString() });
+      } else {
+        const delayMs = Math.min(60 * 60 * 1000, 60 * 1000 * (2 ** (attempts - 1)));
+        retryMap.set(failure.index, {
+          index: failure.index, league: job.league, date: job.date, attempts,
+          retryAfter: now + delayMs, lastError: failure.error
+        });
+      }
+    }
+    let advancedNewJobs = 0;
+    for (const job of batch) if (!job.isRetry) advancedNewJobs++;
+    const nextCursor = Math.min(totalJobs, cursor + advancedNewJobs);
+    const retryJobs = [...retryMap.values()].sort((a, b) => a.index - b.index);
+    const status = nextDeadLetters.length ? "needs-review" :
+      retryJobs.length ? "retry-needed" : nextCursor >= totalJobs ? "complete" : "queued";
     const nextState = {
-      ...state,
-      cursor: nextCursor,
-      status: nextCursor >= Number(state.totalJobs) ? "complete" : (failures.length ? "retry-needed" : "queued"),
-      lastRunAt: new Date().toISOString(),
-      lastBatch: { requested: batch.length, advanced, saved, failures }
+      ...state, cursor: nextCursor, retryJobs, deadLetters: nextDeadLetters,
+      status, lastRunAt: new Date().toISOString(),
+      lastBatch: { requested: batch.length, newJobs: advancedNewJobs, successfulDays, emptyDays,
+        saved, failures, pendingRetries: retryJobs.length, deadLetters: nextDeadLetters.length }
     };
     await env.MAM_KV.put(HISTORY_BACKFILL_KEY, JSON.stringify(nextState));
     return {
-      ok: true, status: nextState.status, requested: batch.length, advanced,
-      processedJobs: nextCursor, totalJobs: Number(state.totalJobs),
-      remainingJobs: Math.max(0, Number(state.totalJobs) - nextCursor), saved, failures
+      ok: true, status, requested: batch.length, advanced: advancedNewJobs,
+      successfulDays, emptyDays, processedJobs: nextCursor, totalJobs,
+      remainingJobs: Math.max(0, totalJobs - nextCursor), saved,
+      pendingRetries: retryJobs.length, deadLetters: nextDeadLetters.length, failures
     };
   } finally {
     await env.DB.prepare(
