@@ -91,6 +91,63 @@ async function normalizeKnownLeagueCountries(env) {
   return results.reduce((sum, result) => sum + (Number(result?.meta?.changes) || 0), 0);
 }
 
+function hasUsableStatistics(value) {
+  if (!value) return false;
+  try {
+    const parsed = typeof value === "string" ? JSON.parse(value) : value;
+    if (!parsed || typeof parsed !== "object") return false;
+    if (Array.isArray(parsed.teams)) return parsed.teams.some(team => Array.isArray(team?.statistics) && team.statistics.length > 0);
+    if (Array.isArray(parsed.response)) return parsed.response.length > 0;
+    if (Array.isArray(parsed)) return parsed.length > 0;
+    return Object.values(parsed).some(value => Array.isArray(value) && value.length > 0);
+  } catch (_) { return false; }
+}
+
+// Reuse a completed ESPN box score only when another provider's row has the
+// same normalized home/away names and kickoff within 10 minutes. Never overwrite
+// existing statistics or infer a match from league IDs alone.
+async function enrichExactCrossSourceMatches(env) {
+  if (!env.DB) return { checked: 0, updated: 0 };
+  const [sourceRows, missingRows] = await Promise.all([
+    env.DB.prepare("SELECT fixture_id, kickoff, home_team, away_team, statistics_json FROM matches WHERE source = 'ESPN' AND statistics_json IS NOT NULL AND statistics_json != '' ORDER BY kickoff DESC LIMIT 2000").all(),
+    env.DB.prepare("SELECT source, fixture_id, kickoff, home_team, away_team FROM matches WHERE source != 'ESPN' AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null') ORDER BY kickoff DESC LIMIT 3000").all()
+  ]);
+  const source = Array.isArray(sourceRows?.results) ? sourceRows.results : [];
+  const missing = Array.isArray(missingRows?.results) ? missingRows.results : [];
+  const index = new Map();
+  for (const row of source) {
+    if (!hasUsableStatistics(row.statistics_json)) continue;
+    const key = normalizeTeamName(row.home_team) + "|" + normalizeTeamName(row.away_team);
+    if (!key || key === "|") continue;
+    const time = Date.parse(row.kickoff || "");
+    if (!Number.isFinite(time)) continue;
+    const list = index.get(key) || [];
+    list.push({ fixtureId: row.fixture_id, time, statistics: row.statistics_json });
+    index.set(key, list);
+  }
+  const updates = [];
+  for (const row of missing) {
+    const key = normalizeTeamName(row.home_team) + "|" + normalizeTeamName(row.away_team);
+    const time = Date.parse(row.kickoff || "");
+    if (!Number.isFinite(time)) continue;
+    const candidates = index.get(key) || [];
+    let best = null, bestDelta = Infinity;
+    for (const candidate of candidates) {
+      const delta = Math.abs(candidate.time - time);
+      if (delta <= 10 * 60 * 1000 && delta < bestDelta) { best = candidate; bestDelta = delta; }
+    }
+    if (best) updates.push(env.DB.prepare(
+      "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = ? AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null')"
+    ).bind(best.statistics, row.source, row.fixture_id));
+  }
+  let updated = 0;
+  for (let i = 0; i < updates.length; i += 50) {
+    const results = await env.DB.batch(updates.slice(i, i + 50));
+    updated += results.reduce((sum, item) => sum + (Number(item?.meta?.changes) || 0), 0);
+  }
+  return { checked: missing.length, updated };
+}
+
 // Safe, additive D1 indexes: they speed up league/date archive reads and status checks.
 // CREATE INDEX IF NOT EXISTS leaves every existing match row untouched.
 async function ensureArchiveIndexes(env) {
@@ -330,6 +387,9 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   await env.MAM_KV.put(summaryQueueKey, JSON.stringify(summaryQueue));
   const doneList = Array.from(summaryDoneSet);
   await env.MAM_KV.put(summaryDoneKey, JSON.stringify(doneList.slice(-3000)));
+
+  const crossSourceStats = await enrichExactCrossSourceMatches(env);
+  if (crossSourceStats.updated) console.log("Exact cross-source statistics enrichment", crossSourceStats);
 
   state.cursor += batch.length;
   if (retryJobs.length) state.jobs.push(...retryJobs);
