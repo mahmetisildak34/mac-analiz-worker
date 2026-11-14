@@ -259,11 +259,13 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   if (!Array.isArray(summaryDone)) summaryDone = [];
   const summaryDoneSet = new Set(summaryDone);
 
-  // Keep the retry queue topped up without letting cooldown items block discovery.
-  // Refill toward 480 (hard cap 500) on every scheduled run, not only when below 80.
+  // Drain the current backlog before discovering another page of missing-stat fixtures.
+  // This prevents a constant stream of new D1 discoveries from keeping the visible queue
+  // pinned near 456 forever while older queued fixtures are being processed FIFO.
+  // Once the queue is empty, discover up to 480 missing ESPN fixtures for the next cycle.
   const summaryQueueBeforeDiscovery = summaryQueue.length;
   let recoveredSummaryItems = 0;
-  if (summaryQueue.length < 480) {
+  if (summaryQueue.length === 0) {
     // D1 has a bounded bind-parameter budget. Do not generate one SQL placeholder
     // per queued fixture (a 458-item queue can make the query fail before summaries run).
     // Read a bounded candidate window and exclude queued IDs in JavaScript instead.
