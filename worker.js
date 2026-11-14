@@ -678,7 +678,11 @@ export default {
       const publicArchiveRead = request.method === "GET" &&
         (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/quality-check" || path === "archive/live" || path === "archive/history-backfill/status" || path === "archive/history-backfill/probe" || path === "archive/history-backfill/pilot-status" ||
          (isESPN && path.endsWith("/summary") && /^\d+$/.test(url.searchParams.get("event") || "")));
-      if (!publicArchiveRead) {
+      const previewPilotTrigger = request.method === "POST" &&
+        path === "archive/history-backfill/pilot-run" &&
+        url.hostname === "feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev" &&
+        env.HISTORY_BACKFILL_PILOT_ENABLED === "true";
+      if (!publicArchiveRead && !previewPilotTrigger) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
         if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
           return new Response(JSON.stringify({ error: "Authentication required" }), {
@@ -717,6 +721,14 @@ export default {
         } catch (error) {
           return new Response(JSON.stringify({ ok: false, status: "staging-table-not-created", detail: String(error?.message || error).slice(0, 200) }), { status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
         }
+      }
+
+      if (path === "archive/history-backfill/pilot-run" && request.method === "GET") {
+        if (url.hostname !== "feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev" || env.HISTORY_BACKFILL_PILOT_ENABLED !== "true") {
+          return new Response("Pilot is available only on the enabled Preview deployment.", { status: 403, headers: { ...cors, "Content-Type": "text/plain; charset=utf-8" } });
+        }
+        const html = "<!doctype html><html><meta name='viewport' content='width=device-width,initial-scale=1'><title>Preview history pilot</title><body style='font:16px system-ui;max-width:620px;margin:40px auto;padding:20px'><h2>Preview pilot — 1 Nov 2026</h2><p>This runs a fixed, three-league, seven-match-target test in the isolated Preview D1 staging table only. It does not touch production or the general history queue.</p><form method='POST' action='/api/archive/history-backfill/pilot-run'><button style='padding:14px 20px;font-size:17px'>Run Preview pilot</button></form></body></html>";
+        return new Response(html, { status: 200, headers: { ...cors, "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } });
       }
 
       if (path === "archive/history-backfill/pilot-run" && request.method === "POST") {
