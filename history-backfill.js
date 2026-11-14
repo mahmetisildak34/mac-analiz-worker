@@ -1,6 +1,6 @@
 // Isolated historical fixture discovery queue.
-// This module only creates and reports work items. It does not execute ESPN requests
-// or write match rows; the live ESPN sync and statistics queues remain untouched.
+// Historical fixture discovery and staging are isolated from the live ESPN sync
+// and its existing statistics-recovery queue.
 export const HISTORY_BACKFILL_KEY = "mam:history-backfill-state:v1";
 const HISTORY_ESPN_BASE = "https://site.api.espn.com/apis/site/v2/sports/soccer";
 export const HISTORY_BACKFILL_START = "2024-07-01";
