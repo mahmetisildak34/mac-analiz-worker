@@ -493,6 +493,13 @@ export async function runNationsLeagueStatisticsBatch(env, fetchImpl = fetch) {
       "CREATE TABLE IF NOT EXISTS mam_history_backfill_statistics (source TEXT NOT NULL, fixture_id TEXT NOT NULL, league_id TEXT NOT NULL, kickoff TEXT, outcome TEXT NOT NULL, statistics_json TEXT, raw_json TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (source, fixture_id))"
     ).run();
 
+    // Keep the historical statistics table relationally attached to the same staged fixture archive.
+    const fixtureColumns = await env.DB.prepare("PRAGMA table_info(mam_history_backfill_matches)").all();
+    const hasFixtureStats = (fixtureColumns.results || []).some(column => column.name === "statistics_json");
+    if (!hasFixtureStats) {
+      await env.DB.prepare("ALTER TABLE mam_history_backfill_matches ADD COLUMN statistics_json TEXT").run();
+    }
+
     const pendingRetries = Array.isArray(state.retryJobs) ? state.retryJobs : [];
     const deadLetters = Array.isArray(state.deadLetters) ? state.deadLetters : [];
     const readyRetries = pendingRetries
@@ -567,9 +574,13 @@ export async function runNationsLeagueStatisticsBatch(env, fetchImpl = fetch) {
           const hasStats = normalized.some(team => team.statistics.length > 0);
           const outcome = hasStats ? "statistics-found" : "no-statistics";
           if (hasStats) statisticsFound++; else noStatistics++;
+          const normalizedJson = JSON.stringify({ teams: normalized, summaryAvailable: true });
           statements.push(env.DB.prepare(
             "INSERT INTO mam_history_backfill_statistics (source, fixture_id, league_id, kickoff, outcome, statistics_json, raw_json) VALUES ('ESPN', ?, '5', ?, ?, ?, ?) ON CONFLICT(source, fixture_id) DO UPDATE SET kickoff=excluded.kickoff, outcome=excluded.outcome, statistics_json=excluded.statistics_json, raw_json=excluded.raw_json, updated_at=CURRENT_TIMESTAMP"
-          ).bind(id, fixture.kickoff || null, outcome, JSON.stringify({ teams: normalized, summaryAvailable: true }), JSON.stringify(payload)));
+          ).bind(id, fixture.kickoff || null, outcome, normalizedJson, JSON.stringify(payload)));
+          statements.push(env.DB.prepare(
+            "UPDATE mam_history_backfill_matches SET statistics_json = ? WHERE source = 'ESPN' AND fixture_id = ?"
+          ).bind(normalizedJson, id));
           if (isRetry) completedRetryIds.add(id);
         } catch (error) {
           failures.push({ fixtureId: id, kickoff: fixture.kickoff || null, attempts: attempts + 1,
