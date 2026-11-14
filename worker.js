@@ -37,8 +37,38 @@ async function createSessionToken(secret) {
 
 function normalizeTeamName(value) {
   return String(value || "").normalize("NFD").toLowerCase()
-    .replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i")
+    .replace(/[\\u0300-\\u036f]/g, "").replace(/ı/g, "i")
     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
+}
+
+const CANONICAL_LEAGUE_COUNTRIES = Object.freeze({
+  "1": "World", "2": "Europe", "3": "Europe", "4": "Europe", "5": "Europe",
+  "6": "Africa", "15": "World", "28": "Asia", "39": "England", "40": "England",
+  "45": "England", "48": "England", "61": "France", "62": "France", "66": "France",
+  "71": "Brazil", "78": "Germany", "79": "Germany", "81": "Germany", "88": "Netherlands",
+  "94": "Portugal", "98": "Japan", "128": "Argentina", "135": "Italy", "136": "Italy",
+  "137": "Italy", "140": "Spain", "141": "Spain", "143": "Spain", "144": "Belgium",
+  "169": "China", "179": "Scotland", "188": "Australia", "190": "Australia",
+  "203": "Türkiye", "204": "Türkiye", "253": "USA", "262": "Mexico", "307": "Saudi Arabia",
+  "352": "Czech Republic", "734": "South Africa", "848": "Europe", "886": "Europe",
+  "1012": "Asia", "1038": "Thailand", "1202": "Australia"
+});
+
+function canonicalLeagueCountry(leagueId, leagueName, country) {
+  const id = String(leagueId || "");
+  const name = String(leagueName || "").toLowerCase();
+  if (id === "1012" || name.includes("afc u17 asian cup")) return "Asia";
+  return CANONICAL_LEAGUE_COUNTRIES[id] || String(country || "").trim();
+}
+
+async function normalizeKnownLeagueCountries(env) {
+  if (!env.DB) return 0;
+  const statements = Object.entries(CANONICAL_LEAGUE_COUNTRIES).map(([id, country]) =>
+    env.DB.prepare("UPDATE matches SET country = ?, updated_at = CURRENT_TIMESTAMP WHERE league_id = ? AND COALESCE(country, '') != ?")
+      .bind(country, id, country)
+  );
+  const results = await env.DB.batch(statements);
+  return results.reduce((sum, result) => sum + (Number(result?.meta?.changes) || 0), 0);
 }
 
 // Safe, additive D1 indexes: they speed up league/date archive reads and status checks.
@@ -307,6 +337,9 @@ export default {
       try {
         // Additive indexes improve archive queries without modifying or deleting stored matches.
         await ensureArchiveIndexes(env);
+        // Normalize known competition regions in-place; metadata only, no match rows are removed.
+        const normalizedLeagueRows = await normalizeKnownLeagueCountries(env);
+        if (normalizedLeagueRows) console.log("Normalized league country metadata", { rows: normalizedLeagueRows });
         // Keep a rolling 45-day history plus 30 days of upcoming fixtures across configured ESPN competitions.
         // Each invocation also fetches up to 16 ESPN match summaries.
         // Keep scoreboard (24) + summary (16) fetches below the 50-subrequest
@@ -633,13 +666,7 @@ export default {
         const normalizeTeam = value => String(value || "").normalize("NFD").toLowerCase()
           .replace(/[\\u0300-\\u036f]/g, "").replace(/ı/g, "i")
           .replace(/[^a-z0-9]+/g, "").trim();
-        const countryForLeague = (leagueId, leagueName, country) => {
-          const id = String(leagueId || "");
-          const name = String(leagueName || "").toLowerCase();
-          // AFC U17 Asian Cup is a continental Asian competition, not a World competition.
-          if (id === "1012" || name.includes("afc u17 asian cup")) return "Asia";
-          return String(country || "");
-        };
+        const countryForLeague = canonicalLeagueCountry;
         const uniqueRows = new Map();
         for (const row of (Array.isArray(result?.results) ? result.results : [])) {
           const home = normalizeTeam(row.home_team), away = normalizeTeam(row.away_team);
@@ -703,7 +730,7 @@ export default {
           return {
             source: row.source || "app",
             fixture: { id: row.fixture_id, date: row.kickoff, status: { short: row.status || "FT" } },
-            league: { id: String(row.league_id), name: row.league_name || "", country: row.country || "" },
+            league: { id: String(row.league_id), name: row.league_name || "", country: canonicalLeagueCountry(row.league_id, row.league_name, row.country) },
             teams: {
               home: { id: row.home_team_id == null ? null : row.home_team_id, name: row.home_team || "" },
               away: { id: row.away_team_id == null ? null : row.away_team_id, name: row.away_team || "" }
@@ -775,7 +802,7 @@ export default {
           statements.push(env.DB.prepare(sql).bind(
             source, fixtureId, leagueId,
             String(league.name || m?.league_name || "").slice(0, 120),
-            String(league.country || m?.country || "").slice(0, 80),
+            canonicalLeagueCountry(leagueId, league.name || m?.league_name, league.country || m?.country).slice(0, 80),
             kickoff.slice(0, 40), status,
             home.id == null ? null : String(home.id).slice(0, 40), homeName.slice(0, 120),
             away.id == null ? null : String(away.id).slice(0, 40), awayName.slice(0, 120),
