@@ -1,4 +1,4 @@
-import { HISTORY_BACKFILL_KEY, buildHistoryBackfillState, runHistoryBackfillBatch, probeHistoryBackfillRange, probeHistoryBackfillBatch, runHistoryBackfillPilot } from "./history-backfill.js";
+import { HISTORY_BACKFILL_KEY, NATIONS_LEAGUE_BACKFILL_KEY, NATIONS_LEAGUE_BACKFILL_LEAGUE, buildHistoryBackfillState, buildNationsLeagueBackfillState, runHistoryBackfillBatch, probeHistoryBackfillRange, probeHistoryBackfillBatch, runHistoryBackfillPilot } from "./history-backfill.js";
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
 const API_BASE = "https://v3.football.api-sports.io";
 const FOOTBALLDATA_BASE = "https://api.football-data.org/v4";
@@ -488,7 +488,10 @@ export default {
     // separately authenticated queue state are enabled. Production remains off.
     if (env.HISTORY_BACKFILL_ENABLED === "true") {
       try {
-        const result = await runHistoryBackfillBatch(env);
+        const nationsLeagueScope = url.searchParams.get("scope") === "nations-league";
+        const result = nationsLeagueScope
+          ? await runHistoryBackfillBatch(env, fetch, { stateKey: NATIONS_LEAGUE_BACKFILL_KEY, leagues: [NATIONS_LEAGUE_BACKFILL_LEAGUE] })
+          : await runHistoryBackfillBatch(env);
         console.log("Scheduled historical fixture backfill", result);
       } catch (historyError) {
         console.log("Scheduled historical fixture backfill failed", String(historyError?.message || historyError));
@@ -768,11 +771,12 @@ export default {
       if (path === "archive/history-backfill/enable" && request.method === "POST") {
         if (env.HISTORY_BACKFILL_ENABLED !== "true") return new Response(JSON.stringify({ ok: false, error: "Historical processor feature flag is disabled." }), { status: 403, headers });
         if (!env.MAM_KV || !env.DB) return new Response(JSON.stringify({ ok: false, error: "D1/KV bindings are required." }), { status: 503, headers });
-        const state = await env.MAM_KV.get(HISTORY_BACKFILL_KEY, "json");
+        const queueKey = url.searchParams.get("scope") === "nations-league" ? NATIONS_LEAGUE_BACKFILL_KEY : HISTORY_BACKFILL_KEY;
+        const state = await env.MAM_KV.get(queueKey, "json");
         if (!state) return new Response(JSON.stringify({ ok: false, error: "Historical queue has not been initialized." }), { status: 409, headers });
         state.executionEnabled = true;
         state.enabledAt = new Date().toISOString();
-        await env.MAM_KV.put(HISTORY_BACKFILL_KEY, JSON.stringify(state));
+        await env.MAM_KV.put(queueKey, JSON.stringify(state));
         return new Response(JSON.stringify({ ok: true, executionEnabled: true, message: "Enabled only; no batch was run." }), { status: 200, headers });
       }
 
@@ -783,13 +787,15 @@ export default {
       }
 
       if (path === "archive/history-backfill/status" && request.method === "GET") {
-        const state = env.MAM_KV ? await env.MAM_KV.get(HISTORY_BACKFILL_KEY, "json") : null;
+        const nationsLeagueScope = url.searchParams.get("scope") === "nations-league";
+        const state = env.MAM_KV ? await env.MAM_KV.get(nationsLeagueScope ? NATIONS_LEAGUE_BACKFILL_KEY : HISTORY_BACKFILL_KEY, "json") : null;
         const totalJobs = Number(state?.totalJobs || (Array.isArray(state?.jobs) ? state.jobs.length : 0));
         const processedJobs = Math.min(Number(state?.cursor || 0), totalJobs);
         return new Response(JSON.stringify({
           ok: true, exists: Boolean(state), status: state?.status || "not-created",
           createdAt: state?.createdAt || null, rangeStart: state?.rangeStart || null,
           rangeEnd: state?.rangeEnd || null, seasonsRequested: state?.seasonsRequested || [],
+          scope: state?.scope || "all-competitions",
           leagueCount: state?.leagueCount || 0, totalJobs,
           processedJobs, remainingJobs: Math.max(0, totalJobs - processedJobs),
           progressPercent: totalJobs ? Math.round(processedJobs / totalJobs * 1000) / 10 : 0,
@@ -801,7 +807,9 @@ export default {
 
       if (path === "archive/history-backfill/start" && request.method === "POST") {
         if (!env.MAM_KV) return new Response(JSON.stringify({ error: "MAM_KV KV binding is missing" }), { status: 503, headers });
-        const existing = await env.MAM_KV.get(HISTORY_BACKFILL_KEY, "json");
+        const nationsLeagueScope = url.searchParams.get("scope") === "nations-league";
+        const queueKey = nationsLeagueScope ? NATIONS_LEAGUE_BACKFILL_KEY : HISTORY_BACKFILL_KEY;
+        const existing = await env.MAM_KV.get(queueKey, "json");
         if (existing && Number(existing.totalJobs || (Array.isArray(existing.jobs) ? existing.jobs.length : 0)) > Number(existing.cursor || 0)) {
           return new Response(JSON.stringify({
             ok: false, alreadyExists: true, status: existing.status || "queued",
@@ -809,13 +817,14 @@ export default {
             message: "Existing historical queue preserved; no reset or overwrite performed."
           }), { status: 409, headers });
         }
-        const state = buildHistoryBackfillState();
-        await env.MAM_KV.put(HISTORY_BACKFILL_KEY, JSON.stringify(state));
+        const state = nationsLeagueScope ? buildNationsLeagueBackfillState() : buildHistoryBackfillState();
+        await env.MAM_KV.put(queueKey, JSON.stringify(state));
         return new Response(JSON.stringify({
           ok: true, created: true, status: state.status, createdAt: state.createdAt,
           rangeStart: state.rangeStart, rangeEnd: state.rangeEnd,
           seasonsRequested: state.seasonsRequested, leagueCount: state.leagueCount,
           totalJobs: state.totalJobs, processedJobs: 0, remainingJobs: state.totalJobs,
+          scope: state.scope || "all-competitions",
           executionEnabled: false,
           note: "Separate queue created. No ESPN API calls, match writes, deletions, or changes to existing queues were performed."
         }), { status: 201, headers });
