@@ -71,6 +71,18 @@ test("ESPN range probe validates input and never writes archive data", async () 
   assert.equal(result.ok, true);
   assert.equal(result.eventCount, 1);
   assert.match(requestedUrl, /dates=20261101-20261107/);
+  let singleDayUrl = "";
+  const singleDay = await probeHistoryBackfillRange({
+    leagueSlug: "eng.1", dateFrom: "20261101", dateTo: "20261101"
+  }, async url => {
+    singleDayUrl = String(url);
+    return new Response(JSON.stringify({ events: [] }), {
+      status: 200, headers: { "Content-Type": "application/json" }
+    });
+  });
+  assert.equal(singleDay.ok, true);
+  assert.match(singleDayUrl, /dates=20261101&/);
+  assert.doesNotMatch(singleDayUrl, /dates=20261101-/);
   assert.equal((await probeHistoryBackfillRange({
     leagueSlug: "unknown", dateFrom: "20261101", dateTo: "20261107"
   }, fetchMock)).status, "invalid-input");
