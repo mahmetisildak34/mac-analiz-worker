@@ -484,6 +484,16 @@ export default {
         console.log("Cross-source statistics enrichment failed", report);
       }
     }
+    // Historical discovery advances only when its dedicated flag AND the
+    // separately authenticated queue state are enabled. Production remains off.
+    if (env.HISTORY_BACKFILL_ENABLED === "true") {
+      try {
+        const result = await runHistoryBackfillBatch(env);
+        console.log("Scheduled historical fixture backfill", result);
+      } catch (historyError) {
+        console.log("Scheduled historical fixture backfill failed", String(historyError?.message || historyError));
+      }
+    }
     if (isHourlySync || !env.MAM_KV) return;
     const now = new Date();
     const fixtures = [];
