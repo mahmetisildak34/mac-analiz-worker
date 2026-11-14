@@ -455,7 +455,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
 export default {
   // Daily TFF fixture sync: one KV write per run, keeping free-tier writes low.
   async scheduled(event, env, ctx) {
-    const isDailySync = event?.cron === '0 3 * * *';
+    const isDailySync = event?.cron === '5 0 * * *';
     const isHourlySync = !isDailySync;
     if (env.DB) {
       try {
