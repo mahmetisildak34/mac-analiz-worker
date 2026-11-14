@@ -440,3 +440,94 @@ export async function runHistoryBackfillBatch(env, fetchImpl = fetch, options = 
     ).bind(owner).run();
   }
 }
+
+
+// Dedicated historical box-score enrichment for the isolated archive.
+// It never reads or writes the live matches table or the live ESPN summary queue.
+export const NATIONS_LEAGUE_STATISTICS_KEY = "mam:nations-league-statistics-state:v1";
+
+export async function buildNationsLeagueStatisticsState(env, now = new Date()) {
+  if (!env.DB || !env.MAM_KV) return { ok: false, status: "unavailable", reason: "D1 and KV bindings are required." };
+  const count = await env.DB.prepare(
+    "SELECT COUNT(*) AS total FROM mam_history_backfill_matches WHERE league_id = '5' AND source = 'ESPN' AND status IN ('FT','AET','PEN')"
+  ).first();
+  const totalJobs = Number(count?.total || 0);
+  const state = {
+    version: 1, scope: "uefa-nations-league-statistics", createdAt: now.toISOString(),
+    totalJobs, cursor: 0, status: totalJobs ? "queued" : "waiting-for-fixtures",
+    executionEnabled: false, retryJobs: [], noStatistics: 0, statisticsFound: 0,
+    note: "Dedicated historical summary queue; staged fixtures only. No live match or live summary queue writes."
+  };
+  await env.MAM_KV.put(NATIONS_LEAGUE_STATISTICS_KEY, JSON.stringify(state));
+  return { ok: true, ...state };
+}
+
+export async function runNationsLeagueStatisticsBatch(env, fetchImpl = fetch) {
+  if (env.HISTORY_STATISTICS_ENABLED !== "true") return { ok: false, status: "disabled", reason: "Statistics processor feature flag is disabled." };
+  if (!env.DB || !env.MAM_KV) return { ok: false, status: "unavailable", reason: "D1 and KV bindings are required." };
+  const state = await env.MAM_KV.get(NATIONS_LEAGUE_STATISTICS_KEY, "json");
+  if (!state) return { ok: false, status: "not-initialized" };
+  if (state.executionEnabled !== true) return { ok: false, status: "not-enabled" };
+  const totalJobs = Number(state.totalJobs || 0);
+  if (!totalJobs) return { ok: true, status: "waiting-for-fixtures", totalJobs: 0 };
+  const cursor = Math.max(0, Number(state.cursor || 0));
+  const limit = 8;
+  const rowsResult = await env.DB.prepare(
+    "SELECT fixture_id AS fixtureId, kickoff, status FROM mam_history_backfill_matches WHERE league_id = '5' AND source = 'ESPN' AND status IN ('FT','AET','PEN') ORDER BY kickoff, fixture_id LIMIT ? OFFSET ?"
+  ).bind(limit, cursor).all();
+  const fixtures = Array.isArray(rowsResult?.results) ? rowsResult.results : [];
+  if (!fixtures.length) {
+    const complete = cursor >= totalJobs;
+    const next = { ...state, status: complete ? "complete" : "needs-review", lastRunAt: new Date().toISOString() };
+    await env.MAM_KV.put(NATIONS_LEAGUE_STATISTICS_KEY, JSON.stringify(next));
+    return { ok: true, status: next.status, processedJobs: cursor, totalJobs, statisticsFound: state.statisticsFound || 0, noStatistics: state.noStatistics || 0 };
+  }
+  await env.DB.prepare(
+    "CREATE TABLE IF NOT EXISTS mam_history_backfill_statistics (source TEXT NOT NULL, fixture_id TEXT NOT NULL, league_id TEXT NOT NULL, kickoff TEXT, outcome TEXT NOT NULL, statistics_json TEXT, raw_json TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (source, fixture_id))"
+  ).run();
+  const results = [];
+  const failures = [];
+  let statisticsFound = 0, noStatistics = 0;
+  for (let i = 0; i < fixtures.length; i += 3) {
+    await Promise.all(fixtures.slice(i, i + 3).map(async fixture => {
+      const id = String(fixture.fixtureId || "");
+      const prefix = "espn-uefa.nations-";
+      if (!id.startsWith(prefix)) { failures.push({ fixtureId: id, reason: "invalid-fixture-id" }); return; }
+      const eventId = id.slice(prefix.length);
+      try {
+        const response = await fetchImpl(HISTORY_ESPN_BASE + "/uefa.nations/summary?event=" + encodeURIComponent(eventId), {
+          headers: { Accept: "application/json" }, signal: AbortSignal.timeout(12000)
+        });
+        if (!response.ok) throw new Error("ESPN summary HTTP " + response.status);
+        const payload = await response.json();
+        const teams = Array.isArray(payload?.boxscore?.teams) ? payload.boxscore.teams : [];
+        const normalized = teams.map(team => ({
+          homeAway: team.homeAway || null,
+          team: team.team?.displayName || team.team?.name || null,
+          statistics: Array.isArray(team.statistics) ? team.statistics : []
+        }));
+        const hasStats = normalized.some(team => team.statistics.length > 0);
+        const outcome = hasStats ? "statistics-found" : "no-statistics";
+        if (hasStats) statisticsFound++; else noStatistics++;
+        results.push(env.DB.prepare(
+          "INSERT INTO mam_history_backfill_statistics (source, fixture_id, league_id, kickoff, outcome, statistics_json, raw_json) VALUES ('ESPN', ?, '5', ?, ?, ?, ?) ON CONFLICT(source, fixture_id) DO UPDATE SET kickoff=excluded.kickoff, outcome=excluded.outcome, statistics_json=excluded.statistics_json, raw_json=excluded.raw_json, updated_at=CURRENT_TIMESTAMP"
+        ).bind(id, fixture.kickoff || null, outcome, JSON.stringify({ teams: normalized, summaryAvailable: true }), JSON.stringify(payload)));
+      } catch (error) {
+        failures.push({ fixtureId: id, reason: String(error?.message || error).slice(0, 180) });
+      }
+    }));
+  }
+  if (results.length) await env.DB.batch(results);
+  const nextCursor = cursor + fixtures.length;
+  const retryJobs = [...(Array.isArray(state.retryJobs) ? state.retryJobs : []), ...failures];
+  const next = {
+    ...state, cursor: nextCursor, totalJobs: Math.max(totalJobs, nextCursor),
+    statisticsFound: Number(state.statisticsFound || 0) + statisticsFound,
+    noStatistics: Number(state.noStatistics || 0) + noStatistics,
+    retryJobs, status: nextCursor >= totalJobs ? (retryJobs.length ? "needs-review" : "complete") : "running",
+    lastRunAt: new Date().toISOString(),
+    lastBatch: { requested: fixtures.length, statisticsFound, noStatistics, failures: failures.length }
+  };
+  await env.MAM_KV.put(NATIONS_LEAGUE_STATISTICS_KEY, JSON.stringify(next));
+  return { ok: true, status: next.status, requested: fixtures.length, processedJobs: nextCursor, totalJobs, statisticsFound, noStatistics, failures, pendingReview: retryJobs.length };
+}
