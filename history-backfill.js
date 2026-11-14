@@ -58,6 +58,7 @@ export function getHistoryBackfillBatch(state, limit = 20) {
   const dayCount = Number(state.dayCount || 0);
   const totalJobs = Number(state.totalJobs || 0);
   const cursor = Math.max(0, Number(state.cursor || 0));
+  if (!Number.isInteger(dayCount) || dayCount < 1 || !Number.isFinite(totalJobs) || totalJobs < 1) return [];
   const safeLimit = Math.max(1, Math.min(50, Number(limit) || 20));
   const jobs = [];
   for (let index = cursor; index < Math.min(totalJobs, cursor + safeLimit); index++) {
