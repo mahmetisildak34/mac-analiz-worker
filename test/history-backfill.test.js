@@ -341,7 +341,7 @@ test("Nations League statistics processor stores raw summary and parsed team sta
         return {
           bind(...values) { this.values = values; return this; },
           all: async () => ({ results: [{ fixtureId: "espn-uefa.nations-12345", kickoff: "2024-09-05T18:45:00Z", status: "FT" }] }),
-          run: async () => ({ meta: { changes: 0 } }),
+          run: async () => ({ meta: { changes: sql.includes("UPDATE mam_history_backfill_statistics_lock") ? 1 : 0 } }),
           sql
         };
       },
