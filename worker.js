@@ -1,3 +1,4 @@
+import { HISTORY_BACKFILL_KEY, buildHistoryBackfillState } from "./history-backfill.js";
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
 const API_BASE = "https://v3.football.api-sports.io";
 const FOOTBALLDATA_BASE = "https://api.football-data.org/v4";
@@ -640,7 +641,7 @@ export default {
       return new Response(null, { status: 204, headers: cors });
     }
 
-    if (request.method !== "GET" && !(request.method === "POST" && requestUrl.pathname === "/api/archive/matches")) {
+    if (request.method !== "GET" && !(request.method === "POST" && (requestUrl.pathname === "/api/archive/matches" || requestUrl.pathname === "/api/archive/history-backfill/start"))) {
       return new Response(JSON.stringify({ error: "Method not allowed" }), {
         status: 405,
         headers: { ...cors, "Content-Type": "application/json" }
@@ -675,7 +676,7 @@ export default {
       // Read-only match archive and aggregate diagnostics are public.
       // Writes and all other private routes still require a signed-in session.
       const publicArchiveRead = request.method === "GET" &&
-        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/quality-check" || path === "archive/live" ||
+        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/quality-check" || path === "archive/live" || path === "archive/history-backfill/status" ||
          (isESPN && path.endsWith("/summary") && /^\d+$/.test(url.searchParams.get("event") || "")));
       if (!publicArchiveRead) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
@@ -684,6 +685,44 @@ export default {
             status: 401, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
           });
         }
+      }
+
+      if (path === "archive/history-backfill/status" && request.method === "GET") {
+        const state = env.MAM_KV ? await env.MAM_KV.get(HISTORY_BACKFILL_KEY, "json") : null;
+        const totalJobs = Array.isArray(state?.jobs) ? state.jobs.length : 0;
+        const processedJobs = Math.min(Number(state?.cursor || 0), totalJobs);
+        return new Response(JSON.stringify({
+          ok: true, exists: Boolean(state), status: state?.status || "not-created",
+          createdAt: state?.createdAt || null, rangeStart: state?.rangeStart || null,
+          rangeEnd: state?.rangeEnd || null, seasonsRequested: state?.seasonsRequested || [],
+          leagueCount: state?.leagueCount || 0, totalJobs,
+          processedJobs, remainingJobs: Math.max(0, totalJobs - processedJobs),
+          progressPercent: totalJobs ? Math.round(processedJobs / totalJobs * 1000) / 10 : 0,
+          executionEnabled: false,
+          note: "This isolated queue does not read or modify the existing ESPN sync or statistics queues."
+        }), { status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
+      }
+
+      if (path === "archive/history-backfill/start" && request.method === "POST") {
+        if (!env.MAM_KV) return new Response(JSON.stringify({ error: "MAM_KV KV binding is missing" }), { status: 503, headers });
+        const existing = await env.MAM_KV.get(HISTORY_BACKFILL_KEY, "json");
+        if (existing && Array.isArray(existing.jobs) && existing.cursor < existing.jobs.length) {
+          return new Response(JSON.stringify({
+            ok: false, alreadyExists: true, status: existing.status || "queued",
+            totalJobs: existing.jobs.length, processedJobs: Number(existing.cursor || 0),
+            message: "Existing historical queue preserved; no reset or overwrite performed."
+          }), { status: 409, headers });
+        }
+        const state = buildHistoryBackfillState();
+        await env.MAM_KV.put(HISTORY_BACKFILL_KEY, JSON.stringify(state));
+        return new Response(JSON.stringify({
+          ok: true, created: true, status: state.status, createdAt: state.createdAt,
+          rangeStart: state.rangeStart, rangeEnd: state.rangeEnd,
+          seasonsRequested: state.seasonsRequested, leagueCount: state.leagueCount,
+          totalJobs: state.jobs.length, processedJobs: 0, remainingJobs: state.jobs.length,
+          executionEnabled: false,
+          note: "Separate queue created. No ESPN API calls, match writes, deletions, or changes to existing queues were performed."
+        }), { status: 201, headers });
       }
 
       if (path === "archive/sync-status" && request.method === "GET") {
