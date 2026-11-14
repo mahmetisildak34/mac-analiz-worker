@@ -87,7 +87,8 @@ export async function probeHistoryBackfillRange({ leagueSlug = "eng.1", dateFrom
   if (daySpan < 1 || daySpan > 7) {
     return { ok: false, status: "invalid-range", reason: "Probe range must be between 1 and 7 days." };
   }
-  const url = HISTORY_ESPN_BASE + "/" + leagueSlug + "/scoreboard?dates=" + dateFrom + "-" + dateTo + "&limit=500";
+  const dateParam = dateFrom === dateTo ? dateFrom : dateFrom + "-" + dateTo;
+  const url = HISTORY_ESPN_BASE + "/" + leagueSlug + "/scoreboard?dates=" + dateParam + "&limit=500";
   try {
     const response = await fetchImpl(url, {
       headers: { Accept: "application/json" },
