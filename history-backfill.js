@@ -86,6 +86,9 @@ export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
   if (!state || !Number.isInteger(Number(state.totalJobs)) || Number(state.totalJobs) < 1) {
     return { ok: false, status: "not-initialized" };
   }
+  if (state.executionEnabled !== true) {
+    return { ok: false, status: "not-enabled", reason: "Enable the queue explicitly before running a batch." };
+  }
   if (Number(state.cursor || 0) >= Number(state.totalJobs)) {
     return { ok: true, status: "complete", processedJobs: Number(state.cursor || 0), totalJobs: Number(state.totalJobs) };
   }
