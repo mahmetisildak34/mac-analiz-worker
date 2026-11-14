@@ -715,7 +715,12 @@ export default {
           totalJobs: jobs,
           processedJobs: Math.min(cursor, jobs),
           remainingJobs: Math.max(0, jobs - cursor),
-          progressPercent: jobs ? Math.round(Math.min(cursor, jobs) / jobs * 1000) / 10 : (scoreboardActive ? 0 : 100),
+          // progressPercent describes the whole archive+statistics job; never report 100%
+          // while missing ESPN statistics remain. fixtureProgressPercent is scan-only.
+          progressPercent: jobs
+            ? Math.round(Math.min(cursor, jobs) / jobs * 1000) / 10
+            : (active ? 0 : 100),
+          fixtureProgressPercent: jobs ? Math.round(Math.min(cursor, jobs) / jobs * 1000) / 10 : 100,
           scoreboardActive,
           scoreboardComplete: !scoreboardActive,
           statisticsQueuePending: queue.length,
