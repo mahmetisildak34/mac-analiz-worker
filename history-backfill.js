@@ -123,7 +123,7 @@ export async function probeHistoryBackfillRange({ leagueSlug = "eng.1", dateFrom
 
 // Read-only coverage audit in small batches to avoid stressing ESPN or Worker limits.
 export async function probeHistoryBackfillBatch({ offset = 0, limit = 5, date }, fetchImpl = fetch) {
-  const validDate = value => /^\\d{8}$/.test(String(value || "")) &&
+  const validDate = value => /^\d{8}$/.test(String(value || "")) &&
     !Number.isNaN(Date.parse(String(value).slice(0, 4) + "-" + String(value).slice(4, 6) + "-" + String(value).slice(6, 8) + "T00:00:00Z"));
   if (!Number.isInteger(offset) || offset < 0 || offset >= HISTORY_BACKFILL_LEAGUES.length ||
       !Number.isInteger(limit) || limit < 1 || limit > 5 || !validDate(date)) {
