@@ -722,6 +722,18 @@ export default {
         ]);
         const statsTotal = Number(statsCoverage?.total || 0);
         const statsWith = Number(statsCoverage?.withStatistics || 0);
+        const queueItems = Array.isArray(summaryQueue) ? summaryQueue : [];
+        const queueNow = Date.now();
+        const queueReady = queueItems.filter(item => Number(item?.retryAfter || 0) <= queueNow);
+        const queueCoolingDown = queueItems.filter(item => Number(item?.retryAfter || 0) > queueNow);
+        const queueRetryAttempts = queueItems.reduce((counts, item) => {
+          const attempt = String(Number(item?.attempts || 0));
+          counts[attempt] = (counts[attempt] || 0) + 1;
+          return counts;
+        }, {});
+        const nextQueueRetryAt = queueCoolingDown.length
+          ? new Date(Math.min(...queueCoolingDown.map(item => Number(item.retryAfter || 0)))).toISOString()
+          : null;
         return new Response(JSON.stringify({
           ok: true,
           total: Number(total?.total || 0),
@@ -730,7 +742,14 @@ export default {
             missingStatistics: Math.max(0, statsTotal - statsWith),
             coveragePercent: statsTotal ? Math.round(statsWith / statsTotal * 1000) / 10 : 0
           },
-          pendingSummaryRetries: Array.isArray(summaryQueue) ? summaryQueue.length : 0,
+          pendingSummaryRetries: queueItems.length,
+          summaryQueueStatus: {
+            queued: queueItems.length,
+            readyToRetry: queueReady.length,
+            coolingDown: queueCoolingDown.length,
+            retryAttempts: queueRetryAttempts,
+            nextRetryAt: nextQueueRetryAt
+          },
           lastUpdated: latest?.lastUpdated || null,
           sources: Array.isArray(bySource?.results) ? bySource.results : [],
           leagues: Array.isArray(byLeague?.results) ? byLeague.results : [],
