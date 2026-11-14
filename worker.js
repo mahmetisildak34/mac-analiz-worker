@@ -654,7 +654,7 @@ export default {
       return new Response(null, { status: 204, headers: cors });
     }
 
-    if (request.method !== "GET" && !(request.method === "POST" && (requestUrl.pathname === "/api/archive/matches" || requestUrl.pathname === "/api/archive/history-backfill/start" || requestUrl.pathname === "/api/archive/history-backfill/enable" || requestUrl.pathname === "/api/archive/history-backfill/run" || requestUrl.pathname === "/api/archive/history-backfill/pilot-run" || requestUrl.pathname === "/api/archive/nations-league/statistics-start" || requestUrl.pathname === "/api/archive/nations-league/statistics-enable" || requestUrl.pathname === "/api/archive/nations-league/statistics-run"))) {
+    if (request.method !== "GET" && !(request.method === "POST" && (requestUrl.pathname === "/api/archive/matches" || requestUrl.pathname === "/api/archive/history-backfill/start" || requestUrl.pathname === "/api/archive/history-backfill/enable" || requestUrl.pathname === "/api/archive/history-backfill/run" || requestUrl.pathname === "/api/archive/history-backfill/preview-batch" || requestUrl.pathname === "/api/archive/history-backfill/pilot-run" || requestUrl.pathname === "/api/archive/nations-league/statistics-start" || requestUrl.pathname === "/api/archive/nations-league/statistics-enable" || requestUrl.pathname === "/api/archive/nations-league/statistics-run"))) {
       return new Response(JSON.stringify({ error: "Method not allowed" }), {
         status: 405,
         headers: { ...cors, "Content-Type": "application/json" }
@@ -702,7 +702,12 @@ export default {
         url.searchParams.get("scope") === "nations-league" &&
         url.hostname === "feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev" &&
         env.HISTORY_BACKFILL_PILOT_ENABLED === "true";
-      if (!publicArchiveRead && !previewPilotTrigger && !previewNationsQueueInit) {
+      const previewNationsBatch = request.method === "POST" &&
+        path === "archive/history-backfill/preview-batch" &&
+        url.searchParams.get("scope") === "nations-league" &&
+        url.hostname === "feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev" &&
+        env.HISTORY_BACKFILL_PILOT_ENABLED === "true";
+      if (!publicArchiveRead && !previewPilotTrigger && !previewNationsQueueInit && !previewNationsBatch) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
         if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
           return new Response(JSON.stringify({ error: "Authentication required" }), {
@@ -791,6 +796,25 @@ export default {
         const result = await runHistoryBackfillBatch(env);
         const status = ["disabled", "not-enabled"].includes(result.status) ? 403 : result.status === "locked" ? 409 : result.status === "unavailable" ? 503 : result.status === "not-initialized" ? 409 : 200;
         return new Response(JSON.stringify(result), { status, headers });
+      }
+
+      if (path === "archive/history-backfill/preview-batch" && request.method === "POST" &&
+          url.searchParams.get("scope") === "nations-league" &&
+          url.hostname === "feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev" &&
+          env.HISTORY_BACKFILL_PILOT_ENABLED === "true") {
+        if (!env.MAM_KV || !env.DB) return new Response(JSON.stringify({ ok: false, status: "unavailable" }), { status: 503, headers });
+        const state = await env.MAM_KV.get(NATIONS_LEAGUE_BACKFILL_KEY, "json");
+        if (!state) return new Response(JSON.stringify({ ok: false, status: "not-initialized" }), { status: 409, headers });
+        state.executionEnabled = true;
+        state.enabledAt = state.enabledAt || new Date().toISOString();
+        await env.MAM_KV.put(NATIONS_LEAGUE_BACKFILL_KEY, JSON.stringify(state));
+        const result = await runHistoryBackfillBatch(env, fetch, {
+          stateKey: NATIONS_LEAGUE_BACKFILL_KEY,
+          leagues: [NATIONS_LEAGUE_BACKFILL_LEAGUE],
+          previewAuthorized: true
+        });
+        const status = result.status === "locked" ? 409 : result.status === "unavailable" ? 503 : result.status === "not-initialized" ? 409 : 200;
+        return new Response(JSON.stringify({ ...result, scope: "uefa-nations-league", environment: "preview" }), { status, headers });
       }
 
       if (path === "archive/nations-league/statistics-start" && request.method === "POST") {
