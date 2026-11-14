@@ -5,6 +5,7 @@ import {
   getHistoryBackfillBatch,
   runHistoryBackfillBatch,
   probeHistoryBackfillRange,
+  probeHistoryBackfillBatch,
   runHistoryBackfillPilot,
   HISTORY_BACKFILL_LEAGUES
 } from "../history-backfill.js";
@@ -208,4 +209,26 @@ test("empty ESPN 200 responses do not advance the historical cursor", async () =
   assert.equal(result.failures.length, 3);
   assert.equal(storedState.cursor, 0);
   assert.equal(storedState.status, "retry-needed");
+});
+
+
+test("read-only coverage batches check at most five configured leagues and never write", async () => {
+  const requested = [];
+  const result = await probeHistoryBackfillBatch({
+    offset: 0, limit: 5, date: "20261101"
+  }, async url => {
+    requested.push(String(url));
+    return new Response(JSON.stringify({ events: [] }), {
+      status: 200, headers: { "Content-Type": "application/json" }
+    });
+  });
+  assert.equal(result.ok, true);
+  assert.equal(result.status, "coverage-batch-complete");
+  assert.equal(result.totalLeagues, 39);
+  assert.equal(result.requested, 5);
+  assert.equal(result.successCount, 5);
+  assert.equal(requested.length, 5);
+  assert.ok(requested.every(url => url.includes("dates=20261101&")));
+  const invalid = await probeHistoryBackfillBatch({ offset: 0, limit: 6, date: "20261101" });
+  assert.equal(invalid.status, "invalid-input");
 });
