@@ -715,8 +715,8 @@ export default {
           leagueCount: state?.leagueCount || 0, totalJobs,
           processedJobs, remainingJobs: Math.max(0, totalJobs - processedJobs),
           progressPercent: totalJobs ? Math.round(processedJobs / totalJobs * 1000) / 10 : 0,
-          executionEnabled: false,
-          note: "This isolated queue does not read or modify the existing ESPN sync or statistics queues."
+          executionEnabled: Boolean(state?.executionEnabled && env.HISTORY_BACKFILL_ENABLED === "true"),
+          note: "Historical processor is manually gated and separate from the existing ESPN sync and statistics queues."
         }), { status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
       }
 
