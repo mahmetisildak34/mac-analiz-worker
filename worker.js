@@ -144,7 +144,10 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
       ? " AND fixture_id NOT IN (" + queuedFixtureIds.map(() => "?").join(",") + ")"
       : "";
     const missingRows = await env.DB.prepare(
-      "SELECT fixture_id AS fixtureId FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null')" +
+      "SELECT fixture_id AS fixtureId FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (" +
+      "statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (" +
+      "CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 AND " +
+      "CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))" +
       exclusionSql +
       " ORDER BY kickoff ASC LIMIT 40"
     ).bind(...queuedFixtureIds).all();
@@ -251,7 +254,8 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
           team: team.team?.displayName || team.team?.name || null,
           statistics: Array.isArray(team.statistics) ? team.statistics : []
         }));
-        if (statistics.length) {
+        const hasActualStatistics = statistics.some(team => team.statistics.length > 0);
+        if (hasActualStatistics) {
           await env.DB.prepare(
             "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ?"
           ).bind(JSON.stringify({ teams: statistics, summaryAvailable: true }), item.fixtureId).run();
@@ -271,7 +275,8 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     }));
   }
   if (summaryRetries.length) summaryQueue.push(...summaryRetries);
-  if (summaryQueue.length > 500) summaryQueue = summaryQueue.slice(-500);
+  // Keep the oldest pending items first; newer overflow can be rediscovered from D1.
+  if (summaryQueue.length > 500) summaryQueue = summaryQueue.slice(0, 500);
   await env.MAM_KV.put(summaryQueueKey, JSON.stringify(summaryQueue));
   const doneList = Array.from(summaryDoneSet);
   await env.MAM_KV.put(summaryDoneKey, JSON.stringify(doneList.slice(-3000)));
@@ -707,7 +712,7 @@ export default {
         }
         const [total, statsCoverage, bySource, byLeague, byStatus, latest, summaryQueue] = await Promise.all([
           env.DB.prepare("SELECT COUNT(*) AS total FROM matches").first(),
-          env.DB.prepare("SELECT COUNT(*) AS total, SUM(CASE WHEN statistics_json IS NOT NULL AND statistics_json != '' AND statistics_json != 'null' THEN 1 ELSE 0 END) AS withStatistics FROM matches").first(),
+          env.DB.prepare("SELECT COUNT(*) AS total, SUM(CASE WHEN statistics_json IS NOT NULL AND statistics_json != '' AND statistics_json != 'null' AND (source != 'ESPN' OR (json_valid(statistics_json) = 1 AND (COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) > 0 OR COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) > 0))) THEN 1 ELSE 0 END) AS withStatistics FROM matches").first(),
           env.DB.prepare("SELECT source, COUNT(*) AS total FROM matches GROUP BY source ORDER BY source").all(),
           env.DB.prepare("SELECT league_id AS leagueId, league_name AS leagueName, country, COUNT(*) AS total, SUM(CASE WHEN status IN ('LIVE','1H','2H','HT','ET','P','INT') THEN 1 ELSE 0 END) AS live, SUM(CASE WHEN status IN ('FT','AET','PEN') AND home_goals IS NOT NULL AND away_goals IS NOT NULL THEN 1 ELSE 0 END) AS finished FROM matches GROUP BY league_id, league_name, country ORDER BY total DESC LIMIT 100").all(),
           env.DB.prepare("SELECT status, COUNT(*) AS total FROM matches GROUP BY status ORDER BY total DESC").all(),
