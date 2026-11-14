@@ -127,7 +127,8 @@ export const HISTORY_BACKFILL_PILOT = {
   leagues: [
     ["39", "eng.1", "Premier League", "England"],
     ["140", "esp.1", "La Liga", "Spain"],
-    ["78", "ger.1", "Bundesliga", "Germany"]
+    ["78", "ger.1", "Bundesliga", "Germany"],
+    ["203", "tur.1", "Süper Lig", "Türkiye"]
   ]
 };
 
