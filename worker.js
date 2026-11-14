@@ -37,7 +37,7 @@ async function createSessionToken(secret) {
 
 function normalizeTeamName(value) {
   return String(value || "").normalize("NFD").toLowerCase()
-    .replace(/[\\u0300-\\u036f]/g, "").replace(/ı/g, "i")
+    .replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i")
     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
 }
 
@@ -755,7 +755,7 @@ export default {
         const rows = Array.isArray(rowsResult?.results) ? rowsResult.results : [];
         const totalRecords = Number(countResult?.total || 0);
         const norm = value => String(value || "").normalize("NFD").toLowerCase()
-          .replace(/[\\u0300-\\u036f]/g, "").replace(/ı/g, "i")
+          .replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i")
           .replace(/[^a-z0-9]+/g, "").trim();
         const duplicateMap = new Map();
         const leagueMap = new Map();
@@ -867,7 +867,7 @@ export default {
           return value === "espn" ? 4 : value.includes("football-data") ? 3 : value === "api-football" ? 2 : 1;
         };
         const normalizeTeam = value => String(value || "").normalize("NFD").toLowerCase()
-          .replace(/[\\u0300-\\u036f]/g, "").replace(/ı/g, "i")
+          .replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i")
           .replace(/[^a-z0-9]+/g, "").trim();
         const countryForLeague = (leagueId, leagueName, country, source) => canonicalLeagueCountry(source, leagueId, leagueName, country);
         const uniqueRows = new Map();
