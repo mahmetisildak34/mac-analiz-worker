@@ -1,0 +1,22 @@
+name: Worker safety checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [feature/isolated-history-backfill-queue]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --ignore-scripts --no-audit --no-fund
+      - run: node --check worker.js
+      - run: node --check history-backfill.js
+      - run: node --test
+      - name: Validate Wrangler config and Worker bundle without deploying
+        run: npx wrangler deploy --dry-run --outdir /tmp/worker-dry-run
