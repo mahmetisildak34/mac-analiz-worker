@@ -264,23 +264,19 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   const summaryQueueBeforeDiscovery = summaryQueue.length;
   let recoveredSummaryItems = 0;
   if (summaryQueue.length < 480) {
-    // Exclude items already waiting (including cooldown retries), otherwise the
-    // same 40 newest missing-stat matches can block every older match indefinitely.
-    const queuedFixtureIds = summaryQueue
-      .map(item => String(item.fixtureId || ""))
-      .filter(Boolean);
-    const exclusionSql = queuedFixtureIds.length
-      ? " AND fixture_id NOT IN (" + queuedFixtureIds.map(() => "?").join(",") + ")"
-      : "";
+    // D1 has a bounded bind-parameter budget. Do not generate one SQL placeholder
+    // per queued fixture (a 458-item queue can make the query fail before summaries run).
+    // Read a bounded candidate window and exclude queued IDs in JavaScript instead.
+    const queuedFixtureIds = new Set(summaryQueue.map(item => String(item.fixtureId || "")).filter(Boolean));
     const missingRows = await env.DB.prepare(
       "SELECT fixture_id AS fixtureId FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (" +
       "statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (" +
       "CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 AND " +
       "CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))" +
-      exclusionSql +
-      " ORDER BY kickoff ASC LIMIT 40"
-    ).bind(...queuedFixtureIds).all();
+      " ORDER BY kickoff ASC LIMIT 2500"
+    ).all();
     for (const row of (Array.isArray(missingRows?.results) ? missingRows.results : [])) {
+      if (summaryQueue.length >= 480) break;
       const fixtureId = String(row.fixtureId || "");
       if (!fixtureId.startsWith("espn-")) continue;
       const splitAt = fixtureId.lastIndexOf("-");
@@ -290,8 +286,9 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
       const key = "ESPN:" + fixtureId;
       // A missing-stat row must never be suppressed by a stale done marker.
       summaryDoneSet.delete(key);
-      if (!summaryQueue.some(item => item.key === key)) {
+      if (!queuedFixtureIds.has(fixtureId) && !summaryQueue.some(item => item.key === key)) {
         summaryQueue.push({ key, slug, fixtureId, eventId, attempts: 0, retryAfter: 0 });
+        queuedFixtureIds.add(fixtureId);
         recoveredSummaryItems++;
       }
     }
