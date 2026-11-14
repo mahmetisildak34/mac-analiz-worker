@@ -307,11 +307,11 @@ export default {
       try {
         // Additive indexes improve archive queries without modifying or deleting stored matches.
         await ensureArchiveIndexes(env);
-        // Keep a rolling 45-day history plus 14 days of upcoming fixtures across configured ESPN competitions.
+        // Keep a rolling 45-day history plus 30 days of upcoming fixtures across configured ESPN competitions.
         // Each invocation also fetches up to 16 ESPN match summaries.
         // Keep scoreboard (24) + summary (16) fetches below the 50-subrequest
         // Workers Free limit, preventing the summary queue from starving the archive sync.
-        await syncEspnFixturesToD1(env, 45, 14, isHourlySync ? 24 : 10);
+        await syncEspnFixturesToD1(env, 45, 30, isHourlySync ? 24 : 10);
       } catch (archiveError) {
         console.log('ESPN D1 archive sync error', String(archiveError?.message || archiveError));
       }
@@ -464,7 +464,7 @@ export default {
         ok: true,
         service: "Maç Analiz Merkezi Worker",
         requestPath: requestUrl.pathname,
-        endpoints: ["/api/archive/d1-status", "/api/archive/matches?league=39&before=2026-11-13&limit=50"],
+        endpoints: ["/api/archive/d1-status", "/api/archive/upcoming?days=30", "/api/archive/matches?league=39&before=2026-11-13&limit=50"],
         note: "Worker is online. Read-only archive endpoints are public; archive writes still require a valid session."
       }), { status: 200, headers });
     }
@@ -508,7 +508,7 @@ export default {
       // Read-only match archive and aggregate diagnostics are public.
       // Writes and all other private routes still require a signed-in session.
       const publicArchiveRead = request.method === "GET" &&
-        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/live" ||
+        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/live" ||
          (isESPN && path.endsWith("/summary") && /^\d+$/.test(url.searchParams.get("event") || "")));
       if (!publicArchiveRead) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
@@ -537,6 +537,42 @@ export default {
           remainingJobs: Math.max(0, jobs - cursor),
           progressPercent: jobs ? Math.round(Math.min(cursor, jobs) / jobs * 1000) / 10 : 100,
           note: jobs ? "ESPN archive backfill is in progress" : "No pending ESPN archive batch"
+        }), {
+          status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+        });
+      }
+
+      if (path === "archive/upcoming" && request.method === "GET") {
+        if (!env.DB) {
+          return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const daysValue = Number.parseInt(url.searchParams.get("days") || "30", 10);
+        const days = Number.isFinite(daysValue) ? Math.max(1, Math.min(60, daysValue)) : 30;
+        const leagueId = String(url.searchParams.get("league") || "").trim();
+        const limitValue = Number.parseInt(url.searchParams.get("limit") || "1000", 10);
+        const limit = Number.isFinite(limitValue) ? Math.max(1, Math.min(2000, limitValue)) : 1000;
+        const filters = ["date(kickoff) >= date('now')", "date(kickoff) <= date('now', '+' || ? || ' days')", "status IN ('NS','TBD','SCHEDULED')"];
+        const binds = [days];
+        if (leagueId) { filters.push("league_id = ?"); binds.push(leagueId); }
+        binds.push(limit);
+        const result = await env.DB.prepare(
+          "SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team_id, home_team, away_team_id, away_team, home_goals, away_goals FROM matches WHERE " +
+          filters.join(" AND ") + " ORDER BY datetime(kickoff) ASC LIMIT ?"
+        ).bind(...binds).all();
+        const matches = (Array.isArray(result?.results) ? result.results : []).map(row => ({
+          source: row.source || "ESPN",
+          fixture: { id: row.fixture_id, date: row.kickoff, status: { short: row.status || "NS" } },
+          league: { id: String(row.league_id), name: row.league_name || "", country: row.country || "" },
+          teams: {
+            home: { id: row.home_team_id == null ? null : row.home_team_id, name: row.home_team || "" },
+            away: { id: row.away_team_id == null ? null : row.away_team_id, name: row.away_team || "" }
+          },
+          goals: { home: row.home_goals, away: row.away_goals }
+        }));
+        return new Response(JSON.stringify({
+          ok: true, days, leagueId: leagueId || null, count: matches.length, response: matches
         }), {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
         });
