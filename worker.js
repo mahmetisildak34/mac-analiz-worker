@@ -1013,7 +1013,7 @@ export default {
           statistics: {
             withStatistics: statsWith,
             missingStatistics: Math.max(0, statsTotal - statsWith),
-            coveragePercent: statsTotal ? Math.round(statsWith / statsTotal * 1000) / 10,
+            coveragePercent: statsTotal ? Math.round(statsWith / statsTotal * 1000) / 10 : 0,
             eligibleMatches: Number(statsCoverage?.eligibleTotal || 0),
             eligibleWithStatistics: Number(statsCoverage?.eligibleWithStatistics || 0),
             eligibleMissingStatistics: Math.max(0, Number(statsCoverage?.eligibleTotal || 0) - Number(statsCoverage?.eligibleWithStatistics || 0)),
