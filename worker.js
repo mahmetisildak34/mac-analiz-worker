@@ -588,7 +588,7 @@ export default {
     const origin = request.headers.get("Origin") || "";
     // Allow the production GitHub Pages app and Cloudflare's own dashboard
     // HTTP test panel. All other browser origins remain blocked.
-    const allowedOrigins = new Set([ALLOWED_ORIGIN, "https://dash.cloudflare.com"]);
+    const allowedOrigins = new Set([ALLOWED_ORIGIN, "https://dash.cloudflare.com", "https://feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev"]);
     const cors = {
       "Access-Control-Allow-Origin": origin && allowedOrigins.has(origin) ? origin : ALLOWED_ORIGIN,
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
