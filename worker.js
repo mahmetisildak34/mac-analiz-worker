@@ -1,4 +1,4 @@
-import { HISTORY_BACKFILL_KEY, buildHistoryBackfillState, runHistoryBackfillBatch, probeHistoryBackfillRange } from "./history-backfill.js";
+import { HISTORY_BACKFILL_KEY, buildHistoryBackfillState, runHistoryBackfillBatch, probeHistoryBackfillRange, runHistoryBackfillPilot } from "./history-backfill.js";
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
 const API_BASE = "https://v3.football.api-sports.io";
 const FOOTBALLDATA_BASE = "https://api.football-data.org/v4";
@@ -641,7 +641,7 @@ export default {
       return new Response(null, { status: 204, headers: cors });
     }
 
-    if (request.method !== "GET" && !(request.method === "POST" && (requestUrl.pathname === "/api/archive/matches" || requestUrl.pathname === "/api/archive/history-backfill/start" || requestUrl.pathname === "/api/archive/history-backfill/enable" || requestUrl.pathname === "/api/archive/history-backfill/run"))) {
+    if (request.method !== "GET" && !(request.method === "POST" && (requestUrl.pathname === "/api/archive/matches" || requestUrl.pathname === "/api/archive/history-backfill/start" || requestUrl.pathname === "/api/archive/history-backfill/enable" || requestUrl.pathname === "/api/archive/history-backfill/run" || requestUrl.pathname === "/api/archive/history-backfill/pilot-run"))) {
       return new Response(JSON.stringify({ error: "Method not allowed" }), {
         status: 405,
         headers: { ...cors, "Content-Type": "application/json" }
@@ -697,6 +697,18 @@ export default {
         return new Response(JSON.stringify(result), {
           status, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
         });
+      }
+
+      if (path === "archive/history-backfill/pilot-run" && request.method === "POST") {
+        if (env.HISTORY_BACKFILL_PILOT_ENABLED !== "true") {
+          return new Response(JSON.stringify({ ok: false, status: "pilot-disabled", error: "Pilot is not enabled in this Worker environment." }), { status: 403, headers });
+        }
+        if (!env.DB) {
+          return new Response(JSON.stringify({ ok: false, status: "unavailable", error: "D1 binding is required." }), { status: 503, headers });
+        }
+        const result = await runHistoryBackfillPilot(env);
+        const status = result.ok ? 200 : result.status === "pilot-disabled" ? 403 : result.status === "unavailable" ? 503 : 502;
+        return new Response(JSON.stringify(result), { status, headers });
       }
 
       if (path === "archive/history-backfill/enable" && request.method === "POST") {
