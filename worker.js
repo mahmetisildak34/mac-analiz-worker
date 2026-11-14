@@ -135,9 +135,19 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   // Recover older ESPN matches that were previously marked "done" without statistics.
   // Requeue a small bounded batch each scheduled run so the backlog drains gradually.
   if (summaryQueue.length < 80) {
+    // Exclude items already waiting (including cooldown retries), otherwise the
+    // same 40 newest missing-stat matches can block every older match indefinitely.
+    const queuedFixtureIds = summaryQueue
+      .map(item => String(item.fixtureId || ""))
+      .filter(Boolean);
+    const exclusionSql = queuedFixtureIds.length
+      ? " AND fixture_id NOT IN (" + queuedFixtureIds.map(() => "?").join(",") + ")"
+      : "";
     const missingRows = await env.DB.prepare(
-      "SELECT fixture_id AS fixtureId FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null') ORDER BY kickoff DESC LIMIT 40"
-    ).all();
+      "SELECT fixture_id AS fixtureId FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null')" +
+      exclusionSql +
+      " ORDER BY kickoff ASC LIMIT 40"
+    ).bind(...queuedFixtureIds).all();
     for (const row of (Array.isArray(missingRows?.results) ? missingRows.results : [])) {
       const fixtureId = String(row.fixtureId || "");
       if (!fixtureId.startsWith("espn-")) continue;
