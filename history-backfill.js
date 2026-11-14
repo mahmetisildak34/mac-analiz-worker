@@ -2,17 +2,17 @@
 // Historical fixture discovery and staging are isolated from the live ESPN sync
 // and its existing statistics-recovery queue.
 export const HISTORY_BACKFILL_KEY = "mam:history-backfill-state:v1";
-export const NATIONS_LEAGUE_BACKFILL_KEY = "mam:nations-league-backfill-state:v2";
+export const NATIONS_LEAGUE_BACKFILL_KEY = "mam:nations-league-backfill-state:v3";
 export const NATIONS_LEAGUE_BACKFILL_LEAGUE = ["5", "uefa.nations", "UEFA Nations League", "Europe"];
 export function buildNationsLeagueBackfillState(now = new Date()) {
-  const rangeStart = "2018-09-06";
+  const rangeStart = "2024-09-05";
   const rangeEnd = now.toISOString().slice(0, 10);
   const start = new Date(rangeStart + "T12:00:00.000Z");
   const end = new Date(rangeEnd + "T12:00:00.000Z");
   const dayCount = Math.floor((end.getTime() - start.getTime()) / 86400000) + 1;
   return {
-    version: 2, scope: "uefa-nations-league", createdAt: now.toISOString(),
-    rangeStart, rangeEnd, dayCount, seasonsRequested: ["2018/19", "2020/21", "2022/23", "2024/25", "2026/27"],
+    version: 3, scope: "uefa-nations-league", createdAt: now.toISOString(),
+    rangeStart, rangeEnd, dayCount, seasonsRequested: ["2024/25", "2026/27"],
     leagueCount: 1, totalJobs: dayCount, cursor: 0, status: "queued", executionEnabled: false,
     note: "Dedicated UEFA Nations League queue. ESPN fixture coverage must be audited; this queue does not modify live matches or the general archive."
   };
