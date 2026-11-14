@@ -5,6 +5,7 @@ import {
   getHistoryBackfillBatch,
   runHistoryBackfillBatch,
   probeHistoryBackfillRange,
+  runHistoryBackfillPilot,
   HISTORY_BACKFILL_LEAGUES
 } from "../history-backfill.js";
 
@@ -98,4 +99,74 @@ test("ESPN range probe reports upstream denial without treating it as empty cove
   assert.equal(result.ok, false);
   assert.equal(result.status, "upstream-http-error");
   assert.equal(result.httpStatus, 403);
+});
+
+
+test("pilot refuses to write when any league returns empty events", async () => {
+  let dbWrites = 0;
+  const env = {
+    HISTORY_BACKFILL_PILOT_ENABLED: "true",
+    DB: {
+      prepare() {
+        return { run: async () => { dbWrites++; }, bind() { return this; } };
+      },
+      batch: async () => { dbWrites++; return []; }
+    }
+  };
+  const result = await runHistoryBackfillPilot(env, async url => {
+    const slug = new URL(url).pathname.split("/").at(-2);
+    return new Response(JSON.stringify({ events: slug === "ger.1" ? [] : [{ id: "1" }] }), { status: 200 });
+  });
+  assert.equal(result.status, "empty-or-invalid-upstream");
+  assert.equal(result.saved, 0);
+  assert.equal(dbWrites, 0);
+});
+
+test("pilot stages validated matches from all three leagues in one idempotent batch", async () => {
+  let createCalls = 0;
+  let batchRows = [];
+  const env = {
+    HISTORY_BACKFILL_PILOT_ENABLED: "true",
+    DB: {
+      prepare(sql) {
+        return {
+          sql,
+          run: async () => { createCalls++; },
+          bind(...values) { this.values = values; return this; }
+        };
+      },
+      batch: async statements => {
+        batchRows = statements;
+        return statements.map(() => ({ meta: { changes: 1 } }));
+      }
+    }
+  };
+  const makeEvent = (id, date) => ({
+    id: String(id), date,
+    competitions: [{
+      competitors: [
+        { homeAway: "home", team: { id: "10", displayName: "Home FC" }, score: "2" },
+        { homeAway: "away", team: { id: "20", displayName: "Away FC" }, score: "1" }
+      ]
+    }],
+    status: { type: { state: "post", completed: true } }
+  });
+  const counts = { "eng.1": 1, "esp.1": 4, "ger.1": 2 };
+  const result = await runHistoryBackfillPilot(env, async url => {
+    const slug = new URL(url).pathname.split("/").at(-2);
+    return new Response(JSON.stringify({
+      events: Array.from({ length: counts[slug] }, (_, index) => makeEvent(index + 1, "2026-11-01T12:00:00Z"))
+    }), { status: 200 });
+  });
+  assert.equal(result.ok, true);
+  assert.equal(result.fetchedMatches, 7);
+  assert.equal(result.databaseChanges, 7);
+  assert.equal(batchRows.length, 7);
+  assert.equal(createCalls, 1);
+  assert.equal(result.status, "pilot-staged");
+});
+
+test("pilot stays disabled unless its dedicated Preview flag is enabled", async () => {
+  const result = await runHistoryBackfillPilot({});
+  assert.equal(result.status, "pilot-disabled");
 });
