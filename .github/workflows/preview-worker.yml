@@ -66,6 +66,20 @@ jobs:
         env:
           PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
 
+      - name: Audit historical queues without mutation
+        run: |
+          set -euo pipefail
+          echo "Nations League fixture queue:"
+          fixture_state="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/history-backfill/status?scope=nations-league")"
+          printf '%s\n' "$fixture_state"
+          echo "$fixture_state" | jq -e '.ok == true and .executionEnabled == false' >/dev/null
+          echo "Nations League statistics queue:"
+          stats_state="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/nations-league/statistics-status")"
+          printf '%s\n' "$stats_state"
+          echo "$stats_state" | jq -e '.ok == true and .executionEnabled == false' >/dev/null
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
       - name: Publish Preview URL
         run: |
           {
