@@ -118,6 +118,22 @@ jobs:
         env:
           PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
 
+      - name: Run one bounded Nations League batch (isolated Preview only)
+        run: |
+          set -euo pipefail
+          code="$(curl --show-error --silent --output /tmp/nations-batch.json --write-out '%{http_code}' -X POST "$PREVIEW_URL/api/archive/history-backfill/preview-batch?scope=nations-league")"
+          cat /tmp/nations-batch.json
+          if [ "$code" != "200" ]; then
+            echo "Preview batch returned HTTP $code" >&2
+            exit 1
+          fi
+          jq -e '.ok == true and .scope == "uefa-nations-league" and .environment == "preview"' /tmp/nations-batch.json >/dev/null
+          status="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/history-backfill/status?scope=nations-league")"
+          printf '%s\\n' "$status"
+          echo "$status" | jq -e '.ok == true and .executionEnabled == false or .executionEnabled == true' >/dev/null
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
       - name: Probe historical Nations League coverage (read-only)
         run: |
           set -euo pipefail
