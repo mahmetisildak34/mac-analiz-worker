@@ -83,8 +83,9 @@ jobs:
       - name: Probe historical Nations League coverage (read-only)
         run: |
           set -euo pipefail
-          probe="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/history-backfill/probe?league=uefa.nations&from=20240905&to=20240907")"
+          probe="$(curl --show-error --silent "$PREVIEW_URL/api/archive/history-backfill/probe?league=uefa.nations&from=20240905&to=20240907")"
           printf '%s\n' "$probe"
+          echo "$probe" | jq -e '.status != null' >/dev/null
           echo "$probe" | jq -e '.ok == true and .status == "range-supported-response"' >/dev/null
         env:
           PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
