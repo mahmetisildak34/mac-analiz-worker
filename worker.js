@@ -1,4 +1,4 @@
-import { HISTORY_BACKFILL_KEY, NATIONS_LEAGUE_BACKFILL_KEY, NATIONS_LEAGUE_BACKFILL_LEAGUE, buildHistoryBackfillState, buildNationsLeagueBackfillState, runHistoryBackfillBatch, probeHistoryBackfillRange, probeHistoryBackfillBatch, runHistoryBackfillPilot } from "./history-backfill.js";
+import { HISTORY_BACKFILL_KEY, NATIONS_LEAGUE_BACKFILL_KEY, NATIONS_LEAGUE_BACKFILL_LEAGUE, NATIONS_LEAGUE_STATISTICS_KEY, buildHistoryBackfillState, buildNationsLeagueBackfillState, buildNationsLeagueStatisticsState, runNationsLeagueStatisticsBatch, runHistoryBackfillBatch, probeHistoryBackfillRange, probeHistoryBackfillBatch, runHistoryBackfillPilot } from "./history-backfill.js";
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
 const API_BASE = "https://v3.football.api-sports.io";
 const FOOTBALLDATA_BASE = "https://api.football-data.org/v4";
@@ -654,7 +654,7 @@ export default {
       return new Response(null, { status: 204, headers: cors });
     }
 
-    if (request.method !== "GET" && !(request.method === "POST" && (requestUrl.pathname === "/api/archive/matches" || requestUrl.pathname === "/api/archive/history-backfill/start" || requestUrl.pathname === "/api/archive/history-backfill/enable" || requestUrl.pathname === "/api/archive/history-backfill/run" || requestUrl.pathname === "/api/archive/history-backfill/pilot-run"))) {
+    if (request.method !== "GET" && !(request.method === "POST" && (requestUrl.pathname === "/api/archive/matches" || requestUrl.pathname === "/api/archive/history-backfill/start" || requestUrl.pathname === "/api/archive/history-backfill/enable" || requestUrl.pathname === "/api/archive/history-backfill/run" || requestUrl.pathname === "/api/archive/history-backfill/pilot-run" || requestUrl.pathname === "/api/archive/nations-league/statistics-start" || requestUrl.pathname === "/api/archive/nations-league/statistics-enable" || requestUrl.pathname === "/api/archive/nations-league/statistics-run"))) {
       return new Response(JSON.stringify({ error: "Method not allowed" }), {
         status: 405,
         headers: { ...cors, "Content-Type": "application/json" }
@@ -689,7 +689,7 @@ export default {
       // Read-only match archive and aggregate diagnostics are public.
       // Writes and all other private routes still require a signed-in session.
       const publicArchiveRead = request.method === "GET" &&
-        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/quality-check" || path === "archive/live" || path === "archive/history-backfill/status" || path === "archive/history-backfill/probe" || path === "archive/history-backfill/probe-batch" || path === "archive/history-backfill/pilot-status" ||
+        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/quality-check" || path === "archive/live" || path === "archive/history-backfill/status" || path === "archive/history-backfill/probe" || path === "archive/history-backfill/probe-batch" || path === "archive/history-backfill/pilot-status" || path === "archive/nations-league/statistics-status" ||
          (isESPN && path.endsWith("/summary") && /^\d+$/.test(url.searchParams.get("event") || "")));
       const previewPilotTrigger = (request.method === "GET" || request.method === "POST") &&
         path === "archive/history-backfill/pilot-run" &&
@@ -784,6 +784,42 @@ export default {
         const result = await runHistoryBackfillBatch(env);
         const status = ["disabled", "not-enabled"].includes(result.status) ? 403 : result.status === "locked" ? 409 : result.status === "unavailable" ? 503 : result.status === "not-initialized" ? 409 : 200;
         return new Response(JSON.stringify(result), { status, headers });
+      }
+
+      if (path === "archive/nations-league/statistics-start" && request.method === "POST") {
+        const result = await buildNationsLeagueStatisticsState(env);
+        return new Response(JSON.stringify(result), { status: result.ok ? 201 : 503, headers });
+      }
+
+      if (path === "archive/nations-league/statistics-enable" && request.method === "POST") {
+        if (env.HISTORY_STATISTICS_ENABLED !== "true") return new Response(JSON.stringify({ ok: false, error: "Historical statistics feature flag is disabled." }), { status: 403, headers });
+        if (!env.MAM_KV) return new Response(JSON.stringify({ ok: false, error: "KV binding is required." }), { status: 503, headers });
+        const state = await env.MAM_KV.get(NATIONS_LEAGUE_STATISTICS_KEY, "json");
+        if (!state) return new Response(JSON.stringify({ ok: false, error: "Statistics queue has not been initialized." }), { status: 409, headers });
+        state.executionEnabled = true;
+        state.enabledAt = new Date().toISOString();
+        await env.MAM_KV.put(NATIONS_LEAGUE_STATISTICS_KEY, JSON.stringify(state));
+        return new Response(JSON.stringify({ ok: true, executionEnabled: true, message: "Enabled only; no statistics batch was run." }), { status: 200, headers });
+      }
+
+      if (path === "archive/nations-league/statistics-run" && request.method === "POST") {
+        const result = await runNationsLeagueStatisticsBatch(env);
+        const status = ["disabled", "not-enabled"].includes(result.status) ? 403 : result.status === "unavailable" ? 503 : result.status === "not-initialized" ? 409 : 200;
+        return new Response(JSON.stringify(result), { status, headers });
+      }
+
+      if (path === "archive/nations-league/statistics-status" && request.method === "GET") {
+        const state = env.MAM_KV ? await env.MAM_KV.get(NATIONS_LEAGUE_STATISTICS_KEY, "json") : null;
+        return new Response(JSON.stringify({
+          ok: true, exists: Boolean(state), scope: "uefa-nations-league-statistics",
+          status: state?.status || "not-created", totalJobs: Number(state?.totalJobs || 0),
+          processedJobs: Number(state?.cursor || 0),
+          remainingJobs: Math.max(0, Number(state?.totalJobs || 0) - Number(state?.cursor || 0)),
+          statisticsFound: Number(state?.statisticsFound || 0), noStatistics: Number(state?.noStatistics || 0),
+          pendingReview: Array.isArray(state?.retryJobs) ? state.retryJobs.length : 0,
+          executionEnabled: Boolean(state?.executionEnabled && env.HISTORY_STATISTICS_ENABLED === "true"),
+          lastRunAt: state?.lastRunAt || null, lastBatch: state?.lastBatch || null
+        }), { status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
       }
 
       if (path === "archive/history-backfill/status" && request.method === "GET") {
