@@ -228,7 +228,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     ["4","uefa.euro","UEFA European Championship","Europe"],
     ["5","uefa.nations","UEFA Nations League","Europe"],
     ["6","caf.nations","Africa Cup of Nations","Africa"],
-    ["9","conmebol.copa_america","Copa América","South America"],
+    ["9","conmebol.america","Copa América","South America"],
     ["15","fifa.cwc","FIFA Club World Cup","World"],
     ["307","ksa.1","Saudi Pro League","Saudi Arabia"]
   ];
