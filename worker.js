@@ -294,6 +294,14 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     }
   }
 
+  // When the statistics backlog is large (for example, hundreds of missing ESPN
+  // box scores), shift the safe 48-request budget toward summaries: 24 scoreboard
+  // + 24 summary calls. With a small queue retain 32 scoreboard + 16 summaries.
+  const summaryBatchLimit = summaryQueue.length >= 100 ? 24 : 16;
+  const scoreboardBatchLimit = Math.min(maxRequests, 48 - summaryBatchLimit);
+  batch = state.jobs.slice(state.cursor, state.cursor + Math.max(1, scoreboardBatchLimit));
+  const queueAfterDiscovery = summaryQueue.length;
+
   let failed = 0;
 
   const fetchJob = async job => {
@@ -357,13 +365,6 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
 
   // Fetch detailed box-score statistics for live and completed matches in small batches.
   // Scoreboard sync remains the source of truth for status and goals; summaries enrich statistics_json.
-  // When the statistics backlog is large (for example, hundreds of missing ESPN
-  // box scores), shift the safe 48-request budget toward summaries: 24 scoreboard
-  // + 24 summary calls. With a small queue retain 32 scoreboard + 16 summaries.
-  const summaryBatchLimit = summaryQueue.length >= 100 ? 24 : 16;
-  const scoreboardBatchLimit = Math.min(maxRequests, 48 - summaryBatchLimit);
-  batch = state.jobs.slice(state.cursor, state.cursor + Math.max(1, scoreboardBatchLimit));
-  const queueAfterDiscovery = summaryQueue.length;
   const nowMs = Date.now();
   const readySummaries = [];
   const deferredSummaries = [];
