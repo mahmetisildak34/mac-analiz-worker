@@ -131,6 +131,29 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   let summaryDone = await env.MAM_KV.get(summaryDoneKey, "json");
   if (!Array.isArray(summaryDone)) summaryDone = [];
   const summaryDoneSet = new Set(summaryDone);
+
+  // Recover older ESPN matches that were previously marked "done" without statistics.
+  // Requeue a small bounded batch each scheduled run so the backlog drains gradually.
+  if (summaryQueue.length < 80) {
+    const missingRows = await env.DB.prepare(
+      "SELECT fixture_id AS fixtureId FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null') ORDER BY kickoff DESC LIMIT 40"
+    ).all();
+    for (const row of (Array.isArray(missingRows?.results) ? missingRows.results : [])) {
+      const fixtureId = String(row.fixtureId || "");
+      if (!fixtureId.startsWith("espn-")) continue;
+      const splitAt = fixtureId.lastIndexOf("-");
+      if (splitAt <= 5 || splitAt >= fixtureId.length - 1) continue;
+      const slug = fixtureId.slice(5, splitAt);
+      const eventId = fixtureId.slice(splitAt + 1);
+      const key = "ESPN:" + fixtureId;
+      // A missing-stat row must never be suppressed by a stale done marker.
+      summaryDoneSet.delete(key);
+      if (!summaryQueue.some(item => item.key === key)) {
+        summaryQueue.push({ key, slug, fixtureId, eventId, attempts: 0, retryAfter: 0 });
+      }
+    }
+  }
+
   let failed = 0;
 
   const fetchJob = async job => {
