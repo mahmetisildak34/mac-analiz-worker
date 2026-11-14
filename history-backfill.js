@@ -69,3 +69,119 @@ export function getHistoryBackfillBatch(state, limit = 20) {
   }
   return jobs;
 }
+
+
+// One manually-invoked, tightly bounded batch. The feature flag is deliberately
+// absent from source control; it must be explicitly set in the Worker environment.
+export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
+  if (env.HISTORY_BACKFILL_ENABLED !== "true") {
+    return { ok: false, status: "disabled", reason: "Set HISTORY_BACKFILL_ENABLED=true only after isolated Preview verification." };
+  }
+  if (!env.DB || !env.MAM_KV) {
+    return { ok: false, status: "unavailable", reason: "D1 and KV bindings are required." };
+  }
+
+  const state = await env.MAM_KV.get(HISTORY_BACKFILL_KEY, "json");
+  if (!state || !Number.isInteger(Number(state.totalJobs)) || Number(state.totalJobs) < 1) {
+    return { ok: false, status: "not-initialized" };
+  }
+  if (Number(state.cursor || 0) >= Number(state.totalJobs)) {
+    return { ok: true, status: "complete", processedJobs: Number(state.cursor || 0), totalJobs: Number(state.totalJobs) };
+  }
+
+  await env.DB.prepare(
+    "CREATE TABLE IF NOT EXISTS mam_history_backfill_lock (id INTEGER PRIMARY KEY CHECK (id = 1), owner TEXT, lease_until INTEGER NOT NULL DEFAULT 0)"
+  ).run();
+  await env.DB.prepare(
+    "INSERT OR IGNORE INTO mam_history_backfill_lock (id, owner, lease_until) VALUES (1, '', 0)"
+  ).run();
+
+  const owner = crypto.randomUUID();
+  const now = Date.now();
+  const leaseUntil = now + 120000;
+  const claim = await env.DB.prepare(
+    "UPDATE mam_history_backfill_lock SET owner = ?, lease_until = ? WHERE id = 1 AND lease_until < ?"
+  ).bind(owner, leaseUntil, now).run();
+  if (Number(claim?.meta?.changes || 0) !== 1) {
+    return { ok: false, status: "locked", reason: "Another historical batch holds the D1 lease." };
+  }
+
+  try {
+    const cursor = Math.max(0, Number(state.cursor || 0));
+    const batch = getHistoryBackfillBatch(state, 4);
+    if (!batch.length) return { ok: false, status: "invalid-queue", cursor };
+
+    const rows = [];
+    const failures = [];
+    for (let i = 0; i < batch.length; i += 2) {
+      await Promise.all(batch.slice(i, i + 2).map(async (job, offset) => {
+        const jobIndex = i + offset;
+        const [leagueId, slug, leagueName, country] = job.league || [];
+        try {
+          if (!slug || !/^\\d{8}$/.test(job.date)) throw new Error("Invalid league/date job");
+          const response = await fetchImpl(ESPN_BASE + "/" + slug + "/scoreboard?dates=" + job.date + "&limit=500", {
+            headers: { Accept: "application/json" }
+          });
+          if (!response.ok) throw new Error("ESPN HTTP " + response.status);
+          const payload = await response.json();
+          for (const event of (Array.isArray(payload?.events) ? payload.events : [])) {
+            const competition = (event.competitions || [])[0] || {};
+            const competitors = competition.competitors || [];
+            const home = competitors.find(item => item.homeAway === "home") || {};
+            const away = competitors.find(item => item.homeAway === "away") || {};
+            const homeName = String(home.team?.displayName || home.team?.name || "").trim();
+            const awayName = String(away.team?.displayName || away.team?.name || "").trim();
+            if (!homeName || !awayName || !event.id || !event.date) continue;
+            const type = event.status?.type || competition.status?.type || {};
+            const phase = String(type.state || "").toLowerCase();
+            const status = type.completed === true || phase === "post" ? "FT" : (phase === "in" || phase === "live") ? "LIVE" : "NS";
+            const score = value => value == null || value === "" ? null : (Number.isFinite(Number(value)) ? Number(value) : null);
+            rows.push({
+              fixtureId: "espn-" + slug + "-" + String(event.id),
+              leagueId, leagueName, country, kickoff: String(event.date), status,
+              homeId: home.team?.id == null ? null : String(home.team.id), homeName,
+              awayId: away.team?.id == null ? null : String(away.team.id), awayName,
+              homeGoals: score(home.score), awayGoals: score(away.score), raw: JSON.stringify(event)
+            });
+          }
+        } catch (error) {
+          failures.push({ index: jobIndex, date: job.date, league: slug || null, error: String(error?.message || error) });
+        }
+      }));
+    }
+
+    const sql = "INSERT INTO matches (source, fixture_id, league_id, league_name, country, kickoff, status, home_team_id, home_team, away_team_id, away_team, home_goals, away_goals, statistics_json, raw_json) VALUES ('ESPN', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?) ON CONFLICT(source, fixture_id) DO UPDATE SET league_id=excluded.league_id, league_name=excluded.league_name, country=excluded.country, kickoff=excluded.kickoff, status=CASE WHEN matches.status IN ('FT','AET','PEN') AND excluded.status='NS' THEN matches.status ELSE excluded.status END, home_team_id=COALESCE(excluded.home_team_id,matches.home_team_id), home_team=excluded.home_team, away_team_id=COALESCE(excluded.away_team_id,matches.away_team_id), away_team=excluded.away_team, home_goals=COALESCE(excluded.home_goals,matches.home_goals), away_goals=COALESCE(excluded.away_goals,matches.away_goals), raw_json=excluded.raw_json, updated_at=CURRENT_TIMESTAMP";
+    let saved = 0;
+    for (let i = 0; i < rows.length; i += 50) {
+      const statements = rows.slice(i, i + 50).map(row => env.DB.prepare(sql).bind(
+        row.fixtureId, row.leagueId, row.leagueName, row.country, row.kickoff, row.status,
+        row.homeId, row.homeName, row.awayId, row.awayName, row.homeGoals, row.awayGoals, row.raw
+      ));
+      const result = await env.DB.batch(statements);
+      saved += result.reduce((sum, item) => sum + (Number(item?.meta?.changes) || 0), 0);
+    }
+
+    // Advance only through the successful contiguous prefix. Later successful
+    // rows are safe to upsert again if an earlier date must be retried.
+    const firstFailure = failures.length ? Math.min(...failures.map(item => item.index)) : batch.length;
+    const advanced = Math.max(0, Math.min(batch.length, firstFailure));
+    const nextCursor = cursor + advanced;
+    const nextState = {
+      ...state,
+      cursor: nextCursor,
+      status: nextCursor >= Number(state.totalJobs) ? "complete" : (failures.length ? "retry-needed" : "queued"),
+      lastRunAt: new Date().toISOString(),
+      lastBatch: { requested: batch.length, advanced, saved, failures }
+    };
+    await env.MAM_KV.put(HISTORY_BACKFILL_KEY, JSON.stringify(nextState));
+    return {
+      ok: true, status: nextState.status, requested: batch.length, advanced,
+      processedJobs: nextCursor, totalJobs: Number(state.totalJobs),
+      remainingJobs: Math.max(0, Number(state.totalJobs) - nextCursor), saved, failures
+    };
+  } finally {
+    await env.DB.prepare(
+      "UPDATE mam_history_backfill_lock SET owner = '', lease_until = 0 WHERE id = 1 AND owner = ?"
+    ).bind(owner).run();
+  }
+}
