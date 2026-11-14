@@ -28,7 +28,7 @@ export const HISTORY_BACKFILL_LEAGUES = [
   ["169","chn.1","Chinese Super League","China"], ["1","fifa.world","FIFA World Cup","World"],
   ["4","uefa.euro","UEFA European Championship","Europe"],
   ["5","uefa.nations","UEFA Nations League","Europe"],
-  ["9","conmebol.copa_america","Copa América","South America"],
+  ["9","conmebol.america","Copa América","South America"],
   ["6","caf.nations","Africa Cup of Nations","Africa"],
   ["15","fifa.cwc","FIFA Club World Cup","World"], ["307","ksa.1","Saudi Pro League","Saudi Arabia"]
 ];
