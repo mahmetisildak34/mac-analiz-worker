@@ -367,6 +367,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   summaryQueue = deferredSummaries;
   const summaryBatch = readySummaries;
   const summaryRetries = [];
+  const summaryRun = { ranAt: new Date().toISOString(), attempted: summaryBatch.length, fetchedWithStatistics: 0, noStatisticsReturned: 0, requestFailures: 0, saved: 0 };
   for (let i = 0; i < summaryBatch.length; i += 4) {
     await Promise.all(summaryBatch.slice(i, i + 4).map(async item => {
       try {
@@ -387,14 +388,19 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
             "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ?"
           ).bind(JSON.stringify({ teams: statistics, summaryAvailable: true }), item.fixtureId).run();
           summaryDoneSet.add(item.key);
+          summaryRun.fetchedWithStatistics++;
+          summaryRun.saved++;
         } else if (Number(item.attempts || 0) < 1) {
+          summaryRun.noStatisticsReturned++;
           summaryRetries.push({ ...item, attempts: Number(item.attempts || 0) + 1, retryAfter: Date.now() + 15 * 60 * 1000 });
         } else {
+          summaryRun.noStatisticsReturned++;
           // Do not permanently mark a match complete when ESPN has not supplied statistics.
           // Cool down this item and retry it in a later scheduled run.
           summaryRetries.push({ ...item, attempts: 0, retryAfter: Date.now() + 6 * 60 * 60 * 1000 });
         }
       } catch (error) {
+        summaryRun.requestFailures++;
         if (Number(item.attempts || 0) < 1) summaryRetries.push({ ...item, attempts: Number(item.attempts || 0) + 1, retryAfter: Date.now() + 15 * 60 * 1000 });
         else summaryRetries.push({ ...item, attempts: 0, retryAfter: Date.now() + 6 * 60 * 60 * 1000 });
         console.log("ESPN match statistics sync failed", item.fixtureId, String(error?.message || error));
@@ -405,6 +411,9 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   // Keep the oldest pending items first; newer overflow can be rediscovered from D1.
   if (summaryQueue.length > 500) summaryQueue = summaryQueue.slice(0, 500);
   await env.MAM_KV.put(summaryQueueKey, JSON.stringify(summaryQueue));
+  summaryRun.pendingAfterRun = summaryQueue.length;
+  if (env.MAM_KV) await env.MAM_KV.put("mam:espn-summary-last-run:v1", JSON.stringify(summaryRun), { expirationTtl: 60 * 60 * 24 * 30 });
+  console.log("ESPN summary processing report", summaryRun);
   const doneList = Array.from(summaryDoneSet);
   await env.MAM_KV.put(summaryDoneKey, JSON.stringify(doneList.slice(-3000)));
 
@@ -972,16 +981,17 @@ export default {
             status: 503, headers: { ...cors, "Content-Type": "application/json" }
           });
         }
-        const [total, statsCoverage, bySource, missingBySource, byLeague, byStatus, latest, summaryQueue, crossSourceStatsReport] = await Promise.all([
+        const [total, statsCoverage, bySource, missingBySource, byLeague, byStatus, latest, summaryQueue, crossSourceStatsReport, summaryLastRun] = await Promise.all([
           env.DB.prepare("SELECT COUNT(*) AS total FROM matches").first(),
-          env.DB.prepare("SELECT COUNT(*) AS total, SUM(CASE WHEN statistics_json IS NOT NULL AND statistics_json != '' AND statistics_json != 'null' AND (source != 'ESPN' OR CASE WHEN json_valid(statistics_json) = 1 THEN CASE WHEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) > 0 OR COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) > 0 THEN 1 ELSE 0 END ELSE 0 END = 1) THEN 1 ELSE 0 END) AS withStatistics FROM matches").first(),
+          env.DB.prepare("SELECT COUNT(*) AS total, SUM(CASE WHEN statistics_json IS NOT NULL AND statistics_json != '' AND statistics_json != 'null' AND (source != 'ESPN' OR CASE WHEN json_valid(statistics_json) = 1 THEN CASE WHEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) > 0 OR COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) > 0 THEN 1 ELSE 0 END ELSE 0 END = 1) THEN 1 ELSE 0 END) AS withStatistics, SUM(CASE WHEN status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') THEN 1 ELSE 0 END) AS eligibleTotal, SUM(CASE WHEN status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND statistics_json IS NOT NULL AND statistics_json != '' AND statistics_json != 'null' AND (source != 'ESPN' OR CASE WHEN json_valid(statistics_json) = 1 THEN CASE WHEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) > 0 OR COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) > 0 THEN 1 ELSE 0 END ELSE 0 END = 1) THEN 1 ELSE 0 END) AS eligibleWithStatistics FROM matches").first(),
           env.DB.prepare("SELECT source, COUNT(*) AS total FROM matches GROUP BY source ORDER BY source").all(),
-          env.DB.prepare("SELECT source, COUNT(*) AS missing FROM matches WHERE statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR (source = 'ESPN' AND (json_valid(statistics_json) = 0 OR (COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) = 0 AND COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) = 0))) GROUP BY source ORDER BY missing DESC").all(),
+          env.DB.prepare("SELECT source, COUNT(*) AS missing FROM matches WHERE status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR (source = 'ESPN' AND (json_valid(statistics_json) = 0 OR (COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) = 0 AND COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) = 0)))) GROUP BY source ORDER BY missing DESC").all(),
           env.DB.prepare("SELECT league_id AS leagueId, league_name AS leagueName, country, COUNT(*) AS total, SUM(CASE WHEN status IN ('LIVE','1H','2H','HT','ET','P','INT') THEN 1 ELSE 0 END) AS live, SUM(CASE WHEN status IN ('FT','AET','PEN') AND home_goals IS NOT NULL AND away_goals IS NOT NULL THEN 1 ELSE 0 END) AS finished FROM matches GROUP BY league_id, league_name, country ORDER BY total DESC LIMIT 100").all(),
           env.DB.prepare("SELECT status, COUNT(*) AS total FROM matches GROUP BY status ORDER BY total DESC").all(),
           env.DB.prepare("SELECT MAX(updated_at) AS lastUpdated FROM matches").first(),
           env.MAM_KV ? env.MAM_KV.get("mam:espn-summary-queue:v1", "json") : Promise.resolve([]),
-          env.MAM_KV ? env.MAM_KV.get("mam:cross-source-stats:last:v1", "json") : Promise.resolve(null)
+          env.MAM_KV ? env.MAM_KV.get("mam:cross-source-stats:last:v1", "json") : Promise.resolve(null),
+          env.MAM_KV ? env.MAM_KV.get("mam:espn-summary-last-run:v1", "json") : Promise.resolve(null)
         ]);
         const statsTotal = Number(statsCoverage?.total || 0);
         const statsWith = Number(statsCoverage?.withStatistics || 0);
@@ -1003,9 +1013,14 @@ export default {
           statistics: {
             withStatistics: statsWith,
             missingStatistics: Math.max(0, statsTotal - statsWith),
-            coveragePercent: statsTotal ? Math.round(statsWith / statsTotal * 1000) / 10 : 0
+            coveragePercent: statsTotal ? Math.round(statsWith / statsTotal * 1000) / 10,
+            eligibleMatches: Number(statsCoverage?.eligibleTotal || 0),
+            eligibleWithStatistics: Number(statsCoverage?.eligibleWithStatistics || 0),
+            eligibleMissingStatistics: Math.max(0, Number(statsCoverage?.eligibleTotal || 0) - Number(statsCoverage?.eligibleWithStatistics || 0)),
+            eligibleCoveragePercent: Number(statsCoverage?.eligibleTotal || 0) ? Math.round(Number(statsCoverage?.eligibleWithStatistics || 0) / Number(statsCoverage.eligibleTotal) * 1000) / 10 : 0 : 0
           },
           crossSourceStatisticsEnrichment: crossSourceStatsReport || null,
+          espnSummaryLastRun: summaryLastRun || null,
           pendingSummaryRetries: queueItems.length,
           summaryQueueStatus: {
             queued: queueItems.length,
