@@ -72,6 +72,52 @@ export function getHistoryBackfillBatch(state, limit = 20) {
 }
 
 
+// Read-only upstream probe: checks whether ESPN accepts a bounded multi-day
+// scoreboard range. It never touches D1, KV, or the historical queue.
+export async function probeHistoryBackfillRange({ leagueSlug = "eng.1", dateFrom, dateTo }, fetchImpl = fetch) {
+  const league = HISTORY_BACKFILL_LEAGUES.find(item => item[1] === leagueSlug);
+  const validDate = value => /^\\d{8}$/.test(String(value || "")) &&
+    !Number.isNaN(Date.parse(String(value).slice(0, 4) + "-" + String(value).slice(4, 6) + "-" + String(value).slice(6, 8) + "T00:00:00Z"));
+  if (!league || !validDate(dateFrom) || !validDate(dateTo)) {
+    return { ok: false, status: "invalid-input", reason: "Use a configured ESPN league and YYYYMMDD dates." };
+  }
+  const from = Date.parse(dateFrom.slice(0,4) + "-" + dateFrom.slice(4,6) + "-" + dateFrom.slice(6,8) + "T00:00:00Z");
+  const to = Date.parse(dateTo.slice(0,4) + "-" + dateTo.slice(4,6) + "-" + dateTo.slice(6,8) + "T00:00:00Z");
+  const daySpan = Math.floor((to - from) / 86400000) + 1;
+  if (daySpan < 1 || daySpan > 7) {
+    return { ok: false, status: "invalid-range", reason: "Probe range must be between 1 and 7 days." };
+  }
+  const url = HISTORY_ESPN_BASE + "/" + leagueSlug + "/scoreboard?dates=" + dateFrom + "-" + dateTo + "&limit=500";
+  try {
+    const response = await fetchImpl(url, {
+      headers: { Accept: "application/json" },
+      signal: AbortSignal.timeout(12000)
+    });
+    const text = await response.text();
+    let payload = null;
+    try { payload = JSON.parse(text); } catch (_) {}
+    if (!response.ok) {
+      return { ok: false, status: "upstream-http-error", httpStatus: response.status, contentType: response.headers?.get?.("content-type") || null, detail: text.slice(0, 240) };
+    }
+    if (!payload || !Array.isArray(payload.events)) {
+      return { ok: false, status: "unexpected-response", httpStatus: response.status, detail: text.slice(0, 240) };
+    }
+    return {
+      ok: true, status: "range-supported-response", httpStatus: response.status,
+      league: league[2], dateFrom, dateTo, daySpan,
+      eventCount: payload.events.length,
+      sampleEvents: payload.events.slice(0, 3).map(event => ({
+        id: String(event.id || ""),
+        date: event.date || null,
+        name: event.name || event.shortName || null
+      })),
+      note: "Read-only probe; no D1/KV writes and no queue progress."
+    };
+  } catch (error) {
+    return { ok: false, status: "network-error", detail: String(error?.message || error).slice(0, 240) };
+  }
+}
+
 // One manually-invoked, tightly bounded batch. The feature flag is deliberately
 // absent from source control; it must be explicitly set in the Worker environment.
 export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
