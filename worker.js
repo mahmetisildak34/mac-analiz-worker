@@ -699,6 +699,26 @@ export default {
         });
       }
 
+      if (path === "archive/history-backfill/pilot-status" && request.method === "GET") {
+        if (!env.DB) return new Response(JSON.stringify({ ok: false, error: "D1 binding is missing." }), { status: 503, headers });
+        try {
+          const [total, byLeague, sample] = await Promise.all([
+            env.DB.prepare("SELECT COUNT(*) AS total, COUNT(DISTINCT fixture_id) AS uniqueFixtures FROM mam_history_backfill_matches WHERE source = 'ESPN' AND kickoff >= '2026-11-01' AND kickoff < '2026-11-02'").first(),
+            env.DB.prepare("SELECT league_name AS league, COUNT(*) AS matches FROM mam_history_backfill_matches WHERE source = 'ESPN' AND kickoff >= '2026-11-01' AND kickoff < '2026-11-02' GROUP BY league_name ORDER BY league_name").all(),
+            env.DB.prepare("SELECT fixture_id AS id, league_name AS league, home_team AS home, away_team AS away, kickoff, status, home_goals AS homeGoals, away_goals AS awayGoals FROM mam_history_backfill_matches WHERE source = 'ESPN' AND kickoff >= '2026-11-01' AND kickoff < '2026-11-02' ORDER BY league_name, kickoff LIMIT 10").all()
+          ]);
+          return new Response(JSON.stringify({
+            ok: true, scope: "Preview staging table only", date: "2026-11-01",
+            total: Number(total?.total || 0), uniqueFixtures: Number(total?.uniqueFixtures || 0),
+            byLeague: Array.isArray(byLeague?.results) ? byLeague.results : [],
+            sample: Array.isArray(sample?.results) ? sample.results : [],
+            note: "Read-only audit; live matches table and queue are not queried or changed."
+          }), { status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
+        } catch (error) {
+          return new Response(JSON.stringify({ ok: false, status: "staging-table-not-created", detail: String(error?.message || error).slice(0, 200) }), { status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
+        }
+      }
+
       if (path === "archive/history-backfill/pilot-run" && request.method === "POST") {
         if (env.HISTORY_BACKFILL_PILOT_ENABLED !== "true") {
           return new Response(JSON.stringify({ ok: false, status: "pilot-disabled", error: "Pilot is not enabled in this Worker environment." }), { status: 403, headers });
