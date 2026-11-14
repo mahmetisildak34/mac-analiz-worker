@@ -19,6 +19,13 @@
       "database_id": "b3103550-8f93-4109-8a24-e0095c49e666"
     }
   ],
+  "previews": {
+    "d1_databases": [],
+    "kv_namespaces": [],
+    "vars": {
+      "HISTORY_BACKFILL_PILOT_ENABLED": "false"
+    }
+  },
   "triggers": {
     "crons": ["5 0 * * *", "15,30,45 0 * * *", "*/15 1-23 * * *"]
   }
