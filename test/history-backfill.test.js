@@ -232,3 +232,21 @@ test("read-only coverage batches check at most five configured leagues and never
   const invalid = await probeHistoryBackfillBatch({ offset: 0, limit: 6, date: "20261101" });
   assert.equal(invalid.status, "invalid-input");
 });
+
+test("Copa América uses ESPN's configured CONMEBOL slug", async () => {
+  const league = HISTORY_BACKFILL_LEAGUES.find(item => item[0] === "9");
+  assert.ok(league);
+  assert.equal(league[1], "conmebol.america");
+  let requestedUrl = "";
+  const result = await probeHistoryBackfillRange({
+    leagueSlug: league[1], dateFrom: "20240714", dateTo: "20240714"
+  }, async url => {
+    requestedUrl = String(url);
+    return new Response(JSON.stringify({ events: [] }), {
+      status: 200, headers: { "Content-Type": "application/json" }
+    });
+  });
+  assert.equal(result.ok, true);
+  assert.equal(result.league, "Copa América");
+  assert.match(requestedUrl, /\/soccer\/conmebol\.america\/scoreboard\?/);
+});
