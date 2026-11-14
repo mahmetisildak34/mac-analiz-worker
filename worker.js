@@ -865,10 +865,11 @@ export default {
             status: 503, headers: { ...cors, "Content-Type": "application/json" }
           });
         }
-        const [total, statsCoverage, bySource, byLeague, byStatus, latest, summaryQueue] = await Promise.all([
+        const [total, statsCoverage, bySource, missingBySource, byLeague, byStatus, latest, summaryQueue] = await Promise.all([
           env.DB.prepare("SELECT COUNT(*) AS total FROM matches").first(),
           env.DB.prepare("SELECT COUNT(*) AS total, SUM(CASE WHEN statistics_json IS NOT NULL AND statistics_json != '' AND statistics_json != 'null' AND (source != 'ESPN' OR CASE WHEN json_valid(statistics_json) = 1 THEN CASE WHEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) > 0 OR COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) > 0 THEN 1 ELSE 0 END ELSE 0 END = 1) THEN 1 ELSE 0 END) AS withStatistics FROM matches").first(),
           env.DB.prepare("SELECT source, COUNT(*) AS total FROM matches GROUP BY source ORDER BY source").all(),
+          env.DB.prepare("SELECT source, COUNT(*) AS missing FROM matches WHERE statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR (source = 'ESPN' AND (json_valid(statistics_json) = 0 OR (COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) = 0 AND COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) = 0))) GROUP BY source ORDER BY missing DESC").all(),
           env.DB.prepare("SELECT league_id AS leagueId, league_name AS leagueName, country, COUNT(*) AS total, SUM(CASE WHEN status IN ('LIVE','1H','2H','HT','ET','P','INT') THEN 1 ELSE 0 END) AS live, SUM(CASE WHEN status IN ('FT','AET','PEN') AND home_goals IS NOT NULL AND away_goals IS NOT NULL THEN 1 ELSE 0 END) AS finished FROM matches GROUP BY league_id, league_name, country ORDER BY total DESC LIMIT 100").all(),
           env.DB.prepare("SELECT status, COUNT(*) AS total FROM matches GROUP BY status ORDER BY total DESC").all(),
           env.DB.prepare("SELECT MAX(updated_at) AS lastUpdated FROM matches").first(),
@@ -906,6 +907,7 @@ export default {
           },
           lastUpdated: latest?.lastUpdated || null,
           sources: Array.isArray(bySource?.results) ? bySource.results : [],
+          missingStatisticsBySource: Array.isArray(missingBySource?.results) ? missingBySource.results : [],
           leagues: Array.isArray(byLeague?.results) ? byLeague.results : [],
           statuses: Array.isArray(byStatus?.results) ? byStatus.results : []
         }), {
