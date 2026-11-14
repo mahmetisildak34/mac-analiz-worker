@@ -90,6 +90,14 @@ jobs:
         env:
           PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
 
+      - name: Inspect one historical Nations League summary (read-only)
+        run: |
+          set -euo pipefail
+          summary="$(curl --show-error --silent "$PREVIEW_URL/api/espn/uefa.nations/summary?event=698882")"
+          echo "$summary" | jq '{event: .header.competitions[0].id, boxscoreTeams: (.boxscore.teams // [] | length), teams: [(.boxscore.teams // [])[] | {homeAway, team: (.team.displayName // .team.name), statisticsCount: ((.statistics // []) | length)}]}'
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
       - name: Publish Preview URL
         run: |
           {
