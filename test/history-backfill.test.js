@@ -9,11 +9,11 @@ import {
   HISTORY_BACKFILL_LEAGUES
 } from "../history-backfill.js";
 
-test("history queue is compact metadata for 38 configured competitions", () => {
+test("history queue is compact metadata for 39 configured competitions", () => {
   const state = buildHistoryBackfillState(new Date("2026-11-14T12:00:00.000Z"));
-  assert.equal(state.leagueCount, 38);
+  assert.equal(state.leagueCount, 39);
   assert.equal(state.dayCount, 867);
-  assert.equal(state.totalJobs, 38 * 867);
+  assert.equal(state.totalJobs, 39 * 867);
   assert.equal(Array.isArray(state.jobs), false);
   assert.equal(state.executionEnabled, false);
 });
