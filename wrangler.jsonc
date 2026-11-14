@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "odd-sunset-6c83",
+  "account_id": "640bfb6a538ee57864281941b14dbc55",
   "main": "worker.js",
   "compatibility_date": "2026-11-12",
   "observability": {
