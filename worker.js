@@ -248,7 +248,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     state = { version: 1, jobs, cursor: 0, createdAt: new Date().toISOString() };
   }
 
-  const batch = state.jobs.slice(state.cursor, state.cursor + Math.max(1, Math.min(40, maxRequests)));
+  let batch = [];
   const rows = [];
   const retryJobs = [];
   const summaryQueueKey = "mam:espn-summary-queue:v1";
@@ -357,11 +357,18 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
 
   // Fetch detailed box-score statistics for live and completed matches in small batches.
   // Scoreboard sync remains the source of truth for status and goals; summaries enrich statistics_json.
+  // When the statistics backlog is large (for example, hundreds of missing ESPN
+  // box scores), shift the safe 48-request budget toward summaries: 24 scoreboard
+  // + 24 summary calls. With a small queue retain 32 scoreboard + 16 summaries.
+  const summaryBatchLimit = summaryQueue.length >= 100 ? 24 : 16;
+  const scoreboardBatchLimit = Math.min(maxRequests, 48 - summaryBatchLimit);
+  batch = state.jobs.slice(state.cursor, state.cursor + Math.max(1, scoreboardBatchLimit));
+  const queueAfterDiscovery = summaryQueue.length;
   const nowMs = Date.now();
   const readySummaries = [];
   const deferredSummaries = [];
   for (const item of summaryQueue) {
-    if (Number(item.retryAfter || 0) <= nowMs && readySummaries.length < 16) readySummaries.push(item);
+    if (Number(item.retryAfter || 0) <= nowMs && readySummaries.length < summaryBatchLimit) readySummaries.push(item);
     else deferredSummaries.push(item);
   }
   summaryQueue = deferredSummaries;
@@ -371,7 +378,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     ranAt: new Date().toISOString(),
     queueBeforeDiscovery: summaryQueueBeforeDiscovery,
     recoveredFromD1: recoveredSummaryItems,
-    queueAfterDiscovery: summaryQueue.length,
+    queueAfterDiscovery,
     attempted: summaryBatch.length,
     fetchedWithStatistics: 0,
     noStatisticsReturned: 0,
@@ -684,18 +691,39 @@ export default {
             status: 503, headers: { ...cors, "Content-Type": "application/json" }
           });
         }
-        const state = await env.MAM_KV.get("mam:espn-sync-state:v2", "json");
+        const [state, queueValue, lastSummaryRun] = await Promise.all([
+          env.MAM_KV.get("mam:espn-sync-state:v2", "json"),
+          env.MAM_KV.get("mam:espn-summary-queue:v1", "json"),
+          env.MAM_KV.get("mam:espn-summary-last-run:v1", "json")
+        ]);
         const jobs = Array.isArray(state?.jobs) ? state.jobs.length : 0;
         const cursor = Number(state?.cursor || 0);
+        const scoreboardActive = jobs > 0 && cursor < jobs;
+        const queue = Array.isArray(queueValue) ? queueValue : [];
+        const now = Date.now();
+        const readyToRetry = queue.filter(item => Number(item?.retryAfter || 0) <= now).length;
+        const coolingDown = queue.length - readyToRetry;
+        const active = scoreboardActive || queue.length > 0;
         return new Response(JSON.stringify({
           ok: true,
-          active: jobs > 0 && cursor < jobs,
+          active,
+          complete: !active,
           createdAt: state?.createdAt || null,
           totalJobs: jobs,
           processedJobs: Math.min(cursor, jobs),
           remainingJobs: Math.max(0, jobs - cursor),
-          progressPercent: jobs ? Math.round(Math.min(cursor, jobs) / jobs * 1000) / 10 : 100,
-          note: jobs ? "ESPN archive backfill is in progress" : "No pending ESPN archive batch"
+          progressPercent: jobs ? Math.round(Math.min(cursor, jobs) / jobs * 1000) / 10 : (scoreboardActive ? 0 : 100),
+          scoreboardActive,
+          scoreboardComplete: !scoreboardActive,
+          statisticsQueuePending: queue.length,
+          statisticsReadyToRetry: readyToRetry,
+          statisticsCoolingDown: coolingDown,
+          lastSummaryRun: lastSummaryRun || null,
+          note: scoreboardActive
+            ? "ESPN fixture archive scan is in progress"
+            : queue.length
+              ? "Fixture scan is complete or between batches; missing statistics are still being retried"
+              : "Fixture scan and statistics retry queue are clear"
         }), {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
         });
@@ -707,60 +735,109 @@ export default {
             status: 503, headers: { ...cors, "Content-Type": "application/json" }
           });
         }
+        // Full archive audit by default (not just upcoming fixtures). Use scope=upcoming
+        // only when an explicitly limited forward-looking check is desired.
+        const scope = String(url.searchParams.get("scope") || "all").toLowerCase();
+        const limitValue = Number.parseInt(url.searchParams.get("limit") || "10000", 10);
+        const limit = Number.isFinite(limitValue) ? Math.max(100, Math.min(20000, limitValue)) : 10000;
         const daysValue = Number.parseInt(url.searchParams.get("days") || "30", 10);
         const days = Number.isFinite(daysValue) ? Math.max(1, Math.min(60, daysValue)) : 30;
-        const rowsResult = await env.DB.prepare(
-          "SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team FROM matches WHERE date(kickoff) >= date('now') AND date(kickoff) <= date('now', '+' || ? || ' days') AND status IN ('NS','TBD','SCHEDULED') ORDER BY datetime(kickoff) ASC LIMIT 2000"
-        ).bind(days).all();
+        const where = scope === "upcoming"
+          ? "WHERE date(kickoff) >= date('now') AND date(kickoff) <= date('now', '+' || ? || ' days') AND status IN ('NS','TBD','SCHEDULED')"
+          : "";
+        const countQuery = scope === "upcoming"
+          ? env.DB.prepare("SELECT COUNT(*) AS total FROM matches " + where).bind(days)
+          : env.DB.prepare("SELECT COUNT(*) AS total FROM matches");
+        const rowsQuery = scope === "upcoming"
+          ? env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team, home_goals, away_goals, statistics_json FROM matches " + where + " ORDER BY datetime(kickoff) DESC LIMIT ?").bind(days, limit)
+          : env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team, home_goals, away_goals, statistics_json FROM matches ORDER BY datetime(kickoff) DESC LIMIT ?").bind(limit);
+        const [countResult, rowsResult] = await Promise.all([countQuery.first(), rowsQuery.all()]);
         const rows = Array.isArray(rowsResult?.results) ? rowsResult.results : [];
+        const totalRecords = Number(countResult?.total || 0);
         const norm = value => String(value || "").normalize("NFD").toLowerCase()
           .replace(/[\\u0300-\\u036f]/g, "").replace(/ı/g, "i")
           .replace(/[^a-z0-9]+/g, "").trim();
         const duplicateMap = new Map();
         const leagueMap = new Map();
         const sourceCounts = {};
-        const invalidRows = [];
+        const invalidRecords = [];
+        const completedWithoutScore = [];
+        const malformedStatistics = [];
+        const missingStatisticsBySource = {};
+        let missingStatistics = 0;
+        let validStatistics = 0;
+        let invalidScoreCount = 0;
         for (const row of rows) {
           const source = String(row.source || "unknown");
           sourceCounts[source] = (sourceCounts[source] || 0) + 1;
           const leagueId = String(row.league_id || "unknown");
+          const leagueKey = source + "|" + leagueId;
           const leagueName = String(row.league_name || "").trim();
           const country = String(row.country || "").trim();
-          if (!leagueMap.has(leagueId)) leagueMap.set(leagueId, { leagueId, names: new Set(), countries: new Set(), count: 0 });
-          const league = leagueMap.get(leagueId);
+          if (!leagueMap.has(leagueKey)) leagueMap.set(leagueKey, { source, leagueId, names: new Set(), countries: new Set(), count: 0 });
+          const league = leagueMap.get(leagueKey);
           league.names.add(leagueName || "(boş)");
           league.countries.add(country || "(boş)");
           league.count++;
           const home = norm(row.home_team), away = norm(row.away_team);
           const kickoff = String(row.kickoff || "");
-          if (!home || !away || !kickoff || !leagueName) {
-            invalidRows.push({ source, fixtureId: row.fixture_id, leagueId, leagueName, country, kickoff, home: row.home_team, away: row.away_team });
+          const kickoffTime = Date.parse(kickoff);
+          const status = String(row.status || "").toUpperCase();
+          if (!home || !away || !kickoff || !Number.isFinite(kickoffTime) || !leagueName) {
+            if (invalidRecords.length < 100) invalidRecords.push({ source, fixtureId: row.fixture_id, leagueId, leagueName, kickoff, home: row.home_team, away: row.away_team });
           }
-          if (home && away && kickoff) {
-            const key = [kickoff.slice(0, 16), home, away].join("|");
+          if (["FT", "AET", "PEN"].includes(status) && (row.home_goals == null || row.away_goals == null)) {
+            if (completedWithoutScore.length < 100) completedWithoutScore.push({ source, fixtureId: row.fixture_id, leagueId, kickoff, home: row.home_team, away: row.away_team, homeGoals: row.home_goals, awayGoals: row.away_goals });
+          }
+          if ((row.home_goals != null && (!Number.isFinite(Number(row.home_goals)) || Number(row.home_goals) < 0 || Number(row.home_goals) > 30)) ||
+              (row.away_goals != null && (!Number.isFinite(Number(row.away_goals)) || Number(row.away_goals) < 0 || Number(row.away_goals) > 30))) invalidScoreCount++;
+          const eligible = ["FT", "AET", "PEN", "LIVE", "1H", "2H", "HT", "ET", "P", "INT"].includes(status);
+          if (eligible) {
+            let usable = false;
+            if (row.statistics_json && row.statistics_json !== "null") {
+              try {
+                const parsed = JSON.parse(row.statistics_json);
+                usable = hasUsableStatistics(parsed);
+              } catch (_) {
+                if (malformedStatistics.length < 100) malformedStatistics.push({ source, fixtureId: row.fixture_id });
+              }
+            }
+            if (usable) validStatistics++;
+            else {
+              missingStatistics++;
+              missingStatisticsBySource[source] = (missingStatisticsBySource[source] || 0) + 1;
+            }
+          }
+          if (home && away && Number.isFinite(kickoffTime)) {
+            const minute = Math.floor(kickoffTime / 60000);
+            const key = [minute, home, away].join("|");
             if (!duplicateMap.has(key)) duplicateMap.set(key, []);
-            duplicateMap.get(key).push({
-              source, fixtureId: String(row.fixture_id || ""), leagueId, leagueName, country,
-              kickoff, home: row.home_team, away: row.away_team
-            });
+            duplicateMap.get(key).push({ source, fixtureId: String(row.fixture_id || ""), leagueId, leagueName, country, kickoff, home: row.home_team, away: row.away_team });
           }
         }
         const duplicates = Array.from(duplicateMap.values())
           .filter(group => group.length > 1)
-          .map(group => ({ copies: group.length, records: group }));
+          .map(group => ({ copies: group.length, sources: Array.from(new Set(group.map(item => item.source))), records: group.slice(0, 10) }))
+          .slice(0, 200);
         const leagueInconsistencies = Array.from(leagueMap.values())
           .filter(item => item.names.size > 1 || item.countries.size > 1)
-          .map(item => ({ leagueId: item.leagueId, names: Array.from(item.names), countries: Array.from(item.countries), count: item.count }));
+          .map(item => ({ source: item.source, leagueId: item.leagueId, names: Array.from(item.names), countries: Array.from(item.countries), count: item.count }))
+          .slice(0, 200);
         return new Response(JSON.stringify({
-          ok: true, days, checked: rows.length, limit: 2000,
-          truncated: rows.length === 2000,
+          ok: true, scope, days: scope === "upcoming" ? days : null,
+          totalRecords, checked: rows.length, limit, truncated: rows.length < totalRecords,
           sourceCounts,
-          duplicateGroups: duplicates.length,
-          duplicateRecords: duplicates,
-          leagueIdsChecked: leagueMap.size,
-          leagueInconsistencies,
-          invalidRecordCount: invalidRows.length,
-          invalidRecords: invalidRows.slice(0, 50)
+          duplicateGroups: duplicates.length, duplicateRecords: duplicates,
+          leagueIdsChecked: leagueMap.size, leagueInconsistencies,
+          invalidRecordCount: invalidRecords.length, invalidRecords,
+          completedWithoutScoreCount: completedWithoutScore.length, completedWithoutScore,
+          invalidScoreCount,
+          eligibleMatchesChecked: validStatistics + missingStatistics,
+          matchesWithUsableStatistics: validStatistics,
+          missingStatisticsCount: missingStatistics,
+          missingStatisticsBySource,
+          malformedStatisticsCount: malformedStatistics.length,
+          malformedStatistics
         }), {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
         });
