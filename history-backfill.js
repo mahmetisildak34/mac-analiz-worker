@@ -2,6 +2,7 @@
 // This module only creates and reports work items. It does not execute ESPN requests
 // or write match rows; the live ESPN sync and statistics queues remain untouched.
 export const HISTORY_BACKFILL_KEY = "mam:history-backfill-state:v1";
+const HISTORY_ESPN_BASE = "https://site.api.espn.com/apis/site/v2/sports/soccer";
 export const HISTORY_BACKFILL_START = "2024-07-01";
 
 export const HISTORY_BACKFILL_LEAGUES = [
@@ -119,7 +120,7 @@ export async function runHistoryBackfillBatch(env, fetchImpl = fetch) {
         const [leagueId, slug, leagueName, country] = job.league || [];
         try {
           if (!slug || !/^\\d{8}$/.test(job.date)) throw new Error("Invalid league/date job");
-          const response = await fetchImpl(ESPN_BASE + "/" + slug + "/scoreboard?dates=" + job.date + "&limit=500", {
+          const response = await fetchImpl(HISTORY_ESPN_BASE + "/" + slug + "/scoreboard?dates=" + job.date + "&limit=500", {
             headers: { Accept: "application/json" }
           });
           if (!response.ok) throw new Error("ESPN HTTP " + response.status);
