@@ -700,7 +700,7 @@ export default {
 
       if (path === "archive/history-backfill/run" && request.method === "POST") {
         const result = await runHistoryBackfillBatch(env);
-        const status = result.status === "disabled" ? 403 : result.status === "locked" ? 409 : result.status === "unavailable" ? 503 : 200;
+        const status = ["disabled", "not-enabled"].includes(result.status) ? 403 : result.status === "locked" ? 409 : result.status === "unavailable" ? 503 : result.status === "not-initialized" ? 409 : 200;
         return new Response(JSON.stringify(result), { status, headers });
       }
 
@@ -716,7 +716,8 @@ export default {
           processedJobs, remainingJobs: Math.max(0, totalJobs - processedJobs),
           progressPercent: totalJobs ? Math.round(processedJobs / totalJobs * 1000) / 10 : 0,
           executionEnabled: Boolean(state?.executionEnabled && env.HISTORY_BACKFILL_ENABLED === "true"),
-          note: "Historical processor is manually gated and separate from the existing ESPN sync and statistics queues."
+          lastRunAt: state?.lastRunAt || null, lastBatch: state?.lastBatch || null,
+          note: "Historical fixtures are staged separately; live matches and the existing statistics queue are not modified."
         }), { status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
       }
 
