@@ -6,7 +6,6 @@ import {
 
 const RUNNER = "mam-nations-statistics-preview";
 const SCOPE = "uefa-nations-league-statistics";
-const FIXTURE_KEY = "mam:nations-league-backfill-state:v3";
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -27,9 +26,6 @@ function assertPreview(env) {
 
 async function runBatch(env, trigger) {
   assertPreview(env);
-  const fixtures = await env.MAM_KV.get(FIXTURE_KEY, "json");
-  if (!fixtures) return { ok: false, status: "waiting-for-fixture-archive", scope: SCOPE, trigger };
-
   let state = await env.MAM_KV.get(NATIONS_LEAGUE_STATISTICS_KEY, "json");
   if (!state) {
     const initialized = await buildNationsLeagueStatisticsState(env);
@@ -61,9 +57,21 @@ export default {
   },
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (url.pathname !== "/health" && url.pathname !== "/status") return new Response("Not found", { status: 404 });
+    if (url.pathname !== "/health" && url.pathname !== "/status" && url.pathname !== "/matches") return new Response("Not found", { status: 404 });
     try {
       assertPreview(env);
+      if (url.pathname === "/matches") {
+        const limit = Math.max(1, Math.min(100, Number(url.searchParams.get("limit") || 50)));
+        const offset = Math.max(0, Number(url.searchParams.get("offset") || 0));
+        const result = await env.DB.prepare(
+          "SELECT m.fixture_id AS fixtureId, m.league_id AS leagueId, m.league_name AS leagueName, m.kickoff, m.status, m.home_team AS homeTeam, m.away_team AS awayTeam, m.home_goals AS homeGoals, m.away_goals AS awayGoals, m.statistics_json AS statisticsJson, s.outcome AS statisticsOutcome FROM mam_history_backfill_matches m LEFT JOIN mam_history_backfill_statistics s ON s.source = m.source AND s.fixture_id = m.fixture_id WHERE m.league_id = '5' AND m.source = 'ESPN' AND m.status IN ('FT','AET','PEN') ORDER BY m.kickoff DESC LIMIT ? OFFSET ?"
+        ).bind(limit, offset).all();
+        return json({
+          ok: true, environment: "preview", scope: SCOPE,
+          limit, offset, matches: result.results || [],
+          note: "Read-only historical fixture archive with statistics joined by exact ESPN fixture ID."
+        });
+      }
       const state = await env.MAM_KV.get(NATIONS_LEAGUE_STATISTICS_KEY, "json");
       const count = await env.DB.prepare(
         "SELECT COUNT(*) AS total FROM mam_history_backfill_matches WHERE league_id = '5' AND source = 'ESPN' AND status IN ('FT','AET','PEN')"
