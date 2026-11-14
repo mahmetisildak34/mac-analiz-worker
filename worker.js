@@ -940,7 +940,31 @@ export default {
           ORDER BY datetime(kickoff) DESC
           LIMIT ?
         `).bind(leagueId, before, limit).all();
-        const matches = (Array.isArray(archived?.results) ? archived.results : []).map(row => {
+        const sourceRows = Array.isArray(archived?.results) ? archived.results : [];
+        const sourcePriority = source => {
+          const value = String(source || "").toLowerCase();
+          return value === "espn" ? 4 : value.includes("football-data") ? 3 : value === "api-football" ? 2 : 1;
+        };
+        const normalizeTeam = value => String(value || "").normalize("NFD").toLowerCase()
+          .replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i")
+          .replace(/[^a-z0-9]+/g, "").trim();
+        const uniqueRows = new Map();
+        for (const row of sourceRows) {
+          const home = normalizeTeam(row.home_team), away = normalizeTeam(row.away_team);
+          const time = Date.parse(String(row.kickoff || ""));
+          const minute = Number.isFinite(time) ? Math.floor(time / 60000) : String(row.kickoff || "").slice(0, 16);
+          const signature = home && away
+            ? [String(row.league_id || leagueId), minute, home, away].join("|")
+            : String(row.source) + "|" + String(row.fixture_id);
+          const previous = uniqueRows.get(signature);
+          const rowHasStats = hasUsableStatistics(row.statistics_json);
+          const previousHasStats = previous ? hasUsableStatistics(previous.statistics_json) : false;
+          if (!previous || (rowHasStats && !previousHasStats) ||
+              (rowHasStats === previousHasStats && sourcePriority(row.source) > sourcePriority(previous.source))) {
+            uniqueRows.set(signature, row);
+          }
+        }
+        const matches = Array.from(uniqueRows.values()).map(row => {
           let statistics = null;
           let raw = null;
           try { statistics = row.statistics_json ? JSON.parse(row.statistics_json) : null; } catch (_) {}
