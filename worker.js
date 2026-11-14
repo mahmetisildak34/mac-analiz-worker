@@ -458,7 +458,7 @@ export default {
       // Read-only match archive and aggregate diagnostics are public.
       // Writes and all other private routes still require a signed-in session.
       const publicArchiveRead = request.method === "GET" &&
-        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches");
+        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/live");
       if (!publicArchiveRead) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
         if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
@@ -616,6 +616,43 @@ export default {
         }
         return new Response(JSON.stringify({ ok: true, received: incoming.length, saved, skipped }), {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+        });
+      }
+
+      if (path === "archive/live" && request.method === "GET") {
+        if (!env.DB) {
+          return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const result = await env.DB.prepare(`
+          SELECT source, fixture_id, league_id, league_name, country, kickoff, status,
+                 home_team_id, home_team, away_team_id, away_team, home_goals, away_goals,
+                 statistics_json, raw_json
+          FROM matches
+          WHERE status IN ('LIVE','1H','2H','HT','ET','BT','P','SUSP','INT','IN_PLAY','PAUSED')
+            AND datetime(updated_at) >= datetime('now', '-6 hours')
+          ORDER BY datetime(updated_at) DESC
+          LIMIT 100
+        `).all();
+        const matches = (Array.isArray(result?.results) ? result.results : []).map(row => {
+          let statistics = null;
+          try { statistics = row.statistics_json ? JSON.parse(row.statistics_json) : null; } catch (_) {}
+          return {
+            source: row.source || "app",
+            fixture: { id: row.fixture_id, date: row.kickoff, status: { short: row.status || "LIVE" } },
+            league: { id: String(row.league_id), name: row.league_name || "", country: row.country || "" },
+            teams: {
+              home: { id: row.home_team_id == null ? null : row.home_team_id, name: row.home_team || "" },
+              away: { id: row.away_team_id == null ? null : row.away_team_id, name: row.away_team || "" }
+            },
+            goals: { home: row.home_goals, away: row.away_goals },
+            statistics
+          };
+        });
+        return new Response(JSON.stringify({ ok: true, count: matches.length, response: matches }), {
+          status: 200,
+          headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
         });
       }
 
