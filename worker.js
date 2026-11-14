@@ -542,6 +542,71 @@ export default {
         });
       }
 
+      if (path === "archive/quality-check" && request.method === "GET") {
+        if (!env.DB) {
+          return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const daysValue = Number.parseInt(url.searchParams.get("days") || "30", 10);
+        const days = Number.isFinite(daysValue) ? Math.max(1, Math.min(60, daysValue)) : 30;
+        const rowsResult = await env.DB.prepare(
+          "SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team FROM matches WHERE date(kickoff) >= date('now') AND date(kickoff) <= date('now', '+' || ? || ' days') AND status IN ('NS','TBD','SCHEDULED') ORDER BY datetime(kickoff) ASC LIMIT 2000"
+        ).bind(days).all();
+        const rows = Array.isArray(rowsResult?.results) ? rowsResult.results : [];
+        const norm = value => String(value || "").normalize("NFD").toLowerCase()
+          .replace(/[\\u0300-\\u036f]/g, "").replace(/ı/g, "i")
+          .replace(/[^a-z0-9]+/g, "").trim();
+        const duplicateMap = new Map();
+        const leagueMap = new Map();
+        const sourceCounts = {};
+        const invalidRows = [];
+        for (const row of rows) {
+          const source = String(row.source || "unknown");
+          sourceCounts[source] = (sourceCounts[source] || 0) + 1;
+          const leagueId = String(row.league_id || "unknown");
+          const leagueName = String(row.league_name || "").trim();
+          const country = String(row.country || "").trim();
+          if (!leagueMap.has(leagueId)) leagueMap.set(leagueId, { leagueId, names: new Set(), countries: new Set(), count: 0 });
+          const league = leagueMap.get(leagueId);
+          league.names.add(leagueName || "(boş)");
+          league.countries.add(country || "(boş)");
+          league.count++;
+          const home = norm(row.home_team), away = norm(row.away_team);
+          const kickoff = String(row.kickoff || "");
+          if (!home || !away || !kickoff || !leagueName) {
+            invalidRows.push({ source, fixtureId: row.fixture_id, leagueId, leagueName, country, kickoff, home: row.home_team, away: row.away_team });
+          }
+          if (home && away && kickoff) {
+            const key = [kickoff.slice(0, 16), home, away].join("|");
+            if (!duplicateMap.has(key)) duplicateMap.set(key, []);
+            duplicateMap.get(key).push({
+              source, fixtureId: String(row.fixture_id || ""), leagueId, leagueName, country,
+              kickoff, home: row.home_team, away: row.away_team
+            });
+          }
+        }
+        const duplicates = Array.from(duplicateMap.values())
+          .filter(group => group.length > 1)
+          .map(group => ({ copies: group.length, records: group }));
+        const leagueInconsistencies = Array.from(leagueMap.values())
+          .filter(item => item.names.size > 1 || item.countries.size > 1)
+          .map(item => ({ leagueId: item.leagueId, names: Array.from(item.names), countries: Array.from(item.countries), count: item.count }));
+        return new Response(JSON.stringify({
+          ok: true, days, checked: rows.length, limit: 2000,
+          truncated: rows.length === 2000,
+          sourceCounts,
+          duplicateGroups: duplicates.length,
+          duplicateRecords: duplicates,
+          leagueIdsChecked: leagueMap.size,
+          leagueInconsistencies,
+          invalidRecordCount: invalidRows.length,
+          invalidRecords: invalidRows.slice(0, 50)
+        }), {
+          status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+        });
+      }
+
       if (path === "archive/upcoming" && request.method === "GET") {
         if (!env.DB) {
           return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
