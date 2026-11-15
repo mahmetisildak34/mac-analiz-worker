@@ -708,7 +708,11 @@ export default {
         url.searchParams.get("scope") === "nations-league" &&
         url.hostname === "feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev" &&
         env.HISTORY_BACKFILL_PILOT_ENABLED === "true";
-      if (!publicArchiveRead && !previewPilotTrigger && !previewNationsQueueInit && !previewNationsBatch) {
+      const previewHistoryStatisticsTrigger = request.method === "POST" &&
+        ["archive/history-statistics/start", "archive/history-statistics/enable", "archive/history-statistics/run"].includes(path) &&
+        url.hostname === "feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev" &&
+        env.HISTORY_STATISTICS_ENABLED === "true";
+      if (!publicArchiveRead && !previewPilotTrigger && !previewNationsQueueInit && !previewNationsBatch && !previewHistoryStatisticsTrigger) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
         if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
           return new Response(JSON.stringify({ error: "Authentication required" }), {
