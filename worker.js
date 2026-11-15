@@ -1285,7 +1285,22 @@ export default {
       const targetUrl = base + "/" + apiPath + url.search;
       const isStandings = /(^|\/)standings$/.test(apiPath);
       const footballDataStatuses = (url.searchParams.get("status") || "").split(",").map(value => value.trim().toUpperCase());
-      const isLive = url.searchParams.get("live") === "all" || (isFootballData && apiPath === "matches" && footballDataStatuses.some(value => ["LIVE", "IN_PLAY", "PAUSED"].includes(value)));
+      const todayIstanbul = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit"
+      }).format(new Date()).replace(/-/g, "");
+      const yesterdayIstanbul = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit"
+      }).format(new Date(Date.now() - 24 * 60 * 60 * 1000)).replace(/-/g, "");
+      const espnScoreboardDate = url.searchParams.get("dates") || "";
+      const isEspnLiveScoreboard = isESPN && apiPath === "scoreboard" &&
+        (espnScoreboardDate === todayIstanbul || espnScoreboardDate === yesterdayIstanbul);
+      // ESPN scoreboard and summary requests used by the live screen must not
+      // inherit the generic 15-minute ESPN cache. Keep them on the 20-second
+      // live cache so scores, goals and match clocks can advance together.
+      const isEspnLiveSummary = isESPN && apiPath === "summary" && /^\\d+$/.test(url.searchParams.get("event") || "");
+      const isLive = url.searchParams.get("live") === "all" ||
+        (isFootballData && apiPath === "matches" && footballDataStatuses.some(value => ["LIVE", "IN_PLAY", "PAUSED"].includes(value))) ||
+        isEspnLiveScoreboard || isEspnLiveSummary;
       const isLiveStats = apiPath === "fixtures/statistics" || (isESPN && apiPath === "summary");
       const isLineupData = apiPath === "fixtures/lineups" || apiPath === "fixtures/players";
       const cacheUrl = new URL(url.toString());
