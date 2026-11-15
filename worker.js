@@ -1273,16 +1273,20 @@ export default {
           .replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ").replace(/\\s+/g, " ").trim()
           .replace(/\\b(football club|fc|cf|afc|a s|as|anonim sirketi|sirketi)\\b/g, "").replace(/\\s+/g, " ").trim();
         const acceptedTeamNames = new Set(requestedTeamNames.map(normalizeArchiveTeam));
-        const hasTeamFilter = (requestedTeamSource === "espn" && /^\\d+$/.test(requestedTeamId)) || acceptedTeamNames.size > 0;
-        const filteredRows = [...merged.values()].filter(row => {
-          if (!hasTeamFilter) return true;
-          if (requestedTeamSource === "espn" && /^\\d+$/.test(requestedTeamId)) {
-            return String(row.home_team_id || "") === requestedTeamId || String(row.away_team_id || "") === requestedTeamId;
-          }
-          const homeMatch = acceptedTeamNames.has(normalizeArchiveTeam(row.home_team));
-          const awayMatch = acceptedTeamNames.has(normalizeArchiveTeam(row.away_team));
-          return homeMatch !== awayMatch;
-        });
+        const allRows = [...merged.values()];
+        const byEspnId = requestedTeamSource === "espn" && /^\\d+$/.test(requestedTeamId)
+          ? allRows.filter(row => String(row.home_team_id || "") === requestedTeamId || String(row.away_team_id || "") === requestedTeamId)
+          : [];
+        const byTeamName = acceptedTeamNames.size
+          ? allRows.filter(row => {
+              const homeMatch = acceptedTeamNames.has(normalizeArchiveTeam(row.home_team));
+              const awayMatch = acceptedTeamNames.has(normalizeArchiveTeam(row.away_team));
+              return homeMatch !== awayMatch;
+            })
+          : [];
+        // Prefer stable ESPN IDs, but fall back to the app's normalized aliases
+        // when an older archived fixture does not carry provider team IDs.
+        const filteredRows = byEspnId.length ? byEspnId : byTeamName.length ? byTeamName : (byEspnId.length || byTeamName.length ? [] : allRows);
         const matches = filteredRows
           .sort((a, b) => new Date(b.kickoff || 0).getTime() - new Date(a.kickoff || 0).getTime())
           .slice(0, limit)
