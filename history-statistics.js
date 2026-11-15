@@ -84,7 +84,7 @@ export async function buildHistoryStatisticsState(env, now = new Date()) {
       "SELECT COUNT(*) AS total FROM mam_history_backfill_matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN')"
     ).first(),
     env.DB.prepare(
-      "SELECT COUNT(*) AS processed, SUM(CASE WHEN outcome = 'statistics-found' THEN 1 ELSE 0 END) AS statisticsFound, SUM(CASE WHEN outcome = 'no-statistics' THEN 1 ELSE 0 END) AS noStatistics FROM mam_history_backfill_statistics WHERE source = 'ESPN'"
+      "SELECT COUNT(*) AS processed, SUM(CASE WHEN outcome = 'statistics-found' THEN 1 ELSE 0 END) AS statisticsFound, SUM(CASE WHEN outcome = 'partial-statistics' THEN 1 ELSE 0 END) AS partialStatistics, SUM(CASE WHEN outcome = 'no-statistics' THEN 1 ELSE 0 END) AS noStatistics FROM mam_history_backfill_statistics WHERE source = 'ESPN'"
     ).first()
   ]);
   const totalJobs = Number(count?.total || 0);
@@ -100,6 +100,7 @@ export async function buildHistoryStatisticsState(env, now = new Date()) {
     retryJobs: [],
     deadLetters: [],
     statisticsFound: Number(outcomes?.statisticsFound || 0),
+    partialStatistics: Number(outcomes?.partialStatistics || 0),
     noStatistics: Number(outcomes?.noStatistics || 0),
     note: "All configured ESPN competitions. Writes only to historical staging tables; live matches and live summary queues are untouched."
   };
@@ -122,6 +123,7 @@ export async function getHistoryStatisticsStatus(env) {
     executionEnabled: state?.executionEnabled === true,
     totalJobs: rows.reduce((sum, row) => sum + Number(row.completedFixtures || 0), 0),
     statisticsFound: rows.reduce((sum, row) => sum + Number(row.statisticsFound || 0), 0),
+    partialStatistics: rows.reduce((sum, row) => sum + Number(row.partialStatistics || 0), 0),
     noStatistics: rows.reduce((sum, row) => sum + Number(row.noStatistics || 0), 0),
     pending: rows.reduce((sum, row) => sum + Number(row.pending || 0), 0),
     pendingRetries: Array.isArray(state?.retryJobs) ? state.retryJobs.length : 0,
@@ -131,6 +133,7 @@ export async function getHistoryStatisticsStatus(env) {
       category: classifyHistoryCompetition(row.leagueId),
       completedFixtures: Number(row.completedFixtures || 0),
       statisticsFound: Number(row.statisticsFound || 0),
+      partialStatistics: Number(row.partialStatistics || 0),
       noStatistics: Number(row.noStatistics || 0),
       pending: Number(row.pending || 0)
     }))
@@ -192,6 +195,7 @@ export async function runHistoryStatisticsBatch(env, fetchImpl = fetch, options 
     const completedRetries = new Set();
     let statisticsFound = 0;
     let noStatistics = 0;
+    let partialStatistics = 0;
 
     for (let i = 0; i < fixtures.length; i += 3) {
       await Promise.all(fixtures.slice(i, i + 3).map(async fixture => {
@@ -218,10 +222,19 @@ export async function runHistoryStatisticsBatch(env, fetchImpl = fetch, options 
             team: team.team.displayName || team.team.name,
             statistics: team.statistics
           }));
-          const hasStats = normalized.some(team => team.statistics.length > 0);
-          const outcome = hasStats ? "statistics-found" : "no-statistics";
-          if (hasStats) statisticsFound++; else noStatistics++;
-          const normalizedJson = JSON.stringify({ teams: normalized, summaryAvailable: true });
+          const homeHasStats = home.statistics.length > 0;
+          const awayHasStats = away.statistics.length > 0;
+          const completeStats = homeHasStats && awayHasStats;
+          const partialStats = homeHasStats !== awayHasStats;
+          const outcome = completeStats ? "statistics-found" : partialStats ? "partial-statistics" : "no-statistics";
+          if (completeStats) statisticsFound++;
+          else if (partialStats) partialStatistics++;
+          else noStatistics++;
+          const normalizedJson = JSON.stringify({
+            teams: normalized,
+            summaryAvailable: true,
+            coverage: { home: homeHasStats, away: awayHasStats, complete: completeStats }
+          });
           statements.push(env.DB.prepare(
             "INSERT INTO mam_history_backfill_statistics (source, fixture_id, league_id, kickoff, outcome, statistics_json, raw_json) VALUES ('ESPN', ?, ?, ?, ?, ?, ?) ON CONFLICT(source, fixture_id) DO UPDATE SET league_id=excluded.league_id, kickoff=excluded.kickoff, outcome=excluded.outcome, statistics_json=excluded.statistics_json, raw_json=excluded.raw_json, updated_at=CURRENT_TIMESTAMP"
           ).bind(fixtureId, String(fixture.leagueId), fixture.kickoff || null, outcome, normalizedJson, JSON.stringify(payload)));
@@ -270,15 +283,16 @@ export async function runHistoryStatisticsBatch(env, fetchImpl = fetch, options 
     const next = {
       ...state, totalJobs, processedJobs, status, retryJobs, deadLetters: nextDeadLetters,
       statisticsFound: Number(state.statisticsFound || 0) + statisticsFound,
+      partialStatistics: Number(state.partialStatistics || 0) + partialStatistics,
       noStatistics: Number(state.noStatistics || 0) + noStatistics,
       lastRunAt: new Date().toISOString(),
       lastBatch: { requested: fixtures.length, fresh: fresh.length, retried: readyRetries.length,
-        statisticsFound, noStatistics, failures: failures.length, pendingRetries: retryJobs.length,
+        statisticsFound, partialStatistics, noStatistics, failures: failures.length, pendingRetries: retryJobs.length,
         deadLetters: nextDeadLetters.length }
     };
     await env.MAM_KV.put(HISTORY_STATISTICS_KEY, JSON.stringify(next));
     return { ok: true, status, requested: fixtures.length, fresh: fresh.length, processedJobs, totalJobs,
-      statisticsFound, noStatistics, failures, pendingRetries: retryJobs.length, deadLetters: nextDeadLetters.length };
+      statisticsFound, partialStatistics, noStatistics, failures, pendingRetries: retryJobs.length, deadLetters: nextDeadLetters.length };
   } finally {
     await env.DB.prepare(
       `UPDATE ${HISTORY_STATISTICS_LOCK_TABLE} SET owner = '', lease_until = 0 WHERE id = 1 AND owner = ?`
