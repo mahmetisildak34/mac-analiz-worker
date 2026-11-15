@@ -867,11 +867,15 @@ export default {
         }
         const daysValue = Number.parseInt(url.searchParams.get("days") || "30", 10);
         const days = Number.isFinite(daysValue) ? Math.max(1, Math.min(60, daysValue)) : 30;
+        const requestedDate = String(url.searchParams.get("date") || "").trim();
+        const exactDate = /^\\d{4}-\\d{2}-\\d{2}$/.test(requestedDate) ? requestedDate : "";
         const leagueId = String(url.searchParams.get("league") || "").trim();
         const limitValue = Number.parseInt(url.searchParams.get("limit") || "1000", 10);
         const limit = Number.isFinite(limitValue) ? Math.max(1, Math.min(2000, limitValue)) : 1000;
-        const filters = ["date(kickoff) >= date('now')", "date(kickoff) <= date('now', '+' || ? || ' days')", "status IN ('NS','TBD','SCHEDULED')"];
-        const binds = [days];
+        const filters = exactDate
+          ? ["substr(kickoff, 1, 10) = ?", "status IN ('NS','TBD','SCHEDULED')"]
+          : ["date(kickoff) >= date('now')", "date(kickoff) <= date('now', '+' || ? || ' days')", "status IN ('NS','TBD','SCHEDULED')"];
+        const binds = exactDate ? [exactDate] : [days];
         if (leagueId) { filters.push("league_id = ?"); binds.push(leagueId); }
         binds.push(limit);
         const result = await env.DB.prepare(
