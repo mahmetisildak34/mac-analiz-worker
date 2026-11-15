@@ -44,7 +44,9 @@ test("general statistics queue initializes disabled from completed staged fixtur
           sql,
           run: async () => ({ meta: { changes: 1 } }),
           all: async () => ({ results: [{ name: "statistics_json" }] }),
-          first: async () => ({ total: 123 })
+          first: async () => sql.includes("mam_history_backfill_statistics")
+            ? ({ processed: 5, statisticsFound: 4, noStatistics: 1 })
+            : ({ total: 123 })
         };
       }
     },
@@ -55,6 +57,9 @@ test("general statistics queue initializes disabled from completed staged fixtur
   const result = await buildHistoryStatisticsState(env, new Date("2026-11-15T00:00:00Z"));
   assert.equal(result.ok, true);
   assert.equal(result.totalJobs, 123);
+  assert.equal(result.processedJobs, 5);
+  assert.equal(result.statisticsFound, 4);
+  assert.equal(result.noStatistics, 1);
   assert.equal(result.executionEnabled, false);
   assert.equal(result.scope, "all-configured-competitions-statistics");
   assert.equal(storedKey, HISTORY_STATISTICS_KEY);
