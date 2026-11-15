@@ -12,7 +12,8 @@ import {
   CLUB_HISTORY_BACKFILL_KEY,
   NATIONAL_TEAM_HISTORY_BACKFILL_KEY,
   buildHistoryBackfillScopedState,
-  getHistoryBackfillQueueConfig
+  getHistoryBackfillQueueConfig,
+  normalizeHistoryStatisticsForApp
 } from "../history-statistics.js";
 
 test("all configured competitions are classified exactly once as club or national team", () => {
@@ -35,6 +36,36 @@ test("catalog exposes named competitions and ESPN slugs for both categories", ()
   assert.deepEqual(catalog.nationalTeams.map(item => item.rank), [1, 2, 3, 4, 5]);
   assert.deepEqual(catalog.clubs.slice(0, 9).map(item => item.priority), Array(9).fill("high"));
   assert.equal(catalog.clubs[9].priority, "standard");
+});
+
+test("ESPN archive statistics normalize into the app's home/away metric contract", () => {
+  const normalized = normalizeHistoryStatisticsForApp({
+    teams: [
+      { homeAway: "home", team: "Home FC", statistics: [
+        { name: "totalShots", displayValue: "14" },
+        { name: "shotsOnTarget", displayValue: "6" },
+        { name: "wonCorners", displayValue: "8" },
+        { name: "yellowCards", displayValue: "2" },
+        { name: "redCards", displayValue: "1" }
+      ] },
+      { homeAway: "away", team: "Away FC", statistics: [
+        { name: "totalShots", displayValue: "9" },
+        { name: "shotsOnTarget", displayValue: "3" },
+        { name: "wonCorners", displayValue: "4" },
+        { name: "yellowCards", displayValue: "3" },
+        { name: "redCards", displayValue: "0" }
+      ] }
+    ],
+    coverage: { home: true, away: true, complete: true }
+  });
+  assert.deepEqual(normalized.home, { shots: 14, shotsOnTarget: 6, corners: 8, yellowCards: 2, redCards: 1 });
+  assert.deepEqual(normalized.away, { shots: 9, shotsOnTarget: 3, corners: 4, yellowCards: 3, redCards: 0 });
+  assert.equal(normalized.coverage.complete, true);
+});
+
+test("app statistics normalizer preserves an already-normalized home/away object", () => {
+  const value = { home: { shots: 10 }, away: { shots: 8 } };
+  assert.equal(normalizeHistoryStatisticsForApp(value), value);
 });
 
 test("general statistics queue initializes disabled from completed staged fixtures only", async () => {
