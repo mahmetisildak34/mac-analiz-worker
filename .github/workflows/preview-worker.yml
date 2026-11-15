@@ -234,6 +234,7 @@ jobs:
         run: |
           set -euo pipefail
           curl --http1.1 --fail --show-error --silent --output /tmp/team-archive.json --dump-header /tmp/team-archive.headers "$PREVIEW_URL/api/archive/matches?league=5&before=2026-11-15&teamId=456&teamSource=espn&limit=10"
+          cat /tmp/team-archive.headers
           echo "Team archive response bytes: $(wc -c < /tmp/team-archive.json)"
           tail -c 240 /tmp/team-archive.json | od -An -t x1c
           jq '{ok, count, sample: (.response[0] // null)}' /tmp/team-archive.json
