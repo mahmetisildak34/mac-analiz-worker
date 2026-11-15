@@ -144,3 +144,86 @@ test("club and national-team fixture queues are separate, ordered, and disabled 
   assert.equal(getHistoryBackfillQueueConfig("national-teams").key, NATIONAL_TEAM_HISTORY_BACKFILL_KEY);
   assert.equal(getHistoryBackfillQueueConfig("unknown"), null);
 });
+
+function makeStatisticsTestEnv(initialState, fixtureRows = []) {
+  let state = structuredClone(initialState);
+  const writtenBatches = [];
+  const env = {
+    HISTORY_STATISTICS_ENABLED: "true",
+    MAM_KV: {
+      get: async key => { assert.equal(key, HISTORY_STATISTICS_KEY); return state; },
+      put: async (_key, value) => { state = JSON.parse(value); }
+    },
+    DB: {
+      prepare(sql) {
+        return {
+          sql,
+          values: [],
+          bind(...values) { this.values = values; return this; },
+          run: async () => ({ meta: { changes: /SET owner = \?|SET owner = ''/.test(sql) ? 1 : 0 } }),
+          all: async () => {
+            if (sql.includes("PRAGMA table_info")) return { results: [{ name: "statistics_json" }] };
+            if (sql.includes("SELECT m.fixture_id")) return { results: fixtureRows };
+            return { results: [] };
+          },
+          first: async () => {
+            if (sql.includes("mam_history_backfill_statistics")) return { total: 0 };
+            return { total: 1 };
+          }
+        };
+      },
+      batch: async statements => {
+        writtenBatches.push(...statements);
+        return statements.map(() => ({ meta: { changes: 1 } }));
+      }
+    }
+  };
+  return { env, getState: () => state, writtenBatches };
+}
+
+test("general statistics processor retries transient upstream failures with backoff", async () => {
+  const fixture = { fixtureId: "espn-eng.1-999", leagueId: "39", kickoff: "2026-11-01T16:30:00Z" };
+  const { env, getState } = makeStatisticsTestEnv({
+    executionEnabled: true, retryJobs: [], deadLetters: [], statisticsFound: 0, noStatistics: 0
+  }, [fixture]);
+  const result = await runHistoryStatisticsBatch(env, async () => new Response("temporary", { status: 503 }));
+  assert.equal(result.ok, true);
+  assert.equal(result.status, "retry-needed");
+  assert.equal(result.pendingRetries, 1);
+  assert.equal(result.failures.length, 1);
+  assert.equal(getState().retryJobs[0].attempts, 1);
+  assert.ok(getState().retryJobs[0].retryAfter > Date.now());
+});
+
+test("general statistics processor records a valid empty box score as unavailable, not zero stats", async () => {
+  const fixture = { fixtureId: "espn-eng.1-999", leagueId: "39", kickoff: "2026-11-01T16:30:00Z" };
+  const { env, getState, writtenBatches } = makeStatisticsTestEnv({
+    executionEnabled: true, retryJobs: [], deadLetters: [], statisticsFound: 0, noStatistics: 0
+  }, [fixture]);
+  const result = await runHistoryStatisticsBatch(env, async () => new Response(JSON.stringify({
+    boxscore: { teams: [
+      { homeAway: "home", team: { displayName: "Liverpool" }, statistics: [] },
+      { homeAway: "away", team: { displayName: "Arsenal" }, statistics: [] }
+    ] }
+  }), { status: 200 }));
+  assert.equal(result.ok, true);
+  assert.equal(result.noStatistics, 1);
+  assert.equal(getState().noStatistics, 1);
+  assert.equal(writtenBatches.length, 2);
+  assert.ok(writtenBatches[0].values.includes("no-statistics"));
+});
+
+test("general statistics processor moves the fifth failed attempt to dead letters", async () => {
+  const fixtureId = "espn-eng.1-999";
+  const { env, getState } = makeStatisticsTestEnv({
+    executionEnabled: true,
+    retryJobs: [{ fixtureId, leagueId: "39", kickoff: "2026-11-01T16:30:00Z", attempts: 4, retryAfter: 0 }],
+    deadLetters: [], statisticsFound: 0, noStatistics: 0
+  });
+  const result = await runHistoryStatisticsBatch(env, async () => new Response("persistent failure", { status: 500 }));
+  assert.equal(result.ok, true);
+  assert.equal(result.status, "needs-review");
+  assert.equal(result.pendingRetries, 0);
+  assert.equal(result.deadLetters, 1);
+  assert.equal(getState().deadLetters[0].attempts, 5);
+});
