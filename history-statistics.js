@@ -25,6 +25,9 @@ export function getHistoryCompetitionCatalog() {
 
 async function ensureStatisticsSchema(db) {
   await db.prepare(
+    "CREATE TABLE IF NOT EXISTS mam_history_backfill_matches (source TEXT NOT NULL, fixture_id TEXT NOT NULL, league_id TEXT, league_name TEXT, country TEXT, kickoff TEXT, status TEXT, home_team_id TEXT, home_team TEXT, away_team_id TEXT, away_team TEXT, home_goals INTEGER, away_goals INTEGER, raw_json TEXT, statistics_json TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (source, fixture_id))"
+  ).run();
+  await db.prepare(
     "CREATE TABLE IF NOT EXISTS mam_history_backfill_statistics (source TEXT NOT NULL, fixture_id TEXT NOT NULL, league_id TEXT NOT NULL, kickoff TEXT, outcome TEXT NOT NULL, statistics_json TEXT, raw_json TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (source, fixture_id))"
   ).run();
   const columns = await db.prepare("PRAGMA table_info(mam_history_backfill_matches)").all();
