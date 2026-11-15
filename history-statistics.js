@@ -46,8 +46,13 @@ export function classifyHistoryCompetition(leagueId) {
 export function getHistoryCompetitionCatalog() {
   return {
     total: HISTORY_BACKFILL_LEAGUES.length,
-    nationalTeams: NATIONAL_TEAM_COMPETITIONS.map(([id, slug, name, country]) => ({ id, slug, name, country })),
-    clubs: CLUB_COMPETITIONS.map(([id, slug, name, country]) => ({ id, slug, name, country }))
+    nationalTeams: NATIONAL_TEAM_COMPETITIONS.map(([id, slug, name, country], index) => ({
+      rank: index + 1, id, slug, name, country, category: "national-team"
+    })),
+    clubs: CLUB_COMPETITIONS.map(([id, slug, name, country], index) => ({
+      rank: index + 1, id, slug, name, country, category: "club",
+      priority: index < 9 ? "high" : "standard"
+    }))
   };
 }
 
