@@ -233,13 +233,15 @@ jobs:
       - name: Verify historical archive is consumable by the app analysis endpoint
         run: |
           set -euo pipefail
-          team_archive="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/matches?league=5&before=2026-11-15&teamId=456&teamSource=espn&limit=10")"
-          printf '%s\\n' "$team_archive" | jq '{ok, count, sample: (.response[0] // null)}'
-          echo "$team_archive" | jq -e '.ok == true and .count > 0 and (.response | type == "array")' >/dev/null
-          echo "$team_archive" | jq -e '[.response[] | select(.mamArchiveOnly == true)] | length > 0' >/dev/null
-          stats_archive="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/matches?league=5&before=2026-11-15&limit=10")"
-          echo "$stats_archive" | jq -e '.ok == true and .count > 0' >/dev/null
-          echo "$stats_archive" | jq -e '[.response[] | select(((.statistics.home // {}) | length) > 0 and ((.statistics.away // {}) | length) > 0)] | length > 0' >/dev/null
+          curl --http1.1 --fail --show-error --silent --output /tmp/team-archive.json --dump-header /tmp/team-archive.headers "$PREVIEW_URL/api/archive/matches?league=5&before=2026-11-15&teamId=456&teamSource=espn&limit=10"
+          echo "Team archive response bytes: $(wc -c < /tmp/team-archive.json)"
+          tail -c 240 /tmp/team-archive.json | od -An -t x1c
+          jq '{ok, count, sample: (.response[0] // null)}' /tmp/team-archive.json
+          jq -e '.ok == true and .count > 0 and (.response | type == "array")' /tmp/team-archive.json >/dev/null
+          jq -e '[.response[] | select(.mamArchiveOnly == true)] | length > 0' /tmp/team-archive.json >/dev/null
+          curl --http1.1 --fail --show-error --silent --output /tmp/stats-archive.json "$PREVIEW_URL/api/archive/matches?league=5&before=2026-11-15&limit=10"
+          jq -e '.ok == true and .count > 0' /tmp/stats-archive.json >/dev/null
+          jq -e '[.response[] | select(((.statistics.home // {}) | length) > 0 and ((.statistics.away // {}) | length) > 0)] | length > 0' /tmp/stats-archive.json >/dev/null
         env:
           PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
 
