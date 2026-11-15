@@ -80,7 +80,12 @@ export function getHistoryCompetitionCatalog() {
     clubs: CLUB_COMPETITIONS.map(([id, slug, name, country], index) => ({
       rank: index + 1, id, slug, name, country, category: "club",
       priority: index < 9 ? "high" : "standard"
-    }))
+    })),
+    externalFallback: [{
+      id: "206", name: "Türkiye Kupası", country: "Türkiye", category: "club",
+      status: "not-in-ESPN-archive",
+      reason: "The app has this extra competition, but candidate ESPN scoreboard slugs returned HTTP 400. Keep the existing provider fallback rather than inventing an ESPN mapping."
+    }]
   };
 }
 
