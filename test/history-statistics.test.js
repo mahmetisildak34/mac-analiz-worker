@@ -61,3 +61,63 @@ test("general statistics processor remains disabled without explicit Preview/wor
   const result = await runHistoryStatisticsBatch({});
   assert.equal(result.status, "disabled");
 });
+
+test("general statistics worker enriches a staged fixture using its matching ESPN competition", async () => {
+  const batchStatements = [];
+  let storedState = {
+    scope: "all-configured-competitions-statistics",
+    executionEnabled: true,
+    totalJobs: 1,
+    retryJobs: [],
+    deadLetters: [],
+    statisticsFound: 0,
+    noStatistics: 0
+  };
+  const env = {
+    HISTORY_STATISTICS_ENABLED: "true",
+    MAM_KV: {
+      get: async key => { assert.equal(key, HISTORY_STATISTICS_KEY); return storedState; },
+      put: async (_key, value) => { storedState = JSON.parse(value); }
+    },
+    DB: {
+      prepare(sql) {
+        return {
+          sql,
+          values: [],
+          bind(...values) { this.values = values; return this; },
+          run: async () => ({ meta: { changes: sql.includes("SET owner = ?") || sql.includes("SET owner = ''") ? 1 : 0 } }),
+          all: async () => {
+            if (sql.includes("PRAGMA table_info")) return { results: [{ name: "statistics_json" }] };
+            if (sql.includes("SELECT m.fixture_id")) return { results: [{
+              fixtureId: "espn-eng.1-999", leagueId: "39", kickoff: "2026-11-01T16:30:00Z", status: "FT"
+            }] };
+            return { results: [] };
+          },
+          first: async () => ({ total: 1 })
+        };
+      },
+      batch: async statements => {
+        batchStatements.push(...statements);
+        return statements.map(() => ({ meta: { changes: 1 } }));
+      }
+    }
+  };
+  let requestedUrl = "";
+  const result = await runHistoryStatisticsBatch(env, async url => {
+    requestedUrl = String(url);
+    return new Response(JSON.stringify({ boxscore: { teams: [
+      { homeAway: "home", team: { displayName: "Liverpool" }, statistics: [{ name: "shots", displayValue: "12" }] },
+      { homeAway: "away", team: { displayName: "Arsenal" }, statistics: [{ name: "shots", displayValue: "9" }] }
+    ] } }), { status: 200 });
+  });
+  assert.equal(result.ok, true);
+  assert.equal(result.statisticsFound, 1);
+  assert.equal(result.status, "complete");
+  assert.match(requestedUrl, /soccer\/eng\.1\/summary\?event=999/);
+  assert.equal(batchStatements.length, 2);
+  assert.match(batchStatements[0].sql, /INSERT INTO mam_history_backfill_statistics/);
+  assert.equal(batchStatements[0].values[0], "espn-eng.1-999");
+  assert.equal(batchStatements[0].values[1], "39");
+  assert.match(batchStatements[1].sql, /UPDATE mam_history_backfill_matches SET statistics_json/);
+  assert.equal(storedState.statisticsFound, 1);
+});
