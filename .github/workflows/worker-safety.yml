@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main]
   push:
-    branches: [feature/isolated-history-backfill-queue]
+    branches: [feature/isolated-history-backfill-queue, feature/all-competitions-statistics-audit]
 
 jobs:
   validate:
@@ -17,6 +17,7 @@ jobs:
       - run: npm install --ignore-scripts --no-audit --no-fund
       - run: node --check worker.js
       - run: node --check history-backfill.js
+      - run: node --check history-statistics.js
       - run: node --test
       - name: Validate Wrangler config and Worker bundle without deploying
         run: npx wrangler deploy --dry-run --outdir /tmp/worker-dry-run
