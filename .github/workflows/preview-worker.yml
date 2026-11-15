@@ -180,6 +180,19 @@ jobs:
         env:
           PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
 
+      - name: Probe all 39 configured ESPN competitions in bounded batches
+        run: |
+          set -euo pipefail
+          for offset in 0 5 10 15 20 25 30 35; do
+            limit=5
+            if [ "$offset" = "35" ]; then limit=4; fi
+            result="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/history-backfill/probe-batch?offset=$offset&limit=$limit&date=20261101")"
+            printf '%s\\n' "$result"
+            echo "$result" | jq -e '.ok == true and .successCount == .requested and .failureCount == 0' >/dev/null
+          done
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
       - name: Initialize all-competition historical statistics queue (Preview only)
         run: |
           set -euo pipefail
