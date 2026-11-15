@@ -238,7 +238,7 @@ jobs:
           echo "Team archive response bytes: $(wc -c < /tmp/team-archive.json)"
           tail -c 240 /tmp/team-archive.json | od -An -t x1c
           jq '{ok, count, sample: (.response[0] // null)}' /tmp/team-archive.json
-          jq -e '.ok == true and .count > 0 and (.response | type == "array")' /tmp/team-archive.json >/dev/null
+          jq -e '.ok == true and .teamFilterApplied == true and .count > 0 and (.response | type == "array")' /tmp/team-archive.json >/dev/null
           jq -e '[.response[] | select(.mamArchiveOnly == true)] | length > 0' /tmp/team-archive.json >/dev/null
           curl --http1.1 --fail --show-error --silent --output /tmp/stats-archive.json "$PREVIEW_URL/api/archive/matches?league=5&before=2026-11-15&limit=10"
           jq -e '.ok == true and .count > 0' /tmp/stats-archive.json >/dev/null
