@@ -31,23 +31,29 @@ test("popular leagues are processed before the remaining archive competitions", 
   );
 });
 
-test("batch generation is bounded and deterministic", () => {
+test("batch generation is bounded, deterministic, and breadth-first across competitions", () => {
   const state = buildHistoryBackfillState(new Date("2026-11-14T12:00:00.000Z"));
   const batch = getHistoryBackfillBatch(state, 500);
   assert.equal(batch.length, 50);
   assert.deepEqual(batch[0].league, HISTORY_BACKFILL_LEAGUES[0]);
   assert.equal(batch[0].date, "20240701");
-  assert.equal(batch[49].date, "20240819");
-});
-
-test("cursor maps to next competition without skipping dates", () => {
-  const state = buildHistoryBackfillState(new Date("2026-11-14T12:00:00.000Z"));
-  state.cursor = state.dayCount - 1;
-  const batch = getHistoryBackfillBatch(state, 2);
-  assert.equal(batch.length, 2);
-  assert.equal(batch[0].date, "20261114");
   assert.deepEqual(batch[1].league, HISTORY_BACKFILL_LEAGUES[1]);
   assert.equal(batch[1].date, "20240701");
+  assert.deepEqual(batch[38].league, HISTORY_BACKFILL_LEAGUES[38]);
+  assert.equal(batch[38].date, "20240701");
+  assert.deepEqual(batch[39].league, HISTORY_BACKFILL_LEAGUES[0]);
+  assert.equal(batch[39].date, "20240702");
+});
+
+test("cursor advances to the next date only after every competition receives the current date", () => {
+  const state = buildHistoryBackfillState(new Date("2026-11-14T12:00:00.000Z"));
+  state.cursor = HISTORY_BACKFILL_LEAGUES.length - 1;
+  const batch = getHistoryBackfillBatch(state, 2);
+  assert.equal(batch.length, 2);
+  assert.deepEqual(batch[0].league, HISTORY_BACKFILL_LEAGUES[38]);
+  assert.equal(batch[0].date, "20240701");
+  assert.deepEqual(batch[1].league, HISTORY_BACKFILL_LEAGUES[0]);
+  assert.equal(batch[1].date, "20240702");
 });
 
 test("invalid or completed cursors return no work", () => {
