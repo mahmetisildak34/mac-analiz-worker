@@ -1,8 +1,8 @@
 import {
   buildHistoryBackfillScopedState,
-  getHistoryBackfillQueueConfig,
-  runHistoryBackfillBatch
+  getHistoryBackfillQueueConfig
 } from "./history-statistics.js";
+import { runHistoryBackfillBatch } from "./history-backfill.js";
 import { buildHistoryStatisticsState, HISTORY_STATISTICS_KEY, runHistoryStatisticsBatch } from "./history-statistics.js";
 
 const SCOPES = ["clubs", "national-teams"];
