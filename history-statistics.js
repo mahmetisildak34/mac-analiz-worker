@@ -2,7 +2,7 @@ import { HISTORY_BACKFILL_LEAGUES } from "./history-backfill.js";
 
 export const HISTORY_STATISTICS_KEY = "mam:history-statistics-state:v1";
 export const HISTORY_STATISTICS_LOCK_TABLE = "mam_history_backfill_statistics_all_lock";
-export const NATIONAL_TEAM_COMPETITION_IDS = Object.freeze(["1", "4", "5", "6", "9"]);
+export const NATIONAL_TEAM_COMPETITION_IDS = Object.freeze(["1", "4", "5", "9", "6"]);
 
 export const NATIONAL_TEAM_COMPETITIONS = Object.freeze(
   HISTORY_BACKFILL_LEAGUES.filter(item => NATIONAL_TEAM_COMPETITION_IDS.includes(String(item[0])))
