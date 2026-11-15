@@ -36,6 +36,8 @@ test("catalog exposes named competitions and ESPN slugs for both categories", ()
   assert.deepEqual(catalog.nationalTeams.map(item => item.rank), [1, 2, 3, 4, 5]);
   assert.deepEqual(catalog.clubs.slice(0, 9).map(item => item.priority), Array(9).fill("high"));
   assert.equal(catalog.clubs[9].priority, "standard");
+  assert.deepEqual(catalog.externalFallback.map(item => item.id), ["206"]);
+  assert.equal(catalog.externalFallback[0].status, "not-in-ESPN-archive");
 });
 
 test("ESPN archive statistics normalize into the app's home/away metric contract", () => {
