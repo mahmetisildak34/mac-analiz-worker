@@ -67,21 +67,28 @@ async function ensureStatisticsSchema(db) {
 export async function buildHistoryStatisticsState(env, now = new Date()) {
   if (!env.DB || !env.MAM_KV) return { ok: false, status: "unavailable", reason: "D1 and KV bindings are required." };
   await ensureStatisticsSchema(env.DB);
-  const count = await env.DB.prepare(
-    "SELECT COUNT(*) AS total FROM mam_history_backfill_matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN')"
-  ).first();
+  const [count, outcomes] = await Promise.all([
+    env.DB.prepare(
+      "SELECT COUNT(*) AS total FROM mam_history_backfill_matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN')"
+    ).first(),
+    env.DB.prepare(
+      "SELECT COUNT(*) AS processed, SUM(CASE WHEN outcome = 'statistics-found' THEN 1 ELSE 0 END) AS statisticsFound, SUM(CASE WHEN outcome = 'no-statistics' THEN 1 ELSE 0 END) AS noStatistics FROM mam_history_backfill_statistics WHERE source = 'ESPN'"
+    ).first()
+  ]);
   const totalJobs = Number(count?.total || 0);
+  const processedJobs = Number(outcomes?.processed || 0);
   const state = {
     version: 1,
     scope: "all-configured-competitions-statistics",
     createdAt: now.toISOString(),
     totalJobs,
-    status: totalJobs ? "queued" : "waiting-for-fixtures",
+    processedJobs,
+    status: processedJobs >= totalJobs && totalJobs > 0 ? "complete" : totalJobs ? "queued" : "waiting-for-fixtures",
     executionEnabled: false,
     retryJobs: [],
     deadLetters: [],
-    statisticsFound: 0,
-    noStatistics: 0,
+    statisticsFound: Number(outcomes?.statisticsFound || 0),
+    noStatistics: Number(outcomes?.noStatistics || 0),
     note: "All configured ESPN competitions. Writes only to historical staging tables; live matches and live summary queues are untouched."
   };
   await env.MAM_KV.put(HISTORY_STATISTICS_KEY, JSON.stringify(state));
