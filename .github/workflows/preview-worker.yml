@@ -236,6 +236,7 @@ jobs:
           archive="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/matches?league=5&before=2026-11-15&limit=2000")"
           printf '%s\\n' "$archive" | jq '{ok, count, sample: (.response[0] // null)}'
           echo "$archive" | jq -e '.ok == true and .count > 0 and (.response | type == "array")' >/dev/null
+          echo "$archive" | jq -e '[.response[] | select(.mamArchiveOnly == true)] | length > 0' >/dev/null
           echo "$archive" | jq -e '[.response[] | select(((.statistics.home // {}) | length) > 0 and ((.statistics.away // {}) | length) > 0)] | length > 0' >/dev/null
         env:
           PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
