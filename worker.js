@@ -872,19 +872,13 @@ export default {
         const exactDate = /^\d{4}-\d{2}-\d{2}$/.test(requestedDate) &&
           Number.isFinite(parsedRequestedDate) &&
           new Date(parsedRequestedDate).toISOString().slice(0, 10) === requestedDate ? requestedDate : "";
-        const dateWindowStart = exactDate
-          ? new Date(parsedRequestedDate - 86400000).toISOString().slice(0, 10) : "";
-        const dateWindowEnd = exactDate
-          ? new Date(parsedRequestedDate + 2 * 86400000).toISOString().slice(0, 10) : "";
         const leagueId = String(url.searchParams.get("league") || "").trim();
         const limitValue = Number.parseInt(url.searchParams.get("limit") || "1000", 10);
         const limit = Number.isFinite(limitValue) ? Math.max(1, Math.min(2000, limitValue)) : 1000;
         const filters = exactDate
-          ? ["kickoff >= ?", "kickoff < ?", "status IN ('NS','TBD','SCHEDULED')"]
+          ? ["date(kickoff, '+3 hours') = ?", "status IN ('NS','TBD','SCHEDULED')"]
           : ["date(kickoff) >= date('now')", "date(kickoff) <= date('now', '+' || ? || ' days')", "status IN ('NS','TBD','SCHEDULED')"];
-        const binds = exactDate
-          ? [dateWindowStart + "T00:00:00", dateWindowEnd + "T00:00:00"]
-          : [days];
+        const binds = exactDate ? [exactDate] : [days];
         if (leagueId) { filters.push("league_id = ?"); binds.push(leagueId); }
         binds.push(limit);
         const result = await env.DB.prepare(
@@ -912,21 +906,7 @@ export default {
           const istanbulDate = dateParts.year + "-" + dateParts.month + "-" + dateParts.day;
           return istanbulDate === exactDate;
         });
-        const dateDebug = exactDate ? (Array.isArray(result?.results) ? result.results : []).slice(0, 5).map(row => {
-          const kickoff = String(row.kickoff || "");
-          const timestamp = Date.parse(kickoff);
-          const parts = Number.isFinite(timestamp) ? new Intl.DateTimeFormat("en-GB", {
-            timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit"
-          }).formatToParts(new Date(timestamp)) : [];
-          const dateParts = Object.fromEntries(parts.map(part => [part.type, part.value]));
-          return {
-            kickoff,
-            kickoffPrefix: kickoff.slice(0, 10),
-            parsed: Number.isFinite(timestamp),
-            istanbulDate: dateParts.year && dateParts.month && dateParts.day
-              ? dateParts.year + "-" + dateParts.month + "-" + dateParts.day : null
-          };
-        }) : [];
+        const dateDebug = [];
         for (const row of candidateRows) {
           const home = normalizeTeam(row.home_team), away = normalizeTeam(row.away_team);
           const time = Date.parse(String(row.kickoff || ""));
