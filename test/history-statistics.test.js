@@ -211,6 +211,7 @@ test("general statistics processor records a valid empty box score as unavailabl
   }), { status: 200 }));
   assert.equal(result.ok, true);
   assert.equal(result.noStatistics, 1);
+  assert.equal(result.status, "complete-with-gaps");
   assert.equal(getState().noStatistics, 1);
   assert.equal(writtenBatches.length, 2);
   assert.ok(writtenBatches[0].values.includes("no-statistics"));
@@ -231,6 +232,7 @@ test("general statistics processor marks one-sided box scores as partial, not co
   assert.equal(result.ok, true);
   assert.equal(result.statisticsFound, 0);
   assert.equal(result.partialStatistics, 1);
+  assert.equal(result.status, "complete-with-gaps");
   assert.equal(getState().partialStatistics, 1);
   assert.ok(writtenBatches[0].values.includes("partial-statistics"));
 });
