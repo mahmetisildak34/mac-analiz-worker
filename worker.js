@@ -1312,7 +1312,7 @@ export default {
             };
           });
         return new Response(JSON.stringify({
-          ok: true, leagueId, count: matches.length, response: matches
+          ok: true, leagueId, teamFilterApplied: hasArchiveTeamFilter, count: matches.length, response: matches
         }), {
           status: 200,
           headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "private, max-age=60" }
