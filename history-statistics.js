@@ -11,8 +11,8 @@ export const CLUB_COMPETITIONS = Object.freeze(
   HISTORY_BACKFILL_LEAGUES.filter(item => !NATIONAL_TEAM_COMPETITION_IDS.includes(String(item[0])))
 );
 
-export const CLUB_HISTORY_BACKFILL_KEY = "mam:club-history-backfill-state:v1";
-export const NATIONAL_TEAM_HISTORY_BACKFILL_KEY = "mam:national-team-history-backfill-state:v1";
+export const CLUB_HISTORY_BACKFILL_KEY = "mam:club-history-backfill-state:v2";
+export const NATIONAL_TEAM_HISTORY_BACKFILL_KEY = "mam:national-team-history-backfill-state:v2";
 
 export function getHistoryBackfillQueueConfig(scope) {
   if (scope === "clubs") return { key: CLUB_HISTORY_BACKFILL_KEY, scope: "club-competitions", leagues: CLUB_COMPETITIONS };
@@ -29,13 +29,13 @@ export function buildHistoryBackfillScopedState(scope, now = new Date()) {
   end.setUTCHours(12, 0, 0, 0);
   const dayCount = Math.floor((end.getTime() - start.getTime()) / 86400000) + 1;
   return {
-    version: 1, scope: config.scope, createdAt: now.toISOString(),
+    version: 2, scope: config.scope, createdAt: now.toISOString(),
     rangeStart, rangeEnd: end.toISOString().slice(0, 10), dayCount,
     seasonsRequested: ["2024/25", "2025/26", "2026/27"],
     leagueCount: config.leagues.length, totalJobs: config.leagues.length * dayCount,
     cursor: 0, status: "queued", executionEnabled: false,
     retryJobs: [], deadLetters: [],
-    note: "Competition category is isolated in its own Preview/production queue. Historical staging only; live matches are not modified."
+    note: "Breadth-first date slices cover all competitions early while preserving configured priority order. Category queues are isolated; live matches are not modified."
   };
 }
 
