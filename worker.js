@@ -903,8 +903,13 @@ export default {
         const candidateRows = (Array.isArray(result?.results) ? result.results : []).filter(row => {
           if (!exactDate) return true;
           const timestamp = Date.parse(String(row.kickoff || ""));
-          return Number.isFinite(timestamp) &&
-            new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(timestamp)) === exactDate;
+          if (!Number.isFinite(timestamp)) return false;
+          const parts = new Intl.DateTimeFormat("en-GB", {
+            timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit"
+          }).formatToParts(new Date(timestamp));
+          const dateParts = Object.fromEntries(parts.map(part => [part.type, part.value]));
+          const istanbulDate = dateParts.year + "-" + dateParts.month + "-" + dateParts.day;
+          return istanbulDate === exactDate;
         });
         for (const row of candidateRows) {
           const home = normalizeTeam(row.home_team), away = normalizeTeam(row.away_team);
@@ -926,7 +931,12 @@ export default {
           goals: { home: row.home_goals, away: row.away_goals }
         }));
         return new Response(JSON.stringify({
-          ok: true, days, leagueId: leagueId || null, count: matches.length, rawCount: Array.isArray(result?.results) ? result.results.length : 0, duplicatesSuppressed: (Array.isArray(result?.results) ? result.results.length : 0) - matches.length, response: matches
+          ok: true, days, date: exactDate || null, leagueId: leagueId || null,
+          count: matches.length,
+          rawCount: Array.isArray(result?.results) ? result.results.length : 0,
+          dateMatchedCount: candidateRows.length,
+          duplicatesSuppressed: candidateRows.length - deduplicatedRows.length,
+          response: matches
         }), {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
         });
