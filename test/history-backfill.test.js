@@ -291,7 +291,7 @@ test("Copa América uses ESPN's configured CONMEBOL slug", async () => {
   });
   assert.equal(result.ok, true);
   assert.equal(result.league, "Copa América");
-  assert.match(requestedUrl, /\/soccer\/conmebol\.copa_america\/scoreboard\?/);
+  assert.match(requestedUrl, /\/soccer\/conmebol\.america\/scoreboard\?/);
 });
 
 test("UEFA Nations League queue covers the 2024 and 2026 editions only, isolated from the general archive", () => {
