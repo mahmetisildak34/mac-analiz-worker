@@ -868,7 +868,7 @@ export default {
         const daysValue = Number.parseInt(url.searchParams.get("days") || "30", 10);
         const days = Number.isFinite(daysValue) ? Math.max(1, Math.min(60, daysValue)) : 30;
         const requestedDate = String(url.searchParams.get("date") || "").trim();
-        const exactDate = /^\\d{4}-\\d{2}-\\d{2}$/.test(requestedDate) ? requestedDate : "";
+        const exactDate = /^\d{4}-\d{2}-\d{2}$/.test(requestedDate) ? requestedDate : "";
         const leagueId = String(url.searchParams.get("league") || "").trim();
         const limitValue = Number.parseInt(url.searchParams.get("limit") || "1000", 10);
         const limit = Number.isFinite(limitValue) ? Math.max(1, Math.min(2000, limitValue)) : 1000;
