@@ -112,7 +112,7 @@ export async function getHistoryStatisticsStatus(env) {
   if (!env.DB || !env.MAM_KV) return { ok: false, status: "unavailable" };
   const state = await env.MAM_KV.get(HISTORY_STATISTICS_KEY, "json");
   const coverage = await env.DB.prepare(
-    "SELECT m.league_id AS leagueId, m.league_name AS league, COUNT(*) AS completedFixtures, SUM(CASE WHEN s.outcome = 'statistics-found' THEN 1 ELSE 0 END) AS statisticsFound, SUM(CASE WHEN s.outcome = 'no-statistics' THEN 1 ELSE 0 END) AS noStatistics, SUM(CASE WHEN s.fixture_id IS NULL THEN 1 ELSE 0 END) AS pending FROM mam_history_backfill_matches m LEFT JOIN mam_history_backfill_statistics s ON s.source = m.source AND s.fixture_id = m.fixture_id WHERE m.source = 'ESPN' AND m.status IN ('FT','AET','PEN') GROUP BY m.league_id, m.league_name ORDER BY m.league_name"
+    "SELECT m.league_id AS leagueId, m.league_name AS league, COUNT(*) AS completedFixtures, SUM(CASE WHEN s.outcome = 'statistics-found' THEN 1 ELSE 0 END) AS statisticsFound, SUM(CASE WHEN s.outcome = 'partial-statistics' THEN 1 ELSE 0 END) AS partialStatistics, SUM(CASE WHEN s.outcome = 'no-statistics' THEN 1 ELSE 0 END) AS noStatistics, SUM(CASE WHEN s.fixture_id IS NULL THEN 1 ELSE 0 END) AS pending FROM mam_history_backfill_matches m LEFT JOIN mam_history_backfill_statistics s ON s.source = m.source AND s.fixture_id = m.fixture_id WHERE m.source = 'ESPN' AND m.status IN ('FT','AET','PEN') GROUP BY m.league_id, m.league_name ORDER BY m.league_name"
   ).all();
   const rows = Array.isArray(coverage?.results) ? coverage.results : [];
   return {
