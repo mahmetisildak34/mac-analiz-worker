@@ -4,12 +4,17 @@ on:
   push:
     branches:
       - feature/isolated-history-backfill-queue
+      - feature/all-competitions-statistics-audit
     paths:
       - "worker.js"
       - "history-backfill.js"
+      - "history-statistics.js"
+      - "test/history-statistics.test.js"
       - "history-preview-runner.js"
       - "wrangler.history-preview.jsonc"
       - "history-statistics-preview-runner.js"
+      - "history-statistics.js"
+      - "test/history-statistics.test.js"
       - "wrangler.statistics-preview.jsonc"
       - "wrangler.jsonc"
       - "package.json"
@@ -137,6 +142,43 @@ jobs:
           status="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/history-backfill/status?scope=nations-league")"
           printf '%s\\n' "$status"
           echo "$status" | jq -e '.ok == true and .executionEnabled == false or .executionEnabled == true' >/dev/null
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Initialize all-competition historical statistics queue (Preview only)
+        run: |
+          set -euo pipefail
+          code="$(curl --show-error --silent --output /tmp/all-stats-init.json --write-out '%{http_code}' -X POST "$PREVIEW_URL/api/archive/history-statistics/start")"
+          cat /tmp/all-stats-init.json
+          if [ "$code" != "201" ]; then
+            echo "All-competition statistics initialization returned HTTP $code" >&2
+            exit 1
+          fi
+          jq -e '.ok == true and .executionEnabled == false and .scope == "all-configured-competitions-statistics"' /tmp/all-stats-init.json >/dev/null
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Enable and run one bounded all-competition statistics batch (Preview only)
+        run: |
+          set -euo pipefail
+          curl --fail --show-error --silent -X POST "$PREVIEW_URL/api/archive/history-statistics/enable" | tee /tmp/all-stats-enable.json
+          jq -e '.ok == true and .executionEnabled == true' /tmp/all-stats-enable.json >/dev/null
+          code="$(curl --show-error --silent --output /tmp/all-stats-run.json --write-out '%{http_code}' -X POST "$PREVIEW_URL/api/archive/history-statistics/run")"
+          cat /tmp/all-stats-run.json
+          if [ "$code" != "200" ]; then
+            echo "All-competition statistics batch returned HTTP $code" >&2
+            exit 1
+          fi
+          jq -e '.ok == true and (.status == "running" or .status == "complete" or .status == "retry-needed" or .status == "retry-wait" or .status == "needs-review")' /tmp/all-stats-run.json >/dev/null
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Audit all-competition statistics coverage by competition
+        run: |
+          set -euo pipefail
+          status="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/history-statistics/status")"
+          printf '%s\\n' "$status"
+          echo "$status" | jq -e '.ok == true and (.byCompetition | type == "array") and (.totalJobs >= 0)' >/dev/null
         env:
           PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
 
