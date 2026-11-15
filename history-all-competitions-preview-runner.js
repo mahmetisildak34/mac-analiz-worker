@@ -3,7 +3,7 @@ import {
   getHistoryBackfillQueueConfig
 } from "./history-statistics.js";
 import { runHistoryBackfillBatch } from "./history-backfill.js";
-import { buildHistoryStatisticsState, HISTORY_STATISTICS_KEY, runHistoryStatisticsBatch } from "./history-statistics.js";
+import { buildHistoryStatisticsState, getHistoryStatisticsStatus, HISTORY_STATISTICS_KEY, runHistoryStatisticsBatch } from "./history-statistics.js";
 
 const SCOPES = ["clubs", "national-teams"];
 
@@ -89,15 +89,15 @@ export default {
       });
     }
     const statistics = await env.MAM_KV.get(HISTORY_STATISTICS_KEY, "json");
+    const statisticsCoverage = await getHistoryStatisticsStatus(env);
     return Response.json({
       ok: true,
       environment: "preview",
       schedule: "*/15 * * * *",
       fixtureQueues: queueStatus,
       statistics: {
-        exists: Boolean(statistics),
+        ...statisticsCoverage,
         executionEnabled: statistics?.executionEnabled === true,
-        status: statistics?.status || "not-created",
         processedJobs: Number(statistics?.processedJobs || 0),
         totalJobs: Number(statistics?.totalJobs || 0),
         retryJobs: Array.isArray(statistics?.retryJobs) ? statistics.retryJobs.length : 0,
