@@ -259,7 +259,20 @@ jobs:
         run: |
           set -euo pipefail
           npx wrangler deploy --config wrangler.all-history-preview.jsonc
-          runner_status="$(curl --fail --show-error --silent "https://mam-all-history-preview.m-ahmetisildak34.workers.dev/status")"
+          runner_status=""
+          for attempt in 1 2 3 4 5; do
+            code="$(curl --show-error --silent --output /tmp/all-history-runner-status.json --write-out '%{http_code}' "https://mam-all-history-preview.m-ahmetisildak34.workers.dev/status")"
+            if [ "$code" = "200" ]; then
+              runner_status="$(cat /tmp/all-history-runner-status.json)"
+              break
+            fi
+            sleep 3
+          done
+          if [ -z "$runner_status" ]; then
+            echo "Preview runner deployed, but its status endpoint did not become available." >&2
+            cat /tmp/all-history-runner-status.json >&2 || true
+            exit 1
+          fi
           printf '%s\\n' "$runner_status"
           echo "$runner_status" | jq -e '.ok == true and .environment == "preview" and .schedule == "*/15 * * * *" and (.fixtureQueues | length == 2)' >/dev/null
         env:
