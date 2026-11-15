@@ -28,7 +28,8 @@
   },
   "previews": {
     "vars": {
-      "HISTORY_BACKFILL_PILOT_ENABLED": "true"
+      "HISTORY_BACKFILL_PILOT_ENABLED": "true",
+      "HISTORY_STATISTICS_ENABLED": "true"
     },
     "kv_namespaces": [
       {
