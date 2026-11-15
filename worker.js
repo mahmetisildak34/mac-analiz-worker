@@ -1297,7 +1297,7 @@ export default {
       // ESPN scoreboard and summary requests used by the live screen must not
       // inherit the generic 15-minute ESPN cache. Keep them on the 20-second
       // live cache so scores, goals and match clocks can advance together.
-      const isEspnLiveSummary = isESPN && apiPath === "summary" && /^\\d+$/.test(url.searchParams.get("event") || "");
+      const isEspnLiveSummary = isESPN && apiPath === "summary" && /^\d+$/.test(url.searchParams.get("event") || "");
       const isLive = url.searchParams.get("live") === "all" ||
         (isFootballData && apiPath === "matches" && footballDataStatuses.some(value => ["LIVE", "IN_PLAY", "PAUSED"].includes(value))) ||
         isEspnLiveScoreboard || isEspnLiveSummary;
