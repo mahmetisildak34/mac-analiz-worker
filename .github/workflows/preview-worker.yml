@@ -193,6 +193,21 @@ jobs:
         env:
           PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
 
+      - name: Check whether the extra Turkey Cup app entry has a verified ESPN feed
+        run: |
+          set -euo pipefail
+          for slug in tur.cup tur.turkish_cup tur.tff_cup tur.turkish-cup; do
+            code="$(curl --show-error --silent --output "/tmp/$slug.json" --write-out '%{http_code}' "$PREVIEW_URL/api/espn/$slug/scoreboard?dates=20261101")"
+            if [ "$code" = "200" ] && jq -e '.events | type == "array"' "/tmp/$slug.json" >/dev/null 2>&1; then
+              echo "Candidate $slug returned a valid ESPN scoreboard:"
+              jq '{league: (.leagues[0].name // null), eventCount: (.events | length), sample: (.events[0].name // null)}' "/tmp/$slug.json"
+            else
+              echo "Candidate $slug is not a verified ESPN scoreboard (HTTP $code)."
+            fi
+          done
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
       - name: Initialize all-competition historical statistics queue (Preview only)
         run: |
           set -euo pipefail
