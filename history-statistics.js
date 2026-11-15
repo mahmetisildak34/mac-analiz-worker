@@ -60,7 +60,14 @@ async function ensureStatisticsSchema(db) {
   ).run();
   const columns = await db.prepare("PRAGMA table_info(mam_history_backfill_matches)").all();
   if (!(columns.results || []).some(column => column.name === "statistics_json")) {
-    await db.prepare("ALTER TABLE mam_history_backfill_matches ADD COLUMN statistics_json TEXT").run();
+    try {
+      await db.prepare("ALTER TABLE mam_history_backfill_matches ADD COLUMN statistics_json TEXT").run();
+    } catch (error) {
+      // Multiple isolated Preview runners may initialize the shared schema at once.
+      // Ignore only the benign race where another runner added the column first.
+      const refreshed = await db.prepare("PRAGMA table_info(mam_history_backfill_matches)").all();
+      if (!(refreshed.results || []).some(column => column.name === "statistics_json")) throw error;
+    }
   }
 }
 
