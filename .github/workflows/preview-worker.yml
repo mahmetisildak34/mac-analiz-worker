@@ -217,7 +217,7 @@ jobs:
             echo "All-competition statistics batch returned HTTP $code" >&2
             exit 1
           fi
-          jq -e '.ok == true and (.status == "running" or .status == "complete" or .status == "retry-needed" or .status == "retry-wait" or .status == "needs-review")' /tmp/all-stats-run.json >/dev/null
+          jq -e '.ok == true and (.status == "running" or .status == "complete" or .status == "complete-with-gaps" or .status == "retry-needed" or .status == "retry-wait" or .status == "needs-review")' /tmp/all-stats-run.json >/dev/null
         env:
           PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
 
