@@ -1286,7 +1286,8 @@ export default {
           : [];
         // Prefer stable ESPN IDs, but fall back to the app's normalized aliases
         // when an older archived fixture does not carry provider team IDs.
-        const filteredRows = byEspnId.length ? byEspnId : byTeamName.length ? byTeamName : (byEspnId.length || byTeamName.length ? [] : allRows);
+        const hasArchiveTeamFilter = (requestedTeamSource === "espn" && /^\\d+$/.test(requestedTeamId)) || acceptedTeamNames.size > 0;
+        const filteredRows = byEspnId.length ? byEspnId : byTeamName.length ? byTeamName : (hasArchiveTeamFilter ? [] : allRows);
         const matches = filteredRows
           .sort((a, b) => new Date(b.kickoff || 0).getTime() - new Date(a.kickoff || 0).getTime())
           .slice(0, limit)
