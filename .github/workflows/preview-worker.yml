@@ -106,7 +106,7 @@ jobs:
           echo "Nations League statistics queue:"
           stats_state="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/nations-league/statistics-status")"
           printf '%s\n' "$stats_state"
-          echo "$stats_state" | jq -e '.ok == true and .executionEnabled == false' >/dev/null
+          echo "$stats_state" | jq -e '.ok == true and .scope == "uefa-nations-league-statistics"' >/dev/null
         env:
           PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
 
