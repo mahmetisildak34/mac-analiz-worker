@@ -147,7 +147,7 @@ export async function runHistoryStatisticsBatch(env, fetchImpl = fetch, options 
       await Promise.all(fixtures.slice(i, i + 3).map(async fixture => {
         const fixtureId = String(fixture.fixtureId || "");
         const match = /^espn-(.+)-(\d+)$/.exec(fixtureId);
-        const league = HISTORY_BACKFILL_LEAGUES.find(item => String(item[1]) === String(fixture.leagueId));
+        const league = HISTORY_BACKFILL_LEAGUES.find(item => String(item[0]) === String(fixture.leagueId));
         const isRetry = fixture.isRetry === true;
         const attempts = Number(fixture.attempts || 0);
         try {
