@@ -1255,10 +1255,11 @@ export default {
           } catch (_) {}
           return 0;
         };
-        for (const row of [
-          ...(Array.isArray(archived?.results) ? archived.results : []),
-          ...historicalRows
-        ]) {
+        const archiveRows = [
+          ...(Array.isArray(archived?.results) ? archived.results : []).map(row => ({ ...row, mamArchiveOnly: false })),
+          ...historicalRows.map(row => ({ ...row, mamArchiveOnly: true }))
+        ];
+        for (const row of archiveRows) {
           const key = String(row.source || "app") + ":" + String(row.fixture_id || "");
           const previous = merged.get(key);
           if (!previous || statsQuality(row) > statsQuality(previous)) merged.set(key, row);
@@ -1274,6 +1275,7 @@ export default {
             const halftime = raw?.score?.halftime || raw?.score?.halfTime || null;
             return {
               source: row.source || "app",
+              mamArchiveOnly: row.mamArchiveOnly === true,
               fixture: { id: row.fixture_id, date: row.kickoff, status: { short: row.status || "FT" } },
               league: { id: String(row.league_id), name: row.league_name || "", country: canonicalLeagueCountry(row.source, row.league_id, row.league_name, row.country) },
               teams: {
