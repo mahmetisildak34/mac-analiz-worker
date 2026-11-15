@@ -69,7 +69,7 @@ export default {
   },
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (url.pathname !== "/status") return new Response("Not found", { status: 404 });
+    if (url.pathname !== "/status" && url.pathname !== "/") return new Response("Not found", { status: 404 });
     if (env.PREVIEW_ONLY !== "true" || env.ENVIRONMENT !== "preview") {
       return Response.json({ ok: false, error: "Preview-only worker guard failed." }, { status: 403 });
     }
