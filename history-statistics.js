@@ -95,7 +95,9 @@ export async function buildHistoryStatisticsState(env, now = new Date()) {
     createdAt: now.toISOString(),
     totalJobs,
     processedJobs,
-    status: processedJobs >= totalJobs && totalJobs > 0 ? "complete" : totalJobs ? "queued" : "waiting-for-fixtures",
+    status: processedJobs >= totalJobs && totalJobs > 0
+      ? (Number(outcomes?.partialStatistics || 0) + Number(outcomes?.noStatistics || 0) > 0 ? "complete-with-gaps" : "complete")
+      : totalJobs ? "queued" : "waiting-for-fixtures",
     executionEnabled: false,
     retryJobs: [],
     deadLetters: [],
@@ -278,13 +280,17 @@ export async function runHistoryStatisticsBatch(env, fetchImpl = fetch, options 
     ).first();
     const totalJobs = Number(total?.total || 0);
     const processedJobs = Number(done?.total || 0);
+    const nextStatisticsFound = Number(state.statisticsFound || 0) + statisticsFound;
+    const nextPartialStatistics = Number(state.partialStatistics || 0) + partialStatistics;
+    const nextNoStatistics = Number(state.noStatistics || 0) + noStatistics;
+    const hasCoverageGaps = nextPartialStatistics + nextNoStatistics > 0;
     const status = nextDeadLetters.length ? "needs-review" : retryJobs.length ? "retry-needed" :
-      processedJobs >= totalJobs ? "complete" : "running";
+      processedJobs >= totalJobs ? (hasCoverageGaps ? "complete-with-gaps" : "complete") : "running";
     const next = {
       ...state, totalJobs, processedJobs, status, retryJobs, deadLetters: nextDeadLetters,
-      statisticsFound: Number(state.statisticsFound || 0) + statisticsFound,
-      partialStatistics: Number(state.partialStatistics || 0) + partialStatistics,
-      noStatistics: Number(state.noStatistics || 0) + noStatistics,
+      statisticsFound: nextStatisticsFound,
+      partialStatistics: nextPartialStatistics,
+      noStatistics: nextNoStatistics,
       lastRunAt: new Date().toISOString(),
       lastBatch: { requested: fixtures.length, fresh: fresh.length, retried: readyRetries.length,
         statisticsFound, partialStatistics, noStatistics, failures: failures.length, pendingRetries: retryJobs.length,
