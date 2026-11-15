@@ -1264,7 +1264,26 @@ export default {
           const previous = merged.get(key);
           if (!previous || statsQuality(row) > statsQuality(previous)) merged.set(key, row);
         }
-        const matches = [...merged.values()]
+        const requestedTeamId = String(url.searchParams.get("teamId") || "").trim();
+        const requestedTeamSource = String(url.searchParams.get("teamSource") || "").toLowerCase();
+        const requestedTeamNames = String(url.searchParams.get("teamNames") || "")
+          .split(",").map(value => value.trim()).filter(Boolean);
+        const normalizeArchiveTeam = value => String(value || "").normalize("NFD").toLowerCase()
+          .replace(/[\\u0300-\\u036f]/g, "").replace(/ı/g, "i")
+          .replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ").replace(/\\s+/g, " ").trim()
+          .replace(/\\b(football club|fc|cf|afc|a s|as|anonim sirketi|sirketi)\\b/g, "").replace(/\\s+/g, " ").trim();
+        const acceptedTeamNames = new Set(requestedTeamNames.map(normalizeArchiveTeam));
+        const hasTeamFilter = (requestedTeamSource === "espn" && /^\\d+$/.test(requestedTeamId)) || acceptedTeamNames.size > 0;
+        const filteredRows = [...merged.values()].filter(row => {
+          if (!hasTeamFilter) return true;
+          if (requestedTeamSource === "espn" && /^\\d+$/.test(requestedTeamId)) {
+            return String(row.home_team_id || "") === requestedTeamId || String(row.away_team_id || "") === requestedTeamId;
+          }
+          const homeMatch = acceptedTeamNames.has(normalizeArchiveTeam(row.home_team));
+          const awayMatch = acceptedTeamNames.has(normalizeArchiveTeam(row.away_team));
+          return homeMatch !== awayMatch;
+        });
+        const matches = filteredRows
           .sort((a, b) => new Date(b.kickoff || 0).getTime() - new Date(a.kickoff || 0).getTime())
           .slice(0, limit)
           .map(row => {
