@@ -32,6 +32,9 @@ test("catalog exposes named competitions and ESPN slugs for both categories", ()
   assert.ok(catalog.nationalTeams.some(item => item.name === "UEFA Nations League" && item.slug === "uefa.nations"));
   assert.ok(catalog.nationalTeams.some(item => item.name === "FIFA World Cup" && item.slug === "fifa.world"));
   assert.ok(catalog.clubs.some(item => item.name === "FIFA Club World Cup" && item.slug === "fifa.cwc"));
+  assert.deepEqual(catalog.nationalTeams.map(item => item.rank), [1, 2, 3, 4, 5]);
+  assert.deepEqual(catalog.clubs.slice(0, 9).map(item => item.priority), Array(9).fill("high"));
+  assert.equal(catalog.clubs[9].priority, "standard");
 });
 
 test("general statistics queue initializes disabled from completed staged fixtures only", async () => {
