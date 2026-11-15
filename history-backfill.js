@@ -89,13 +89,19 @@ export function getHistoryBackfillBatch(state, limit = 20, leagues = HISTORY_BAC
   const dayCount = Number(state.dayCount || 0);
   const totalJobs = Number(state.totalJobs || 0);
   const cursor = Math.max(0, Number(state.cursor || 0));
-  if (!Number.isInteger(dayCount) || dayCount < 1 || !Number.isFinite(totalJobs) || totalJobs < 1) return [];
+  if (!Number.isInteger(dayCount) || dayCount < 1 || !Number.isFinite(totalJobs) || totalJobs < 1 ||
+      !Array.isArray(leagues) || leagues.length < 1) return [];
   const safeLimit = Math.max(1, Math.min(50, Number(limit) || 20));
   const jobs = [];
+  // Breadth-first ordering: every configured competition receives a date slice
+  // before any competition advances to the next date. The first competitions in
+  // the catalog retain priority, while coverage starts across the full catalog early.
   for (let index = cursor; index < Math.min(totalJobs, cursor + safeLimit); index++) {
-    const league = leagues[Math.floor(index / dayCount)];
+    const leagueIndex = index % leagues.length;
+    const dayOffset = Math.floor(index / leagues.length);
+    const league = leagues[leagueIndex];
     const day = new Date(start);
-    day.setUTCDate(day.getUTCDate() + (index % dayCount));
+    day.setUTCDate(day.getUTCDate() + dayOffset);
     jobs.push({ league, date: day.toISOString().slice(0, 10).replace(/-/g, ""), attempts: 0 });
   }
   return jobs;
