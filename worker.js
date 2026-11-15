@@ -1,5 +1,5 @@
 import { HISTORY_BACKFILL_KEY, NATIONS_LEAGUE_BACKFILL_KEY, NATIONS_LEAGUE_BACKFILL_LEAGUE, NATIONS_LEAGUE_STATISTICS_KEY, buildHistoryBackfillState, buildNationsLeagueBackfillState, buildNationsLeagueStatisticsState, runNationsLeagueStatisticsBatch, runHistoryBackfillBatch, probeHistoryBackfillRange, probeHistoryBackfillBatch, runHistoryBackfillPilot } from "./history-backfill.js";
-import { HISTORY_STATISTICS_KEY, buildHistoryStatisticsState, getHistoryStatisticsStatus, getHistoryCompetitionCatalog, runHistoryStatisticsBatch } from "./history-statistics.js";
+import { HISTORY_STATISTICS_KEY, CLUB_HISTORY_BACKFILL_KEY, NATIONAL_TEAM_HISTORY_BACKFILL_KEY, buildHistoryStatisticsState, getHistoryStatisticsStatus, getHistoryCompetitionCatalog, runHistoryStatisticsBatch, buildHistoryBackfillScopedState, getHistoryBackfillQueueConfig } from "./history-statistics.js";
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
 const API_BASE = "https://v3.football.api-sports.io";
 const FOOTBALLDATA_BASE = "https://api.football-data.org/v4";
@@ -698,21 +698,21 @@ export default {
         env.HISTORY_BACKFILL_PILOT_ENABLED === "true";
       // Allow only metadata initialization for the dedicated Nations League queue
       // on the isolated Preview hostname. This cannot enable or execute a batch.
-      const previewNationsQueueInit = request.method === "POST" &&
+      const previewScopedQueueInit = request.method === "POST" &&
         path === "archive/history-backfill/start" &&
-        url.searchParams.get("scope") === "nations-league" &&
+        ["nations-league", "clubs", "national-teams"].includes(url.searchParams.get("scope") || "") &&
         url.hostname === "feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev" &&
         env.HISTORY_BACKFILL_PILOT_ENABLED === "true";
       const previewNationsBatch = request.method === "POST" &&
         path === "archive/history-backfill/preview-batch" &&
-        url.searchParams.get("scope") === "nations-league" &&
+        ["nations-league", "clubs", "national-teams"].includes(url.searchParams.get("scope") || "") &&
         url.hostname === "feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev" &&
         env.HISTORY_BACKFILL_PILOT_ENABLED === "true";
       const previewHistoryStatisticsTrigger = request.method === "POST" &&
         ["archive/history-statistics/start", "archive/history-statistics/enable", "archive/history-statistics/run"].includes(path) &&
         url.hostname === "feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev" &&
         env.HISTORY_STATISTICS_ENABLED === "true";
-      if (!publicArchiveRead && !previewPilotTrigger && !previewNationsQueueInit && !previewNationsBatch && !previewHistoryStatisticsTrigger) {
+      if (!publicArchiveRead && !previewPilotTrigger && !previewScopedQueueInit && !previewNationsBatch && !previewHistoryStatisticsTrigger) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
         if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
           return new Response(JSON.stringify({ error: "Authentication required" }), {
@@ -794,7 +794,9 @@ export default {
       if (path === "archive/history-backfill/enable" && request.method === "POST") {
         if (env.HISTORY_BACKFILL_ENABLED !== "true") return new Response(JSON.stringify({ ok: false, error: "Historical processor feature flag is disabled." }), { status: 403, headers });
         if (!env.MAM_KV || !env.DB) return new Response(JSON.stringify({ ok: false, error: "D1/KV bindings are required." }), { status: 503, headers });
-        const queueKey = url.searchParams.get("scope") === "nations-league" ? NATIONS_LEAGUE_BACKFILL_KEY : HISTORY_BACKFILL_KEY;
+        const requestedScope = url.searchParams.get("scope") || "";
+        const scopedQueue = getHistoryBackfillQueueConfig(requestedScope);
+        const queueKey = requestedScope === "nations-league" ? NATIONS_LEAGUE_BACKFILL_KEY : (scopedQueue?.key || HISTORY_BACKFILL_KEY);
         const state = await env.MAM_KV.get(queueKey, "json");
         if (!state) return new Response(JSON.stringify({ ok: false, error: "Historical queue has not been initialized." }), { status: 409, headers });
         state.executionEnabled = true;
@@ -804,28 +806,37 @@ export default {
       }
 
       if (path === "archive/history-backfill/run" && request.method === "POST") {
-        const result = await runHistoryBackfillBatch(env);
+        const requestedScope = url.searchParams.get("scope") || "";
+        const scopedQueue = getHistoryBackfillQueueConfig(requestedScope);
+        const result = scopedQueue
+          ? await runHistoryBackfillBatch(env, fetch, { stateKey: scopedQueue.key, leagues: scopedQueue.leagues })
+          : requestedScope === "nations-league"
+            ? await runHistoryBackfillBatch(env, fetch, { stateKey: NATIONS_LEAGUE_BACKFILL_KEY, leagues: [NATIONS_LEAGUE_BACKFILL_LEAGUE] })
+            : await runHistoryBackfillBatch(env);
         const status = ["disabled", "not-enabled"].includes(result.status) ? 403 : result.status === "locked" ? 409 : result.status === "unavailable" ? 503 : result.status === "not-initialized" ? 409 : 200;
         return new Response(JSON.stringify(result), { status, headers });
       }
 
       if (path === "archive/history-backfill/preview-batch" && request.method === "POST" &&
-          url.searchParams.get("scope") === "nations-league" &&
+          ["nations-league", "clubs", "national-teams"].includes(url.searchParams.get("scope") || "") &&
           url.hostname === "feature-isolated-history-backfill-queue-odd-sunset-6c83.m-ahmetisildak34.workers.dev" &&
           env.HISTORY_BACKFILL_PILOT_ENABLED === "true") {
         if (!env.MAM_KV || !env.DB) return new Response(JSON.stringify({ ok: false, status: "unavailable" }), { status: 503, headers });
-        const state = await env.MAM_KV.get(NATIONS_LEAGUE_BACKFILL_KEY, "json");
+        const requestedScope = url.searchParams.get("scope");
+        const scopedQueue = getHistoryBackfillQueueConfig(requestedScope);
+        const queueKey = requestedScope === "nations-league" ? NATIONS_LEAGUE_BACKFILL_KEY : scopedQueue.key;
+        const leagues = requestedScope === "nations-league" ? [NATIONS_LEAGUE_BACKFILL_LEAGUE] : scopedQueue.leagues;
+        const state = await env.MAM_KV.get(queueKey, "json");
         if (!state) return new Response(JSON.stringify({ ok: false, status: "not-initialized" }), { status: 409, headers });
         state.executionEnabled = true;
         state.enabledAt = state.enabledAt || new Date().toISOString();
-        await env.MAM_KV.put(NATIONS_LEAGUE_BACKFILL_KEY, JSON.stringify(state));
+        await env.MAM_KV.put(queueKey, JSON.stringify(state));
         const result = await runHistoryBackfillBatch(env, fetch, {
-          stateKey: NATIONS_LEAGUE_BACKFILL_KEY,
-          leagues: [NATIONS_LEAGUE_BACKFILL_LEAGUE],
-          previewAuthorized: true
+          stateKey: queueKey, leagues, previewAuthorized: true
         });
+        const responseScope = requestedScope === "nations-league" ? "uefa-nations-league" : scopedQueue.scope;
         const status = result.status === "locked" ? 409 : result.status === "unavailable" ? 503 : result.status === "not-initialized" ? 409 : 200;
-        return new Response(JSON.stringify({ ...result, scope: "uefa-nations-league", environment: "preview" }), { status, headers });
+        return new Response(JSON.stringify({ ...result, scope: responseScope, environment: "preview" }), { status, headers });
       }
 
       if (path === "archive/history-statistics/start" && request.method === "POST") {
@@ -893,8 +904,10 @@ export default {
       }
 
       if (path === "archive/history-backfill/status" && request.method === "GET") {
-        const nationsLeagueScope = url.searchParams.get("scope") === "nations-league";
-        const state = env.MAM_KV ? await env.MAM_KV.get(nationsLeagueScope ? NATIONS_LEAGUE_BACKFILL_KEY : HISTORY_BACKFILL_KEY, "json") : null;
+        const requestedScope = url.searchParams.get("scope") || "";
+        const scopedQueue = getHistoryBackfillQueueConfig(requestedScope);
+        const queueKey = requestedScope === "nations-league" ? NATIONS_LEAGUE_BACKFILL_KEY : (scopedQueue?.key || HISTORY_BACKFILL_KEY);
+        const state = env.MAM_KV ? await env.MAM_KV.get(queueKey, "json") : null;
         const totalJobs = Number(state?.totalJobs || (Array.isArray(state?.jobs) ? state.jobs.length : 0));
         const processedJobs = Math.min(Number(state?.cursor || 0), totalJobs);
         return new Response(JSON.stringify({
@@ -913,8 +926,10 @@ export default {
 
       if (path === "archive/history-backfill/start" && request.method === "POST") {
         if (!env.MAM_KV) return new Response(JSON.stringify({ error: "MAM_KV KV binding is missing" }), { status: 503, headers });
-        const nationsLeagueScope = url.searchParams.get("scope") === "nations-league";
-        const queueKey = nationsLeagueScope ? NATIONS_LEAGUE_BACKFILL_KEY : HISTORY_BACKFILL_KEY;
+        const requestedScope = url.searchParams.get("scope") || "";
+        const nationsLeagueScope = requestedScope === "nations-league";
+        const scopedQueue = getHistoryBackfillQueueConfig(requestedScope);
+        const queueKey = nationsLeagueScope ? NATIONS_LEAGUE_BACKFILL_KEY : (scopedQueue?.key || HISTORY_BACKFILL_KEY);
         const existing = await env.MAM_KV.get(queueKey, "json");
         if (existing && Number(existing.totalJobs || (Array.isArray(existing.jobs) ? existing.jobs.length : 0)) > Number(existing.cursor || 0)) {
           return new Response(JSON.stringify({
@@ -923,7 +938,7 @@ export default {
             message: "Existing historical queue preserved; no reset or overwrite performed."
           }), { status: 409, headers });
         }
-        const state = nationsLeagueScope ? buildNationsLeagueBackfillState() : buildHistoryBackfillState();
+        const state = nationsLeagueScope ? buildNationsLeagueBackfillState() : scopedQueue ? buildHistoryBackfillScopedState(requestedScope) : buildHistoryBackfillState();
         await env.MAM_KV.put(queueKey, JSON.stringify(state));
         return new Response(JSON.stringify({
           ok: true, created: true, status: state.status, createdAt: state.createdAt,
