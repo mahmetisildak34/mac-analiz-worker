@@ -229,6 +229,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     ["1","fifa.world","FIFA World Cup","World"],
     ["4","uefa.euro","UEFA European Championship","Europe"],
     ["5","uefa.nations","UEFA Nations League","Europe"],
+    ["9","conmebol.america","Copa América","South America"],
     ["6","caf.nations","Africa Cup of Nations","Africa"],
     ["15","fifa.cwc","FIFA Club World Cup","World"],
     ["307","ksa.1","Saudi Pro League","Saudi Arabia"]
@@ -261,11 +262,11 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   if (!Array.isArray(summaryDone)) summaryDone = [];
   const summaryDoneSet = new Set(summaryDone);
 
-  // Keep the retry queue topped up without letting cooldown items block discovery.
-  // Refill toward 480 (hard cap 500) on every scheduled run, not only when below 80.
+  // Drain the current statistics backlog before discovering another page of missing-stat fixtures.
+  // This prevents fresh discoveries from keeping older queued fixtures pinned near the cap.
   const summaryQueueBeforeDiscovery = summaryQueue.length;
   let recoveredSummaryItems = 0;
-  if (summaryQueue.length < 480) {
+  if (summaryQueue.length === 0) {
     // D1 has a bounded bind-parameter budget. Do not generate one SQL placeholder
     // per queued fixture (a 458-item queue can make the query fail before summaries run).
     // Read a bounded candidate window and exclude queued IDs in JavaScript instead.
