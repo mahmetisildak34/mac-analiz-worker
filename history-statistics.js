@@ -213,11 +213,21 @@ export async function runHistoryStatisticsBatch(env, fetchImpl = fetch, options 
       ...fresh.map(row => ({ ...row, isRetry: false, attempts: 0 }))
     ];
     if (!fixtures.length) {
+      const [totalResult, processedResult] = await Promise.all([
+        env.DB.prepare("SELECT COUNT(*) AS total FROM mam_history_backfill_matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN')").first(),
+        env.DB.prepare("SELECT COUNT(*) AS total FROM mam_history_backfill_statistics WHERE source = 'ESPN'").first()
+      ]);
+      const totalJobs = Number(totalResult?.total || 0);
+      const processedJobs = Number(processedResult?.total || 0);
       const hasRetry = pendingRetries.length > 0;
-      const status = hasRetry ? "retry-wait" : (deadLetters.length ? "needs-review" : "complete");
-      const next = { ...state, status, lastRunAt: new Date().toISOString() };
+      const hasGaps = Number(state.partialStatistics || 0) + Number(state.noStatistics || 0) > 0;
+      const status = hasRetry ? "retry-wait" : deadLetters.length ? "needs-review" :
+        totalJobs === 0 ? "waiting-for-fixtures" :
+        processedJobs >= totalJobs ? (hasGaps ? "complete-with-gaps" : "complete") : "running";
+      const next = { ...state, totalJobs, processedJobs, status, lastRunAt: new Date().toISOString() };
       await env.MAM_KV.put(HISTORY_STATISTICS_KEY, JSON.stringify(next));
-      return { ok: true, status, requested: 0, pendingRetries: pendingRetries.length, deadLetters: deadLetters.length };
+      return { ok: true, status, requested: 0, processedJobs, totalJobs,
+        pendingRetries: pendingRetries.length, deadLetters: deadLetters.length };
     }
 
     const statements = [];
