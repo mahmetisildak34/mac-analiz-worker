@@ -151,6 +151,7 @@ test("club and national-team fixture queues are separate, ordered, and disabled 
 function makeStatisticsTestEnv(initialState, fixtureRows = []) {
   let state = structuredClone(initialState);
   const writtenBatches = [];
+  let storedStatisticsRows = 0;
   const env = {
     HISTORY_STATISTICS_ENABLED: "true",
     MAM_KV: {
@@ -170,13 +171,14 @@ function makeStatisticsTestEnv(initialState, fixtureRows = []) {
             return { results: [] };
           },
           first: async () => {
-            if (sql.includes("mam_history_backfill_statistics")) return { total: 0 };
+            if (sql.includes("mam_history_backfill_statistics")) return { total: storedStatisticsRows };
             return { total: 1 };
           }
         };
       },
       batch: async statements => {
         writtenBatches.push(...statements);
+        storedStatisticsRows += statements.filter(statement => statement.sql.includes("INSERT INTO mam_history_backfill_statistics")).length;
         return statements.map(() => ({ meta: { changes: 1 } }));
       }
     }
