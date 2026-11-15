@@ -145,6 +145,39 @@ jobs:
         env:
           PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
 
+      - name: Initialize isolated club and national-team queues (Preview only)
+        run: |
+          set -euo pipefail
+          for scope in clubs national-teams; do
+            code="$(curl --show-error --silent --output "/tmp/$scope-init.json" --write-out '%{http_code}' -X POST "$PREVIEW_URL/api/archive/history-backfill/start?scope=$scope")"
+            cat "/tmp/$scope-init.json"
+            if [ "$code" = "201" ]; then
+              jq -e '.ok == true and .executionEnabled == false' "/tmp/$scope-init.json" >/dev/null
+            elif [ "$code" = "409" ]; then
+              jq -e '.alreadyExists == true' "/tmp/$scope-init.json" >/dev/null
+            else
+              echo "$scope queue initialization returned HTTP $code" >&2
+              exit 1
+            fi
+          done
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Run one bounded batch for each competition category (Preview only)
+        run: |
+          set -euo pipefail
+          for scope in clubs national-teams; do
+            code="$(curl --show-error --silent --output "/tmp/$scope-batch.json" --write-out '%{http_code}' -X POST "$PREVIEW_URL/api/archive/history-backfill/preview-batch?scope=$scope")"
+            cat "/tmp/$scope-batch.json"
+            if [ "$code" != "200" ]; then
+              echo "$scope preview batch returned HTTP $code" >&2
+              exit 1
+            fi
+            jq -e '.ok == true and .environment == "preview"' "/tmp/$scope-batch.json" >/dev/null
+          done
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
       - name: Initialize all-competition historical statistics queue (Preview only)
         run: |
           set -euo pipefail
