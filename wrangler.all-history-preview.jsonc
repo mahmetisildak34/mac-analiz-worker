@@ -1,0 +1,30 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mam-all-history-preview",
+  "account_id": "640bfb6a538ee57864281941b14dbc55",
+  "main": "history-all-competitions-preview-runner.js",
+  "compatibility_date": "2026-11-12",
+  "workers_dev": true,
+  "observability": { "enabled": true },
+  "vars": {
+    "ENVIRONMENT": "preview",
+    "PREVIEW_ONLY": "true",
+    "HISTORY_STATISTICS_ENABLED": "true"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "MAM_KV",
+      "id": "5e90bdd4b76c4a2eb7a88381966f0f3e"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "mac-analiz-preview",
+      "database_id": "704a5c24-491f-455f-b62a-23752083f085"
+    }
+  ],
+  "triggers": {
+    "crons": ["*/15 * * * *"]
+  }
+}
