@@ -1358,7 +1358,7 @@ export default {
 
       if (upstream.ok && cache) {
         const cacheHeaders = new Headers(response.headers);
-        const responseCacheSeconds = isLive ? 10 : isLineupData ? 300 : isESPN && apiPath === "summary" ? 300 : isLiveStats ? 30 : isESPN ? 900 : isStandings ? STANDINGS_CACHE_SECONDS : CACHE_SECONDS;
+        const responseCacheSeconds = isLive ? 5 : isLineupData ? 300 : isESPN && apiPath === "summary" ? 300 : isLiveStats ? 15 : isESPN ? 900 : isStandings ? STANDINGS_CACHE_SECONDS : CACHE_SECONDS;
         cacheHeaders.set("Cache-Control", "public, max-age=" + responseCacheSeconds);
 
         const cacheCopy = new Response(response.clone().body, {
