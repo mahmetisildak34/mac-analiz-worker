@@ -1269,12 +1269,12 @@ export default {
         const requestedTeamNames = String(url.searchParams.get("teamNames") || "")
           .split(",").map(value => value.trim()).filter(Boolean);
         const normalizeArchiveTeam = value => String(value || "").normalize("NFD").toLowerCase()
-          .replace(/[\\u0300-\\u036f]/g, "").replace(/ı/g, "i")
-          .replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ").replace(/\\s+/g, " ").trim()
-          .replace(/\\b(football club|fc|cf|afc|a s|as|anonim sirketi|sirketi)\\b/g, "").replace(/\\s+/g, " ").trim();
+          .replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i")
+          .replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ").trim()
+          .replace(/\b(football club|fc|cf|afc|a s|as|anonim sirketi|sirketi)\b/g, "").replace(/\s+/g, " ").trim();
         const acceptedTeamNames = new Set(requestedTeamNames.map(normalizeArchiveTeam));
         const allRows = [...merged.values()];
-        const byEspnId = requestedTeamSource === "espn" && /^\\d+$/.test(requestedTeamId)
+        const byEspnId = requestedTeamSource === "espn" && /^\d+$/.test(requestedTeamId)
           ? allRows.filter(row => String(row.home_team_id || "") === requestedTeamId || String(row.away_team_id || "") === requestedTeamId)
           : [];
         const byTeamName = acceptedTeamNames.size
@@ -1286,7 +1286,7 @@ export default {
           : [];
         // Prefer stable ESPN IDs, but fall back to the app's normalized aliases
         // when an older archived fixture does not carry provider team IDs.
-        const hasArchiveTeamFilter = (requestedTeamSource === "espn" && /^\\d+$/.test(requestedTeamId)) || acceptedTeamNames.size > 0;
+        const hasArchiveTeamFilter = (requestedTeamSource === "espn" && /^\d+$/.test(requestedTeamId)) || acceptedTeamNames.size > 0;
         const filteredRows = byEspnId.length ? byEspnId : byTeamName.length ? byTeamName : (hasArchiveTeamFilter ? [] : allRows);
         const matches = filteredRows
           .sort((a, b) => new Date(b.kickoff || 0).getTime() - new Date(a.kickoff || 0).getTime())
