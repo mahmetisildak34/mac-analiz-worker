@@ -193,6 +193,15 @@ jobs:
         env:
           PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
 
+      - name: Verify ordered competition catalog and explicit external fallback
+        run: |
+          set -euo pipefail
+          catalog="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/history-backfill/catalog")"
+          printf '%s\\n' "$catalog" | jq '{total, clubCount: (.clubs | length), nationalTeamCount: (.nationalTeams | length), firstClub: .clubs[0], firstNationalTeam: .nationalTeams[0], externalFallback}'
+          echo "$catalog" | jq -e '.total == 39 and (.clubs | length) == 34 and (.nationalTeams | length) == 5 and .clubs[0].priority == "high" and .externalFallback[0].id == "206"' >/dev/null
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
       - name: Check whether the extra Turkey Cup app entry has a verified ESPN feed
         run: |
           set -euo pipefail
