@@ -1249,7 +1249,8 @@ export default {
         const statsQuality = row => {
           try {
             const parsed = row.statistics_json ? JSON.parse(row.statistics_json) : null;
-            if (parsed?.home || parsed?.away) return Object.keys(parsed.home || {}).length + Object.keys(parsed.away || {}).length;
+            const normalized = normalizeHistoryStatisticsForApp(parsed);
+            if (normalized?.home || normalized?.away) return Object.keys(normalized.home || {}).length + Object.keys(normalized.away || {}).length;
             if (Array.isArray(parsed?.teams)) return parsed.teams.reduce((sum, team) => sum + (Array.isArray(team.statistics) ? team.statistics.length : 0), 0);
           } catch (_) {}
           return 0;
