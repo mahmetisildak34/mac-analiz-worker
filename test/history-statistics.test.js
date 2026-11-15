@@ -8,7 +8,11 @@ import {
   getHistoryCompetitionCatalog,
   buildHistoryStatisticsState,
   runHistoryStatisticsBatch,
-  HISTORY_STATISTICS_KEY
+  HISTORY_STATISTICS_KEY,
+  CLUB_HISTORY_BACKFILL_KEY,
+  NATIONAL_TEAM_HISTORY_BACKFILL_KEY,
+  buildHistoryBackfillScopedState,
+  getHistoryBackfillQueueConfig
 } from "../history-statistics.js";
 
 test("all configured competitions are classified exactly once as club or national team", () => {
@@ -120,4 +124,18 @@ test("general statistics worker enriches a staged fixture using its matching ESP
   assert.equal(batchStatements[0].values[1], "39");
   assert.match(batchStatements[1].sql, /UPDATE mam_history_backfill_matches SET statistics_json/);
   assert.equal(storedState.statisticsFound, 1);
+});
+
+test("club and national-team fixture queues are separate, ordered, and disabled initially", () => {
+  const clubs = buildHistoryBackfillScopedState("clubs", new Date("2026-11-15T00:00:00Z"));
+  const national = buildHistoryBackfillScopedState("national-teams", new Date("2026-11-15T00:00:00Z"));
+  assert.equal(clubs.scope, "club-competitions");
+  assert.equal(national.scope, "national-team-competitions");
+  assert.equal(clubs.leagueCount, 34);
+  assert.equal(national.leagueCount, 5);
+  assert.equal(clubs.executionEnabled, false);
+  assert.equal(national.executionEnabled, false);
+  assert.equal(getHistoryBackfillQueueConfig("clubs").key, CLUB_HISTORY_BACKFILL_KEY);
+  assert.equal(getHistoryBackfillQueueConfig("national-teams").key, NATIONAL_TEAM_HISTORY_BACKFILL_KEY);
+  assert.equal(getHistoryBackfillQueueConfig("unknown"), null);
 });
