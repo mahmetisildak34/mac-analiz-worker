@@ -1,0 +1,344 @@
+name: Cloudflare Worker Preview
+
+on:
+  push:
+    branches:
+      - feature/isolated-history-backfill-queue
+      - feature/all-competitions-statistics-audit
+    paths:
+      - "worker.js"
+      - "history-backfill.js"
+      - "history-statistics.js"
+      - "history-all-competitions-preview-runner.js"
+      - "wrangler.all-history-preview.jsonc"
+      - "test/history-statistics.test.js"
+      - "history-preview-runner.js"
+      - "wrangler.history-preview.jsonc"
+      - "history-statistics-preview-runner.js"
+      - "history-statistics.js"
+      - "test/history-statistics.test.js"
+      - "wrangler.statistics-preview.jsonc"
+      - "wrangler.jsonc"
+      - "package.json"
+      - ".github/workflows/preview-worker.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "worker.js"
+      - "history-backfill.js"
+      - "history-statistics-preview-runner.js"
+      - "wrangler.statistics-preview.jsonc"
+      - "wrangler.jsonc"
+      - "package.json"
+      - ".github/workflows/preview-worker.yml"
+
+permissions:
+  contents: read
+
+# Serialize updates to the single shared Preview deployment.
+concurrency:
+  group: cloudflare-worker-preview-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  preview:
+    # Never expose Cloudflare credentials to a pull request from a fork.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pinned project dependencies
+        run: npm install --ignore-scripts --no-audit --no-fund
+
+      - name: Create or update isolated Cloudflare Preview
+        id: preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          output=""
+          for attempt in 1 2 3; do
+            if output="$(npx wrangler preview --name feature-isolated-history-backfill-queue --json 2>&1)"; then
+              break
+            fi
+            printf '%s\n' "$output" >&2
+            if ! printf '%s' "$output" | grep -q '11024\|modified concurrently'; then
+              exit 1
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              echo "Cloudflare Preview remained busy after 3 attempts." >&2
+              exit 1
+            fi
+            sleep "$((attempt * 4))"
+          done
+          printf '%s\n' "$output"
+          preview_url="$(printf '%s' "$output" | jq -er '.preview.urls[0]')"
+          echo "preview_url=$preview_url" >> "$GITHUB_OUTPUT"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+      - name: Probe Preview root without changing data
+        run: |
+          set -euo pipefail
+          curl --fail --show-error --silent "$PREVIEW_URL/" | tee /tmp/preview-root.json
+          grep -q '"ok":true' /tmp/preview-root.json
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Probe isolated staging status (read-only)
+        run: |
+          set -euo pipefail
+          curl --fail --show-error --silent "$PREVIEW_URL/api/archive/history-backfill/pilot-status"
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Audit historical queues without mutation
+        run: |
+          set -euo pipefail
+          echo "Nations League fixture queue:"
+          fixture_state="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/history-backfill/status?scope=nations-league")"
+          printf '%s\n' "$fixture_state"
+          echo "$fixture_state" | jq -e '.ok == true and .executionEnabled == false' >/dev/null
+          echo "Nations League statistics queue:"
+          stats_state="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/nations-league/statistics-status")"
+          printf '%s\n' "$stats_state"
+          echo "$stats_state" | jq -e '.ok == true and .scope == "uefa-nations-league-statistics"' >/dev/null
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Initialize isolated Nations League queue metadata (Preview only)
+        run: |
+          set -euo pipefail
+          code="$(curl --show-error --silent --output /tmp/queue-init.json --write-out '%{http_code}' -X POST "$PREVIEW_URL/api/archive/history-backfill/start?scope=nations-league")"
+          cat /tmp/queue-init.json
+          if [ "$code" = "201" ]; then
+            jq -e '.ok == true and .created == true and .executionEnabled == false' /tmp/queue-init.json >/dev/null
+          elif [ "$code" = "409" ]; then
+            jq -e '.alreadyExists == true' /tmp/queue-init.json >/dev/null
+          else
+            echo "Unexpected queue initialization HTTP status: $code" >&2
+            exit 1
+          fi
+          status="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/history-backfill/status?scope=nations-league")"
+          printf '%s\n' "$status"
+          echo "$status" | jq -e '.ok == true and .exists == true and .executionEnabled == false and .rangeStart == "2024-09-05" and .seasonsRequested == ["2024/25","2026/27"]' >/dev/null
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Run one bounded Nations League batch (isolated Preview only)
+        run: |
+          set -euo pipefail
+          code="$(curl --show-error --silent --output /tmp/nations-batch.json --write-out '%{http_code}' -X POST "$PREVIEW_URL/api/archive/history-backfill/preview-batch?scope=nations-league")"
+          cat /tmp/nations-batch.json
+          if [ "$code" != "200" ]; then
+            echo "Preview batch returned HTTP $code" >&2
+            exit 1
+          fi
+          jq -e '.ok == true and .scope == "uefa-nations-league" and .environment == "preview"' /tmp/nations-batch.json >/dev/null
+          status="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/history-backfill/status?scope=nations-league")"
+          printf '%s\\n' "$status"
+          echo "$status" | jq -e '.ok == true and .executionEnabled == false or .executionEnabled == true' >/dev/null
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Initialize isolated club and national-team queues (Preview only)
+        run: |
+          set -euo pipefail
+          for scope in clubs national-teams; do
+            code="$(curl --show-error --silent --output "/tmp/$scope-init.json" --write-out '%{http_code}' -X POST "$PREVIEW_URL/api/archive/history-backfill/start?scope=$scope")"
+            cat "/tmp/$scope-init.json"
+            if [ "$code" = "201" ]; then
+              jq -e '.ok == true and .executionEnabled == false' "/tmp/$scope-init.json" >/dev/null
+            elif [ "$code" = "409" ]; then
+              jq -e '.alreadyExists == true' "/tmp/$scope-init.json" >/dev/null
+            else
+              echo "$scope queue initialization returned HTTP $code" >&2
+              exit 1
+            fi
+          done
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Run one bounded batch for each competition category (Preview only)
+        run: |
+          set -euo pipefail
+          for scope in clubs national-teams; do
+            code="$(curl --show-error --silent --output "/tmp/$scope-batch.json" --write-out '%{http_code}' -X POST "$PREVIEW_URL/api/archive/history-backfill/preview-batch?scope=$scope")"
+            cat "/tmp/$scope-batch.json"
+            if [ "$code" != "200" ]; then
+              echo "$scope preview batch returned HTTP $code" >&2
+              exit 1
+            fi
+            jq -e '.ok == true and .environment == "preview"' "/tmp/$scope-batch.json" >/dev/null
+          done
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Probe all 39 configured ESPN competitions in bounded batches
+        run: |
+          set -euo pipefail
+          for offset in 0 5 10 15 20 25 30 35; do
+            limit=5
+            if [ "$offset" = "35" ]; then limit=4; fi
+            result="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/history-backfill/probe-batch?offset=$offset&limit=$limit&date=20261101")"
+            printf '%s\\n' "$result"
+            echo "$result" | jq -e '.ok == true and .successCount == .requested and .failureCount == 0' >/dev/null
+          done
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Verify ordered competition catalog and explicit external fallback
+        run: |
+          set -euo pipefail
+          curl --fail --show-error --silent --output /tmp/competition-catalog.json "$PREVIEW_URL/api/archive/history-backfill/catalog"
+          jq '{total, clubCount: (.clubs | length), nationalTeamCount: (.nationalTeams | length), firstClub: .clubs[0], firstNationalTeam: .nationalTeams[0], externalFallback}' /tmp/competition-catalog.json
+          jq -e '.total == 39 and (.clubs | length) == 34 and (.nationalTeams | length) == 5 and .clubs[0].priority == "high" and .externalFallback[0].id == "206"' /tmp/competition-catalog.json >/dev/null
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Check whether the extra Turkey Cup app entry has a verified ESPN feed
+        run: |
+          set -euo pipefail
+          for slug in tur.cup tur.turkish_cup tur.tff_cup tur.turkish-cup; do
+            code="$(curl --show-error --silent --output "/tmp/$slug.json" --write-out '%{http_code}' "https://site.api.espn.com/apis/site/v2/sports/soccer/$slug/scoreboard?dates=20261101")"
+            if [ "$code" = "200" ] && jq -e '.events | type == "array"' "/tmp/$slug.json" >/dev/null 2>&1; then
+              echo "Candidate $slug returned a valid ESPN scoreboard:"
+              jq '{league: (.leagues[0].name // null), eventCount: (.events | length), sample: (.events[0].name // null)}' "/tmp/$slug.json"
+            else
+              echo "Candidate $slug is not a verified ESPN scoreboard (HTTP $code)."
+            fi
+          done
+      
+      - name: Initialize all-competition historical statistics queue (Preview only)
+        run: |
+          set -euo pipefail
+          code="$(curl --show-error --silent --output /tmp/all-stats-init.json --write-out '%{http_code}' -X POST "$PREVIEW_URL/api/archive/history-statistics/start")"
+          cat /tmp/all-stats-init.json
+          if [ "$code" != "201" ]; then
+            echo "All-competition statistics initialization returned HTTP $code" >&2
+            exit 1
+          fi
+          jq -e '.ok == true and .executionEnabled == false and .scope == "all-configured-competitions-statistics"' /tmp/all-stats-init.json >/dev/null
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Enable and run one bounded all-competition statistics batch (Preview only)
+        run: |
+          set -euo pipefail
+          curl --fail --show-error --silent -X POST "$PREVIEW_URL/api/archive/history-statistics/enable" | tee /tmp/all-stats-enable.json
+          jq -e '.ok == true and .executionEnabled == true' /tmp/all-stats-enable.json >/dev/null
+          code="$(curl --show-error --silent --output /tmp/all-stats-run.json --write-out '%{http_code}' -X POST "$PREVIEW_URL/api/archive/history-statistics/run")"
+          cat /tmp/all-stats-run.json
+          if [ "$code" != "200" ]; then
+            echo "All-competition statistics batch returned HTTP $code" >&2
+            exit 1
+          fi
+          jq -e '.ok == true and (.status == "running" or .status == "complete" or .status == "complete-with-gaps" or .status == "retry-needed" or .status == "retry-wait" or .status == "needs-review")' /tmp/all-stats-run.json >/dev/null
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Audit all-competition statistics coverage by competition
+        run: |
+          set -euo pipefail
+          status="$(curl --fail --show-error --silent "$PREVIEW_URL/api/archive/history-statistics/status")"
+          printf '%s\\n' "$status"
+          echo "$status" | jq -e '.ok == true and (.byCompetition | type == "array") and (.totalJobs >= 0)' >/dev/null
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Verify historical archive is consumable by the app analysis endpoint
+        run: |
+          set -euo pipefail
+          curl --http1.1 --fail --show-error --silent --output /tmp/team-archive.json --dump-header /tmp/team-archive.headers "$PREVIEW_URL/api/archive/matches?league=5&before=2026-11-15&teamId=456&teamSource=espn&limit=10"
+          cat /tmp/team-archive.headers
+          echo "Team archive response bytes: $(wc -c < /tmp/team-archive.json)"
+          tail -c 240 /tmp/team-archive.json | od -An -t x1c
+          jq '{ok, count, sample: (.response[0] // null)}' /tmp/team-archive.json
+          jq -e '.ok == true and .teamFilterApplied == true and .count > 0 and (.response | type == "array")' /tmp/team-archive.json >/dev/null
+          jq -e '[.response[] | select(.mamArchiveOnly == true)] | length > 0' /tmp/team-archive.json >/dev/null
+          curl --http1.1 --fail --show-error --silent --output /tmp/team-name-archive.json "$PREVIEW_URL/api/archive/matches?league=5&before=2026-11-15&teamNames=latvia&limit=10"
+          jq -e '.ok == true and .teamFilterApplied == true and .count > 0' /tmp/team-name-archive.json >/dev/null
+          curl --http1.1 --fail --show-error --silent --output /tmp/stats-archive.json "$PREVIEW_URL/api/archive/matches?league=5&before=2026-11-15&limit=10"
+          jq -e '.ok == true and .count > 0' /tmp/stats-archive.json >/dev/null
+          jq -e '[.response[] | select(((.statistics.home // {}) | length) > 0 and ((.statistics.away // {}) | length) > 0)] | length > 0' /tmp/stats-archive.json >/dev/null
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Probe historical Nations League coverage (read-only)
+        run: |
+          set -euo pipefail
+          probe="$(curl --show-error --silent "$PREVIEW_URL/api/archive/history-backfill/probe?league=uefa.nations&from=20240905&to=20240905")"
+          printf '%s\n' "$probe"
+          echo "$probe" | jq -e '.status != null' >/dev/null
+          echo "$probe" | jq -e '.ok == true and .status == "range-supported-response"' >/dev/null
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Inspect one historical Nations League summary (read-only)
+        run: |
+          set -euo pipefail
+          summary="$(curl --show-error --silent "$PREVIEW_URL/api/espn/uefa.nations/summary?event=698882")"
+          echo "$summary" | jq '{event: .header.competitions[0].id, boxscoreTeams: (.boxscore.teams // [] | length), teams: [(.boxscore.teams // [])[] | {homeAway, team: (.team.displayName // .team.name), statisticsCount: ((.statistics // []) | length)}]}'
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+
+      - name: Deploy dedicated Preview-only 15-minute history runner
+        run: |
+          set -euo pipefail
+          npx wrangler deploy --config wrangler.history-preview.jsonc
+          runner_status="$(curl --fail --show-error --silent "https://mam-nations-history-preview.m-ahmetisildak34.workers.dev/status")"
+          printf '%s\\n' "$runner_status"
+          echo "$runner_status" | jq -e '.ok == true and .environment == "preview" and .scope == "uefa-nations-league" and .schedule == "*/15 * * * *"' >/dev/null
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+      - name: Deploy dedicated Preview-only 15-minute statistics runner
+        run: |
+          set -euo pipefail
+          npx wrangler deploy --config wrangler.statistics-preview.jsonc
+          runner_status="$(curl --fail --show-error --silent "https://mam-nations-statistics-preview.m-ahmetisildak34.workers.dev/status")"
+          printf '%s\\n' "$runner_status"
+          echo "$runner_status" | jq -e '.ok == true and .environment == "preview" and .scope == "uefa-nations-league-statistics" and .schedule == "*/15 * * * *"' >/dev/null
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+      - name: Deploy dedicated Preview-only all-competitions history runner
+        run: |
+          set -euo pipefail
+          npx wrangler deploy --config wrangler.all-history-preview.jsonc
+          runner_status=""
+          for attempt in 1 2 3 4 5; do
+            code="$(curl --show-error --silent --output /tmp/all-history-runner-status.json --write-out '%{http_code}' "https://mam-all-history-preview.m-ahmetisildak34.workers.dev/status")"
+            if [ "$code" = "200" ]; then
+              runner_status="$(cat /tmp/all-history-runner-status.json)"
+              break
+            fi
+            sleep 3
+          done
+          if [ -z "$runner_status" ]; then
+            echo "Preview runner deployed, but its status endpoint did not become available." >&2
+            cat /tmp/all-history-runner-status.json >&2 || true
+            exit 1
+          fi
+          printf '%s\\n' "$runner_status"
+          echo "$runner_status" | jq -e '.ok == true and .environment == "preview" and .schedule == "*/15 * * * *" and (.fixtureQueues | length == 2)' >/dev/null
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+      - name: Publish Preview URL
+        run: |
+          {
+            echo "## Cloudflare Worker Preview"
+            echo
+            echo "Preview URL: $PREVIEW_URL"
+            echo
+            echo "Only the Preview deployment was updated. Production deployment and live data were not changed."
+          } >> "$GITHUB_STEP_SUMMARY"
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
