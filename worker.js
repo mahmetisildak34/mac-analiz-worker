@@ -902,7 +902,8 @@ export default {
         const uniqueRows = new Map();
         const candidateRows = (Array.isArray(result?.results) ? result.results : []).filter(row => {
           if (!exactDate) return true;
-          const timestamp = Date.parse(String(row.kickoff || ""));
+          const kickoffText = String(row.kickoff || "");
+          const timestamp = Date.parse(kickoffText);
           if (!Number.isFinite(timestamp)) return false;
           const parts = new Intl.DateTimeFormat("en-GB", {
             timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit"
@@ -911,6 +912,21 @@ export default {
           const istanbulDate = dateParts.year + "-" + dateParts.month + "-" + dateParts.day;
           return istanbulDate === exactDate;
         });
+        const dateDebug = exactDate ? (Array.isArray(result?.results) ? result.results : []).slice(0, 5).map(row => {
+          const kickoff = String(row.kickoff || "");
+          const timestamp = Date.parse(kickoff);
+          const parts = Number.isFinite(timestamp) ? new Intl.DateTimeFormat("en-GB", {
+            timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit"
+          }).formatToParts(new Date(timestamp)) : [];
+          const dateParts = Object.fromEntries(parts.map(part => [part.type, part.value]));
+          return {
+            kickoff,
+            kickoffPrefix: kickoff.slice(0, 10),
+            parsed: Number.isFinite(timestamp),
+            istanbulDate: dateParts.year && dateParts.month && dateParts.day
+              ? dateParts.year + "-" + dateParts.month + "-" + dateParts.day : null
+          };
+        }) : [];
         for (const row of candidateRows) {
           const home = normalizeTeam(row.home_team), away = normalizeTeam(row.away_team);
           const time = Date.parse(String(row.kickoff || ""));
@@ -936,6 +952,7 @@ export default {
           rawCount: Array.isArray(result?.results) ? result.results.length : 0,
           dateMatchedCount: candidateRows.length,
           duplicatesSuppressed: candidateRows.length - deduplicatedRows.length,
+          dateDebug,
           response: matches
         }), {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
