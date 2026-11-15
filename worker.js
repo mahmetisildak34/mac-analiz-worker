@@ -1,5 +1,5 @@
 import { HISTORY_BACKFILL_KEY, NATIONS_LEAGUE_BACKFILL_KEY, NATIONS_LEAGUE_BACKFILL_LEAGUE, NATIONS_LEAGUE_STATISTICS_KEY, buildHistoryBackfillState, buildNationsLeagueBackfillState, buildNationsLeagueStatisticsState, runNationsLeagueStatisticsBatch, runHistoryBackfillBatch, probeHistoryBackfillRange, probeHistoryBackfillBatch, runHistoryBackfillPilot } from "./history-backfill.js";
-import { HISTORY_STATISTICS_KEY, CLUB_HISTORY_BACKFILL_KEY, NATIONAL_TEAM_HISTORY_BACKFILL_KEY, buildHistoryStatisticsState, getHistoryStatisticsStatus, getHistoryCompetitionCatalog, runHistoryStatisticsBatch, buildHistoryBackfillScopedState, getHistoryBackfillQueueConfig } from "./history-statistics.js";
+import { HISTORY_STATISTICS_KEY, CLUB_HISTORY_BACKFILL_KEY, NATIONAL_TEAM_HISTORY_BACKFILL_KEY, buildHistoryStatisticsState, getHistoryStatisticsStatus, getHistoryCompetitionCatalog, runHistoryStatisticsBatch, buildHistoryBackfillScopedState, getHistoryBackfillQueueConfig, normalizeHistoryStatisticsForApp } from "./history-statistics.js";
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
 const API_BASE = "https://v3.football.api-sports.io";
 const FOOTBALLDATA_BASE = "https://api.football-data.org/v4";
@@ -1206,25 +1206,84 @@ export default {
           ORDER BY datetime(kickoff) DESC
           LIMIT ?
         `).bind(leagueId, before, limit).all();
-        const matches = (Array.isArray(archived?.results) ? archived.results : []).map(row => {
-          let statistics = null;
-          let raw = null;
-          try { statistics = row.statistics_json ? JSON.parse(row.statistics_json) : null; } catch (_) {}
-          try { raw = row.raw_json ? JSON.parse(row.raw_json) : null; } catch (_) {}
-          const halftime = raw?.score?.halftime || raw?.score?.halfTime || null;
-          return {
-            source: row.source || "app",
-            fixture: { id: row.fixture_id, date: row.kickoff, status: { short: row.status || "FT" } },
-            league: { id: String(row.league_id), name: row.league_name || "", country: canonicalLeagueCountry(row.source, row.league_id, row.league_name, row.country) },
-            teams: {
-              home: { id: row.home_team_id == null ? null : row.home_team_id, name: row.home_team || "" },
-              away: { id: row.away_team_id == null ? null : row.away_team_id, name: row.away_team || "" }
-            },
-            goals: { home: row.home_goals, away: row.away_goals },
-            score: halftime ? { halftime } : null,
-            statistics
-          };
-        });
+
+        // Historical backfill stays in its own additive table. Read it alongside
+        // the regular app archive so the analysis engine can consume verified
+        // history without copying rows into or overwriting the live matches table.
+        let historicalRows = [];
+        try {
+          const historical = await env.DB.prepare(`
+            SELECT source, fixture_id, league_id, league_name, country, kickoff, status,
+                   home_team_id, home_team, away_team_id, away_team, home_goals, away_goals,
+                   statistics_json, raw_json
+            FROM mam_history_backfill_matches
+            WHERE source = 'ESPN' AND league_id = ?
+              AND status IN ('FT','AET','PEN')
+              AND date(kickoff) < date(?)
+              AND home_goals IS NOT NULL AND away_goals IS NOT NULL
+            ORDER BY datetime(kickoff) DESC
+            LIMIT ?
+          `).bind(leagueId, before, limit).all();
+          historicalRows = Array.isArray(historical?.results) ? historical.results : [];
+        } catch (_) {
+          // Older production databases may not have the isolated table or its
+          // statistics_json column yet. The normal matches archive remains usable.
+          try {
+            const historical = await env.DB.prepare(`
+              SELECT source, fixture_id, league_id, league_name, country, kickoff, status,
+                     home_team_id, home_team, away_team_id, away_team, home_goals, away_goals,
+                     raw_json
+              FROM mam_history_backfill_matches
+              WHERE source = 'ESPN' AND league_id = ?
+                AND status IN ('FT','AET','PEN')
+                AND date(kickoff) < date(?)
+                AND home_goals IS NOT NULL AND away_goals IS NOT NULL
+              ORDER BY datetime(kickoff) DESC
+              LIMIT ?
+            `).bind(leagueId, before, limit).all();
+            historicalRows = Array.isArray(historical?.results) ? historical.results : [];
+          } catch (_) {}
+        }
+
+        const merged = new Map();
+        const statsQuality = row => {
+          try {
+            const parsed = row.statistics_json ? JSON.parse(row.statistics_json) : null;
+            if (parsed?.home || parsed?.away) return Object.keys(parsed.home || {}).length + Object.keys(parsed.away || {}).length;
+            if (Array.isArray(parsed?.teams)) return parsed.teams.reduce((sum, team) => sum + (Array.isArray(team.statistics) ? team.statistics.length : 0), 0);
+          } catch (_) {}
+          return 0;
+        };
+        for (const row of [
+          ...(Array.isArray(archived?.results) ? archived.results : []),
+          ...historicalRows
+        ]) {
+          const key = String(row.source || "app") + ":" + String(row.fixture_id || "");
+          const previous = merged.get(key);
+          if (!previous || statsQuality(row) > statsQuality(previous)) merged.set(key, row);
+        }
+        const matches = [...merged.values()]
+          .sort((a, b) => new Date(b.kickoff || 0).getTime() - new Date(a.kickoff || 0).getTime())
+          .slice(0, limit)
+          .map(row => {
+            let statisticsRaw = null;
+            let raw = null;
+            try { statisticsRaw = row.statistics_json ? JSON.parse(row.statistics_json) : null; } catch (_) {}
+            try { raw = row.raw_json ? JSON.parse(row.raw_json) : null; } catch (_) {}
+            const halftime = raw?.score?.halftime || raw?.score?.halfTime || null;
+            return {
+              source: row.source || "app",
+              fixture: { id: row.fixture_id, date: row.kickoff, status: { short: row.status || "FT" } },
+              league: { id: String(row.league_id), name: row.league_name || "", country: canonicalLeagueCountry(row.source, row.league_id, row.league_name, row.country) },
+              teams: {
+                home: { id: row.home_team_id == null ? null : row.home_team_id, name: row.home_team || "" },
+                away: { id: row.away_team_id == null ? null : row.away_team_id, name: row.away_team || "" }
+              },
+              goals: { home: row.home_goals, away: row.away_goals },
+              score: halftime ? { halftime } : null,
+              statistics: normalizeHistoryStatisticsForApp(statisticsRaw) || statisticsRaw
+            };
+          });
         return new Response(JSON.stringify({
           ok: true, leagueId, count: matches.length, response: matches
         }), {
