@@ -39,6 +39,34 @@ export function buildHistoryBackfillScopedState(scope, now = new Date()) {
   };
 }
 
+export function normalizeHistoryStatisticsForApp(raw) {
+  if (!raw || typeof raw !== "object") return null;
+  if (raw.home || raw.away) return raw;
+  const teams = Array.isArray(raw.teams) ? raw.teams : [];
+  if (!teams.length) return Array.isArray(raw) ? raw : null;
+  const normalizeName = value => String(value || "").toLowerCase().replace(/[^a-z]/g, "");
+  const readTeam = homeAway => {
+    const team = teams.find(item => item.homeAway === homeAway);
+    const result = {};
+    for (const stat of (Array.isArray(team?.statistics) ? team.statistics : [])) {
+      const key = normalizeName(stat.name || stat.abbreviation || stat.type);
+      const rawValue = stat.displayValue ?? stat.value;
+      const number = Number(String(rawValue ?? "").replace(/,/g, "").replace("%", ""));
+      if (rawValue === null || rawValue === undefined || rawValue === "" || !Number.isFinite(number)) continue;
+      if (/corner/.test(key)) result.corners = number;
+      else if (/shotsontarget|shotsongoal|ontarget/.test(key)) result.shotsOnTarget = number;
+      else if (/totalshots|shots$/.test(key)) result.shots = number;
+      else if (/yellowcard/.test(key)) result.yellowCards = number;
+      else if (/redcard/.test(key)) result.redCards = number;
+    }
+    return result;
+  };
+  const home = teams.find(item => item.homeAway === "home");
+  const away = teams.find(item => item.homeAway === "away");
+  if (!home || !away) return null;
+  return { home: readTeam("home"), away: readTeam("away"), coverage: raw.coverage || null };
+}
+
 export function classifyHistoryCompetition(leagueId) {
   return NATIONAL_TEAM_COMPETITION_IDS.includes(String(leagueId)) ? "national-team" : "club";
 }
