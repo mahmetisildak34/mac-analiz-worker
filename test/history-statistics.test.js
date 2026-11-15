@@ -48,7 +48,7 @@ test("general statistics queue initializes disabled from completed staged fixtur
           run: async () => ({ meta: { changes: 1 } }),
           all: async () => ({ results: [{ name: "statistics_json" }] }),
           first: async () => sql.includes("mam_history_backfill_statistics")
-            ? ({ processed: 5, statisticsFound: 4, noStatistics: 1 })
+            ? ({ processed: 5, statisticsFound: 4, partialStatistics: 0, noStatistics: 1 })
             : ({ total: 123 })
         };
       }
@@ -214,6 +214,25 @@ test("general statistics processor records a valid empty box score as unavailabl
   assert.equal(getState().noStatistics, 1);
   assert.equal(writtenBatches.length, 2);
   assert.ok(writtenBatches[0].values.includes("no-statistics"));
+});
+
+test("general statistics processor marks one-sided box scores as partial, not complete", async () => {
+  const fixture = { fixtureId: "espn-eng.1-999", leagueId: "39", kickoff: "2026-11-01T16:30:00Z" };
+  const { env, getState, writtenBatches } = makeStatisticsTestEnv({
+    executionEnabled: true, retryJobs: [], deadLetters: [], statisticsFound: 0,
+    partialStatistics: 0, noStatistics: 0
+  }, [fixture]);
+  const result = await runHistoryStatisticsBatch(env, async () => new Response(JSON.stringify({
+    boxscore: { teams: [
+      { homeAway: "home", team: { displayName: "Liverpool" }, statistics: [{ name: "shots", displayValue: "12" }] },
+      { homeAway: "away", team: { displayName: "Arsenal" }, statistics: [] }
+    ] }
+  }), { status: 200 }));
+  assert.equal(result.ok, true);
+  assert.equal(result.statisticsFound, 0);
+  assert.equal(result.partialStatistics, 1);
+  assert.equal(getState().partialStatistics, 1);
+  assert.ok(writtenBatches[0].values.includes("partial-statistics"));
 });
 
 test("general statistics processor moves the fifth failed attempt to dead letters", async () => {
