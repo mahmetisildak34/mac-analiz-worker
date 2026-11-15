@@ -868,14 +868,23 @@ export default {
         const daysValue = Number.parseInt(url.searchParams.get("days") || "30", 10);
         const days = Number.isFinite(daysValue) ? Math.max(1, Math.min(60, daysValue)) : 30;
         const requestedDate = String(url.searchParams.get("date") || "").trim();
-        const exactDate = /^\d{4}-\d{2}-\d{2}$/.test(requestedDate) ? requestedDate : "";
+        const parsedRequestedDate = Date.parse(requestedDate + "T00:00:00Z");
+        const exactDate = /^\d{4}-\d{2}-\d{2}$/.test(requestedDate) &&
+          Number.isFinite(parsedRequestedDate) &&
+          new Date(parsedRequestedDate).toISOString().slice(0, 10) === requestedDate ? requestedDate : "";
+        const dateWindowStart = exactDate
+          ? new Date(parsedRequestedDate - 86400000).toISOString().slice(0, 10) : "";
+        const dateWindowEnd = exactDate
+          ? new Date(parsedRequestedDate + 2 * 86400000).toISOString().slice(0, 10) : "";
         const leagueId = String(url.searchParams.get("league") || "").trim();
         const limitValue = Number.parseInt(url.searchParams.get("limit") || "1000", 10);
         const limit = Number.isFinite(limitValue) ? Math.max(1, Math.min(2000, limitValue)) : 1000;
         const filters = exactDate
-          ? ["substr(kickoff, 1, 10) = ?", "status IN ('NS','TBD','SCHEDULED')"]
+          ? ["kickoff >= ?", "kickoff < ?", "status IN ('NS','TBD','SCHEDULED')"]
           : ["date(kickoff) >= date('now')", "date(kickoff) <= date('now', '+' || ? || ' days')", "status IN ('NS','TBD','SCHEDULED')"];
-        const binds = exactDate ? [exactDate] : [days];
+        const binds = exactDate
+          ? [dateWindowStart + "T00:00:00", dateWindowEnd + "T00:00:00"]
+          : [days];
         if (leagueId) { filters.push("league_id = ?"); binds.push(leagueId); }
         binds.push(limit);
         const result = await env.DB.prepare(
@@ -891,7 +900,13 @@ export default {
           .replace(/[^a-z0-9]+/g, "").trim();
         const countryForLeague = (leagueId, leagueName, country, source) => canonicalLeagueCountry(source, leagueId, leagueName, country);
         const uniqueRows = new Map();
-        for (const row of (Array.isArray(result?.results) ? result.results : [])) {
+        const candidateRows = (Array.isArray(result?.results) ? result.results : []).filter(row => {
+          if (!exactDate) return true;
+          const timestamp = Date.parse(String(row.kickoff || ""));
+          return Number.isFinite(timestamp) &&
+            new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(timestamp)) === exactDate;
+        });
+        for (const row of candidateRows) {
           const home = normalizeTeam(row.home_team), away = normalizeTeam(row.away_team);
           const time = Date.parse(String(row.kickoff || ""));
           const minute = Number.isFinite(time) ? Math.floor(time / 60000) : String(row.kickoff || "").slice(0, 16);
