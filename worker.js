@@ -1016,7 +1016,7 @@ export default {
             archiveTeamsNotInDirectory:archivedTeams.filter(row=>!expected.some(team=>normalizeTeamName(team.name)===normalizeTeamName(row.teamName))).slice(0,50).map(row=>row.teamName)
           };
         });
-        return new Response(JSON.stringify({
+        const qualityReport = {
           ok: true, scope, days: scope === "upcoming" ? days : null,
           totalRecords, checked: rows.length, limit, truncated: rows.length < totalRecords,
           sourceCounts,
