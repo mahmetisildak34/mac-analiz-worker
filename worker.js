@@ -1297,7 +1297,7 @@ export default {
 
       const isESPNStandings = isESPN && apiPath.endsWith("/standings");
       const base = isFixtureDownload ? "https://fixturedownload.com/feed/json" : isSportScore ? "https://sportscore.com/api" : isESPNStandings ? "https://site.api.espn.com/apis/v2/sports/soccer" : isESPN ? ESPN_BASE : isFootballData ? FOOTBALLDATA_BASE : API_BASE;
-      const targetUrl = base + "/" + apiPath + url.search;
+      const targetUrl = base + "/" + apiPath + (isSportScore ? "/" : "") + url.search;
       const isStandings = /(^|\/)standings$/.test(apiPath);
       const footballDataStatuses = (url.searchParams.get("status") || "").split(",").map(value => value.trim().toUpperCase());
       const todayIstanbul = new Intl.DateTimeFormat("en-CA", {
