@@ -177,17 +177,25 @@ async function ensureArchiveIndexes(env) {
   // Schema changes belong in scheduled maintenance, never on the public request path.
   // The quota guard is created/upgraded once per maintenance window, not on every API call.
   await env.DB.prepare(
-    "CREATE TABLE IF NOT EXISTS mam_api_quota_guard (day TEXT PRIMARY KEY, used INTEGER NOT NULL DEFAULT 0, live_last_ms INTEGER NOT NULL DEFAULT 0)"
+    "CREATE TABLE IF NOT EXISTS mam_api_quota_guard (day TEXT PRIMARY KEY, used INTEGER NOT NULL DEFAULT 0, live_last_ms INTEGER NOT NULL DEFAULT 0, minute_last_ms INTEGER NOT NULL DEFAULT 0)"
   ).run();
-  for (const column of [
-    "live_last_ms INTEGER NOT NULL DEFAULT 0",
-    "minute_last_ms INTEGER NOT NULL DEFAULT 0"
+
+  // Inspect the live schema instead of swallowing every ALTER TABLE error.
+  // The scheduled migration must fail visibly if D1 cannot apply the change.
+  const quotaSchema = await env.DB.prepare("PRAGMA table_info(mam_api_quota_guard)").all();
+  const quotaColumns = new Set((quotaSchema?.results || []).map(column => String(column.name || "")));
+  for (const [name, definition] of [
+    ["live_last_ms", "INTEGER NOT NULL DEFAULT 0"],
+    ["minute_last_ms", "INTEGER NOT NULL DEFAULT 0"]
   ]) {
-    try {
-      await env.DB.prepare("ALTER TABLE mam_api_quota_guard ADD COLUMN " + column).run();
-    } catch (_) {
-      // Column already exists; safe to continue.
+    if (!quotaColumns.has(name)) {
+      await env.DB.prepare("ALTER TABLE mam_api_quota_guard ADD COLUMN " + name + " " + definition).run();
     }
+  }
+  const verifiedQuotaSchema = await env.DB.prepare("PRAGMA table_info(mam_api_quota_guard)").all();
+  const verifiedQuotaColumns = new Set((verifiedQuotaSchema?.results || []).map(column => String(column.name || "")));
+  if (!verifiedQuotaColumns.has("live_last_ms") || !verifiedQuotaColumns.has("minute_last_ms")) {
+    throw new Error("D1 quota guard migration verification failed: required columns are missing");
   }
   await env.DB.prepare(
     "CREATE INDEX IF NOT EXISTS idx_matches_league_kickoff ON matches (league_id, kickoff)"
@@ -577,7 +585,9 @@ export default {
       try {
         // D1 maintenance scans are throttled; repeating full-table metadata updates every 15 minutes
         // burns the free row-read allowance without improving fixture freshness.
-        const maintenanceKey = "mam:d1-maintenance-last:v2";
+        // Bump the maintenance marker when introducing a new D1 schema migration.
+        // v3 forces the new minute_last_ms column migration even if v2 ran recently.
+        const maintenanceKey = "mam:d1-maintenance-last:v3";
         const lastMaintenanceAt = Number(env.MAM_KV ? await env.MAM_KV.get(maintenanceKey) : 0);
         if (!lastMaintenanceAt || Date.now() - lastMaintenanceAt >= 24 * 60 * 60 * 1000) {
           await ensureArchiveIndexes(env);
