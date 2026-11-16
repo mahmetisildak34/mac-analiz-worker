@@ -713,7 +713,7 @@ export default {
             status: 503, headers: { ...cors, "Content-Type": "application/json" }
           });
         }
-        const syncStatusCacheKey = "mam:sync-status-cache:v1";
+        const syncStatusCacheKey = "mam:sync-status-cache:v2";
         const cachedSyncStatus = await env.MAM_KV.get(syncStatusCacheKey);
         if (cachedSyncStatus) {
           return new Response(cachedSyncStatus, {
@@ -1308,7 +1308,7 @@ export default {
             status: 503, headers: { ...cors, "Content-Type": "application/json" }
           });
         }
-        const d1StatusCacheKey = "mam:d1-status-cache:v1";
+        const d1StatusCacheKey = "mam:d1-status-cache:v2";
         const cachedD1Status = env.MAM_KV ? await env.MAM_KV.get(d1StatusCacheKey) : null;
         if (cachedD1Status) {
           return new Response(cachedD1Status, {
@@ -1370,7 +1370,7 @@ export default {
           statuses: Array.isArray(byStatus?.results) ? byStatus.results : []
         };
         const d1StatusBody = JSON.stringify(d1StatusReport);
-        if (env.MAM_KV) await env.MAM_KV.put(d1StatusCacheKey, d1StatusBody, { expirationTtl: 6 * 60 * 60 });
+        if (env.MAM_KV) await env.MAM_KV.put(d1StatusCacheKey, d1StatusBody, { expirationTtl: 10 * 60 });
         return new Response(d1StatusBody, {
           status: 200,
           headers: {
