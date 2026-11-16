@@ -1308,7 +1308,7 @@ export default {
         const before = String(url.searchParams.get("before") || new Date().toISOString()).trim().slice(0, 40);
         const limitValue = Number.parseInt(url.searchParams.get("limit") || "1500", 10);
         const limit = Number.isFinite(limitValue) ? Math.max(1, Math.min(2000, limitValue)) : 1500;
-        if (!before || !/^\\d{4}-\\d{2}-\\d{2}(?:T.*)?$/.test(before)) {
+        if (!before || !/^\d{4}-\d{2}-\d{2}(?:T.*)?$/.test(before)) {
           return new Response(JSON.stringify({ error: "Invalid before date; use YYYY-MM-DD or an ISO timestamp" }), {
             status: 400, headers: { ...cors, "Content-Type": "application/json" }
           });
