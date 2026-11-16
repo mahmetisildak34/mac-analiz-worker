@@ -852,7 +852,7 @@ export default {
         // This measures teams observed in the archive; it does not invent missing teams.
         const priorityLeagueIds = ["39","203","140","78","135","61","2","3","88","94","848"];
         const leaguePlaceholders = priorityLeagueIds.map(() => "?").join(",");
-        const [teamCoverageResult, upcomingCoverageResult] = await Promise.all([
+        const [teamCoverageResult, upcomingCoverageResult, upcomingFixturesResult] = await Promise.all([
           env.DB.prepare(
             "WITH appearances AS (" +
             "SELECT league_id, date(kickoff) AS match_day, lower(trim(home_team)) AS team_name, lower(trim(away_team)) AS opponent_name " +
@@ -865,12 +865,24 @@ export default {
             ") SELECT league_id AS leagueId, team_name AS teamName, completed_matches AS completedMatches, last_match AS lastMatch FROM team_counts ORDER BY league_id, completed_matches ASC, team_name"
           ).bind(...priorityLeagueIds, ...priorityLeagueIds).all(),
           env.DB.prepare(
-            "SELECT league_id AS leagueId, COUNT(DISTINCT date(kickoff) || '|' || lower(trim(home_team)) || '|' || lower(trim(away_team))) AS upcomingMatches FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('NS','TBD','SCHEDULED') AND date(kickoff) >= date('now') GROUP BY league_id"
+            "SELECT league_id AS leagueId, COUNT(DISTINCT date(kickoff) || '|' || lower(trim(home_team)) || '|' || lower(trim(away_team))) AS upcomingMatches FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('NS','TBD','SCHEDULED') AND date(kickoff) >= date('now') AND date(kickoff) <= date('now','+30 days') GROUP BY league_id"
+          ).bind(...priorityLeagueIds).all(),
+          env.DB.prepare(
+            "SELECT league_id AS leagueId, date(kickoff) AS matchDay, home_team AS home, away_team AS away FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('NS','TBD','SCHEDULED') AND date(kickoff) >= date('now') AND date(kickoff) <= date('now','+30 days')"
           ).bind(...priorityLeagueIds).all()
         ]);
         const teamCoverageRows = Array.isArray(teamCoverageResult?.results) ? teamCoverageResult.results : [];
         const upcomingCoverageRows = Array.isArray(upcomingCoverageResult?.results) ? upcomingCoverageResult.results : [];
+        const upcomingFixtureRows = Array.isArray(upcomingFixturesResult?.results) ? upcomingFixturesResult.results : [];
         const upcomingByLeague = new Map(upcomingCoverageRows.map(row => [String(row.leagueId), Number(row.upcomingMatches || 0)]));
+        const d1UpcomingByLeague = new Map();
+        const auditName = value => normalizeTeamName(value).replace(/-(?:fc|afc|cf|sc|sk|fk)$/,"");
+        for (const row of upcomingFixtureRows) {
+          const id = String(row.leagueId);
+          const list = d1UpcomingByLeague.get(id) || new Set();
+          list.add([String(row.matchDay||""),auditName(row.home),auditName(row.away)].join("|"));
+          d1UpcomingByLeague.set(id,list);
+        }
         const priorityLeagueDefinitions = [
           ["39","eng.1","İngiltere Premier League"],["203","tur.1","Türkiye Süper Lig"],
           ["140","esp.1","İspanya La Liga"],["78","ger.1","Almanya Bundesliga"],
@@ -883,9 +895,27 @@ export default {
         // Fetch the provider's current team directory so a team absent from D1
         // is visible as missing instead of disappearing from the denominator.
         const directoryResults = await Promise.allSettled(priorityLeagueDefinitions.map(async ([id,slug]) => {
-          const response = await fetch(ESPN_BASE + "/" + slug + "/teams?limit=500", { headers: { "Accept": "application/json" } });
-          if (!response.ok) throw new Error("ESPN teams HTTP " + response.status);
-          const payload = await response.json();
+          const auditStart = new Date();
+          auditStart.setUTCHours(0,0,0,0);
+          const auditEnd = new Date(auditStart);
+          auditEnd.setUTCDate(auditEnd.getUTCDate()+30);
+          const dateRange = auditStart.toISOString().slice(0,10).replace(/-/g,"")+"-"+auditEnd.toISOString().slice(0,10).replace(/-/g,"");
+          const [teamResponse,scoreboardResponse] = await Promise.all([
+            fetch(ESPN_BASE + "/" + slug + "/teams?limit=500", { headers: { "Accept": "application/json" } }),
+            fetch(ESPN_BASE + "/" + slug + "/scoreboard?dates="+dateRange+"&limit=500", { headers: { "Accept": "application/json" } })
+          ]);
+          if (!teamResponse.ok) throw new Error("ESPN teams HTTP " + teamResponse.status);
+          if (!scoreboardResponse.ok) throw new Error("ESPN scoreboard HTTP " + scoreboardResponse.status);
+          const payload = await teamResponse.json();
+          const scoreboard = await scoreboardResponse.json();
+          const upcomingEvents = (Array.isArray(scoreboard.events)?scoreboard.events:[]).map(event=>{
+            const competitors=event.competitions?.[0]?.competitors||[];
+            const home=competitors.find(side=>side.homeAway==="home");
+            const away=competitors.find(side=>side.homeAway==="away");
+            const status=event.status?.type||event.competitions?.[0]?.status?.type||{};
+            const completed=status.completed===true||String(status.state||"").toLowerCase()==="post";
+            return { id:String(event.id||""),date:String(event.date||"").slice(0,10),home:String(home?.team?.displayName||home?.team?.name||""),away:String(away?.team?.displayName||away?.team?.name||""),completed };
+          }).filter(event=>event.id&&event.date&&event.home&&event.away&&!event.completed&&event.date>=auditStart.toISOString().slice(0,10)&&event.date<=auditEnd.toISOString().slice(0,10));
           const found = [];
           const walk = value => {
             if (!value || typeof value !== "object") return;
@@ -901,15 +931,18 @@ export default {
             const name = String(team.displayName || team.name || team.shortDisplayName || "").trim();
             if (idValue && name) unique.set(idValue,{ id:idValue,name });
           }
-          return { leagueId:id, teams:Array.from(unique.values()) };
+          return { leagueId:id, teams:Array.from(unique.values()), upcomingEvents };
         }));
         const directoriesByLeague = new Map();
+        const providerUpcomingByLeague = new Map();
         const directoryErrors = [];
         for (let i=0;i<directoryResults.length;i++) {
           const result = directoryResults[i];
           const leagueId = priorityLeagueDefinitions[i][0];
-          if (result.status === "fulfilled") directoriesByLeague.set(leagueId,result.value.teams);
-          else directoryErrors.push({ leagueId,error:String(result.reason?.message || result.reason) });
+          if (result.status === "fulfilled") {
+            directoriesByLeague.set(leagueId,result.value.teams);
+            providerUpcomingByLeague.set(leagueId,result.value.upcomingEvents);
+          } else directoryErrors.push({ leagueId,error:String(result.reason?.message || result.reason) });
         }
         const teamCoverageByLeague = new Map();
         for (const row of teamCoverageRows) {
@@ -933,6 +966,11 @@ export default {
             };
           });
           const ready = checkedTeams.filter(team => team.ready).length;
+          const providerUpcoming = providerUpcomingByLeague.get(leagueId) || [];
+          const providerUpcomingKeys = new Set(providerUpcoming.map(event=>[event.date,auditName(event.home),auditName(event.away)].join("|")));
+          const d1UpcomingKeys = d1UpcomingByLeague.get(leagueId) || new Set();
+          const missingUpcoming = providerUpcoming.filter(event=>!d1UpcomingKeys.has([event.date,auditName(event.home),auditName(event.away)].join("|")));
+          const extraUpcoming = Array.from(d1UpcomingKeys).filter(key=>!providerUpcomingKeys.has(key));
           return {
             leagueId, leagueName:coverageNames[leagueId],
             expectedTeams:directory?.length ?? null,
@@ -940,6 +978,9 @@ export default {
             teamsWithAtLeast10:ready,
             teamsBelow10:checkedTeams.length-ready,
             upcomingMatches:upcomingByLeague.get(leagueId) || 0,
+            providerUpcomingMatches:Array.isArray(providerUpcoming)?providerUpcoming.length:null,
+            missingUpcomingInD1:missingUpcoming.slice(0,50).map(event=>({date:event.date,home:event.home,away:event.away})),
+            d1UpcomingNotInProvider:extraUpcoming.slice(0,50),
             directoryVerified:Array.isArray(directory),
             missingTeams:checkedTeams.filter(team=>!team.ready).slice(0,100),
             archiveTeamsNotInDirectory:archivedTeams.filter(row=>!expected.some(team=>normalizeTeamName(team.name)===normalizeTeamName(row.teamName))).slice(0,50).map(row=>row.teamName)
