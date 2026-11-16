@@ -109,9 +109,25 @@ function hasUsableStatistics(value) {
 // existing statistics or infer a match from league IDs alone.
 async function enrichExactCrossSourceMatches(env) {
   if (!env.DB) return { checked: 0, updated: 0, reason: "DB binding missing" };
+  // Keyset pagination: each scheduled run examines only a small new window.
+  // Cursors live in KV, so repeated cron runs do not reread the same archive prefix.
+  const cursorKey = "mam:cross-source-scan-cursors:v1";
+  const cursors = env.MAM_KV ? (await env.MAM_KV.get(cursorKey, "json") || {}) : {};
+  const sourceCursor = cursors.source || null;
+  const missingCursor = cursors.missing || null;
+  const sourceSql = "SELECT fixture_id, kickoff, home_team, away_team, home_goals, away_goals, statistics_json FROM matches WHERE source = 'ESPN' AND statistics_json IS NOT NULL AND statistics_json != ''" +
+    (sourceCursor ? " AND (kickoff > ? OR (kickoff = ? AND fixture_id > ?))" : "") +
+    " ORDER BY kickoff ASC, fixture_id ASC LIMIT 400";
+  const missingSql = "SELECT source, fixture_id, kickoff, home_team, away_team, home_goals, away_goals FROM matches WHERE source != 'ESPN' AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null')" +
+    (missingCursor ? " AND (kickoff > ? OR (kickoff = ? AND fixture_id > ?))" : "") +
+    " ORDER BY kickoff ASC, fixture_id ASC LIMIT 500";
   const [sourceRows, missingRows] = await Promise.all([
-    env.DB.prepare("SELECT fixture_id, kickoff, home_team, away_team, home_goals, away_goals, statistics_json FROM matches WHERE source = 'ESPN' AND statistics_json IS NOT NULL AND statistics_json != '' ORDER BY kickoff DESC LIMIT 2000").all(),
-    env.DB.prepare("SELECT source, fixture_id, kickoff, home_team, away_team, home_goals, away_goals FROM matches WHERE source != 'ESPN' AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null') ORDER BY kickoff DESC LIMIT 3000").all()
+    sourceCursor
+      ? env.DB.prepare(sourceSql).bind(sourceCursor.kickoff, sourceCursor.kickoff, sourceCursor.fixtureId).all()
+      : env.DB.prepare(sourceSql).all(),
+    missingCursor
+      ? env.DB.prepare(missingSql).bind(missingCursor.kickoff, missingCursor.kickoff, missingCursor.fixtureId).all()
+      : env.DB.prepare(missingSql).all()
   ]);
   const source = Array.isArray(sourceRows?.results) ? sourceRows.results : [];
   const missing = Array.isArray(missingRows?.results) ? missingRows.results : [];
@@ -155,15 +171,27 @@ async function enrichExactCrossSourceMatches(env) {
     const results = await env.DB.batch(updates.slice(i, i + 50));
     updated += results.reduce((sum, item) => sum + (Number(item?.meta?.changes) || 0), 0);
   }
+  const nextCursors = {
+    source: source.length === 400 && source.length
+      ? { kickoff: source[source.length - 1].kickoff, fixtureId: source[source.length - 1].fixture_id }
+      : null,
+    missing: missing.length === 500 && missing.length
+      ? { kickoff: missing[missing.length - 1].kickoff, fixtureId: missing[missing.length - 1].fixture_id }
+      : null
+  };
+  if (env.MAM_KV) await env.MAM_KV.put(cursorKey, JSON.stringify(nextCursors), { expirationTtl: 60 * 60 * 24 * 30 });
   const report = {
     ranAt: new Date().toISOString(),
     espnRowsScanned: source.length,
+    espnBatchLimit: 400,
     usableEspnStats,
     nonEspnMissingRowsScanned: missing.length,
+    nonEspnBatchLimit: 500,
     exactTeamMatches,
     withinTenMinuteWindow: withinTimeWindow,
     updateAttempts: updates.length,
-    updated
+    updated,
+    cursorsAdvanced: Boolean(nextCursors.source || nextCursors.missing)
   };
   if (env.MAM_KV) await env.MAM_KV.put("mam:cross-source-stats:last:v1", JSON.stringify(report), { expirationTtl: 60 * 60 * 24 * 30 });
   console.log("Cross-source statistics enrichment report", report);
@@ -308,15 +336,24 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     // per queued fixture (a 458-item queue can make the query fail before summaries run).
     // Read a bounded candidate window and exclude queued IDs in JavaScript instead.
     const queuedFixtureIds = new Set(summaryQueue.map(item => String(item.fixtureId || "")).filter(Boolean));
-    const missingRows = await env.DB.prepare(
-      "SELECT fixture_id AS fixtureId FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (" +
+    const discoveryCursorKey = "mam:espn-summary-discovery-cursor:v1";
+    const discoveryCursor = await env.MAM_KV.get(discoveryCursorKey, "json");
+    const discoverySql = "SELECT fixture_id AS fixtureId, kickoff FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (" +
       "statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (" +
       "CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 AND " +
       "CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))" +
-      " ORDER BY kickoff ASC LIMIT 2500"
-    ).all();
+      (discoveryCursor ? " AND (kickoff > ? OR (kickoff = ? AND fixture_id > ?))" : "") +
+      " ORDER BY kickoff ASC, fixture_id ASC LIMIT 300";
+    const missingRows = discoveryCursor
+      ? await env.DB.prepare(discoverySql).bind(discoveryCursor.kickoff, discoveryCursor.kickoff, discoveryCursor.fixtureId).all()
+      : await env.DB.prepare(discoverySql).all();
+    const discoveredRows = Array.isArray(missingRows?.results) ? missingRows.results : [];
+    const lastDiscovered = discoveredRows[discoveredRows.length - 1];
+    await env.MAM_KV.put(discoveryCursorKey, JSON.stringify(discoveredRows.length === 300 && lastDiscovered
+      ? { kickoff: lastDiscovered.kickoff, fixtureId: lastDiscovered.fixtureId }
+      : null), { expirationTtl: 60 * 60 * 24 * 30 });
     await env.MAM_KV.put(discoveryThrottleKey, String(Date.now()), { expirationTtl: 60 * 60 * 24 });
-    for (const row of (Array.isArray(missingRows?.results) ? missingRows.results : [])) {
+    for (const row of discoveredRows) {
       if (summaryQueue.length >= 480) break;
       const fixtureId = String(row.fixtureId || "");
       if (!fixtureId.startsWith("espn-")) continue;
