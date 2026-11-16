@@ -177,14 +177,25 @@ async function ensureArchiveIndexes(env) {
   // Schema changes belong in scheduled maintenance, never on the public request path.
   // The quota guard is created/upgraded once per maintenance window, not on every API call.
   await env.DB.prepare(
-    "CREATE TABLE IF NOT EXISTS mam_api_quota_guard (day TEXT PRIMARY KEY, used INTEGER NOT NULL DEFAULT 0, live_last_ms INTEGER NOT NULL DEFAULT 0)"
+    "CREATE TABLE IF NOT EXISTS mam_api_quota_guard (day TEXT PRIMARY KEY, used INTEGER NOT NULL DEFAULT 0, live_last_ms INTEGER NOT NULL DEFAULT 0, minute_last_ms INTEGER NOT NULL DEFAULT 0)"
   ).run();
-  try {
-    await env.DB.prepare(
-      "ALTER TABLE mam_api_quota_guard ADD COLUMN live_last_ms INTEGER NOT NULL DEFAULT 0"
-    ).run();
-  } catch (_) {
-    // Column already exists; safe to continue.
+
+  // Inspect the live schema instead of swallowing every ALTER TABLE error.
+  // The scheduled migration must fail visibly if D1 cannot apply the change.
+  const quotaSchema = await env.DB.prepare("PRAGMA table_info(mam_api_quota_guard)").all();
+  const quotaColumns = new Set((quotaSchema?.results || []).map(column => String(column.name || "")));
+  for (const [name, definition] of [
+    ["live_last_ms", "INTEGER NOT NULL DEFAULT 0"],
+    ["minute_last_ms", "INTEGER NOT NULL DEFAULT 0"]
+  ]) {
+    if (!quotaColumns.has(name)) {
+      await env.DB.prepare("ALTER TABLE mam_api_quota_guard ADD COLUMN " + name + " " + definition).run();
+    }
+  }
+  const verifiedQuotaSchema = await env.DB.prepare("PRAGMA table_info(mam_api_quota_guard)").all();
+  const verifiedQuotaColumns = new Set((verifiedQuotaSchema?.results || []).map(column => String(column.name || "")));
+  if (!verifiedQuotaColumns.has("live_last_ms") || !verifiedQuotaColumns.has("minute_last_ms")) {
+    throw new Error("D1 quota guard migration verification failed: required columns are missing");
   }
   await env.DB.prepare(
     "CREATE INDEX IF NOT EXISTS idx_matches_league_kickoff ON matches (league_id, kickoff)"
@@ -574,7 +585,9 @@ export default {
       try {
         // D1 maintenance scans are throttled; repeating full-table metadata updates every 15 minutes
         // burns the free row-read allowance without improving fixture freshness.
-        const maintenanceKey = "mam:d1-maintenance-last:v2";
+        // Bump the maintenance marker when introducing a new D1 schema migration.
+        // v3 forces the new minute_last_ms column migration even if v2 ran recently.
+        const maintenanceKey = "mam:d1-maintenance-last:v3";
         const lastMaintenanceAt = Number(env.MAM_KV ? await env.MAM_KV.get(maintenanceKey) : 0);
         if (!lastMaintenanceAt || Date.now() - lastMaintenanceAt >= 24 * 60 * 60 * 1000) {
           await ensureArchiveIndexes(env);
@@ -1292,9 +1305,14 @@ export default {
           });
         }
         const leagueId = String(url.searchParams.get("league") || "").trim();
-        const before = String(url.searchParams.get("before") || new Date().toISOString()).slice(0, 40);
+        const before = String(url.searchParams.get("before") || new Date().toISOString()).trim().slice(0, 40);
         const limitValue = Number.parseInt(url.searchParams.get("limit") || "1500", 10);
         const limit = Number.isFinite(limitValue) ? Math.max(1, Math.min(2000, limitValue)) : 1500;
+        if (!before || !/^\d{4}-\d{2}-\d{2}(?:T.*)?$/.test(before)) {
+          return new Response(JSON.stringify({ error: "Invalid before date; use YYYY-MM-DD or an ISO timestamp" }), {
+            status: 400, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
         if (!leagueId) {
           return new Response(JSON.stringify({ error: "A league ID is required" }), {
             status: 400, headers: { ...cors, "Content-Type": "application/json" }
@@ -1304,18 +1322,37 @@ export default {
           String(url.searchParams.get("teamNames") || "")
             .split(",").map(value => normalizeTeamName(value)).filter(Boolean)
         );
-        const archived = await env.DB.prepare(`
-          SELECT source, fixture_id, league_id, league_name, country, kickoff, status,
-                 home_team_id, home_team, away_team_id, away_team, home_goals, away_goals,
-                 statistics_json, raw_json
-          FROM matches
-          WHERE league_id = ?
-            AND date(kickoff) < date(?)
-            AND home_goals IS NOT NULL
-            AND away_goals IS NOT NULL
-          ORDER BY datetime(kickoff) DESC
-          LIMIT ?
-        `).bind(leagueId, before, limit).all();
+        let archived;
+        try {
+          // kickoff is stored as an ISO date/time string. A direct range predicate
+          // allows idx_matches_league_kickoff to serve this read instead of applying
+          // date() to every row in the selected league.
+          archived = await env.DB.prepare(`
+            SELECT source, fixture_id, league_id, league_name, country, kickoff, status,
+                   home_team_id, home_team, away_team, home_goals, away_goals,
+                   statistics_json, raw_json
+            FROM matches
+            WHERE league_id = ?
+              AND kickoff < ?
+              AND home_goals IS NOT NULL
+              AND away_goals IS NOT NULL
+            ORDER BY kickoff DESC
+            LIMIT ?
+          `).bind(leagueId, before, limit).all();
+        } catch (archiveReadError) {
+          const detail = String(archiveReadError?.message || archiveReadError);
+          console.error("D1 archive/matches read failed", {
+            leagueId, before, limit, teamFilterCount: requestedTeamNames.size, detail
+          });
+          return new Response(JSON.stringify({
+            error: "D1 archive query failed",
+            detail,
+            retryable: /busy|overload|temporar|timeout|connection/i.test(detail)
+          }), {
+            status: 503,
+            headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+          });
+        }
         const archivedRows = Array.isArray(archived?.results) ? archived.results : [];
         // Apply the requested team filter before shaping the response. Previously the
         // browser sent teamNames but this route ignored them and returned the league's
@@ -1793,21 +1830,27 @@ export default {
         const nowMs = Date.now();
         const livePollIntervalMs = 5 * 60 * 1000;
         const reservation = await env.DB.prepare(
-          "UPDATE mam_api_quota_guard SET used = used + 1, live_last_ms = CASE WHEN ? = 1 THEN ? ELSE live_last_ms END WHERE day = ? AND used < ? AND (? = 0 OR live_last_ms = 0 OR live_last_ms <= ?) RETURNING used"
-        ).bind(isLive ? 1 : 0, nowMs, utcDay, dailyLimit, isLive ? 1 : 0, nowMs - livePollIntervalMs).first();
+          "UPDATE mam_api_quota_guard SET used = used + 1, live_last_ms = CASE WHEN ? = 1 THEN ? ELSE live_last_ms END, minute_last_ms = CASE WHEN minute_last_ms <= ? THEN ? ELSE minute_last_ms + 6000 END WHERE day = ? AND used < ? AND minute_last_ms <= ? AND (? = 0 OR live_last_ms = 0 OR live_last_ms <= ?) RETURNING used, live_last_ms, minute_last_ms"
+        ).bind(isLive ? 1 : 0, nowMs, nowMs - 6000, nowMs, utcDay, dailyLimit, nowMs, isLive ? 1 : 0, nowMs - livePollIntervalMs).first();
         if (!reservation) {
           const state = await env.DB.prepare(
-            "SELECT used, live_last_ms FROM mam_api_quota_guard WHERE day = ?"
+            "SELECT used, live_last_ms, minute_last_ms FROM mam_api_quota_guard WHERE day = ?"
           ).bind(utcDay).first();
           const liveWait = isLive && Number(state?.live_last_ms || 0) > nowMs - livePollIntervalMs;
+          const minuteWait = Number(state?.minute_last_ms || 0) > nowMs;
+          const dailyWait = Number(state?.used || 0) >= dailyLimit;
           const retryAt = liveWait
             ? Number(state.live_last_ms) + livePollIntervalMs
-            : Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate() + 1);
+            : minuteWait
+              ? Number(state.minute_last_ms) + 6000
+              : Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate() + 1);
           const retrySeconds = Math.max(1, Math.ceil((retryAt - nowMs) / 1000));
           return new Response(JSON.stringify({
             error: liveWait
               ? "API-Football live fallback is shared and limited to one upstream request every 5 minutes on the Free plan."
-              : "API-Football shared daily safety budget reached.",
+              : dailyWait
+                ? "API-Football shared daily safety budget reached."
+                : "API-Football shared per-minute limit reached; retry after the indicated delay.",
             used: Number(state?.used || 0),
             limit: dailyLimit,
             retryAfterSeconds: retrySeconds
@@ -1821,6 +1864,9 @@ export default {
             }
           });
         }
+        // One request may wait behind the previous device; all others receive Retry-After.
+        const waitMs = Math.max(0, Number(reservation.minute_last_ms || nowMs) - nowMs);
+        if (waitMs > 0) await new Promise(resolve => setTimeout(resolve, waitMs));
       }
 
       const upstreamHeaders = (isESPN || isFixtureDownload || isSportScore)
