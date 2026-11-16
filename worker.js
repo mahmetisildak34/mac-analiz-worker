@@ -179,12 +179,15 @@ async function ensureArchiveIndexes(env) {
   await env.DB.prepare(
     "CREATE TABLE IF NOT EXISTS mam_api_quota_guard (day TEXT PRIMARY KEY, used INTEGER NOT NULL DEFAULT 0, live_last_ms INTEGER NOT NULL DEFAULT 0)"
   ).run();
-  try {
-    await env.DB.prepare(
-      "ALTER TABLE mam_api_quota_guard ADD COLUMN live_last_ms INTEGER NOT NULL DEFAULT 0"
-    ).run();
-  } catch (_) {
-    // Column already exists; safe to continue.
+  for (const column of [
+    "live_last_ms INTEGER NOT NULL DEFAULT 0",
+    "minute_last_ms INTEGER NOT NULL DEFAULT 0"
+  ]) {
+    try {
+      await env.DB.prepare("ALTER TABLE mam_api_quota_guard ADD COLUMN " + column).run();
+    } catch (_) {
+      // Column already exists; safe to continue.
+    }
   }
   await env.DB.prepare(
     "CREATE INDEX IF NOT EXISTS idx_matches_league_kickoff ON matches (league_id, kickoff)"
@@ -1793,8 +1796,8 @@ export default {
         const nowMs = Date.now();
         const livePollIntervalMs = 5 * 60 * 1000;
         const reservation = await env.DB.prepare(
-          "UPDATE mam_api_quota_guard SET used = used + 1, live_last_ms = CASE WHEN ? = 1 THEN ? ELSE live_last_ms END WHERE day = ? AND used < ? AND (? = 0 OR live_last_ms = 0 OR live_last_ms <= ?) RETURNING used"
-        ).bind(isLive ? 1 : 0, nowMs, utcDay, dailyLimit, isLive ? 1 : 0, nowMs - livePollIntervalMs).first();
+          "UPDATE mam_api_quota_guard SET used = used + 1, live_last_ms = CASE WHEN ? = 1 THEN ? ELSE live_last_ms END, minute_last_ms = CASE WHEN minute_last_ms <= ? THEN ? ELSE minute_last_ms + 6000 END WHERE day = ? AND used < ? AND (? = 0 OR live_last_ms = 0 OR live_last_ms <= ?) RETURNING used, live_last_ms, minute_last_ms"
+        ).bind(isLive ? 1 : 0, nowMs, nowMs - 6000, nowMs, utcDay, dailyLimit, isLive ? 1 : 0, nowMs - livePollIntervalMs).first();
         if (!reservation) {
           const state = await env.DB.prepare(
             "SELECT used, live_last_ms FROM mam_api_quota_guard WHERE day = ?"
@@ -1821,6 +1824,28 @@ export default {
             }
           });
         }
+        // Serialize every device behind one shared 10-requests/minute lane.
+        // Queue only briefly; reject excess waiters instead of letting bursts hit the provider.
+        const reservedAt = Number(reservation.minute_last_ms || nowMs);
+        const waitMs = Math.max(0, reservedAt - nowMs);
+        if (waitMs > 8000) {
+          const retrySeconds = Math.ceil(waitMs / 1000);
+          return new Response(JSON.stringify({
+            error: "API-Football shared per-minute queue is busy; retry after the indicated delay.",
+            used: Number(reservation.used || 0),
+            limit: dailyLimit,
+            retryAfterSeconds: retrySeconds
+          }), {
+            status: 429,
+            headers: {
+              ...cors,
+              "Content-Type": "application/json; charset=utf-8",
+              "Cache-Control": "no-store",
+              "Retry-After": String(retrySeconds)
+            }
+          });
+        }
+        if (waitMs > 0) await new Promise(resolve => setTimeout(resolve, waitMs));
       }
 
       const upstreamHeaders = (isESPN || isFixtureDownload || isSportScore)
