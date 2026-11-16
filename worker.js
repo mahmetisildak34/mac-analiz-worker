@@ -348,13 +348,11 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
       ? await env.DB.prepare(discoverySql).bind(discoveryCursor.kickoff, discoveryCursor.kickoff, discoveryCursor.fixtureId).all()
       : await env.DB.prepare(discoverySql).all();
     const discoveredRows = Array.isArray(missingRows?.results) ? missingRows.results : [];
-    const lastDiscovered = discoveredRows[discoveredRows.length - 1];
-    await env.MAM_KV.put(discoveryCursorKey, JSON.stringify(discoveredRows.length === 300 && lastDiscovered
-      ? { kickoff: lastDiscovered.kickoff, fixtureId: lastDiscovered.fixtureId }
-      : null), { expirationTtl: 60 * 60 * 24 * 30 });
+    let lastDiscoveryProcessed = null;
     await env.MAM_KV.put(discoveryThrottleKey, String(Date.now()), { expirationTtl: 60 * 60 * 24 });
     for (const row of discoveredRows) {
       if (summaryQueue.length >= 480) break;
+      lastDiscoveryProcessed = row;
       const fixtureId = String(row.fixtureId || "");
       if (!fixtureId.startsWith("espn-")) continue;
       const splitAt = fixtureId.lastIndexOf("-");
@@ -370,6 +368,12 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
         recoveredSummaryItems++;
       }
     }
+    // Advance only through rows actually examined; never skip overflow when the queue fills.
+    await env.MAM_KV.put(discoveryCursorKey, JSON.stringify(
+      discoveredRows.length === 300 && lastDiscoveryProcessed
+        ? { kickoff: lastDiscoveryProcessed.kickoff, fixtureId: lastDiscoveryProcessed.fixtureId }
+        : null
+    ), { expirationTtl: 60 * 60 * 24 * 30 });
   }
 
   // When the statistics backlog is large (for example, hundreds of missing ESPN
