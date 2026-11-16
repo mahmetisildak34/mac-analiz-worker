@@ -763,7 +763,7 @@ export default {
               : "Fixture scan and statistics retry queue are clear"
         };
         const syncStatusBody = JSON.stringify(syncStatusReport);
-        await env.MAM_KV.put(syncStatusCacheKey, syncStatusBody, { expirationTtl: 5 * 60 });
+        await env.MAM_KV.put(syncStatusCacheKey, syncStatusBody, { expirationTtl: 30 * 60 });
         return new Response(syncStatusBody, {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
         });
@@ -1370,7 +1370,7 @@ export default {
           statuses: Array.isArray(byStatus?.results) ? byStatus.results : []
         };
         const d1StatusBody = JSON.stringify(d1StatusReport);
-        if (env.MAM_KV) await env.MAM_KV.put(d1StatusCacheKey, d1StatusBody, { expirationTtl: 10 * 60 });
+        if (env.MAM_KV) await env.MAM_KV.put(d1StatusCacheKey, d1StatusBody, { expirationTtl: 30 * 60 });
         return new Response(d1StatusBody, {
           status: 200,
           headers: {
