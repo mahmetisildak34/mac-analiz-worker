@@ -709,8 +709,15 @@ export default {
 
       if (path === "archive/sync-status" && request.method === "GET") {
         if (!env.MAM_KV) {
-          return new Response(JSON.stringify({ error: "MAM_KV KV binding is missing" }), {
+          const syncStatusReport = { error: "MAM_KV KV binding is missing" }), {
             status: 503, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const syncStatusCacheKey = "mam:sync-status-cache:v1";
+        const cachedSyncStatus = await env.MAM_KV.get(syncStatusCacheKey);
+        if (cachedSyncStatus) {
+          return new Response(cachedSyncStatus, {
+            status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
           });
         }
         const [state, queueValue, lastSummaryRun, missingStatsResult] = await Promise.all([
@@ -754,7 +761,10 @@ export default {
             : queue.length || missingStatisticsInD1 > 0
               ? "Fixture scan is complete or between batches; missing statistics remain in the archive and are being retried"
               : "Fixture scan and statistics retry queue are clear"
-        }), {
+        };
+        const syncStatusBody = JSON.stringify(syncStatusReport);
+        await env.MAM_KV.put(syncStatusCacheKey, syncStatusBody, { expirationTtl: 5 * 60 });
+        return new Response(syncStatusBody, {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
         });
       }
