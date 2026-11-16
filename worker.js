@@ -875,8 +875,11 @@ export default {
         const leagueId = String(url.searchParams.get("league") || "").trim();
         const limitValue = Number.parseInt(url.searchParams.get("limit") || "1000", 10);
         const limit = Number.isFinite(limitValue) ? Math.max(1, Math.min(2000, limitValue)) : 1000;
+        // Exact calendar-day lookup is a scoreboard query: include scheduled,
+        // live and completed fixtures. The rolling upcoming window remains
+        // scheduled-only so it does not mix historical results into future lists.
         const filters = exactDate
-          ? ["date(kickoff, '+3 hours') = ?", "status IN ('NS','TBD','SCHEDULED')"]
+          ? ["date(kickoff, '+3 hours') = ?"]
           : ["date(kickoff) >= date('now')", "date(kickoff) <= date('now', '+' || ? || ' days')", "status IN ('NS','TBD','SCHEDULED')"];
         const binds = exactDate ? [exactDate] : [days];
         if (leagueId) { filters.push("league_id = ?"); binds.push(leagueId); }
