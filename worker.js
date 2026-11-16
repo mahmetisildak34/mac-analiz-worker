@@ -1333,6 +1333,57 @@ export default {
         cache = null;
       }
 
+      // Shared server-side guard: protect the single API-Football key across
+      // every visitor/device. Cache hits return above and do not consume quota.
+      const isPrimaryFootballApi = !isESPN && !isFixtureDownload && !isFootballData;
+      if (isPrimaryFootballApi) {
+        if (!env.DB) {
+          return new Response(JSON.stringify({
+            error: "API-Football upstream blocked: D1 quota guard is unavailable"
+          }), {
+            status: 503,
+            headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+          });
+        }
+        const utcDay = new Date().toISOString().slice(0, 10);
+        const nowMs = Date.now();
+        await env.DB.prepare(
+          "CREATE TABLE IF NOT EXISTS mam_api_quota_guard (day TEXT PRIMARY KEY, used INTEGER NOT NULL DEFAULT 0, live_last_ms INTEGER NOT NULL DEFAULT 0)"
+        ).run();
+        await env.DB.prepare(
+          "INSERT OR IGNORE INTO mam_api_quota_guard (day, used, live_last_ms) VALUES (?, 0, 0)"
+        ).bind(utcDay).run();
+        const reservation = await env.DB.prepare(
+          "UPDATE mam_api_quota_guard SET used = used + 1, live_last_ms = CASE WHEN ? = 1 THEN ? ELSE live_last_ms END WHERE day = ? AND used < 85 AND (? = 0 OR live_last_ms = 0 OR live_last_ms <= ?) RETURNING used"
+        ).bind(isLive ? 1 : 0, nowMs, utcDay, isLive ? 1 : 0, nowMs - 30 * 60 * 1000).first();
+        if (!reservation) {
+          const state = await env.DB.prepare(
+            "SELECT used, live_last_ms FROM mam_api_quota_guard WHERE day = ?"
+          ).bind(utcDay).first();
+          const liveWait = isLive && Number(state?.live_last_ms || 0) > nowMs - 30 * 60 * 1000;
+          const retryAt = liveWait
+            ? Number(state.live_last_ms) + 30 * 60 * 1000
+            : Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate() + 1);
+          const retrySeconds = Math.max(1, Math.ceil((retryAt - nowMs) / 1000));
+          return new Response(JSON.stringify({
+            error: liveWait
+              ? "API-Football live polling is globally limited to one upstream request per 30 minutes on the free quota."
+              : "API-Football shared daily safety budget reached (85 requests).",
+            used: Number(state?.used || 0),
+            limit: 85,
+            retryAfterSeconds: retrySeconds
+          }), {
+            status: 429,
+            headers: {
+              ...cors,
+              "Content-Type": "application/json; charset=utf-8",
+              "Cache-Control": "no-store",
+              "Retry-After": String(retrySeconds)
+            }
+          });
+        }
+      }
+
       const upstreamHeaders = (isESPN || isFixtureDownload)
         ? { "Accept": "application/json" }
         : isFootballData
