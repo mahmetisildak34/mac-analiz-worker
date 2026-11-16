@@ -1352,31 +1352,34 @@ export default {
           });
         }
         const utcDay = new Date().toISOString().slice(0, 10);
-        const nowMs = Date.now();
+        // Keep the shared D1 guard aligned with the provider plan. Default stays
+        // conservative for Free; after upgrading, set API_FOOTBALL_DAILY_LIMIT
+        // in Worker variables (e.g. 6500 for a 7,500/day Pro plan).
+        const configuredLimit = Number(env.API_FOOTBALL_DAILY_LIMIT || 85);
+        const dailyLimit = Number.isFinite(configuredLimit)
+          ? Math.max(1, Math.floor(configuredLimit))
+          : 85;
         await env.DB.prepare(
           "CREATE TABLE IF NOT EXISTS mam_api_quota_guard (day TEXT PRIMARY KEY, used INTEGER NOT NULL DEFAULT 0, live_last_ms INTEGER NOT NULL DEFAULT 0)"
         ).run();
         await env.DB.prepare(
           "INSERT OR IGNORE INTO mam_api_quota_guard (day, used, live_last_ms) VALUES (?, 0, 0)"
         ).bind(utcDay).run();
+        // Do not impose a 30-minute global live-score lock. Provider's own
+        // per-minute limit and this shared daily reservation are the guards.
         const reservation = await env.DB.prepare(
-          "UPDATE mam_api_quota_guard SET used = used + 1, live_last_ms = CASE WHEN ? = 1 THEN ? ELSE live_last_ms END WHERE day = ? AND used < 85 AND (? = 0 OR live_last_ms = 0 OR live_last_ms <= ?) RETURNING used"
-        ).bind(isLive ? 1 : 0, nowMs, utcDay, isLive ? 1 : 0, nowMs - 30 * 60 * 1000).first();
+          "UPDATE mam_api_quota_guard SET used = used + 1 WHERE day = ? AND used < ? RETURNING used"
+        ).bind(utcDay, dailyLimit).first();
         if (!reservation) {
           const state = await env.DB.prepare(
-            "SELECT used, live_last_ms FROM mam_api_quota_guard WHERE day = ?"
+            "SELECT used FROM mam_api_quota_guard WHERE day = ?"
           ).bind(utcDay).first();
-          const liveWait = isLive && Number(state?.live_last_ms || 0) > nowMs - 30 * 60 * 1000;
-          const retryAt = liveWait
-            ? Number(state.live_last_ms) + 30 * 60 * 1000
-            : Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate() + 1);
-          const retrySeconds = Math.max(1, Math.ceil((retryAt - nowMs) / 1000));
+          const retryAt = Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate() + 1);
+          const retrySeconds = Math.max(1, Math.ceil((retryAt - Date.now()) / 1000));
           return new Response(JSON.stringify({
-            error: liveWait
-              ? "API-Football live polling is globally limited to one upstream request per 30 minutes on the free quota."
-              : "API-Football shared daily safety budget reached (85 requests).",
+            error: "API-Football shared daily safety budget reached.",
             used: Number(state?.used || 0),
-            limit: 85,
+            limit: dailyLimit,
             retryAfterSeconds: retrySeconds
           }), {
             status: 429,
