@@ -761,17 +761,24 @@ export default {
 
       if (path === "archive/quality-check" && request.method === "GET") {
         if (!env.DB) {
-          return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
+          const qualityReport = { error: "D1 binding DB is missing" }), {
             status: 503, headers: { ...cors, "Content-Type": "application/json" }
           });
         }
         // Full archive audit by default (not just upcoming fixtures). Use scope=upcoming
         // only when an explicitly limited forward-looking check is desired.
         const scope = String(url.searchParams.get("scope") || "all").toLowerCase();
-        const limitValue = Number.parseInt(url.searchParams.get("limit") || "10000", 10);
+        const limitValue = Number.parseInt(url.searchParams.get("limit") || "3000", 10);
         const limit = Number.isFinite(limitValue) ? Math.max(100, Math.min(20000, limitValue)) : 10000;
         const daysValue = Number.parseInt(url.searchParams.get("days") || "30", 10);
         const days = Number.isFinite(daysValue) ? Math.max(1, Math.min(60, daysValue)) : 30;
+        const qualityCacheKey = "mam:quality-check-cache:v2:" + scope + ":" + days + ":" + limit;
+        const cachedQualityReport = env.MAM_KV ? await env.MAM_KV.get(qualityCacheKey) : null;
+        if (cachedQualityReport) {
+          return new Response(cachedQualityReport, {
+            status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+          });
+        }
         const where = scope === "upcoming"
           ? "WHERE date(kickoff) >= date('now') AND date(kickoff) <= date('now', '+' || ? || ' days') AND status IN ('NS','TBD','SCHEDULED')"
           : "";
@@ -1018,7 +1025,10 @@ export default {
           priorityLeagueCoverage,
           priorityLeagueDirectoryErrors: directoryErrors,
           priorityLeagueCoverageNote: "Takım kapsamı ESPN takım rehberiyle karşılaştırılır; rehber alınamayan liglerde yalnızca arşivde gözlenen takımlar sayılır."
-        }), {
+        };
+        const qualityReportBody = JSON.stringify(qualityReport);
+        if (env.MAM_KV) await env.MAM_KV.put(qualityCacheKey, qualityReportBody, { expirationTtl: 6 * 60 * 60 });
+        return new Response(qualityReportBody, {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
         });
       }
