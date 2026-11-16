@@ -174,6 +174,18 @@ async function enrichExactCrossSourceMatches(env) {
 // CREATE INDEX IF NOT EXISTS leaves every existing match row untouched.
 async function ensureArchiveIndexes(env) {
   if (!env.DB) return;
+  // Schema changes belong in scheduled maintenance, never on the public request path.
+  // The quota guard is created/upgraded once per maintenance window, not on every API call.
+  await env.DB.prepare(
+    "CREATE TABLE IF NOT EXISTS mam_api_quota_guard (day TEXT PRIMARY KEY, used INTEGER NOT NULL DEFAULT 0, live_last_ms INTEGER NOT NULL DEFAULT 0)"
+  ).run();
+  try {
+    await env.DB.prepare(
+      "ALTER TABLE mam_api_quota_guard ADD COLUMN live_last_ms INTEGER NOT NULL DEFAULT 0"
+    ).run();
+  } catch (_) {
+    // Column already exists; safe to continue.
+  }
   await env.DB.prepare(
     "CREATE INDEX IF NOT EXISTS idx_matches_league_kickoff ON matches (league_id, kickoff)"
   ).run();
@@ -1564,18 +1576,7 @@ export default {
         const dailyLimit = Number.isFinite(configuredLimit)
           ? Math.max(1, Math.floor(configuredLimit))
           : 85;
-        await env.DB.prepare(
-          "CREATE TABLE IF NOT EXISTS mam_api_quota_guard (day TEXT PRIMARY KEY, used INTEGER NOT NULL DEFAULT 0, live_last_ms INTEGER NOT NULL DEFAULT 0)"
-        ).run();
-        // Upgrade older D1 installations created before the shared live timestamp existed.
-        // CREATE TABLE IF NOT EXISTS does not alter an existing table.
-        try {
-          await env.DB.prepare(
-            "ALTER TABLE mam_api_quota_guard ADD COLUMN live_last_ms INTEGER NOT NULL DEFAULT 0"
-          ).run();
-        } catch (_) {
-          // Column already exists; safe to continue.
-        }
+        // Quota-guard schema is maintained by the scheduled migration, not per request.
         await env.DB.prepare(
           "INSERT OR IGNORE INTO mam_api_quota_guard (day, used, live_last_ms) VALUES (?, 0, 0)"
         ).bind(utcDay).run();
@@ -1622,9 +1623,12 @@ export default {
           ? { "X-Auth-Token": apiKey }
           : { "x-apisports-key": apiKey };
 
+      // Bound provider latency so a stalled upstream cannot hold the Worker request open.
+      // No automatic retry here: retries could consume extra API-Football quota unexpectedly.
       const upstream = await fetch(targetUrl, {
         method: "GET",
-        headers: upstreamHeaders
+        headers: upstreamHeaders,
+        signal: AbortSignal.timeout(12000)
       });
 
       const responseHeaders = new Headers(cors);
