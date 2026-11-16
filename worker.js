@@ -871,23 +871,78 @@ export default {
         const teamCoverageRows = Array.isArray(teamCoverageResult?.results) ? teamCoverageResult.results : [];
         const upcomingCoverageRows = Array.isArray(upcomingCoverageResult?.results) ? upcomingCoverageResult.results : [];
         const upcomingByLeague = new Map(upcomingCoverageRows.map(row => [String(row.leagueId), Number(row.upcomingMatches || 0)]));
-        const coverageNames = {
-          "39":"İngiltere Premier League","203":"Türkiye Süper Lig","140":"İspanya La Liga",
-          "78":"Almanya Bundesliga","135":"İtalya Serie A","61":"Fransa Ligue 1",
-          "2":"UEFA Şampiyonlar Ligi","3":"UEFA Avrupa Ligi","88":"Hollanda Eredivisie",
-          "94":"Portekiz Primeira Liga","848":"UEFA Konferans Ligi"
-        };
-        const priorityLeagueCoverage = priorityLeagueIds.map(leagueId => {
-          const teams = teamCoverageRows.filter(row => String(row.leagueId) === leagueId);
-          const ready = teams.filter(row => Number(row.completedMatches || 0) >= 10);
+        const priorityLeagueDefinitions = [
+          ["39","eng.1","İngiltere Premier League"],["203","tur.1","Türkiye Süper Lig"],
+          ["140","esp.1","İspanya La Liga"],["78","ger.1","Almanya Bundesliga"],
+          ["135","ita.1","İtalya Serie A"],["61","fra.1","Fransa Ligue 1"],
+          ["2","uefa.champions","UEFA Şampiyonlar Ligi"],["3","uefa.europa","UEFA Avrupa Ligi"],
+          ["88","ned.1","Hollanda Eredivisie"],["94","por.1","Portekiz Primeira Liga"],
+          ["848","uefa.europa.conf","UEFA Konferans Ligi"]
+        ];
+        const coverageNames = Object.fromEntries(priorityLeagueDefinitions.map(([id,slug,name]) => [id,name]));
+        // Fetch the provider's current team directory so a team absent from D1
+        // is visible as missing instead of disappearing from the denominator.
+        const directoryResults = await Promise.allSettled(priorityLeagueDefinitions.map(async ([id,slug]) => {
+          const response = await fetch(ESPN_BASE + "/" + slug + "/teams?limit=500", { headers: { "Accept": "application/json" } });
+          if (!response.ok) throw new Error("ESPN teams HTTP " + response.status);
+          const payload = await response.json();
+          const found = [];
+          const walk = value => {
+            if (!value || typeof value !== "object") return;
+            if (Array.isArray(value)) { value.forEach(walk); return; }
+            if (value.team && typeof value.team === "object") found.push(value.team);
+            if (value.id && (value.displayName || value.name || value.shortDisplayName)) found.push(value);
+            for (const [key,child] of Object.entries(value)) if (key !== "team" && child && typeof child === "object") walk(child);
+          };
+          walk(payload);
+          const unique = new Map();
+          for (const team of found) {
+            const idValue = String(team.id || "");
+            const name = String(team.displayName || team.name || team.shortDisplayName || "").trim();
+            if (idValue && name) unique.set(idValue,{ id:idValue,name });
+          }
+          return { leagueId:id, teams:Array.from(unique.values()) };
+        }));
+        const directoriesByLeague = new Map();
+        const directoryErrors = [];
+        for (let i=0;i<directoryResults.length;i++) {
+          const result = directoryResults[i];
+          const leagueId = priorityLeagueDefinitions[i][0];
+          if (result.status === "fulfilled") directoriesByLeague.set(leagueId,result.value.teams);
+          else directoryErrors.push({ leagueId,error:String(result.reason?.message || result.reason) });
+        }
+        const teamCoverageByLeague = new Map();
+        for (const row of teamCoverageRows) {
+          const leagueId = String(row.leagueId);
+          const list = teamCoverageByLeague.get(leagueId) || [];
+          list.push(row);
+          teamCoverageByLeague.set(leagueId,list);
+        }
+        const priorityLeagueCoverage = priorityLeagueDefinitions.map(([leagueId,slug]) => {
+          const archivedTeams = teamCoverageByLeague.get(leagueId) || [];
+          const directory = directoriesByLeague.get(leagueId);
+          const archivedByName = new Map(archivedTeams.map(row => [normalizeTeamName(row.teamName),row]));
+          const expected = Array.isArray(directory) ? directory : archivedTeams.map(row => ({name:row.teamName}));
+          const checkedTeams = expected.map(team => {
+            const archived = archivedByName.get(normalizeTeamName(team.name));
+            return {
+              team:team.name,
+              completedMatches:Number(archived?.completedMatches || 0),
+              lastMatch:archived?.lastMatch || null,
+              ready:Number(archived?.completedMatches || 0) >= 10
+            };
+          });
+          const ready = checkedTeams.filter(team => team.ready).length;
           return {
-            leagueId, leagueName: coverageNames[leagueId],
-            observedTeams: teams.length,
-            teamsWithAtLeast10: ready.length,
-            teamsBelow10: teams.length - ready.length,
-            upcomingMatches: upcomingByLeague.get(leagueId) || 0,
-            missingTeams: teams.filter(row => Number(row.completedMatches || 0) < 10).slice(0, 100)
-              .map(row => ({ team: row.teamName, completedMatches: Number(row.completedMatches || 0), lastMatch: row.lastMatch }))
+            leagueId, leagueName:coverageNames[leagueId],
+            expectedTeams:directory?.length ?? null,
+            observedTeams:archivedTeams.length,
+            teamsWithAtLeast10:ready,
+            teamsBelow10:checkedTeams.length-ready,
+            upcomingMatches:upcomingByLeague.get(leagueId) || 0,
+            directoryVerified:Array.isArray(directory),
+            missingTeams:checkedTeams.filter(team=>!team.ready).slice(0,100),
+            archiveTeamsNotInDirectory:archivedTeams.filter(row=>!expected.some(team=>normalizeTeamName(team.name)===normalizeTeamName(row.teamName))).slice(0,50).map(row=>row.teamName)
           };
         });
         return new Response(JSON.stringify({
@@ -907,7 +962,8 @@ export default {
           malformedStatisticsCount,
           malformedStatistics,
           priorityLeagueCoverage,
-          priorityLeagueCoverageNote: "Takım sayıları arşivde en az bir tamamlanmış maçı bulunan takımları kapsar; sağlayıcı takım rehberiyle tam takım listesi ayrıca doğrulanmalıdır."
+          priorityLeagueDirectoryErrors: directoryErrors,
+          priorityLeagueCoverageNote: "Takım kapsamı ESPN takım rehberiyle karşılaştırılır; rehber alınamayan liglerde yalnızca arşivde gözlenen takımlar sayılır."
         }), {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
         });
