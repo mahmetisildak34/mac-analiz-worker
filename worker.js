@@ -193,27 +193,30 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   // ESPN scoreboard coverage mirrors the app's supported ESPN fallback competitions.
   // Keep league IDs aligned with the app so every archived row is queryable by league.
   const leagues = [
+    // First priority: the ten main competitions from the app's agreed rollout plan.
     ["39","eng.1","Premier League","England"],
+    ["203","tur.1","Süper Lig","Türkiye"],
+    ["140","esp.1","La Liga","Spain"],
+    ["78","ger.1","Bundesliga","Germany"],
+    ["135","ita.1","Serie A","Italy"],
+    ["61","fra.1","Ligue 1","France"],
+    ["2","uefa.champions","UEFA Champions League","Europe"],
+    ["3","uefa.europa","UEFA Europa League","Europe"],
+    ["88","ned.1","Eredivisie","Netherlands"],
+    ["94","por.1","Primeira Liga","Portugal"],
+    // Conference League is kept immediately after the ten primary leagues.
+    ["848","uefa.europa.conf","UEFA Conference League","Europe"],
     ["40","eng.2","Championship","England"],
     ["45","eng.fa","FA Cup","England"],
     ["48","eng.league_cup","EFL Cup","England"],
-    ["140","esp.1","La Liga","Spain"],
     ["141","esp.2","La Liga 2","Spain"],
     ["143","esp.copa_del_rey","Copa del Rey","Spain"],
-    ["78","ger.1","Bundesliga","Germany"],
     ["79","ger.2","2. Bundesliga","Germany"],
     ["81","ger.dfb_pokal","DFB Pokal","Germany"],
-    ["135","ita.1","Serie A","Italy"],
     ["136","ita.2","Serie B","Italy"],
     ["137","ita.coppa_italia","Coppa Italia","Italy"],
-    ["61","fra.1","Ligue 1","France"],
     ["62","fra.2","Ligue 2","France"],
     ["66","fra.coupe_de_france","Coupe de France","France"],
-    ["2","uefa.champions","UEFA Champions League","Europe"],
-    ["3","uefa.europa","UEFA Europa League","Europe"],
-    ["848","uefa.europa.conf","UEFA Conference League","Europe"],
-    ["94","por.1","Primeira Liga","Portugal"],
-    ["88","ned.1","Eredivisie","Netherlands"],
     ["144","bel.1","Belgian Pro League","Belgium"],
     ["203","tur.1","Süper Lig","Türkiye"],
     ["204","tur.2","1. Lig","Türkiye"],
@@ -469,7 +472,9 @@ export default {
         // Each invocation also fetches up to 16 ESPN match summaries.
         // Keep scoreboard (32) + summary (16) fetches at 48 total, below the 50-subrequest
         // Workers Free limit while increasing archive throughput by one third.
-        await syncEspnFixturesToD1(env, 45, 30, isHourlySync ? 32 : 10);
+        // Build a deep historical D1 archive in the background (about 2.5 seasons),
+        // with the app's ten primary competitions processed first, followed by Conference League.
+        await syncEspnFixturesToD1(env, 900, 30, isHourlySync ? 32 : 10);
       } catch (archiveError) {
         console.log('ESPN D1 archive sync error', String(archiveError?.message || archiveError));
       }
