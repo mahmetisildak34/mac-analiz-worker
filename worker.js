@@ -796,6 +796,7 @@ export default {
       const path = url.pathname.replace(/^\/api\//, "").replace(/\/+$/, "");
 
       const isESPN = path.startsWith("espn/");
+      const isFootballStatus = path === "football/status";
       const isFixtureDownload = path.startsWith("fixturesdownload/");
       const isSportScore = path.startsWith("sportscore/");
       const validESPNPath = /^espn\/[a-zA-Z0-9._-]+\/(?:scoreboard|summary|standings|teams|teams\/[0-9]+\/schedule)$/.test(path) && ( !path.endsWith("/summary") || /^\d+$/.test(url.searchParams.get("event") || "") );
@@ -1625,7 +1626,9 @@ export default {
       }
 
       const isFootballData = path.startsWith("football-data/");
-      const apiPath = isESPN
+      const apiPath = isFootballStatus
+        ? "status"
+        : isESPN
         ? path.slice("espn/".length)
         : isSportScore
           ? path.slice("sportscore/".length)
@@ -1652,6 +1655,57 @@ export default {
           status: 500,
           headers: { ...cors, "Content-Type": "application/json" }
         });
+      }
+
+      // Private, quota-free API-Football account diagnostic. Never return account
+      // identity or the API key; bypass shared D1 reservation and edge cache.
+      if (isFootballStatus) {
+        try {
+          const statusResponse = await fetch(API_BASE + "/status", {
+            method: "GET",
+            headers: { "x-apisports-key": apiKey, "Accept": "application/json" },
+            signal: AbortSignal.timeout(12000)
+          });
+          let statusBody = {};
+          try { statusBody = await statusResponse.json(); } catch (_) {}
+          const account = statusBody?.response?.account || {};
+          const subscription = statusBody?.response?.subscription || {};
+          const requests = statusBody?.response?.requests || {};
+          return new Response(JSON.stringify({
+            diagnostic: "API-Football /status",
+            secretConfigured: Boolean(apiKey),
+            workerReachedProvider: true,
+            providerHttpStatus: statusResponse.status,
+            providerOk: statusResponse.ok && (!statusBody.errors || Object.keys(statusBody.errors).length === 0),
+            accountPresent: Boolean(account && Object.keys(account).length),
+            subscription: {
+              plan: subscription.plan || null,
+              active: typeof subscription.active === "boolean" ? subscription.active : null,
+              end: subscription.end || null
+            },
+            requests: {
+              current: Number.isFinite(Number(requests.current)) ? Number(requests.current) : null,
+              dailyLimit: Number.isFinite(Number(requests.limit_day)) ? Number(requests.limit_day) : null
+            },
+            errors: statusBody.errors || {},
+            checkedAt: new Date().toISOString()
+          }), {
+            status: statusResponse.ok ? 200 : statusResponse.status,
+            headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+          });
+        } catch (diagnosticError) {
+          return new Response(JSON.stringify({
+            diagnostic: "API-Football /status",
+            secretConfigured: Boolean(apiKey),
+            workerReachedProvider: false,
+            providerOk: false,
+            error: String(diagnosticError?.message || diagnosticError),
+            checkedAt: new Date().toISOString()
+          }), {
+            status: 502,
+            headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+          });
+        }
       }
 
       const isESPNStandings = isESPN && apiPath.endsWith("/standings");
@@ -1710,7 +1764,7 @@ export default {
 
       // Shared server-side guard: protect the single API-Football key across
       // every visitor/device. Cache hits return above and do not consume quota.
-      const isPrimaryFootballApi = !isESPN && !isFixtureDownload && !isSportScore && !isFootballData;
+      const isPrimaryFootballApi = !isFootballStatus && !isESPN && !isFixtureDownload && !isSportScore && !isFootballData;
       if (isPrimaryFootballApi) {
         if (!env.DB) {
           return new Response(JSON.stringify({
