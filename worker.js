@@ -474,7 +474,7 @@ export default {
         // Workers Free limit while increasing archive throughput by one third.
         // Build a deep historical D1 archive in the background (about 2.5 seasons),
         // with the app's ten primary competitions processed first, followed by Conference League.
-        await syncEspnFixturesToD1(env, 900, 30, isHourlySync ? 32 : 10);
+        await syncEspnFixturesToD1(env, 900, 180, isHourlySync ? 32 : 10);
       } catch (archiveError) {
         console.log('ESPN D1 archive sync error', String(archiveError?.message || archiveError));
       }
@@ -865,7 +865,7 @@ export default {
             ") SELECT league_id AS leagueId, team_name AS teamName, completed_matches AS completedMatches, last_match AS lastMatch FROM team_counts ORDER BY league_id, completed_matches ASC, team_name"
           ).bind(...priorityLeagueIds, ...priorityLeagueIds).all(),
           env.DB.prepare(
-            "SELECT league_id AS leagueId, COUNT(DISTINCT date(kickoff) || '|' || lower(trim(home_team)) || '|' || lower(trim(away_team))) AS upcomingMatches FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('NS','TBD','SCHEDULED') AND date(kickoff) >= date('now') AND date(kickoff) <= date('now','+30 days') GROUP BY league_id"
+            "SELECT league_id AS leagueId, COUNT(DISTINCT date(kickoff) || '|' || lower(trim(home_team)) || '|' || lower(trim(away_team))) AS upcomingMatches FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('NS','TBD','SCHEDULED') AND date(kickoff) >= date('now') AND date(kickoff) <= date('now','+180 days') GROUP BY league_id"
           ).bind(...priorityLeagueIds).all(),
           env.DB.prepare(
             "SELECT league_id AS leagueId, date(kickoff) AS matchDay, home_team AS home, away_team AS away FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('NS','TBD','SCHEDULED') AND date(kickoff) >= date('now') AND date(kickoff) <= date('now','+30 days')"
@@ -898,7 +898,7 @@ export default {
           const auditStart = new Date();
           auditStart.setUTCHours(0,0,0,0);
           const auditEnd = new Date(auditStart);
-          auditEnd.setUTCDate(auditEnd.getUTCDate()+30);
+          auditEnd.setUTCDate(auditEnd.getUTCDate()+180);
           const dateRange = auditStart.toISOString().slice(0,10).replace(/-/g,"")+"-"+auditEnd.toISOString().slice(0,10).replace(/-/g,"");
           const [teamResponse,scoreboardResponse] = await Promise.all([
             fetch(ESPN_BASE + "/" + slug + "/teams?limit=500", { headers: { "Accept": "application/json" } }),
