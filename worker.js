@@ -878,10 +878,13 @@ export default {
         // Exact calendar-day lookup is a scoreboard query: include scheduled,
         // live and completed fixtures. The rolling upcoming window remains
         // scheduled-only so it does not mix historical results into future lists.
+        // Include a UTC-day margin in SQL, then apply the exact Istanbul-day
+        // filter below. This handles both Z timestamps and explicit +03:00 offsets
+        // without double-shifting already-localized kickoff values.
         const filters = exactDate
-          ? ["date(kickoff, '+3 hours') = ?"]
+          ? ["date(kickoff) >= date(?, '-1 day')", "date(kickoff) < date(?, '+2 days')"]
           : ["date(kickoff) >= date('now')", "date(kickoff) <= date('now', '+' || ? || ' days')", "status IN ('NS','TBD','SCHEDULED')"];
-        const binds = exactDate ? [exactDate] : [days];
+        const binds = exactDate ? [exactDate, exactDate] : [days];
         if (leagueId) { filters.push("league_id = ?"); binds.push(leagueId); }
         binds.push(limit);
         const result = await env.DB.prepare(
