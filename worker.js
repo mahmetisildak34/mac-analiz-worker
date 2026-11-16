@@ -883,15 +883,18 @@ export default {
         // Include a UTC-day margin in SQL, then apply the exact Istanbul-day
         // filter below. This handles both Z timestamps and explicit +03:00 offsets
         // without double-shifting already-localized kickoff values.
+        const resultsOnly = url.searchParams.get("results") === "1";
         const filters = exactDate
           ? ["date(kickoff) >= date(?, '-1 day')", "date(kickoff) < date(?, '+2 days')"]
-          : ["date(kickoff) >= date('now')", "date(kickoff) <= date('now', '+' || ? || ' days')", "status IN ('NS','TBD','SCHEDULED')"];
+          : resultsOnly
+            ? ["date(kickoff) >= date('now', '-' || ? || ' days')", "date(kickoff) <= date('now')", "status IN ('FT','AET','PEN','AWD','WO','FINISHED','COMPLETED')", "home_goals IS NOT NULL", "away_goals IS NOT NULL"]
+            : ["date(kickoff) >= date('now')", "date(kickoff) <= date('now', '+' || ? || ' days')", "status IN ('NS','TBD','SCHEDULED')"];
         const binds = exactDate ? [exactDate, exactDate] : [days];
         if (leagueId) { filters.push("league_id = ?"); binds.push(leagueId); }
         binds.push(limit);
         const result = await env.DB.prepare(
           "SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team_id, home_team, away_team_id, away_team, home_goals, away_goals FROM matches WHERE " +
-          filters.join(" AND ") + " ORDER BY datetime(kickoff) ASC LIMIT ?"
+          filters.join(" AND ") + " ORDER BY datetime(kickoff) " + (resultsOnly ? "DESC" : "ASC") + " LIMIT ?"
         ).bind(...binds).all();
         const sourcePriority = source => {
           const value = String(source || "").toLowerCase();
