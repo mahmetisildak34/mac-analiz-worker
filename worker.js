@@ -109,16 +109,17 @@ function hasUsableStatistics(value) {
 // existing statistics or infer a match from league IDs alone.
 async function enrichExactCrossSourceMatches(env) {
   if (!env.DB) return { checked: 0, updated: 0, reason: "DB binding missing" };
-  // Keyset pagination: each scheduled run examines only a small new window.
-  // Cursors live in KV, so repeated cron runs do not reread the same archive prefix.
-  const cursorKey = "mam:cross-source-scan-cursors:v1";
+  const cursorKey = "mam:cross-source-scan-cursors:v2";
   const cursors = env.MAM_KV ? (await env.MAM_KV.get(cursorKey, "json") || {}) : {};
   const sourceCursor = cursors.source || null;
   const missingCursor = cursors.missing || null;
-  const sourceSql = "SELECT fixture_id, kickoff, home_team, away_team, home_goals, away_goals, statistics_json FROM matches WHERE source = 'ESPN' AND statistics_json IS NOT NULL AND statistics_json != ''" +
+
+  // Include provider team IDs for diagnostics, but do not assume IDs are shared
+  // across providers. Team names, score and kickoff remain the cross-provider key.
+  const sourceSql = "SELECT fixture_id, kickoff, country, league_name, home_team, away_team, home_goals, away_goals, statistics_json FROM matches WHERE source = 'ESPN' AND statistics_json IS NOT NULL AND statistics_json != ''" +
     (sourceCursor ? " AND (kickoff > ? OR (kickoff = ? AND fixture_id > ?))" : "") +
     " ORDER BY kickoff ASC, fixture_id ASC LIMIT 400";
-  const missingSql = "SELECT source, fixture_id, kickoff, home_team, away_team, home_goals, away_goals FROM matches WHERE source != 'ESPN' AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null')" +
+  const missingSql = "SELECT source, fixture_id, kickoff, country, league_name, home_team, away_team, home_goals, away_goals FROM matches WHERE source != 'ESPN' AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 AND CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))" +
     (missingCursor ? " AND (kickoff > ? OR (kickoff = ? AND fixture_id > ?))" : "") +
     " ORDER BY kickoff ASC, fixture_id ASC LIMIT 500";
   const [sourceRows, missingRows] = await Promise.all([
@@ -131,69 +132,105 @@ async function enrichExactCrossSourceMatches(env) {
   ]);
   const source = Array.isArray(sourceRows?.results) ? sourceRows.results : [];
   const missing = Array.isArray(missingRows?.results) ? missingRows.results : [];
-  const index = new Map();
+
+  const normalizeMatchTeam = value => String(value || "").normalize("NFD").toLowerCase()
+    .replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i")
+    .replace(/&/g, " and ")
+    .replace(/\b(football club|soccer club|fc|afc|cf|sc|fk|sk|as|a\.s\.|club|calcio)\b/g, " ")
+    .replace(/\b(u\d{2}|women|womens|ladies)\b/g, " ")
+    .replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
+  const normalizeLeague = value => String(value || "").normalize("NFD").toLowerCase()
+    .replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
+  const matchKey = row => normalizeMatchTeam(row.home_team) + "|" + normalizeMatchTeam(row.away_team);
+  const statsIndex = new Map();
   let usableEspnStats = 0;
   for (const row of source) {
     if (!hasUsableStatistics(row.statistics_json)) continue;
     usableEspnStats++;
-    const key = normalizeTeamName(row.home_team) + "|" + normalizeTeamName(row.away_team);
-    if (!key || key === "|") continue;
+    const key = matchKey(row);
     const time = Date.parse(row.kickoff || "");
-    if (!Number.isFinite(time)) continue;
-    const list = index.get(key) || [];
-    list.push({ fixtureId: row.fixture_id, time, homeGoals: row.home_goals, awayGoals: row.away_goals, statistics: row.statistics_json });
-    index.set(key, list);
+    if (!key || key === "|" || !Number.isFinite(time)) continue;
+    const list = statsIndex.get(key) || [];
+    list.push({
+      fixtureId: row.fixture_id, time, country: normalizeLeague(row.country),
+      league: normalizeLeague(row.league_name),
+      homeGoals: row.home_goals, awayGoals: row.away_goals,
+      statistics: row.statistics_json
+    });
+    statsIndex.set(key, list);
   }
+
   const updates = [];
   let exactTeamMatches = 0;
-  let withinTimeWindow = 0;
+  let withinExpandedWindow = 0;
+  let ambiguousMatches = 0;
+  let scoreMismatches = 0;
   for (const row of missing) {
-    const key = normalizeTeamName(row.home_team) + "|" + normalizeTeamName(row.away_team);
+    const key = matchKey(row);
     const time = Date.parse(row.kickoff || "");
-    if (!Number.isFinite(time)) continue;
-    const candidates = index.get(key) || [];
-    if (candidates.length) exactTeamMatches++;
-    let best = null, bestDelta = Infinity;
-    for (const candidate of candidates) {
-      const delta = Math.abs(candidate.time - time);
-      const sameScore = row.home_goals != null && row.away_goals != null && candidate.homeGoals != null && candidate.awayGoals != null && Number(row.home_goals) === Number(candidate.homeGoals) && Number(row.away_goals) === Number(candidate.awayGoals);
-      if (sameScore && delta <= 10 * 60 * 1000 && delta < bestDelta) { best = candidate; bestDelta = delta; }
+    if (!Number.isFinite(time) || !key || key === "|") continue;
+    const candidates = statsIndex.get(key) || [];
+    if (!candidates.length) continue;
+    exactTeamMatches++;
+    const sameScore = candidates.filter(candidate =>
+      row.home_goals != null && row.away_goals != null &&
+      candidate.homeGoals != null && candidate.awayGoals != null &&
+      Number(row.home_goals) === Number(candidate.homeGoals) &&
+      Number(row.away_goals) === Number(candidate.awayGoals)
+    );
+    if (!sameScore.length) { scoreMismatches++; continue; }
+
+    // Expand the former 10-minute window to 6 hours to tolerate provider kickoff
+    // corrections/time-zone representation differences. Score + ordered teams
+    // + compatible competition context remain mandatory safeguards.
+    const safeCandidates = sameScore
+      .map(candidate => ({
+        ...candidate,
+        delta: Math.abs(candidate.time - time),
+        sameCountry: !normalizeLeague(row.country) || !candidate.country ||
+          normalizeLeague(row.country) === candidate.country,
+        sameLeague: !normalizeLeague(row.league_name) || !candidate.league ||
+          normalizeLeague(row.league_name) === candidate.league
+      }))
+      .filter(candidate => candidate.delta <= 6 * 60 * 60 * 1000 &&
+        candidate.sameCountry && candidate.sameLeague)
+      .sort((a, b) => a.delta - b.delta);
+    if (!safeCandidates.length) continue;
+    if (safeCandidates.length > 1 &&
+        safeCandidates[1].delta - safeCandidates[0].delta < 30 * 60 * 1000) {
+      ambiguousMatches++;
+      continue;
     }
-    if (best) {
-      withinTimeWindow++;
-      updates.push(env.DB.prepare(
-        "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = ? AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null')"
-      ).bind(best.statistics, row.source, row.fixture_id));
-    }
+    const best = safeCandidates[0];
+    withinExpandedWindow++;
+    updates.push(env.DB.prepare(
+      "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = ? AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 AND CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))"
+    ).bind(best.statistics, row.source, row.fixture_id));
   }
+
   let updated = 0;
   for (let i = 0; i < updates.length; i += 50) {
     const results = await env.DB.batch(updates.slice(i, i + 50));
     updated += results.reduce((sum, item) => sum + (Number(item?.meta?.changes) || 0), 0);
   }
   const nextCursors = {
-    source: source.length === 400 && source.length
+    source: source.length === 400
       ? { kickoff: source[source.length - 1].kickoff, fixtureId: source[source.length - 1].fixture_id }
       : null,
-    missing: missing.length === 500 && missing.length
+    missing: missing.length === 500
       ? { kickoff: missing[missing.length - 1].kickoff, fixtureId: missing[missing.length - 1].fixture_id }
       : null
   };
   if (env.MAM_KV) await env.MAM_KV.put(cursorKey, JSON.stringify(nextCursors), { expirationTtl: 60 * 60 * 24 * 30 });
   const report = {
-    ranAt: new Date().toISOString(),
-    espnRowsScanned: source.length,
-    espnBatchLimit: 400,
-    usableEspnStats,
-    nonEspnMissingRowsScanned: missing.length,
-    nonEspnBatchLimit: 500,
-    exactTeamMatches,
-    withinTenMinuteWindow: withinTimeWindow,
-    updateAttempts: updates.length,
-    updated,
+    ranAt: new Date().toISOString(), espnRowsScanned: source.length,
+    espnBatchLimit: 400, usableEspnStats,
+    nonEspnMissingRowsScanned: missing.length, nonEspnBatchLimit: 500,
+    exactTeamMatches, scoreMismatches, withinExpandedWindow, ambiguousMatches,
+    updateAttempts: updates.length, updated,
     cursorsAdvanced: Boolean(nextCursors.source || nextCursors.missing)
   };
-  if (env.MAM_KV) await env.MAM_KV.put("mam:cross-source-stats:last:v1", JSON.stringify(report), { expirationTtl: 60 * 60 * 24 * 30 });
+  if (env.MAM_KV) await env.MAM_KV.put("mam:cross-source-stats:last:v2", JSON.stringify(report), { expirationTtl: 60 * 60 * 24 * 30 });
   console.log("Cross-source statistics enrichment report", report);
   return report;
 }
