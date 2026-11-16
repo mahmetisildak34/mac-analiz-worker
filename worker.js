@@ -709,7 +709,7 @@ export default {
 
       if (path === "archive/sync-status" && request.method === "GET") {
         if (!env.MAM_KV) {
-          const syncStatusReport = { error: "MAM_KV KV binding is missing" }), {
+          return new Response(JSON.stringify({ error: "MAM_KV KV binding is missing" }), {
             status: 503, headers: { ...cors, "Content-Type": "application/json" }
           });
         }
@@ -735,7 +735,7 @@ export default {
         const coolingDown = queue.length - readyToRetry;
         const missingStatisticsInD1 = Number(missingStatsResult?.total || 0);
         const active = scoreboardActive || queue.length > 0 || missingStatisticsInD1 > 0;
-        return new Response(JSON.stringify({
+        const syncStatusReport = {
           ok: true,
           active,
           complete: !active,
@@ -771,7 +771,7 @@ export default {
 
       if (path === "archive/quality-check" && request.method === "GET") {
         if (!env.DB) {
-          const qualityReport = { error: "D1 binding DB is missing" }), {
+          return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
             status: 503, headers: { ...cors, "Content-Type": "application/json" }
           });
         }
@@ -1304,7 +1304,7 @@ export default {
 
       if (path === "archive/d1-status") {
         if (!env.DB) {
-          const d1StatusReport = { error: "D1 binding DB is missing" }), {
+          return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
             status: 503, headers: { ...cors, "Content-Type": "application/json" }
           });
         }
@@ -1341,7 +1341,7 @@ export default {
         const nextQueueRetryAt = queueCoolingDown.length
           ? new Date(Math.min(...queueCoolingDown.map(item => Number(item.retryAfter || 0)))).toISOString()
           : null;
-        return new Response(JSON.stringify({
+        const d1StatusReport = {
           ok: true,
           total: Number(total?.total || 0),
           statistics: {
