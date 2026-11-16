@@ -601,11 +601,42 @@ async function buildPriorityLeagueStatus(env) {
               AND home_goals IS NOT NULL AND away_goals IS NOT NULL
           ),
           team_appearances AS (
-            SELECT league_id, home_team AS team_name, kickoff, home_team, away_team
+            SELECT league_id, home_team AS team_name, kickoff, home_team, away_team,
+                   statistics_json, source
             FROM completed WHERE COALESCE(home_team,'') <> ''
             UNION ALL
-            SELECT league_id, away_team AS team_name, kickoff, home_team, away_team
+            SELECT league_id, away_team AS team_name, kickoff, home_team, away_team,
+                   statistics_json, source
             FROM completed WHERE COALESCE(away_team,'') <> ''
+          ),
+          ranked_appearances AS (
+            SELECT *, ROW_NUMBER() OVER (
+              PARTITION BY league_id, team_name ORDER BY kickoff DESC, home_team, away_team
+            ) AS recent_rank
+            FROM team_appearances
+          ),
+          recent_team_summary AS (
+            SELECT league_id, team_name, COUNT(*) AS recent_games,
+                   SUM(CASE WHEN statistics_json IS NOT NULL
+                     AND statistics_json <> '' AND statistics_json <> 'null'
+                     AND json_valid(statistics_json) = 1
+                     AND json_type(statistics_json, '$.teams') = 'array'
+                     AND json_array_length(statistics_json, '$.teams') >= 2
+                     AND json_array_length(statistics_json, '$.teams[0].statistics') > 0
+                     AND json_array_length(statistics_json, '$.teams[1].statistics') > 0
+                     THEN 1 ELSE 0 END) AS recent_games_with_real_stats
+            FROM ranked_appearances
+            WHERE recent_rank <= 10
+            GROUP BY league_id, team_name
+          ),
+          recent_league_summary AS (
+            SELECT league_id, COUNT(*) AS teams_checked,
+                   SUM(CASE WHEN recent_games >= 10 THEN 1 ELSE 0 END) AS teams_with_10_recent,
+                   SUM(CASE WHEN recent_games < 10 THEN 10 - recent_games ELSE 0 END) AS missing_recent_team_games,
+                   SUM(recent_games) AS recent_team_appearances,
+                   SUM(recent_games_with_real_stats) AS recent_team_appearances_with_stats,
+                   SUM(recent_games - recent_games_with_real_stats) AS recent_team_appearances_missing_stats
+            FROM recent_team_summary GROUP BY league_id
           ),
           team_games AS (
             SELECT league_id, team_name,
@@ -639,10 +670,17 @@ async function buildPriorityLeagueStatus(env) {
                  COALESCE(l.rows_with_statistics_payload,0) AS rows_with_statistics_payload,
                  COALESCE(t.team_count,0) AS team_count,
                  COALESCE(t.teams_with_10,0) AS teams_with_10,
-                 t.min_team_games, t.max_team_games
+                 t.min_team_games, t.max_team_games,
+                 COALESCE(r.teams_checked,0) AS teams_checked_for_recent_10,
+                 COALESCE(r.teams_with_10_recent,0) AS teams_with_10_recent,
+                 COALESCE(r.missing_recent_team_games,0) AS missing_recent_team_games,
+                 COALESCE(r.recent_team_appearances,0) AS recent_team_appearances,
+                 COALESCE(r.recent_team_appearances_with_stats,0) AS recent_team_appearances_with_stats,
+                 COALESCE(r.recent_team_appearances_missing_stats,0) AS recent_team_appearances_missing_stats
           FROM priority p
           LEFT JOIN league_summary l ON l.league_id = p.league_id
           LEFT JOIN team_summary t ON t.league_id = p.league_id
+          LEFT JOIN recent_league_summary r ON r.league_id = p.league_id
           ORDER BY p.priority_order
         `;
   const result = await env.DB.prepare(sql).all();
@@ -650,9 +688,9 @@ async function buildPriorityLeagueStatus(env) {
     ok: true,
     generatedAt: new Date().toISOString(),
     scope: "ten-priority-leagues",
-    verificationLevel: "archive-coverage-only",
+    verificationLevel: "per-team-recent-10-coverage",
     leagues: Array.isArray(result?.results) ? result.results : [],
-    note: "Archive coverage only. Statistics count means a non-empty valid JSON payload, not verified field completeness. Per-team ten-match completeness, cross-provider fixture identity, live accuracy and statistical field completeness require separate verification."
+    note: "Recent-10 coverage is measured per team from archived completed fixtures. Statistics are counted only when both teams have non-empty statistics arrays in the stored teams payload. This does not independently prove historical fixture completeness beyond the available archive or live-score accuracy."
   };
 }
 
