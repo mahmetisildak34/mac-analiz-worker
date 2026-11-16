@@ -110,8 +110,8 @@ function hasUsableStatistics(value) {
 async function enrichExactCrossSourceMatches(env) {
   if (!env.DB) return { checked: 0, updated: 0, reason: "DB binding missing" };
   const [sourceRows, missingRows] = await Promise.all([
-    env.DB.prepare("SELECT fixture_id, kickoff, home_team, away_team, statistics_json FROM matches WHERE source = 'ESPN' AND statistics_json IS NOT NULL AND statistics_json != '' ORDER BY kickoff DESC LIMIT 2000").all(),
-    env.DB.prepare("SELECT source, fixture_id, kickoff, home_team, away_team FROM matches WHERE source != 'ESPN' AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null') ORDER BY kickoff DESC LIMIT 3000").all()
+    env.DB.prepare("SELECT fixture_id, kickoff, home_team, away_team, home_goals, away_goals, statistics_json FROM matches WHERE source = 'ESPN' AND statistics_json IS NOT NULL AND statistics_json != '' ORDER BY kickoff DESC LIMIT 2000").all(),
+    env.DB.prepare("SELECT source, fixture_id, kickoff, home_team, away_team, home_goals, away_goals FROM matches WHERE source != 'ESPN' AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null') ORDER BY kickoff DESC LIMIT 3000").all()
   ]);
   const source = Array.isArray(sourceRows?.results) ? sourceRows.results : [];
   const missing = Array.isArray(missingRows?.results) ? missingRows.results : [];
@@ -125,7 +125,7 @@ async function enrichExactCrossSourceMatches(env) {
     const time = Date.parse(row.kickoff || "");
     if (!Number.isFinite(time)) continue;
     const list = index.get(key) || [];
-    list.push({ fixtureId: row.fixture_id, time, statistics: row.statistics_json });
+    list.push({ fixtureId: row.fixture_id, time, homeGoals: row.home_goals, awayGoals: row.away_goals, statistics: row.statistics_json });
     index.set(key, list);
   }
   const updates = [];
@@ -140,7 +140,8 @@ async function enrichExactCrossSourceMatches(env) {
     let best = null, bestDelta = Infinity;
     for (const candidate of candidates) {
       const delta = Math.abs(candidate.time - time);
-      if (delta <= 10 * 60 * 1000 && delta < bestDelta) { best = candidate; bestDelta = delta; }
+      const sameScore = row.home_goals != null && row.away_goals != null && candidate.homeGoals != null && candidate.awayGoals != null && Number(row.home_goals) === Number(candidate.homeGoals) && Number(row.away_goals) === Number(candidate.awayGoals);
+      if (sameScore && delta <= 10 * 60 * 1000 && delta < bestDelta) { best = candidate; bestDelta = delta; }
     }
     if (best) {
       withinTimeWindow++;
