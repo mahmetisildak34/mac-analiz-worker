@@ -854,10 +854,10 @@ export default {
         const [teamCoverageResult, upcomingCoverageResult] = await Promise.all([
           env.DB.prepare(
             "WITH appearances AS (" +
-            "SELECT league_id, date(kickoff) AS match_day, lower(trim(home_team)) AS team_name, lower(trim(away_team)) AS opponent_name, kickoff " +
+            "SELECT league_id, date(kickoff) AS match_day, lower(trim(home_team)) AS team_name, lower(trim(away_team)) AS opponent_name " +
             "FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('FT','AET','PEN') AND home_goals IS NOT NULL AND away_goals IS NOT NULL " +
             "UNION " +
-            "SELECT league_id, date(kickoff) AS match_day, lower(trim(away_team)) AS team_name, lower(trim(home_team)) AS opponent_name, kickoff " +
+            "SELECT league_id, date(kickoff) AS match_day, lower(trim(away_team)) AS team_name, lower(trim(home_team)) AS opponent_name " +
             "FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('FT','AET','PEN') AND home_goals IS NOT NULL AND away_goals IS NOT NULL" +
             "), team_counts AS (" +
             "SELECT league_id, team_name, COUNT(*) AS completed_matches, MAX(match_day) AS last_match FROM appearances GROUP BY league_id, team_name" +
