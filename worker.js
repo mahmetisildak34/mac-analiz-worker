@@ -1299,6 +1299,10 @@ export default {
             status: 400, headers: { ...cors, "Content-Type": "application/json" }
           });
         }
+        const requestedTeamNames = new Set(
+          String(url.searchParams.get("teamNames") || "")
+            .split(",").map(value => normalizeTeamName(value)).filter(Boolean)
+        );
         const archived = await env.DB.prepare(`
           SELECT source, fixture_id, league_id, league_name, country, kickoff, status,
                  home_team_id, home_team, away_team_id, away_team, home_goals, away_goals,
@@ -1311,7 +1315,17 @@ export default {
           ORDER BY datetime(kickoff) DESC
           LIMIT ?
         `).bind(leagueId, before, limit).all();
-        const matches = (Array.isArray(archived?.results) ? archived.results : []).map(row => {
+        const archivedRows = Array.isArray(archived?.results) ? archived.results : [];
+        // Apply the requested team filter before shaping the response. Previously the
+        // browser sent teamNames but this route ignored them and returned the league's
+        // first 2,000 rows, so a team's older fixtures could be pushed out by other clubs.
+        const filteredRows = requestedTeamNames.size
+          ? archivedRows.filter(row =>
+              requestedTeamNames.has(normalizeTeamName(row.home_team)) ||
+              requestedTeamNames.has(normalizeTeamName(row.away_team))
+            )
+          : archivedRows;
+        const matches = filteredRows.map(row => {
           let statistics = null;
           let raw = null;
           try { statistics = row.statistics_json ? JSON.parse(row.statistics_json) : null; } catch (_) {}
@@ -1331,7 +1345,10 @@ export default {
           };
         });
         return new Response(JSON.stringify({
-          ok: true, leagueId, count: matches.length, response: matches
+          ok: true, leagueId, count: matches.length,
+          rawCount: archivedRows.length,
+          teamFilterApplied: requestedTeamNames.size > 0,
+          response: matches
         }), {
           status: 200,
           headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "private, max-age=60" }
