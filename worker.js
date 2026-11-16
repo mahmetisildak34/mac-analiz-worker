@@ -658,7 +658,7 @@ export default {
         });
       }
 
-      const path = url.pathname.replace(/^\/api\//, "");
+      const path = url.pathname.replace(/^\/api\//, "").replace(/\/+$/, "");
 
       const isESPN = path.startsWith("espn/");
       const isFixtureDownload = path.startsWith("fixturesdownload/");
