@@ -242,7 +242,7 @@ async function ensureArchiveIndexes(env) {
   // Schema changes belong in scheduled maintenance, never on the public request path.
   // The quota guard is created/upgraded once per maintenance window, not on every API call.
   await env.DB.prepare(
-    "CREATE TABLE IF NOT EXISTS mam_api_quota_guard (day TEXT PRIMARY KEY, used INTEGER NOT NULL DEFAULT 0, live_last_ms INTEGER NOT NULL DEFAULT 0, minute_last_ms INTEGER NOT NULL DEFAULT 0, provider_cooldown_until_ms INTEGER NOT NULL DEFAULT 0)"
+    "CREATE TABLE IF NOT EXISTS mam_api_quota_guard (day TEXT PRIMARY KEY, used INTEGER NOT NULL DEFAULT 0, live_last_ms INTEGER NOT NULL DEFAULT 0, minute_last_ms INTEGER NOT NULL DEFAULT 0)"
   ).run();
 
   // Inspect the live schema instead of swallowing every ALTER TABLE error.
@@ -251,8 +251,7 @@ async function ensureArchiveIndexes(env) {
   const quotaColumns = new Set((quotaSchema?.results || []).map(column => String(column.name || "")));
   for (const [name, definition] of [
     ["live_last_ms", "INTEGER NOT NULL DEFAULT 0"],
-    ["minute_last_ms", "INTEGER NOT NULL DEFAULT 0"],
-    ["provider_cooldown_until_ms", "INTEGER NOT NULL DEFAULT 0"]
+    ["minute_last_ms", "INTEGER NOT NULL DEFAULT 0"]
   ]) {
     if (!quotaColumns.has(name)) {
       await env.DB.prepare("ALTER TABLE mam_api_quota_guard ADD COLUMN " + name + " " + definition).run();
@@ -260,7 +259,7 @@ async function ensureArchiveIndexes(env) {
   }
   const verifiedQuotaSchema = await env.DB.prepare("PRAGMA table_info(mam_api_quota_guard)").all();
   const verifiedQuotaColumns = new Set((verifiedQuotaSchema?.results || []).map(column => String(column.name || "")));
-  if (!verifiedQuotaColumns.has("live_last_ms") || !verifiedQuotaColumns.has("minute_last_ms") || !verifiedQuotaColumns.has("provider_cooldown_until_ms")) {
+  if (!verifiedQuotaColumns.has("live_last_ms") || !verifiedQuotaColumns.has("minute_last_ms")) {
     throw new Error("D1 quota guard migration verification failed: required columns are missing");
   }
   await env.DB.prepare(
@@ -705,8 +704,8 @@ export default {
         // D1 maintenance scans are throttled; repeating full-table metadata updates every 15 minutes
         // burns the free row-read allowance without improving fixture freshness.
         // Bump the maintenance marker when introducing a new D1 schema migration.
-        // v4 adds shared provider-side 429 cooldown persistence.
-        const maintenanceKey = "mam:d1-maintenance-last:v4";
+        // v3 maintains the existing shared minute guard schema.
+        const maintenanceKey = "mam:d1-maintenance-last:v3";
         const lastMaintenanceAt = Number(env.MAM_KV ? await env.MAM_KV.get(maintenanceKey) : 0);
         if (!lastMaintenanceAt || Date.now() - lastMaintenanceAt >= 24 * 60 * 60 * 1000) {
           await ensureArchiveIndexes(env);
@@ -1950,21 +1949,14 @@ export default {
         const livePollIntervalMs = 5 * 60 * 1000;
         const minimumRequestSpacingMs = 8000; // Stay below the provider 10-requests/minute ceiling with headroom.
         const quotaState = await env.DB.prepare(
-          "SELECT used, live_last_ms, minute_last_ms, provider_cooldown_until_ms FROM mam_api_quota_guard WHERE day = ?"
+          "SELECT used, live_last_ms, minute_last_ms FROM mam_api_quota_guard WHERE day = ?"
         ).bind(utcDay).first();
-        const providerCooldownUntil = Number(quotaState?.provider_cooldown_until_ms || 0);
-        if (providerCooldownUntil > nowMs) {
-          const retrySeconds = Math.max(1, Math.ceil((providerCooldownUntil - nowMs) / 1000));
-          return new Response(JSON.stringify({ error: "API-Football provider rate limit is active; all devices are paused until the shared cooldown expires.", retryAfterSeconds: retrySeconds, providerCooldown: true }), {
-            status: 429, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "Retry-After": String(retrySeconds) }
-          });
-        }
         const reservation = await env.DB.prepare(
-          "UPDATE mam_api_quota_guard SET used = used + 1, live_last_ms = CASE WHEN ? = 1 THEN ? ELSE live_last_ms END, minute_last_ms = ? WHERE day = ? AND used < ? AND minute_last_ms <= ? AND provider_cooldown_until_ms <= ? AND (? = 0 OR live_last_ms = 0 OR live_last_ms <= ?) RETURNING used, live_last_ms, minute_last_ms"
-        ).bind(isLive ? 1 : 0, nowMs, nowMs + minimumRequestSpacingMs, utcDay, dailyLimit, nowMs, nowMs, isLive ? 1 : 0, nowMs - livePollIntervalMs).first();
+          "UPDATE mam_api_quota_guard SET used = used + 1, live_last_ms = CASE WHEN ? = 1 THEN ? ELSE live_last_ms END, minute_last_ms = ? WHERE day = ? AND used < ? AND minute_last_ms <= ? AND (? = 0 OR live_last_ms = 0 OR live_last_ms <= ?) RETURNING used, live_last_ms, minute_last_ms"
+        ).bind(isLive ? 1 : 0, nowMs, nowMs + minimumRequestSpacingMs, utcDay, dailyLimit, nowMs, isLive ? 1 : 0, nowMs - livePollIntervalMs).first();
         if (!reservation) {
           const state = await env.DB.prepare(
-            "SELECT used, live_last_ms, minute_last_ms, provider_cooldown_until_ms FROM mam_api_quota_guard WHERE day = ?"
+            "SELECT used, live_last_ms, minute_last_ms FROM mam_api_quota_guard WHERE day = ?"
           ).bind(utcDay).first();
           const liveWait = isLive && Number(state?.live_last_ms || 0) > nowMs - livePollIntervalMs;
           const minuteWait = Number(state?.minute_last_ms || 0) > nowMs;
@@ -2022,7 +2014,7 @@ export default {
           : 60;
         const cooldownUntil = Date.now() + cooldownSeconds * 1000;
         await env.DB.prepare(
-          "UPDATE mam_api_quota_guard SET provider_cooldown_until_ms = MAX(provider_cooldown_until_ms, ?) WHERE day = ?"
+          "UPDATE mam_api_quota_guard SET minute_last_ms = MAX(minute_last_ms, ?) WHERE day = ?"
         ).bind(cooldownUntil, new Date().toISOString().slice(0, 10)).run();
       }
 
