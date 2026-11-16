@@ -1349,6 +1349,22 @@ export default {
         "Content-Type",
         upstream.headers.get("Content-Type") || "application/json; charset=utf-8"
       );
+      // Expose provider quota headers to the browser app so it can distinguish
+      // daily exhaustion from a short per-minute 429 and stop wasteful retries.
+      for (const headerName of [
+        "x-ratelimit-requests-limit",
+        "x-ratelimit-requests-remaining",
+        "x-ratelimit-limit",
+        "x-ratelimit-remaining",
+        "retry-after"
+      ]) {
+        const headerValue = upstream.headers.get(headerName);
+        if (headerValue) responseHeaders.set(headerName, headerValue);
+      }
+      responseHeaders.set(
+        "Access-Control-Expose-Headers",
+        "x-ratelimit-requests-limit, x-ratelimit-requests-remaining, x-ratelimit-limit, x-ratelimit-remaining, retry-after"
+      );
 
       const response = new Response(upstream.body, {
         status: upstream.status,
