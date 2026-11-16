@@ -267,7 +267,10 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   // Refill toward 480 (hard cap 500) on every scheduled run, not only when below 80.
   const summaryQueueBeforeDiscovery = summaryQueue.length;
   let recoveredSummaryItems = 0;
-  if (summaryQueue.length < 480) {
+  const discoveryThrottleKey = "mam:espn-summary-discovery-last:v1";
+  const lastDiscoveryAt = Number(await env.MAM_KV.get(discoveryThrottleKey) || 0);
+  const discoveryDue = !lastDiscoveryAt || Date.now() - lastDiscoveryAt >= 6 * 60 * 60 * 1000;
+  if (summaryQueue.length < 480 && discoveryDue) {
     // D1 has a bounded bind-parameter budget. Do not generate one SQL placeholder
     // per queued fixture (a 458-item queue can make the query fail before summaries run).
     // Read a bounded candidate window and exclude queued IDs in JavaScript instead.
@@ -279,6 +282,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
       "CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))" +
       " ORDER BY kickoff ASC LIMIT 2500"
     ).all();
+    await env.MAM_KV.put(discoveryThrottleKey, String(Date.now()), { expirationTtl: 60 * 60 * 24 });
     for (const row of (Array.isArray(missingRows?.results) ? missingRows.results : [])) {
       if (summaryQueue.length >= 480) break;
       const fixtureId = String(row.fixtureId || "");
@@ -463,12 +467,17 @@ export default {
     const isHourlySync = !isDailySync;
     if (env.DB) {
       try {
-        // Additive indexes improve archive queries without modifying or deleting stored matches.
-        await ensureArchiveIndexes(env);
-        // Normalize known competition regions in-place; metadata only, no match rows are removed.
-        const normalizedLeagueRows = await normalizeKnownLeagueCountries(env);
-        if (normalizedLeagueRows) console.log("Normalized league country metadata", { rows: normalizedLeagueRows });
-        // Keep a rolling 900-day history plus 30 days of upcoming fixtures across configured ESPN competitions.
+        // D1 maintenance scans are throttled; repeating full-table metadata updates every 15 minutes
+        // burns the free row-read allowance without improving fixture freshness.
+        const maintenanceKey = "mam:d1-maintenance-last:v1";
+        const lastMaintenanceAt = Number(env.MAM_KV ? await env.MAM_KV.get(maintenanceKey) : 0);
+        if (!lastMaintenanceAt || Date.now() - lastMaintenanceAt >= 24 * 60 * 60 * 1000) {
+          await ensureArchiveIndexes(env);
+          const normalizedLeagueRows = await normalizeKnownLeagueCountries(env);
+          if (normalizedLeagueRows) console.log("Normalized league country metadata", { rows: normalizedLeagueRows });
+          if (env.MAM_KV) await env.MAM_KV.put(maintenanceKey, String(Date.now()), { expirationTtl: 60 * 60 * 48 });
+        }
+        // Keep a rolling 900-day history plus 180 days of upcoming fixtures across configured ESPN competitions.
         // Each invocation also fetches up to 16 ESPN match summaries.
         // Keep scoreboard (32) + summary (16) fetches at 48 total, below the 50-subrequest
         // Workers Free limit while increasing archive throughput by one third.
@@ -478,11 +487,15 @@ export default {
       } catch (archiveError) {
         console.log('ESPN D1 archive sync error', String(archiveError?.message || archiveError));
       }
-      // Run cross-provider enrichment independently of ESPN backfill success.
-      // This guarantees a diagnostic report on every scheduled invocation.
+      // Cross-provider enrichment scans historical rows, so run it at most every six hours.
       try {
-        const crossSourceStats = await enrichExactCrossSourceMatches(env);
-        console.log("Scheduled cross-source statistics enrichment", crossSourceStats);
+        const enrichmentThrottleKey = "mam:cross-source-enrichment-last:v1";
+        const lastEnrichmentAt = Number(env.MAM_KV ? await env.MAM_KV.get(enrichmentThrottleKey) : 0);
+        if (!lastEnrichmentAt || Date.now() - lastEnrichmentAt >= 6 * 60 * 60 * 1000) {
+          const crossSourceStats = await enrichExactCrossSourceMatches(env);
+          console.log("Scheduled cross-source statistics enrichment", crossSourceStats);
+          if (env.MAM_KV) await env.MAM_KV.put(enrichmentThrottleKey, String(Date.now()), { expirationTtl: 60 * 60 * 48 });
+        }
       } catch (enrichmentError) {
         const report = { ranAt: new Date().toISOString(), error: String(enrichmentError?.message || enrichmentError) };
         if (env.MAM_KV) await env.MAM_KV.put("mam:cross-source-stats:last:v1", JSON.stringify(report), { expirationTtl: 60 * 60 * 24 * 30 });
