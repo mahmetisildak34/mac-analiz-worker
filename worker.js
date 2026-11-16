@@ -897,6 +897,7 @@ export default {
         };
         const normalizeTeam = value => String(value || "").normalize("NFD").toLowerCase()
           .replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i")
+          .replace(/\b(football club|fc|afc|sk|fk|as|a\.s\.|cf|sc|club|calcio)\b/g, "")
           .replace(/[^a-z0-9]+/g, "").trim();
         const countryForLeague = (leagueId, leagueName, country, source) => canonicalLeagueCountry(source, leagueId, leagueName, country);
         const uniqueRows = new Map();
@@ -916,8 +917,12 @@ export default {
         for (const row of candidateRows) {
           const home = normalizeTeam(row.home_team), away = normalizeTeam(row.away_team);
           const time = Date.parse(String(row.kickoff || ""));
-          const minute = Number.isFinite(time) ? Math.floor(time / 60000) : String(row.kickoff || "").slice(0, 16);
-          const signature = home && away ? [minute, home, away].join("|") : String(row.source) + "|" + String(row.fixture_id);
+          const dateKey = Number.isFinite(time)
+            ? new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(time))
+            : String(row.kickoff || "").slice(0, 10);
+          const signature = home && away
+            ? [row.league_id, dateKey, home, away].join("|")
+            : String(row.source) + "|" + String(row.fixture_id);
           const previous = uniqueRows.get(signature);
           if (!previous || sourcePriority(row.source) > sourcePriority(previous.source)) uniqueRows.set(signature, row);
         }
@@ -1362,6 +1367,15 @@ export default {
         await env.DB.prepare(
           "CREATE TABLE IF NOT EXISTS mam_api_quota_guard (day TEXT PRIMARY KEY, used INTEGER NOT NULL DEFAULT 0, live_last_ms INTEGER NOT NULL DEFAULT 0)"
         ).run();
+        // Upgrade older D1 installations created before the shared live timestamp existed.
+        // CREATE TABLE IF NOT EXISTS does not alter an existing table.
+        try {
+          await env.DB.prepare(
+            "ALTER TABLE mam_api_quota_guard ADD COLUMN live_last_ms INTEGER NOT NULL DEFAULT 0"
+          ).run();
+        } catch (_) {
+          // Column already exists; safe to continue.
+        }
         await env.DB.prepare(
           "INSERT OR IGNORE INTO mam_api_quota_guard (day, used, live_last_ms) VALUES (?, 0, 0)"
         ).bind(utcDay).run();
