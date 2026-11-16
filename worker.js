@@ -1305,9 +1305,14 @@ export default {
           });
         }
         const leagueId = String(url.searchParams.get("league") || "").trim();
-        const before = String(url.searchParams.get("before") || new Date().toISOString()).slice(0, 40);
+        const before = String(url.searchParams.get("before") || new Date().toISOString()).trim().slice(0, 40);
         const limitValue = Number.parseInt(url.searchParams.get("limit") || "1500", 10);
         const limit = Number.isFinite(limitValue) ? Math.max(1, Math.min(2000, limitValue)) : 1500;
+        if (!before || !/^\\d{4}-\\d{2}-\\d{2}(?:T.*)?$/.test(before)) {
+          return new Response(JSON.stringify({ error: "Invalid before date; use YYYY-MM-DD or an ISO timestamp" }), {
+            status: 400, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
         if (!leagueId) {
           return new Response(JSON.stringify({ error: "A league ID is required" }), {
             status: 400, headers: { ...cors, "Content-Type": "application/json" }
@@ -1317,18 +1322,37 @@ export default {
           String(url.searchParams.get("teamNames") || "")
             .split(",").map(value => normalizeTeamName(value)).filter(Boolean)
         );
-        const archived = await env.DB.prepare(`
-          SELECT source, fixture_id, league_id, league_name, country, kickoff, status,
-                 home_team_id, home_team, away_team_id, away_team, home_goals, away_goals,
-                 statistics_json, raw_json
-          FROM matches
-          WHERE league_id = ?
-            AND date(kickoff) < date(?)
-            AND home_goals IS NOT NULL
-            AND away_goals IS NOT NULL
-          ORDER BY datetime(kickoff) DESC
-          LIMIT ?
-        `).bind(leagueId, before, limit).all();
+        let archived;
+        try {
+          // kickoff is stored as an ISO date/time string. A direct range predicate
+          // allows idx_matches_league_kickoff to serve this read instead of applying
+          // date() to every row in the selected league.
+          archived = await env.DB.prepare(`
+            SELECT source, fixture_id, league_id, league_name, country, kickoff, status,
+                   home_team_id, home_team, away_team, home_goals, away_goals,
+                   statistics_json, raw_json
+            FROM matches
+            WHERE league_id = ?
+              AND kickoff < ?
+              AND home_goals IS NOT NULL
+              AND away_goals IS NOT NULL
+            ORDER BY kickoff DESC
+            LIMIT ?
+          `).bind(leagueId, before, limit).all();
+        } catch (archiveReadError) {
+          const detail = String(archiveReadError?.message || archiveReadError);
+          console.error("D1 archive/matches read failed", {
+            leagueId, before, limit, teamFilterCount: requestedTeamNames.size, detail
+          });
+          return new Response(JSON.stringify({
+            error: "D1 archive query failed",
+            detail,
+            retryable: /busy|overload|temporar|timeout|connection/i.test(detail)
+          }), {
+            status: 503,
+            headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+          });
+        }
         const archivedRows = Array.isArray(archived?.results) ? archived.results : [];
         // Apply the requested team filter before shaping the response. Previously the
         // browser sent teamNames but this route ignored them and returned the league's
