@@ -195,6 +195,17 @@ async function ensureArchiveIndexes(env) {
   await env.DB.prepare(
     "CREATE INDEX IF NOT EXISTS idx_matches_updated_at ON matches (updated_at)"
   ).run();
+  // Composite indexes support the scheduled source/scoreboard scans and cross-provider
+  // enrichment queries without repeatedly walking the full matches table.
+  await env.DB.prepare(
+    "CREATE INDEX IF NOT EXISTS idx_matches_source_kickoff ON matches (source, kickoff DESC)"
+  ).run();
+  await env.DB.prepare(
+    "CREATE INDEX IF NOT EXISTS idx_matches_kickoff ON matches (kickoff DESC)"
+  ).run();
+  await env.DB.prepare(
+    "CREATE INDEX IF NOT EXISTS idx_matches_source_status_kickoff ON matches (source, status, kickoff)"
+  ).run();
 }
 
 // KV archive writes are intentionally disabled on the free tier.
