@@ -789,7 +789,7 @@ export default {
         }
         // Cached read-only coverage snapshot for the ten priority competitions.
         // This is an archive coverage indicator, not proof that every club has ten verified matches.
-        const cacheKey = "mam:priority-league-status:v1";
+        const cacheKey = "mam:priority-league-status:v2";
         const cached = env.MAM_KV ? await env.MAM_KV.get(cacheKey) : null;
         if (cached) {
           return new Response(cached, {
@@ -849,7 +849,7 @@ export default {
                    SUM(CASE WHEN UPPER(COALESCE(status,'')) IN ('NS','TBD','PST','SCHEDULED') THEN 1 ELSE 0 END) AS upcoming_rows,
                    COUNT(DISTINCT source) AS source_count,
                    SUM(CASE WHEN statistics_json IS NOT NULL AND statistics_json <> '' AND statistics_json <> 'null'
-                             AND json_valid(statistics_json) = 1 THEN 1 ELSE 0 END) AS rows_with_statistics
+                             AND json_valid(statistics_json) = 1 THEN 1 ELSE 0 END) AS rows_with_statistics_payload
             FROM scoped GROUP BY league_id
           )
           SELECT p.league_id, p.league_name, p.priority_order,
@@ -857,7 +857,7 @@ export default {
                  COALESCE(l.upcoming_rows,0) AS upcoming_rows,
                  COALESCE(l.completed_missing_score,0) AS completed_missing_score,
                  COALESCE(l.source_count,0) AS source_count,
-                 COALESCE(l.rows_with_statistics,0) AS rows_with_statistics,
+                 COALESCE(l.rows_with_statistics_payload,0) AS rows_with_statistics_payload,
                  COALESCE(t.team_count,0) AS team_count,
                  COALESCE(t.teams_with_10,0) AS teams_with_10,
                  t.min_team_games, t.max_team_games
@@ -873,7 +873,7 @@ export default {
           scope: "ten-priority-leagues",
           verificationLevel: "archive-coverage-only",
           leagues: Array.isArray(result?.results) ? result.results : [],
-          note: "Archive coverage only. Per-team ten-match completeness, cross-provider fixture identity, live accuracy and statistical field completeness require separate verification."
+          note: "Archive coverage only. Statistics count means a non-empty valid JSON payload, not verified field completeness. Per-team ten-match completeness, cross-provider fixture identity, live accuracy and statistical field completeness require separate verification."
         };
         const body = JSON.stringify(report);
         if (env.MAM_KV) {
