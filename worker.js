@@ -1468,7 +1468,22 @@ export default {
         // Shared edge cache reduces duplicate ESPN scoreboard calls across all
         // visitors while keeping live scoreboards fresh within 20 seconds.
         // A single-match live summary stays at 5 seconds for clock/stat detail.
-        const responseCacheSeconds = isEspnLiveSummary ? 5 : isEspnLiveScoreboard ? 20 : isSportScore ? 8 : isLive ? 5 : isLineupData ? 300 : isESPN && apiPath === "summary" ? 300 : isLiveStats ? 15 : isESPN ? 900 : isStandings ? STANDINGS_CACHE_SECONDS : CACHE_SECONDS;
+        // Date-scoped fixture lists change more often than historical team data.
+        // Keep today's/upcoming fixture responses short-lived so postponed or
+        // newly published matches appear promptly without turning off edge caching.
+        const isFixtureList = apiPath === "fixtures";
+        const responseCacheSeconds = isEspnLiveSummary ? 5
+          : isEspnLiveScoreboard ? 20
+          : isSportScore ? 8
+          : isLive ? 5
+          : isLineupData ? 300
+          : isESPN && apiPath === "summary" ? 300
+          : isLiveStats ? 15
+          : isESPN ? 900
+          : isStandings ? STANDINGS_CACHE_SECONDS
+          : isFixtureList && url.searchParams.has("date") ? 300
+          : isFixtureList ? 900
+          : CACHE_SECONDS;
         cacheHeaders.set("Cache-Control", "public, max-age=" + responseCacheSeconds);
 
         const cacheCopy = new Response(response.clone().body, {
