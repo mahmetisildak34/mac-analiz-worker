@@ -1294,8 +1294,15 @@ export default {
 
       if (path === "archive/d1-status") {
         if (!env.DB) {
-          return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
+          const d1StatusReport = { error: "D1 binding DB is missing" }), {
             status: 503, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const d1StatusCacheKey = "mam:d1-status-cache:v1";
+        const cachedD1Status = env.MAM_KV ? await env.MAM_KV.get(d1StatusCacheKey) : null;
+        if (cachedD1Status) {
+          return new Response(cachedD1Status, {
+            status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
           });
         }
         const [total, statsCoverage, bySource, missingBySource, byLeague, byStatus, latest, summaryQueue, crossSourceStatsReport, summaryLastRun] = await Promise.all([
@@ -1351,12 +1358,15 @@ export default {
           missingStatisticsBySource: Array.isArray(missingBySource?.results) ? missingBySource.results : [],
           leagues: Array.isArray(byLeague?.results) ? byLeague.results : [],
           statuses: Array.isArray(byStatus?.results) ? byStatus.results : []
-        }), {
+        };
+        const d1StatusBody = JSON.stringify(d1StatusReport);
+        if (env.MAM_KV) await env.MAM_KV.put(d1StatusCacheKey, d1StatusBody, { expirationTtl: 10 * 60 });
+        return new Response(d1StatusBody, {
           status: 200,
           headers: {
             ...cors,
             "Content-Type": "application/json; charset=utf-8",
-            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+            "Cache-Control": "no-store",
             "Pragma": "no-cache",
             "Expires": "0"
           }
