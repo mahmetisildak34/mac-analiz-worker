@@ -1369,6 +1369,7 @@ export default {
         // analysis. Live API-Football is only a fallback; ESPN remains the fast
         // live feed. A 5-minute shared lock prevents every browser refresh from
         // consuming the 85-call daily safety budget.
+        const nowMs = Date.now();
         const livePollIntervalMs = 5 * 60 * 1000;
         const reservation = await env.DB.prepare(
           "UPDATE mam_api_quota_guard SET used = used + 1, live_last_ms = CASE WHEN ? = 1 THEN ? ELSE live_last_ms END WHERE day = ? AND used < ? AND (? = 0 OR live_last_ms = 0 OR live_last_ms <= ?) RETURNING used"
