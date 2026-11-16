@@ -467,7 +467,7 @@ export default {
         // Normalize known competition regions in-place; metadata only, no match rows are removed.
         const normalizedLeagueRows = await normalizeKnownLeagueCountries(env);
         if (normalizedLeagueRows) console.log("Normalized league country metadata", { rows: normalizedLeagueRows });
-        // Keep a rolling 45-day history plus 30 days of upcoming fixtures across configured ESPN competitions.
+        // Keep a rolling 900-day history plus 30 days of upcoming fixtures across configured ESPN competitions.
         // Each invocation also fetches up to 16 ESPN match summaries.
         // Keep scoreboard (32) + summary (16) fetches at 48 total, below the 50-subrequest
         // Workers Free limit while increasing archive throughput by one third.
