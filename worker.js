@@ -495,9 +495,10 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
           summaryRetries.push({ ...item, attempts: Number(item.attempts || 0) + 1, retryAfter: Date.now() + 15 * 60 * 1000 });
         } else {
           summaryRun.noStatisticsReturned++;
-          // Do not permanently mark a match complete when ESPN has not supplied statistics.
-          // Cool down this item and retry it in a later scheduled run.
-          summaryRetries.push({ ...item, attempts: 0, retryAfter: Date.now() + 6 * 60 * 60 * 1000 });
+          // ESPN returned a valid summary but no team statistics. Keep it retryable,
+          // but check at most once per day to avoid repeatedly spending requests on
+          // matches for which the provider has not published a box score yet.
+          summaryRetries.push({ ...item, attempts: 0, retryAfter: Date.now() + 24 * 60 * 60 * 1000 });
         }
       } catch (error) {
         summaryRun.requestFailures++;
