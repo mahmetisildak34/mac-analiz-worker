@@ -821,16 +821,18 @@ export default {
             WHERE UPPER(COALESCE(status,'')) IN ('FT','AET','PEN','FINISHED','COMPLETED')
               AND home_goals IS NOT NULL AND away_goals IS NOT NULL
           ),
-          team_games AS (
-            SELECT league_id, home_team AS team_name,
-                   COUNT(DISTINCT date(kickoff) || '|' || home_team || '|' || away_team) AS games
+          team_appearances AS (
+            SELECT league_id, home_team AS team_name, kickoff, home_team, away_team
             FROM completed WHERE COALESCE(home_team,'') <> ''
-            GROUP BY league_id, home_team
             UNION ALL
-            SELECT league_id, away_team AS team_name,
-                   COUNT(DISTINCT date(kickoff) || '|' || home_team || '|' || away_team) AS games
+            SELECT league_id, away_team AS team_name, kickoff, home_team, away_team
             FROM completed WHERE COALESCE(away_team,'') <> ''
-            GROUP BY league_id, away_team
+          ),
+          team_games AS (
+            SELECT league_id, team_name,
+                   COUNT(DISTINCT date(kickoff) || '|' || home_team || '|' || away_team) AS games
+            FROM team_appearances
+            GROUP BY league_id, team_name
           ),
           team_summary AS (
             SELECT league_id, COUNT(*) AS team_count,
