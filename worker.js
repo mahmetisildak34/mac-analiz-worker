@@ -118,10 +118,10 @@ async function enrichExactCrossSourceMatches(env) {
   // across providers. Team names, score and kickoff remain the cross-provider key.
   const sourceSql = "SELECT fixture_id, kickoff, country, league_name, home_team, away_team, home_goals, away_goals, statistics_json FROM matches WHERE source = 'ESPN' AND statistics_json IS NOT NULL AND statistics_json != ''" +
     (sourceCursor ? " AND (kickoff > ? OR (kickoff = ? AND fixture_id > ?))" : "") +
-    " ORDER BY kickoff ASC, fixture_id ASC LIMIT 400";
-  const missingSql = "SELECT source, fixture_id, kickoff, country, league_name, home_team, away_team, home_goals, away_goals FROM matches WHERE source != 'ESPN' AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 AND CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))" +
+    " ORDER BY kickoff ASC, fixture_id ASC LIMIT 120";
+  const missingSql = "SELECT source, fixture_id, kickoff, country, league_name, home_team, away_team, home_goals, away_goals FROM matches WHERE source != 'ESPN' AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null')" +
     (missingCursor ? " AND (kickoff > ? OR (kickoff = ? AND fixture_id > ?))" : "") +
-    " ORDER BY kickoff ASC, fixture_id ASC LIMIT 500";
+    " ORDER BY kickoff ASC, fixture_id ASC LIMIT 120";
   const [sourceRows, missingRows] = await Promise.all([
     sourceCursor
       ? env.DB.prepare(sourceSql).bind(sourceCursor.kickoff, sourceCursor.kickoff, sourceCursor.fixtureId).all()
@@ -224,8 +224,8 @@ async function enrichExactCrossSourceMatches(env) {
   if (env.MAM_KV) await env.MAM_KV.put(cursorKey, JSON.stringify(nextCursors), { expirationTtl: 60 * 60 * 24 * 30 });
   const report = {
     ranAt: new Date().toISOString(), espnRowsScanned: source.length,
-    espnBatchLimit: 400, usableEspnStats,
-    nonEspnMissingRowsScanned: missing.length, nonEspnBatchLimit: 500,
+    espnBatchLimit: 120, usableEspnStats,
+    nonEspnMissingRowsScanned: missing.length, nonEspnBatchLimit: 120,
     exactTeamMatches, scoreMismatches, withinExpandedWindow, ambiguousMatches,
     updateAttempts: updates.length, updated,
     cursorsAdvanced: Boolean(nextCursors.source || nextCursors.missing)
@@ -367,7 +367,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   let recoveredSummaryItems = 0;
   const discoveryThrottleKey = "mam:espn-summary-discovery-last:v1";
   const lastDiscoveryAt = Number(await env.MAM_KV.get(discoveryThrottleKey) || 0);
-  const discoveryDue = !lastDiscoveryAt || Date.now() - lastDiscoveryAt >= 6 * 60 * 60 * 1000;
+  const discoveryDue = !lastDiscoveryAt || Date.now() - lastDiscoveryAt >= 24 * 60 * 60 * 1000;
   if (summaryQueue.length < 480 && discoveryDue) {
     // D1 has a bounded bind-parameter budget. Do not generate one SQL placeholder
     // per queued fixture (a 458-item queue can make the query fail before summaries run).
@@ -380,7 +380,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
       "CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 AND " +
       "CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))" +
       (discoveryCursor ? " AND (kickoff > ? OR (kickoff = ? AND fixture_id > ?))" : "") +
-      " ORDER BY kickoff ASC, fixture_id ASC LIMIT 300";
+      " ORDER BY kickoff ASC, fixture_id ASC LIMIT 100";
     const missingRows = discoveryCursor
       ? await env.DB.prepare(discoverySql).bind(discoveryCursor.kickoff, discoveryCursor.kickoff, discoveryCursor.fixtureId).all()
       : await env.DB.prepare(discoverySql).all();
@@ -416,8 +416,8 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   // When the statistics backlog is large (for example, hundreds of missing ESPN
   // box scores), shift the safe 48-request budget toward summaries: 24 scoreboard
   // + 24 summary calls. With a small queue retain 32 scoreboard + 16 summaries.
-  const summaryBatchLimit = summaryQueue.length >= 100 ? 24 : 16;
-  const scoreboardBatchLimit = Math.min(maxRequests, 48 - summaryBatchLimit);
+  const summaryBatchLimit = Math.min(4, summaryQueue.length);
+  const scoreboardBatchLimit = Math.min(maxRequests, 8);
   batch = state.jobs.slice(state.cursor, state.cursor + Math.max(1, scoreboardBatchLimit));
   const queueAfterDiscovery = summaryQueue.length;
 
@@ -739,7 +739,7 @@ export default {
       try {
         const enrichmentThrottleKey = "mam:cross-source-enrichment-last:v1";
         const lastEnrichmentAt = Number(env.MAM_KV ? await env.MAM_KV.get(enrichmentThrottleKey) : 0);
-        if (!lastEnrichmentAt || Date.now() - lastEnrichmentAt >= 6 * 60 * 60 * 1000) {
+        if (!lastEnrichmentAt || Date.now() - lastEnrichmentAt >= 24 * 60 * 60 * 1000) {
           const crossSourceStats = await enrichExactCrossSourceMatches(env);
           console.log("Scheduled cross-source statistics enrichment", crossSourceStats);
           if (env.MAM_KV) await env.MAM_KV.put(enrichmentThrottleKey, String(Date.now()), { expirationTtl: 60 * 60 * 48 });
@@ -1690,7 +1690,7 @@ export default {
           statuses: Array.isArray(byStatus?.results) ? byStatus.results : []
         };
         const d1StatusBody = JSON.stringify(d1StatusReport);
-        if (env.MAM_KV) await env.MAM_KV.put(d1StatusCacheKey, d1StatusBody, { expirationTtl: 10 * 60 });
+        if (env.MAM_KV) await env.MAM_KV.put(d1StatusCacheKey, d1StatusBody, { expirationTtl: 60 * 60 });
         return new Response(d1StatusBody, {
           status: 200,
           headers: {
