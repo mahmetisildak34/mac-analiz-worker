@@ -1829,6 +1829,10 @@ export default {
         const reservedAt = Number(reservation.minute_last_ms || nowMs);
         const waitMs = Math.max(0, reservedAt - nowMs);
         if (waitMs > 8000) {
+          // Release the daily reservation when this request is rejected before reaching the provider.
+          await env.DB.prepare(
+            "UPDATE mam_api_quota_guard SET used = CASE WHEN used > 0 THEN used - 1 ELSE 0 END WHERE day = ?"
+          ).bind(utcDay).run();
           const retrySeconds = Math.ceil(waitMs / 1000);
           return new Response(JSON.stringify({
             error: "API-Football shared per-minute queue is busy; retry after the indicated delay.",
