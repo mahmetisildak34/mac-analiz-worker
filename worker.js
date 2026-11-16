@@ -1796,21 +1796,27 @@ export default {
         const nowMs = Date.now();
         const livePollIntervalMs = 5 * 60 * 1000;
         const reservation = await env.DB.prepare(
-          "UPDATE mam_api_quota_guard SET used = used + 1, live_last_ms = CASE WHEN ? = 1 THEN ? ELSE live_last_ms END, minute_last_ms = CASE WHEN minute_last_ms <= ? THEN ? ELSE minute_last_ms + 6000 END WHERE day = ? AND used < ? AND (? = 0 OR live_last_ms = 0 OR live_last_ms <= ?) RETURNING used, live_last_ms, minute_last_ms"
-        ).bind(isLive ? 1 : 0, nowMs, nowMs - 6000, nowMs, utcDay, dailyLimit, isLive ? 1 : 0, nowMs - livePollIntervalMs).first();
+          "UPDATE mam_api_quota_guard SET used = used + 1, live_last_ms = CASE WHEN ? = 1 THEN ? ELSE live_last_ms END, minute_last_ms = CASE WHEN minute_last_ms <= ? THEN ? ELSE minute_last_ms + 6000 END WHERE day = ? AND used < ? AND minute_last_ms <= ? AND (? = 0 OR live_last_ms = 0 OR live_last_ms <= ?) RETURNING used, live_last_ms, minute_last_ms"
+        ).bind(isLive ? 1 : 0, nowMs, nowMs - 6000, nowMs, utcDay, dailyLimit, nowMs, isLive ? 1 : 0, nowMs - livePollIntervalMs).first();
         if (!reservation) {
           const state = await env.DB.prepare(
-            "SELECT used, live_last_ms FROM mam_api_quota_guard WHERE day = ?"
+            "SELECT used, live_last_ms, minute_last_ms FROM mam_api_quota_guard WHERE day = ?"
           ).bind(utcDay).first();
           const liveWait = isLive && Number(state?.live_last_ms || 0) > nowMs - livePollIntervalMs;
+          const minuteWait = Number(state?.minute_last_ms || 0) > nowMs;
+          const dailyWait = Number(state?.used || 0) >= dailyLimit;
           const retryAt = liveWait
             ? Number(state.live_last_ms) + livePollIntervalMs
-            : Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate() + 1);
+            : minuteWait
+              ? Number(state.minute_last_ms) + 6000
+              : Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate() + 1);
           const retrySeconds = Math.max(1, Math.ceil((retryAt - nowMs) / 1000));
           return new Response(JSON.stringify({
             error: liveWait
               ? "API-Football live fallback is shared and limited to one upstream request every 5 minutes on the Free plan."
-              : "API-Football shared daily safety budget reached.",
+              : dailyWait
+                ? "API-Football shared daily safety budget reached."
+                : "API-Football shared per-minute limit reached; retry after the indicated delay.",
             used: Number(state?.used || 0),
             limit: dailyLimit,
             retryAfterSeconds: retrySeconds
@@ -1824,31 +1830,8 @@ export default {
             }
           });
         }
-        // Serialize every device behind one shared 10-requests/minute lane.
-        // Queue only briefly; reject excess waiters instead of letting bursts hit the provider.
-        const reservedAt = Number(reservation.minute_last_ms || nowMs);
-        const waitMs = Math.max(0, reservedAt - nowMs);
-        if (waitMs > 8000) {
-          // Release the daily reservation when this request is rejected before reaching the provider.
-          await env.DB.prepare(
-            "UPDATE mam_api_quota_guard SET used = CASE WHEN used > 0 THEN used - 1 ELSE 0 END WHERE day = ?"
-          ).bind(utcDay).run();
-          const retrySeconds = Math.ceil(waitMs / 1000);
-          return new Response(JSON.stringify({
-            error: "API-Football shared per-minute queue is busy; retry after the indicated delay.",
-            used: Number(reservation.used || 0),
-            limit: dailyLimit,
-            retryAfterSeconds: retrySeconds
-          }), {
-            status: 429,
-            headers: {
-              ...cors,
-              "Content-Type": "application/json; charset=utf-8",
-              "Cache-Control": "no-store",
-              "Retry-After": String(retrySeconds)
-            }
-          });
-        }
+        // One request may wait behind the previous device; all others receive Retry-After.
+        const waitMs = Math.max(0, Number(reservation.minute_last_ms || nowMs) - nowMs);
         if (waitMs > 0) await new Promise(resolve => setTimeout(resolve, waitMs));
       }
 
