@@ -574,7 +574,7 @@ export default {
       try {
         // D1 maintenance scans are throttled; repeating full-table metadata updates every 15 minutes
         // burns the free row-read allowance without improving fixture freshness.
-        const maintenanceKey = "mam:d1-maintenance-last:v1";
+        const maintenanceKey = "mam:d1-maintenance-last:v2";
         const lastMaintenanceAt = Number(env.MAM_KV ? await env.MAM_KV.get(maintenanceKey) : 0);
         if (!lastMaintenanceAt || Date.now() - lastMaintenanceAt >= 24 * 60 * 60 * 1000) {
           await ensureArchiveIndexes(env);
