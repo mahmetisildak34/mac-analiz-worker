@@ -661,11 +661,13 @@ export default {
 
       const isESPN = path.startsWith("espn/");
       const isFixtureDownload = path.startsWith("fixturesdownload/");
+      const isSportScore = path.startsWith("sportscore/");
       const validESPNPath = /^espn\/[a-zA-Z0-9._-]+\/(?:scoreboard|summary|standings|teams|teams\/[0-9]+\/schedule)$/.test(path) && ( !path.endsWith("/summary") || /^\d+$/.test(url.searchParams.get("event") || "") );
       const validFixtureDownloadPath = /^fixturesdownload\/(?:champions-league|europa-league|conference-league)-20(?:24|25|26|27)$/.test(path);
+      const validSportScorePath = /^sportscore\/(?:widget\/(?:matches|match)|v1\/fixtures)$/.test(path);
       const validStandardPath = /^[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)*$/.test(path);
 
-      if (!(isESPN ? validESPNPath : isFixtureDownload ? validFixtureDownloadPath : validStandardPath)) {
+      if (!(isESPN ? validESPNPath : isFixtureDownload ? validFixtureDownloadPath : isSportScore ? validSportScorePath : validStandardPath)) {
         return new Response("Invalid API path", {
           status: 400,
           headers: cors
@@ -676,7 +678,7 @@ export default {
       // Writes and all other private routes still require a signed-in session.
       const publicArchiveRead = request.method === "GET" &&
         (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/quality-check" || path === "archive/live" ||
-         isESPN || isFixtureDownload);
+         isESPN || isFixtureDownload || isSportScore);
       if (!publicArchiveRead) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
         if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
@@ -1266,13 +1268,15 @@ export default {
       const isFootballData = path.startsWith("football-data/");
       const apiPath = isESPN
         ? path.slice("espn/".length)
-        : isFootballData
+        : isSportScore
+          ? path.slice("sportscore/".length)
+          : isFootballData
           ? path.slice("football-data/".length)
           : isFixtureDownload
             ? path.slice("fixturesdownload/".length)
             : path;
 
-      const apiKey = isESPN || isFixtureDownload
+      const apiKey = isESPN || isFixtureDownload || isSportScore
         ? null
         : isFootballData
           ? env.FOOTBALLDATA_API_KEY
@@ -1280,7 +1284,7 @@ export default {
 
       // ESPN and public FixtureDownload feeds do not require an API key.
       // Only API-Football and football-data.org require their respective secrets.
-      if (!isESPN && !isFixtureDownload && !apiKey) {
+      if (!isESPN && !isFixtureDownload && !isSportScore && !apiKey) {
         return new Response(JSON.stringify({
           error: isFootballData
             ? "FOOTBALLDATA_API_KEY secret is missing"
@@ -1292,7 +1296,7 @@ export default {
       }
 
       const isESPNStandings = isESPN && apiPath.endsWith("/standings");
-      const base = isFixtureDownload ? "https://fixturedownload.com/feed/json" : isESPNStandings ? "https://site.api.espn.com/apis/v2/sports/soccer" : isESPN ? ESPN_BASE : isFootballData ? FOOTBALLDATA_BASE : API_BASE;
+      const base = isFixtureDownload ? "https://fixturedownload.com/feed/json" : isSportScore ? "https://sportscore.com/api" : isESPNStandings ? "https://site.api.espn.com/apis/v2/sports/soccer" : isESPN ? ESPN_BASE : isFootballData ? FOOTBALLDATA_BASE : API_BASE;
       const targetUrl = base + "/" + apiPath + url.search;
       const isStandings = /(^|\/)standings$/.test(apiPath);
       const footballDataStatuses = (url.searchParams.get("status") || "").split(",").map(value => value.trim().toUpperCase());
@@ -1309,7 +1313,8 @@ export default {
       // inherit the generic 15-minute ESPN cache. Keep them on the 20-second
       // live cache so scores, goals and match clocks can advance together.
       const isEspnLiveSummary = isESPN && apiPath === "summary" && /^\d+$/.test(url.searchParams.get("event") || "");
-      const isLive = url.searchParams.get("live") === "all" ||
+      const isSportScoreLive = isSportScore && /^(?:widget\/matches|v1\/fixtures|widget\/match)$/.test(apiPath);
+      const isLive = isSportScoreLive || url.searchParams.get("live") === "all" ||
         (isFootballData && apiPath === "matches" && footballDataStatuses.some(value => ["LIVE", "IN_PLAY", "PAUSED"].includes(value))) ||
         isEspnLiveScoreboard || isEspnLiveSummary;
       const isLiveStats = apiPath === "fixtures/statistics" || (isESPN && apiPath === "summary");
@@ -1346,7 +1351,7 @@ export default {
 
       // Shared server-side guard: protect the single API-Football key across
       // every visitor/device. Cache hits return above and do not consume quota.
-      const isPrimaryFootballApi = !isESPN && !isFixtureDownload && !isFootballData;
+      const isPrimaryFootballApi = !isESPN && !isFixtureDownload && !isSportScore && !isFootballData;
       if (isPrimaryFootballApi) {
         if (!env.DB) {
           return new Response(JSON.stringify({
@@ -1416,7 +1421,7 @@ export default {
         }
       }
 
-      const upstreamHeaders = (isESPN || isFixtureDownload)
+      const upstreamHeaders = (isESPN || isFixtureDownload || isSportScore)
         ? { "Accept": "application/json" }
         : isFootballData
           ? { "X-Auth-Token": apiKey }
@@ -1460,7 +1465,7 @@ export default {
         // Shared edge cache reduces duplicate ESPN scoreboard calls across all
         // visitors while keeping live scoreboards fresh within 20 seconds.
         // A single-match live summary stays at 5 seconds for clock/stat detail.
-        const responseCacheSeconds = isEspnLiveSummary ? 5 : isEspnLiveScoreboard ? 20 : isLive ? 5 : isLineupData ? 300 : isESPN && apiPath === "summary" ? 300 : isLiveStats ? 15 : isESPN ? 900 : isStandings ? STANDINGS_CACHE_SECONDS : CACHE_SECONDS;
+        const responseCacheSeconds = isEspnLiveSummary ? 5 : isEspnLiveScoreboard ? 20 : isSportScore ? 8 : isLive ? 5 : isLineupData ? 300 : isESPN && apiPath === "summary" ? 300 : isLiveStats ? 15 : isESPN ? 900 : isStandings ? STANDINGS_CACHE_SECONDS : CACHE_SECONDS;
         cacheHeaders.set("Cache-Control", "public, max-age=" + responseCacheSeconds);
 
         const cacheCopy = new Response(response.clone().body, {
