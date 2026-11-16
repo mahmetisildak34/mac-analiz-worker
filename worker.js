@@ -1442,7 +1442,10 @@ export default {
 
       if (upstream.ok && cache) {
         const cacheHeaders = new Headers(response.headers);
-        const responseCacheSeconds = isLive ? 5 : isLineupData ? 300 : isESPN && apiPath === "summary" ? 300 : isLiveStats ? 15 : isESPN ? 900 : isStandings ? STANDINGS_CACHE_SECONDS : CACHE_SECONDS;
+        // Shared edge cache reduces duplicate ESPN scoreboard calls across all
+        // visitors while keeping live scoreboards fresh within 20 seconds.
+        // A single-match live summary stays at 5 seconds for clock/stat detail.
+        const responseCacheSeconds = isEspnLiveSummary ? 5 : isEspnLiveScoreboard ? 20 : isLive ? 5 : isLineupData ? 300 : isESPN && apiPath === "summary" ? 300 : isLiveStats ? 15 : isESPN ? 900 : isStandings ? STANDINGS_CACHE_SECONDS : CACHE_SECONDS;
         cacheHeaders.set("Cache-Control", "public, max-age=" + responseCacheSeconds);
 
         const cacheCopy = new Response(response.clone().body, {
