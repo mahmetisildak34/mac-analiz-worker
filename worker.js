@@ -195,8 +195,7 @@ async function ensureArchiveIndexes(env) {
   await env.DB.prepare(
     "CREATE INDEX IF NOT EXISTS idx_matches_updated_at ON matches (updated_at)"
   ).run();
-  // Composite indexes support the scheduled source/scoreboard scans and cross-provider
-  // enrichment queries without repeatedly walking the full matches table.
+  // Composite indexes keep scheduled source and cross-provider scans off full-table paths.
   await env.DB.prepare(
     "CREATE INDEX IF NOT EXISTS idx_matches_source_kickoff ON matches (source, kickoff DESC)"
   ).run();
@@ -590,14 +589,13 @@ export default {
         // Build a deep historical D1 archive in the background (about 2.5 seasons),
         // with the app's ten primary competitions processed first, followed by Conference League.
         await syncEspnFixturesToD1(env, 900, 180, isHourlySync ? 32 : 10);
-        // Run the ten-league archive quality snapshot once per day after the archive sync.
+        // Daily archive quality snapshot: one bounded D1 aggregation, then KV-served reads.
         if (isDailySync && env.MAM_KV) {
           try {
-            const dailyQuality = await buildPriorityLeagueStatus(env);
-            await env.MAM_KV.put("mam:priority-league-status:v3", JSON.stringify(dailyQuality), { expirationTtl: 60 * 60 * 48 });
+            const report = await buildPriorityLeagueStatus(env);
+            await env.MAM_KV.put("mam:priority-league-status:v3", JSON.stringify(report), { expirationTtl: 60 * 60 * 48 });
             console.log("Daily priority league archive quality check", {
-              generatedAt: dailyQuality.generatedAt,
-              leagues: dailyQuality.leagues.length
+              generatedAt: report.generatedAt, leagues: report.leagues.length
             });
           } catch (qualityError) {
             console.log("Daily priority league archive quality check failed", String(qualityError?.message || qualityError));
@@ -816,13 +814,13 @@ export default {
       // Writes and all other private routes still require a signed-in session.
       const publicArchiveRead = request.method === "GET" &&
         (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/priority-league-status" || path === "archive/quality-check" || path === "archive/live" ||
-         isESPN || i      if (path === "archive/priority-league-status" && request.method === "GET") {
+         isESPN || isFixtuif (path === "archive/priority-league-status" && request.method === "GET") {
         if (!env.DB) {
           return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
             status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
           });
         }
-        // The daily cron creates this snapshot. Public reads use KV and do not rescan D1.
+        // Daily cron precomputes this report; public reads use KV and avoid rescanning D1.
         const cacheKey = "mam:priority-league-status:v3";
         const cached = env.MAM_KV ? await env.MAM_KV.get(cacheKey) : null;
         if (cached) {
@@ -846,7 +844,7 @@ export default {
         }
       }
 
-          ('135', 'İtalya Serie A', 5),
+      135', 'İtalya Serie A', 5),
               ('61', 'Fransa Ligue 1', 6),
               ('2', 'UEFA Şampiyonlar Ligi', 7),
               ('3', 'UEFA Avrupa Ligi', 8),
