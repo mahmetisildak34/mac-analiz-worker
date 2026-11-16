@@ -814,7 +814,79 @@ export default {
       // Writes and all other private routes still require a signed-in session.
       const publicArchiveRead = request.method === "GET" &&
         (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/priority-league-status" || path === "archive/quality-check" || path === "archive/live" ||
-         isESPN || isFixtuif (path === "archive/priority-league-status" && request.method === "GET") {
+         isESPN || isFixtureDownload || isSportScore);
+      if (!publicArchiveRead) {
+        const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
+        if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
+          return new Response(JSON.stringify({ error: "Authentication required" }), {
+            status: 401, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+          });
+        }
+      }
+
+      if (path === "archive/sync-status" && request.method === "GET") {
+        if (!env.MAM_KV) {
+          return new Response(JSON.stringify({ error: "MAM_KV KV binding is missing" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json" }
+          });
+        }
+        const syncStatusCacheKey = "mam:sync-status-cache:v2";
+        const cachedSyncStatus = await env.MAM_KV.get(syncStatusCacheKey);
+        if (cachedSyncStatus) {
+          return new Response(cachedSyncStatus, {
+            status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+          });
+        }
+        const [state, queueValue, lastSummaryRun, missingStatsResult] = await Promise.all([
+          env.MAM_KV.get("mam:espn-sync-state:v2", "json"),
+          env.MAM_KV.get("mam:espn-summary-queue:v1", "json"),
+          env.MAM_KV.get("mam:espn-summary-last-run:v1", "json"),
+          env.DB ? env.DB.prepare("SELECT COUNT(*) AS total FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 AND CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))").first() : Promise.resolve(null)
+        ]);
+        const jobs = Array.isArray(state?.jobs) ? state.jobs.length : 0;
+        const cursor = Number(state?.cursor || 0);
+        const scoreboardActive = jobs > 0 && cursor < jobs;
+        const queue = Array.isArray(queueValue) ? queueValue : [];
+        const now = Date.now();
+        const readyToRetry = queue.filter(item => Number(item?.retryAfter || 0) <= now).length;
+        const coolingDown = queue.length - readyToRetry;
+        const missingStatisticsInD1 = Number(missingStatsResult?.total || 0);
+        const active = scoreboardActive || queue.length > 0 || missingStatisticsInD1 > 0;
+        const syncStatusReport = {
+          ok: true,
+          active,
+          complete: !active,
+          createdAt: state?.createdAt || null,
+          totalJobs: jobs,
+          processedJobs: Math.min(cursor, jobs),
+          remainingJobs: Math.max(0, jobs - cursor),
+          // progressPercent describes the whole archive+statistics job; never report 100%
+          // while missing ESPN statistics remain. fixtureProgressPercent is scan-only.
+          progressPercent: jobs
+            ? Math.round(Math.min(cursor, jobs) / jobs * 1000) / 10
+            : (active ? 0 : 100),
+          fixtureProgressPercent: jobs ? Math.round(Math.min(cursor, jobs) / jobs * 1000) / 10 : 100,
+          scoreboardActive,
+          scoreboardComplete: !scoreboardActive,
+          statisticsQueuePending: queue.length,
+          missingStatisticsInD1,
+          statisticsReadyToRetry: readyToRetry,
+          statisticsCoolingDown: coolingDown,
+          lastSummaryRun: lastSummaryRun || null,
+          note: scoreboardActive
+            ? "ESPN fixture archive scan is in progress"
+            : queue.length || missingStatisticsInD1 > 0
+              ? "Fixture scan is complete or between batches; missing statistics remain in the archive and are being retried"
+              : "Fixture scan and statistics retry queue are clear"
+        };
+        const syncStatusBody = JSON.stringify(syncStatusReport);
+        await env.MAM_KV.put(syncStatusCacheKey, syncStatusBody, { expirationTtl: 60 });
+        return new Response(syncStatusBody, {
+          status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+        });
+      }
+
+      if (path === "archive/priority-league-status" && request.method === "GET") {
         if (!env.DB) {
           return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
             status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
@@ -842,87 +914,6 @@ export default {
             status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
           });
         }
-      }
-
-      135', 'İtalya Serie A', 5),
-              ('61', 'Fransa Ligue 1', 6),
-              ('2', 'UEFA Şampiyonlar Ligi', 7),
-              ('3', 'UEFA Avrupa Ligi', 8),
-              ('88', 'Hollanda Eredivisie', 9),
-              ('94', 'Portekiz Primeira Liga', 10)
-          ),
-          scoped AS (
-            SELECT CAST(league_id AS TEXT) AS league_id, source, kickoff, status,
-                   home_team, away_team, home_goals, away_goals, statistics_json
-            FROM matches
-            WHERE CAST(league_id AS TEXT) IN ('39','203','140','78','135','61','2','3','88','94')
-          ),
-          completed AS (
-            SELECT * FROM scoped
-            WHERE UPPER(COALESCE(status,'')) IN ('FT','AET','PEN','FINISHED','COMPLETED')
-              AND home_goals IS NOT NULL AND away_goals IS NOT NULL
-          ),
-          team_appearances AS (
-            SELECT league_id, home_team AS team_name, kickoff, home_team, away_team
-            FROM completed WHERE COALESCE(home_team,'') <> ''
-            UNION ALL
-            SELECT league_id, away_team AS team_name, kickoff, home_team, away_team
-            FROM completed WHERE COALESCE(away_team,'') <> ''
-          ),
-          team_games AS (
-            SELECT league_id, team_name,
-                   COUNT(DISTINCT date(kickoff) || '|' || home_team || '|' || away_team) AS games
-            FROM team_appearances
-            GROUP BY league_id, team_name
-          ),
-          team_summary AS (
-            SELECT league_id, COUNT(*) AS team_count,
-                   SUM(CASE WHEN games >= 10 THEN 1 ELSE 0 END) AS teams_with_10,
-                   MIN(games) AS min_team_games,
-                   MAX(games) AS max_team_games
-            FROM team_games GROUP BY league_id
-          ),
-          league_summary AS (
-            SELECT league_id,
-                   COUNT(*) AS archived_rows,
-                   SUM(CASE WHEN UPPER(COALESCE(status,'')) IN ('FT','AET','PEN','FINISHED','COMPLETED')
-                             AND (home_goals IS NULL OR away_goals IS NULL) THEN 1 ELSE 0 END) AS completed_missing_score,
-                   SUM(CASE WHEN UPPER(COALESCE(status,'')) IN ('NS','TBD','PST','SCHEDULED') THEN 1 ELSE 0 END) AS upcoming_rows,
-                   COUNT(DISTINCT source) AS source_count,
-                   SUM(CASE WHEN statistics_json IS NOT NULL AND statistics_json <> '' AND statistics_json <> 'null'
-                             AND json_valid(statistics_json) = 1 THEN 1 ELSE 0 END) AS rows_with_statistics_payload
-            FROM scoped GROUP BY league_id
-          )
-          SELECT p.league_id, p.league_name, p.priority_order,
-                 COALESCE(l.archived_rows,0) AS archived_rows,
-                 COALESCE(l.upcoming_rows,0) AS upcoming_rows,
-                 COALESCE(l.completed_missing_score,0) AS completed_missing_score,
-                 COALESCE(l.source_count,0) AS source_count,
-                 COALESCE(l.rows_with_statistics_payload,0) AS rows_with_statistics_payload,
-                 COALESCE(t.team_count,0) AS team_count,
-                 COALESCE(t.teams_with_10,0) AS teams_with_10,
-                 t.min_team_games, t.max_team_games
-          FROM priority p
-          LEFT JOIN league_summary l ON l.league_id = p.league_id
-          LEFT JOIN team_summary t ON t.league_id = p.league_id
-          ORDER BY p.priority_order
-        `;
-        const result = await env.DB.prepare(sql).all();
-        const report = {
-          ok: true,
-          generatedAt: new Date().toISOString(),
-          scope: "ten-priority-leagues",
-          verificationLevel: "archive-coverage-only",
-          leagues: Array.isArray(result?.results) ? result.results : [],
-          note: "Archive coverage only. Statistics count means a non-empty valid JSON payload, not verified field completeness. Per-team ten-match completeness, cross-provider fixture identity, live accuracy and statistical field completeness require separate verification."
-        };
-        const body = JSON.stringify(report);
-        if (env.MAM_KV) {
-          try { await env.MAM_KV.put(cacheKey, body, { expirationTtl: 600 }); } catch (_) {}
-        }
-        return new Response(body, {
-          status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
-        });
       }
 
       if (path === "archive/quality-check" && request.method === "GET") {
