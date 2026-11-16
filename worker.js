@@ -708,7 +708,7 @@ export default {
       // Read-only match archive and aggregate diagnostics are public.
       // Writes and all other private routes still require a signed-in session.
       const publicArchiveRead = request.method === "GET" &&
-        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/quality-check" || path === "archive/live" ||
+        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/priority-league-status" || path === "archive/quality-check" || path === "archive/live" ||
          isESPN || isFixtureDownload || isSportScore);
       if (!publicArchiveRead) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
@@ -777,6 +777,107 @@ export default {
         const syncStatusBody = JSON.stringify(syncStatusReport);
         await env.MAM_KV.put(syncStatusCacheKey, syncStatusBody, { expirationTtl: 60 });
         return new Response(syncStatusBody, {
+          status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+        });
+      }
+
+      if (path === "archive/priority-league-status" && request.method === "GET") {
+        if (!env.DB) {
+          return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+          });
+        }
+        // Cached read-only coverage snapshot for the ten priority competitions.
+        // This is an archive coverage indicator, not proof that every club has ten verified matches.
+        const cacheKey = "mam:priority-league-status:v1";
+        const cached = env.MAM_KV ? await env.MAM_KV.get(cacheKey) : null;
+        if (cached) {
+          return new Response(cached, {
+            status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+          });
+        }
+        const sql = `
+          WITH priority(league_id, league_name, priority_order) AS (
+            VALUES
+              ('39', 'İngiltere Premier League', 1),
+              ('203', 'Türkiye Süper Lig', 2),
+              ('140', 'İspanya La Liga', 3),
+              ('78', 'Almanya Bundesliga', 4),
+              ('135', 'İtalya Serie A', 5),
+              ('61', 'Fransa Ligue 1', 6),
+              ('2', 'UEFA Şampiyonlar Ligi', 7),
+              ('3', 'UEFA Avrupa Ligi', 8),
+              ('88', 'Hollanda Eredivisie', 9),
+              ('94', 'Portekiz Primeira Liga', 10)
+          ),
+          scoped AS (
+            SELECT CAST(league_id AS TEXT) AS league_id, source, kickoff, status,
+                   home_team, away_team, home_goals, away_goals, statistics_json
+            FROM matches
+            WHERE CAST(league_id AS TEXT) IN ('39','203','140','78','135','61','2','3','88','94')
+          ),
+          completed AS (
+            SELECT * FROM scoped
+            WHERE UPPER(COALESCE(status,'')) IN ('FT','AET','PEN','FINISHED','COMPLETED')
+              AND home_goals IS NOT NULL AND away_goals IS NOT NULL
+          ),
+          team_games AS (
+            SELECT league_id, home_team AS team_name,
+                   COUNT(DISTINCT date(kickoff) || '|' || home_team || '|' || away_team) AS games
+            FROM completed WHERE COALESCE(home_team,'') <> ''
+            GROUP BY league_id, home_team
+            UNION ALL
+            SELECT league_id, away_team AS team_name,
+                   COUNT(DISTINCT date(kickoff) || '|' || home_team || '|' || away_team) AS games
+            FROM completed WHERE COALESCE(away_team,'') <> ''
+            GROUP BY league_id, away_team
+          ),
+          team_summary AS (
+            SELECT league_id, COUNT(*) AS team_count,
+                   SUM(CASE WHEN games >= 10 THEN 1 ELSE 0 END) AS teams_with_10,
+                   MIN(games) AS min_team_games,
+                   MAX(games) AS max_team_games
+            FROM team_games GROUP BY league_id
+          ),
+          league_summary AS (
+            SELECT league_id,
+                   COUNT(*) AS archived_rows,
+                   SUM(CASE WHEN UPPER(COALESCE(status,'')) IN ('FT','AET','PEN','FINISHED','COMPLETED')
+                             AND (home_goals IS NULL OR away_goals IS NULL) THEN 1 ELSE 0 END) AS completed_missing_score,
+                   SUM(CASE WHEN UPPER(COALESCE(status,'')) IN ('NS','TBD','PST','SCHEDULED') THEN 1 ELSE 0 END) AS upcoming_rows,
+                   COUNT(DISTINCT source) AS source_count,
+                   SUM(CASE WHEN statistics_json IS NOT NULL AND statistics_json <> '' AND statistics_json <> 'null'
+                             AND json_valid(statistics_json) = 1 THEN 1 ELSE 0 END) AS rows_with_statistics
+            FROM scoped GROUP BY league_id
+          )
+          SELECT p.league_id, p.league_name, p.priority_order,
+                 COALESCE(l.archived_rows,0) AS archived_rows,
+                 COALESCE(l.upcoming_rows,0) AS upcoming_rows,
+                 COALESCE(l.completed_missing_score,0) AS completed_missing_score,
+                 COALESCE(l.source_count,0) AS source_count,
+                 COALESCE(l.rows_with_statistics,0) AS rows_with_statistics,
+                 COALESCE(t.team_count,0) AS team_count,
+                 COALESCE(t.teams_with_10,0) AS teams_with_10,
+                 t.min_team_games, t.max_team_games
+          FROM priority p
+          LEFT JOIN league_summary l ON l.league_id = p.league_id
+          LEFT JOIN team_summary t ON t.league_id = p.league_id
+          ORDER BY p.priority_order
+        `;
+        const result = await env.DB.prepare(sql).all();
+        const report = {
+          ok: true,
+          generatedAt: new Date().toISOString(),
+          scope: "ten-priority-leagues",
+          verificationLevel: "archive-coverage-only",
+          leagues: Array.isArray(result?.results) ? result.results : [],
+          note: "Archive coverage only. Per-team ten-match completeness, cross-provider fixture identity, live accuracy and statistical field completeness require separate verification."
+        };
+        const body = JSON.stringify(report);
+        if (env.MAM_KV) {
+          try { await env.MAM_KV.put(cacheKey, body, { expirationTtl: 600 }); } catch (_) {}
+        }
+        return new Response(body, {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
         });
       }
