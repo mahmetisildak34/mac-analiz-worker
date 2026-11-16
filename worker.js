@@ -865,7 +865,7 @@ export default {
             ") SELECT league_id AS leagueId, team_name AS teamName, completed_matches AS completedMatches, last_match AS lastMatch FROM team_counts ORDER BY league_id, completed_matches ASC, team_name"
           ).bind(...priorityLeagueIds, ...priorityLeagueIds).all(),
           env.DB.prepare(
-            "SELECT league_id AS leagueId, COUNT(*) AS upcomingMatches FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('NS','TBD','SCHEDULED') AND date(kickoff) >= date('now') GROUP BY league_id"
+            "SELECT league_id AS leagueId, COUNT(DISTINCT date(kickoff) || '|' || lower(trim(home_team)) || '|' || lower(trim(away_team))) AS upcomingMatches FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('NS','TBD','SCHEDULED') AND date(kickoff) >= date('now') GROUP BY league_id"
           ).bind(...priorityLeagueIds).all()
         ]);
         const teamCoverageRows = Array.isArray(teamCoverageResult?.results) ? teamCoverageResult.results : [];
