@@ -624,6 +624,12 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     saved += result.reduce((sum, item) => sum + (Number(item?.meta?.changes) || 0), 0);
   }
 
+  // Fresh D1 fixture rows must invalidate the current half-goals snapshot immediately.
+  if (saved > 0) {
+    try { await env.MAM_KV.delete("mam:half-goals:v1:" + new Date().toISOString().slice(0, 13)); }
+    catch (cacheError) { console.log("Half-goals cache invalidation failed after ESPN sync", String(cacheError?.message || cacheError)); }
+  }
+
   // Fetch detailed box-score statistics for live and completed matches in small batches.
   // Scoreboard sync remains the source of truth for status and goals; summaries enrich statistics_json.
   const nowMs = Date.now();
@@ -1008,6 +1014,7 @@ export default {
     const snapshot = { source: "TFF", season: "2026/2027", updatedAt: new Date().toISOString(), count: fixtures.length, fixtures };
     // D1 kalıcı fikstür arşivi: mevcut KV snapshot'ını koruyarak aynı maçları güvenli biçimde güncelle.
     if (env.DB) {
+      let tffD1Updated = false;
       try {
         const sql = `INSERT INTO matches
           (source, fixture_id, league_id, league_name, country, kickoff, status,
@@ -1027,8 +1034,14 @@ export default {
         for (let i = 0; i < statements.length; i += 50) {
           await env.DB.batch(statements.slice(i, i + 50));
         }
+        tffD1Updated = true;
       } catch (d1Error) {
         // D1 geçici hata verse bile mevcut TFF KV fikstür servisi çalışmaya devam etsin.
+        console.log("TFF D1 fixture sync failed; preserving existing archive rows", String(d1Error?.message || d1Error));
+      }
+      if (tffD1Updated) {
+        try { await env.MAM_KV.delete("mam:half-goals:v1:" + new Date().toISOString().slice(0, 13)); }
+        catch (cacheError) { console.log("Half-goals cache invalidation failed after TFF sync", String(cacheError?.message || cacheError)); }
       }
     }
     await env.MAM_KV.put("superlig:fixtures:2026-27", JSON.stringify(snapshot));
