@@ -1073,7 +1073,8 @@ export default {
           });
         }
         const syncStatusCacheKey = "mam:sync-status-cache:v2";
-        const cachedSyncStatus = await env.MAM_KV.get(syncStatusCacheKey);
+        const forceFreshSyncStatus = new URL(request.url).searchParams.get("fresh") === "1";
+        const cachedSyncStatus = forceFreshSyncStatus ? null : await env.MAM_KV.get(syncStatusCacheKey);
         if (cachedSyncStatus) {
           return new Response(cachedSyncStatus, {
             status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
@@ -1116,6 +1117,14 @@ export default {
           missingStatisticsInD1,
           statisticsReadyToRetry: readyToRetry,
           statisticsCoolingDown: coolingDown,
+          summaryQueueSample: queue.slice(0, 25).map(item => ({
+            fixtureId: item.fixtureId || null,
+            slug: item.slug || null,
+            attempts: Number(item.attempts || 0),
+            noStatsAttempts: Number(item.noStatsAttempts || 0),
+            retryAfter: Number(item.retryAfter || 0),
+            cooldownAccelerated: item.cooldownAccelerated === true
+          })),
           missingStatisticsSample: (missingStatsSample?.results || []).map(row => ({
             fixtureId: row.fixtureId, leagueId: row.leagueId, leagueName: row.leagueName,
             kickoff: row.kickoff, homeTeam: row.homeTeam, awayTeam: row.awayTeam, status: row.status,
