@@ -17,6 +17,7 @@ permissions:
 
 jobs:
   audit:
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && contains(github.event.workflow_run.head_commit.message, '[audit]'))
     runs-on: ubuntu-latest
     steps:
       - name: Audit D1 archive against ESPN team directories and upcoming fixtures
@@ -27,6 +28,11 @@ jobs:
           const raw = await response.text();
           if (!response.ok) throw new Error("Coverage audit HTTP " + response.status + ": " + raw.slice(0, 1200));
           const report = JSON.parse(raw);
+          let syncStatus = null;
+          try {
+            const syncResponse = await fetch("https://odd-sunset-6c83.m-ahmetisildak34.workers.dev/api/archive/sync-status", { headers: { "Accept": "application/json" } });
+            if (syncResponse.ok) syncStatus = await syncResponse.json();
+          } catch (_) {}
           const leagues = Array.isArray(report.priorityLeagueCoverage) ? report.priorityLeagueCoverage : [];
           const incomplete = leagues.filter(league =>
             !league.directoryVerified ||
@@ -42,6 +48,7 @@ jobs:
             invalidRecordCount: report.invalidRecordCount,
             completedWithoutScoreCount: report.completedWithoutScoreCount,
             invalidScoreCount: report.invalidScoreCount,
+            syncStatus,
             leagues,
             directoryErrors: report.priorityLeagueDirectoryErrors,
             incompleteLeagueCount: incomplete.length
