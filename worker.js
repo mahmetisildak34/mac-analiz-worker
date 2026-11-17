@@ -1663,6 +1663,94 @@ export default {
         });
       }
 
+      if (path === "archive/half-goals" && request.method === "GET") {
+        if (!env.DB) return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
+          status: 503, headers: { ...cors, "Content-Type": "application/json" }
+        });
+        const cacheKey = "mam:half-goals:v1:" + new Date().toISOString().slice(0, 13);
+        if (env.MAM_KV) {
+          const cached = await env.MAM_KV.get(cacheKey);
+          if (cached) return new Response(cached, {
+            status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "public, max-age=300" }
+          });
+        }
+        const [historyResult, upcomingResult] = await Promise.all([
+          env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team, home_goals, away_goals, raw_json FROM matches WHERE status IN ('FT','AET','PEN','FINISHED','COMPLETED','AWD','WO') AND home_goals IS NOT NULL AND away_goals IS NOT NULL AND datetime(kickoff) >= datetime('now','-365 days') ORDER BY datetime(kickoff) DESC LIMIT 6000").all(),
+          env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team FROM matches WHERE status IN ('NS','TBD','SCHEDULED') AND datetime(kickoff) >= datetime('now') AND datetime(kickoff) <= datetime('now','+30 days') ORDER BY datetime(kickoff) ASC LIMIT 1500").all()
+        ]);
+        const readHalf = value => {
+          if (value == null) return null;
+          if (typeof value === "number" && Number.isFinite(value)) return value;
+          if (typeof value === "string" && value.trim() !== "" && Number.isFinite(Number(value))) return Number(value);
+          if (typeof value === "object") {
+            const n = value.value ?? value.score ?? value.goals;
+            if (n != null && Number.isFinite(Number(n))) return Number(n);
+          }
+          return null;
+        };
+        const extractHalf = raw => {
+          if (!raw || typeof raw !== "object") return null;
+          const score = raw.score || raw.header?.competitions?.[0]?.status?.score || {};
+          const direct = score.halftime || score.halfTime || score.half_time || raw.halftime || raw.halfTime || raw.half_time;
+          if (direct && typeof direct === "object") {
+            const home = readHalf(direct.home ?? direct.homeTeam);
+            const away = readHalf(direct.away ?? direct.awayTeam);
+            if (home != null && away != null) return { home, away, method: "halftime-score" };
+          }
+          const competition = raw.competitions?.[0] || raw.header?.competitions?.[0] || raw.event?.competitions?.[0];
+          const competitors = Array.isArray(competition?.competitors) ? competition.competitors : [];
+          if (competitors.length >= 2) {
+            const homeTeam = competitors.find(team => String(team.homeAway || "").toLowerCase() === "home");
+            const awayTeam = competitors.find(team => String(team.homeAway || "").toLowerCase() === "away");
+            const homeLines = homeTeam?.linescores;
+            const awayLines = awayTeam?.linescores;
+            if (Array.isArray(homeLines) && Array.isArray(awayLines) && homeLines.length >= 2 && awayLines.length >= 2) {
+              const home = readHalf(homeLines[0]);
+              const away = readHalf(awayLines[0]);
+              if (home != null && away != null) return { home, away, method: "period-linescore" };
+            }
+          }
+          return null;
+        };
+        const history = [];
+        for (const row of (historyResult?.results || [])) {
+          let raw = null;
+          try { raw = row.raw_json ? JSON.parse(row.raw_json) : null; } catch (_) {}
+          const halftime = extractHalf(raw);
+          if (!halftime) continue;
+          const homeGoals = Number(row.home_goals), awayGoals = Number(row.away_goals);
+          if (!Number.isFinite(homeGoals) || !Number.isFinite(awayGoals) ||
+              halftime.home < 0 || halftime.away < 0 ||
+              halftime.home > homeGoals || halftime.away > awayGoals) continue;
+          history.push({
+            source: row.source, fixtureId: row.fixture_id, leagueId: String(row.league_id || ""),
+            leagueName: row.league_name || "", country: row.country || "", kickoff: row.kickoff,
+            home: row.home_team || "", away: row.away_team || "",
+            homeGoals, awayGoals, halftimeHome: halftime.home, halftimeAway: halftime.away,
+            firstHalfGoal: halftime.home + halftime.away > 0,
+            secondHalfGoal: (homeGoals - halftime.home) + (awayGoals - halftime.away) > 0
+          });
+        }
+        const upcoming = (upcomingResult?.results || []).map(row => ({
+          source: row.source, fixtureId: row.fixture_id, leagueId: String(row.league_id || ""),
+          leagueName: row.league_name || "", country: row.country || "", kickoff: row.kickoff,
+          home: row.home_team || "", away: row.away_team || ""
+        }));
+        const leagues = [...new Map(history.concat(upcoming).map(row => [row.leagueId, {
+          id: row.leagueId, name: row.leagueName, country: row.country
+        }])).values()].filter(item => item.id).sort((a,b) => a.name.localeCompare(b.name));
+        const body = JSON.stringify({
+          ok: true, generatedAt: new Date().toISOString(), historyWindowDays: 365,
+          historyScanned: (historyResult?.results || []).length, historyWithHalfTime: history.length,
+          upcomingCount: upcoming.length, leagues, history, upcoming,
+          note: "Only fixtures with a verifiable half-time score are included in historical half-goal rates. No half-time score is inferred from full-time score."
+        });
+        if (env.MAM_KV) await env.MAM_KV.put(cacheKey, body, { expirationTtl: 3 * 60 * 60 });
+        return new Response(body, {
+          status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "public, max-age=300" }
+        });
+      }
+
       if (path === "archive/matches" && request.method === "GET") {
         if (!env.DB) {
           return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
