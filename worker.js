@@ -137,15 +137,18 @@ async function enrichExactCrossSourceMatches(env) {
   const sourceSql = "SELECT fixture_id, kickoff, country, league_name, home_team, away_team, home_goals, away_goals, statistics_json FROM matches WHERE source = 'ESPN' AND statistics_json IS NOT NULL AND statistics_json != ''" +
     (sourceCursor ? " AND (kickoff > ? OR (kickoff = ? AND fixture_id > ?))" : "") +
     " ORDER BY kickoff ASC, fixture_id ASC LIMIT 120";
-  const missingSql = "SELECT source, fixture_id, kickoff, country, league_name, home_team, away_team, home_goals, away_goals FROM matches WHERE source != 'ESPN' AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null')" +
-    (missingCursor ? " AND (kickoff > ? OR (kickoff = ? AND fixture_id > ?))" : "") +
-    " ORDER BY kickoff ASC, fixture_id ASC LIMIT 120";
+  const missingSql = "SELECT source, fixture_id, kickoff, country, league_name, home_team, away_team, home_goals, away_goals FROM matches WHERE source != 'ESPN' AND (" +
+    "statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (" +
+    "CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 AND " +
+    "CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))" +
+    (missingCursor ? " AND (kickoff > ? OR (kickoff = ? AND (fixture_id > ? OR (fixture_id = ? AND source > ?))))" : "") +
+    " ORDER BY kickoff ASC, fixture_id ASC, source ASC LIMIT 120";
   const [sourceRows, missingRows] = await Promise.all([
     sourceCursor
       ? env.DB.prepare(sourceSql).bind(sourceCursor.kickoff, sourceCursor.kickoff, sourceCursor.fixtureId).all()
       : env.DB.prepare(sourceSql).all(),
     missingCursor
-      ? env.DB.prepare(missingSql).bind(missingCursor.kickoff, missingCursor.kickoff, missingCursor.fixtureId).all()
+      ? env.DB.prepare(missingSql).bind(missingCursor.kickoff, missingCursor.kickoff, missingCursor.fixtureId, missingCursor.fixtureId, missingCursor.source || "").all()
       : env.DB.prepare(missingSql).all()
   ]);
   const source = Array.isArray(sourceRows?.results) ? sourceRows.results : [];
@@ -236,7 +239,7 @@ async function enrichExactCrossSourceMatches(env) {
       ? { kickoff: source[source.length - 1].kickoff, fixtureId: source[source.length - 1].fixture_id }
       : null,
     missing: missing.length === 120
-      ? { kickoff: missing[missing.length - 1].kickoff, fixtureId: missing[missing.length - 1].fixture_id }
+      ? { kickoff: missing[missing.length - 1].kickoff, fixtureId: missing[missing.length - 1].fixture_id, source: missing[missing.length - 1].source }
       : null
   };
   if (env.MAM_KV) await env.MAM_KV.put(cursorKey, JSON.stringify(nextCursors), { expirationTtl: 60 * 60 * 24 * 30 });
