@@ -876,7 +876,7 @@ export default {
       }
       // Cross-provider enrichment scans historical rows, so run it at most every six hours.
       try {
-        const enrichmentThrottleKey = "mam:cross-source-enrichment-last:v1";
+        const enrichmentThrottleKey = "mam:cross-source-enrichment-last:v2";
         const lastEnrichmentAt = Number(env.MAM_KV ? await env.MAM_KV.get(enrichmentThrottleKey) : 0);
         if (!lastEnrichmentAt || Date.now() - lastEnrichmentAt >= 6 * 60 * 60 * 1000) {
           const crossSourceStats = await enrichExactCrossSourceMatches(env);
