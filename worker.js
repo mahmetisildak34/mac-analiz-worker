@@ -562,8 +562,19 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   const readySummaries = [];
   const deferredSummaries = [];
   for (const item of summaryQueue) {
-    if (Number(item.retryAfter || 0) <= nowMs && readySummaries.length < summaryBatchLimit) readySummaries.push(item);
-    else deferredSummaries.push(item);
+    // One controlled early recheck for fixtures whose previous successful ESPN
+    // summary contained no box score. This prevents a full-day cooldown from
+    // leaving known gaps untouched, while the existing per-run budget keeps
+    // provider traffic bounded. Failed HTTP requests still honor Retry-After.
+    const eligibleForOneEarlyRecheck =
+      Number(item.noStatsAttempts || 0) > 0 && item.cooldownAccelerated !== true;
+    if ((Number(item.retryAfter || 0) <= nowMs || eligibleForOneEarlyRecheck) &&
+        readySummaries.length < summaryBatchLimit) {
+      readySummaries.push({
+        ...item,
+        ...(eligibleForOneEarlyRecheck ? { cooldownAccelerated: true } : {})
+      });
+    } else deferredSummaries.push(item);
   }
   summaryQueue = deferredSummaries;
   const summaryBatch = readySummaries;
