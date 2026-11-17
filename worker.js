@@ -1680,12 +1680,21 @@ export default {
             console.warn("half-goals KV read failed; falling back to D1:", String(cacheReadError?.message || cacheReadError));
           }
         }
-        let historyResult, upcomingResult;
+        const historyRows = [];
+        let historyScanned = 0;
+        let upcomingResult;
         try {
-          [historyResult, upcomingResult] = await Promise.all([
-            env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team, home_goals, away_goals, raw_json FROM matches WHERE status IN ('FT','AET','PEN','FINISHED','COMPLETED','AWD','WO') AND home_goals IS NOT NULL AND away_goals IS NOT NULL AND datetime(kickoff) >= datetime('now','-365 days') ORDER BY datetime(kickoff) DESC LIMIT 6000").all(),
-            env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team FROM matches WHERE status IN ('NS','TBD','SCHEDULED') AND datetime(kickoff) >= datetime('now') AND datetime(kickoff) <= datetime('now','+30 days') ORDER BY datetime(kickoff) ASC LIMIT 1500").all()
-          ]);
+          // Keep each D1 result well below the 50 MB response ceiling.
+          // raw_json is needed for verified half-time extraction, so page it in small batches.
+          const historyStatement = env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team, home_goals, away_goals, raw_json FROM matches WHERE status IN ('FT','AET','PEN','FINISHED','COMPLETED','AWD','WO') AND home_goals IS NOT NULL AND away_goals IS NOT NULL AND datetime(kickoff) >= datetime('now','-365 days') ORDER BY datetime(kickoff) DESC LIMIT 100 OFFSET ?");
+          for (let offset = 0; offset < 6000; offset += 100) {
+            const batch = await historyStatement.bind(offset).all();
+            const rows = batch?.results || [];
+            historyRows.push(...rows);
+            historyScanned += rows.length;
+            if (rows.length < 100) break;
+          }
+          upcomingResult = await env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team FROM matches WHERE status IN ('NS','TBD','SCHEDULED') AND datetime(kickoff) >= datetime('now') AND datetime(kickoff) <= datetime('now','+30 days') ORDER BY datetime(kickoff) ASC LIMIT 1500").all();
         } catch (archiveQueryError) {
           const detail = String(archiveQueryError?.message || archiveQueryError).slice(0, 500);
           console.error("half-goals D1 query failed:", detail);
@@ -1731,7 +1740,7 @@ export default {
           return null;
         };
         const history = [];
-        for (const row of (historyResult?.results || [])) {
+        for (const row of historyRows) {
           let raw = null;
           try { raw = row.raw_json ? JSON.parse(row.raw_json) : null; } catch (_) {}
           const halftime = extractHalf(raw);
@@ -1759,7 +1768,7 @@ export default {
         }])).values()].filter(item => item.id).sort((a,b) => a.name.localeCompare(b.name));
         const body = JSON.stringify({
           ok: true, generatedAt: new Date().toISOString(), historyWindowDays: 365,
-          historyScanned: (historyResult?.results || []).length, historyWithHalfTime: history.length,
+          historyScanned, historyWithHalfTime: history.length,
           upcomingCount: upcoming.length, leagues, history, upcoming,
           note: "Only fixtures with a verifiable half-time score are included in historical half-goal rates. No half-time score is inferred from full-time score."
         });
