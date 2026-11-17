@@ -525,6 +525,8 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     fetchedWithStatistics: 0,
     noStatisticsReturned: 0,
     requestFailures: 0,
+    requestFailureSamples: [],
+    noStatisticsSamples: [],
     saved: 0
   };
   for (let i = 0; i < summaryBatch.length; i += 4) {
@@ -551,6 +553,9 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
           summaryRun.saved++;
         } else {
           summaryRun.noStatisticsReturned++;
+          if (summaryRun.noStatisticsSamples.length < 10) {
+            summaryRun.noStatisticsSamples.push({ fixtureId: item.fixtureId, slug: item.slug, eventId: item.eventId });
+          }
           // A successful summary with an empty box score is not a transient request
           // failure. Retry this fixture once per day, without an extra 15-minute call.
           summaryRetries.push({
@@ -562,6 +567,12 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
         }
       } catch (error) {
         summaryRun.requestFailures++;
+        if (summaryRun.requestFailureSamples.length < 10) {
+          summaryRun.requestFailureSamples.push({
+            fixtureId: item.fixtureId, slug: item.slug, eventId: item.eventId,
+            error: String(error?.message || error).slice(0, 240)
+          });
+        }
         if (Number(item.attempts || 0) < 1) summaryRetries.push({ ...item, attempts: Number(item.attempts || 0) + 1, retryAfter: Date.now() + 15 * 60 * 1000 });
         else summaryRetries.push({ ...item, attempts: 0, retryAfter: Date.now() + 6 * 60 * 60 * 1000 });
         console.log("ESPN match statistics sync failed", item.fixtureId, String(error?.message || error));
