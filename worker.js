@@ -1680,10 +1680,22 @@ export default {
             console.warn("half-goals KV read failed; falling back to D1:", String(cacheReadError?.message || cacheReadError));
           }
         }
-        const [historyResult, upcomingResult] = await Promise.all([
-          env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team, home_goals, away_goals, raw_json FROM matches WHERE status IN ('FT','AET','PEN','FINISHED','COMPLETED','AWD','WO') AND home_goals IS NOT NULL AND away_goals IS NOT NULL AND datetime(kickoff) >= datetime('now','-365 days') ORDER BY datetime(kickoff) DESC LIMIT 6000").all(),
-          env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team FROM matches WHERE status IN ('NS','TBD','SCHEDULED') AND datetime(kickoff) >= datetime('now') AND datetime(kickoff) <= datetime('now','+30 days') ORDER BY datetime(kickoff) ASC LIMIT 1500").all()
-        ]);
+        let historyResult, upcomingResult;
+        try {
+          [historyResult, upcomingResult] = await Promise.all([
+            env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team, home_goals, away_goals, raw_json FROM matches WHERE status IN ('FT','AET','PEN','FINISHED','COMPLETED','AWD','WO') AND home_goals IS NOT NULL AND away_goals IS NOT NULL AND datetime(kickoff) >= datetime('now','-365 days') ORDER BY datetime(kickoff) DESC LIMIT 6000").all(),
+            env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team FROM matches WHERE status IN ('NS','TBD','SCHEDULED') AND datetime(kickoff) >= datetime('now') AND datetime(kickoff) <= datetime('now','+30 days') ORDER BY datetime(kickoff) ASC LIMIT 1500").all()
+          ]);
+        } catch (archiveQueryError) {
+          const detail = String(archiveQueryError?.message || archiveQueryError).slice(0, 500);
+          console.error("half-goals D1 query failed:", detail);
+          return new Response(JSON.stringify({
+            error: "Half-goals archive database query failed",
+            detail
+          }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+          });
+        }
         const readHalf = value => {
           if (value == null) return null;
           if (typeof value === "number" && Number.isFinite(value)) return value;
