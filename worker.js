@@ -36,10 +36,28 @@ async function createSessionToken(secret) {
 }
 
 
+const TEAM_NAME_ALIASES = Object.freeze({
+  "man-utd":"manchester-united", "man-united":"manchester-united",
+  "man-city":"manchester-city", "hull":"hull-city", "hull-city-afc":"hull-city",
+  "brighton":"brighton-hove-albion", "west-ham":"west-ham-united",
+  "wolves":"wolverhampton-wanderers", "nottm-forest":"nottingham-forest",
+  "newcastle":"newcastle-united", "leeds":"leeds-united", "ipswich":"ipswich-town",
+  "bournemouth":"afc-bournemouth", "inter":"inter-milan", "internazionale":"inter-milan",
+  "ac-milan":"milan", "ath-madrid":"atletico-madrid", "atletico":"atletico-madrid",
+  "psg":"paris-saint-germain", "paris":"paris-saint-germain", "bayern":"bayern-munich",
+  "dortmund":"borussia-dortmund", "sporting":"sporting-cp",
+  "sporting-lisbon":"sporting-cp", "ajax-amsterdam":"ajax", "psv-eindhoven":"psv"
+});
+
 function normalizeTeamName(value) {
-  return String(value || "").normalize("NFD").toLowerCase()
-    .replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i")
+  const normalized = String(value || "").toLowerCase()
+    .replace(/[ıİ]/g, "i").replace(/[şŞ]/g, "s").replace(/[ğĞ]/g, "g")
+    .replace(/[çÇ]/g, "c").replace(/[öÖ]/g, "o").replace(/[üÜ]/g, "u")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/&/g, " and ")
+    .replace(/\b(football club|fc|afc|cf|sc|sk|fk)\b/g, " ")
     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
+  return TEAM_NAME_ALIASES[normalized] || normalized;
 }
 
 const ESPN_LEAGUE_COUNTRIES = Object.freeze({
@@ -1169,9 +1187,7 @@ export default {
             "UNION " +
             "SELECT league_id, date(kickoff) AS match_day, lower(trim(away_team)) AS team_name, lower(trim(home_team)) AS opponent_name " +
             "FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('FT','AET','PEN','FINISHED','COMPLETED','AWD','WO') AND home_goals IS NOT NULL AND away_goals IS NOT NULL" +
-            "), team_counts AS (" +
-            "SELECT league_id, team_name, COUNT(*) AS completed_matches, MAX(match_day) AS last_match FROM appearances GROUP BY league_id, team_name" +
-            ") SELECT league_id AS leagueId, team_name AS teamName, completed_matches AS completedMatches, last_match AS lastMatch FROM team_counts ORDER BY league_id, completed_matches ASC, team_name"
+            ") SELECT league_id AS leagueId, date(kickoff) AS matchDay, lower(trim(home_team)) AS teamName, lower(trim(away_team)) AS opponentName FROM appearances"
           ).bind(...priorityLeagueIds, ...priorityLeagueIds).all(),
           env.DB.prepare(
             "SELECT league_id AS leagueId, COUNT(DISTINCT date(kickoff) || '|' || lower(trim(home_team)) || '|' || lower(trim(away_team))) AS upcomingMatches FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('NS','TBD','SCHEDULED') AND date(kickoff) >= date('now') AND date(kickoff) <= date('now','+180 days') GROUP BY league_id"
@@ -1180,7 +1196,30 @@ export default {
             "SELECT league_id AS leagueId, date(kickoff) AS matchDay, home_team AS home, away_team AS away FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('NS','TBD','SCHEDULED') AND date(kickoff) >= date('now') AND date(kickoff) <= date('now','+30 days')"
           ).bind(...priorityLeagueIds).all()
         ]);
-        const teamCoverageRows = Array.isArray(teamCoverageResult?.results) ? teamCoverageResult.results : [];
+        const rawTeamAppearances = Array.isArray(teamCoverageResult?.results) ? teamCoverageResult.results : [];
+        // Normalize club aliases and deduplicate provider copies before counting
+        // appearances, so "Man Utd" and "Manchester United" are one team.
+        const canonicalAppearanceKeys = new Set();
+        const canonicalTeamCounts = new Map();
+        for (const row of rawTeamAppearances) {
+          const leagueId = String(row.leagueId || "");
+          const teamKey = normalizeTeamName(row.teamName);
+          const opponentKey = normalizeTeamName(row.opponentName);
+          const matchDay = String(row.matchDay || "");
+          if (!leagueId || !teamKey || !opponentKey || !matchDay) continue;
+          const appearanceKey = [leagueId,matchDay,teamKey,opponentKey].join("|");
+          if (canonicalAppearanceKeys.has(appearanceKey)) continue;
+          canonicalAppearanceKeys.add(appearanceKey);
+          const key = [leagueId,teamKey].join("|");
+          const aggregate = canonicalTeamCounts.get(key) || {
+            leagueId, teamName: String(row.teamName || "").trim(),
+            completedMatches: 0, lastMatch: matchDay
+          };
+          aggregate.completedMatches++;
+          if (matchDay > aggregate.lastMatch) aggregate.lastMatch = matchDay;
+          canonicalTeamCounts.set(key,aggregate);
+        }
+        const teamCoverageRows = Array.from(canonicalTeamCounts.values());
         const upcomingCoverageRows = Array.isArray(upcomingCoverageResult?.results) ? upcomingCoverageResult.results : [];
         const upcomingFixtureRows = Array.isArray(upcomingFixturesResult?.results) ? upcomingFixturesResult.results : [];
         const upcomingByLeague = new Map(upcomingCoverageRows.map(row => [String(row.leagueId), Number(row.upcomingMatches || 0)]));
