@@ -232,10 +232,10 @@ async function enrichExactCrossSourceMatches(env) {
     updated += results.reduce((sum, item) => sum + (Number(item?.meta?.changes) || 0), 0);
   }
   const nextCursors = {
-    source: source.length === 400
+    source: source.length === 120
       ? { kickoff: source[source.length - 1].kickoff, fixtureId: source[source.length - 1].fixture_id }
       : null,
-    missing: missing.length === 500
+    missing: missing.length === 120
       ? { kickoff: missing[missing.length - 1].kickoff, fixtureId: missing[missing.length - 1].fixture_id }
       : null
   };
