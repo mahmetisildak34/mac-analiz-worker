@@ -364,8 +364,52 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
       dates.push(d.toISOString().slice(0, 10).replace(/-/g, ""));
     }
     const jobs = [];
-    for (const league of leagues) for (const date of dates) jobs.push({ league, date, attempts: 0 });
-    state = { version: 1, jobs, cursor: 0, createdAt: new Date().toISOString() };
+    // The active archive target is the ten agreed priority competitions.
+    // Secondary competitions remain queryable from already archived D1 rows,
+    // but do not consume the primary historical backfill budget.
+    for (const league of leagues.slice(0, 10)) {
+      for (const date of dates) jobs.push({ league, date, attempts: 0 });
+    }
+    state = { version: 2, jobs, cursor: 0, createdAt: new Date().toISOString() };
+  } else {
+    // Extend an in-flight legacy queue without discarding its cursor or any
+    // already archived data. Promote pending priority jobs ahead of secondary
+    // competitions, then append only missing priority league/date pairs.
+    const completedPrefix = state.jobs.slice(0, state.cursor);
+    const pendingJobs = state.jobs.slice(state.cursor);
+    const priorityIds = new Set(leagues.slice(0, 10).map(league => String(league[0])));
+    const priorityPending = [];
+    const secondaryPending = [];
+    const seenPriority = new Set();
+    for (const job of pendingJobs) {
+      const leagueId = String(job?.league?.[0] || "");
+      if (priorityIds.has(leagueId)) {
+        const key = leagueId + "|" + String(job.date || "");
+        if (!seenPriority.has(key)) {
+          seenPriority.add(key);
+          priorityPending.push(job);
+        }
+      } else {
+        secondaryPending.push(job);
+      }
+    }
+    const base = new Date();
+    base.setUTCHours(12, 0, 0, 0);
+    for (let offset = -Math.max(1, lookBackDays); offset <= lookAheadDays; offset++) {
+      const d = new Date(base);
+      d.setUTCDate(d.getUTCDate() + offset);
+      const date = d.toISOString().slice(0, 10).replace(/-/g, "");
+      for (const league of leagues.slice(0, 10)) {
+        const key = String(league[0]) + "|" + date;
+        if (!seenPriority.has(key)) {
+          seenPriority.add(key);
+          priorityPending.push({ league, date, attempts: 0 });
+        }
+      }
+    }
+    state.jobs = [...completedPrefix, ...priorityPending, ...secondaryPending];
+    state.cursor = completedPrefix.length;
+    state.version = 2;
   }
 
   let batch = [];
@@ -752,7 +796,7 @@ export default {
         // Workers Free limit while increasing archive throughput by one third.
         // Build a deep historical D1 archive in the background (about 2.5 seasons),
         // with the app's ten primary competitions processed first, followed by Conference League.
-        await syncEspnFixturesToD1(env, 900, 180, isHourlySync ? 32 : 10);
+        await syncEspnFixturesToD1(env, 365, 180, isHourlySync ? 32 : 10);
         // Daily archive quality snapshot: one bounded D1 aggregation, then KV-served reads.
         if (isDailySync && env.MAM_KV) {
           try {
