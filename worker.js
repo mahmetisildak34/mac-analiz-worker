@@ -1116,13 +1116,13 @@ export default {
             invalidRecordCount++;
             if (invalidRecords.length < 100) invalidRecords.push({ source, fixtureId: row.fixture_id, leagueId, leagueName, kickoff, home: row.home_team, away: row.away_team });
           }
-          if (["FT", "AET", "PEN"].includes(status) && (row.home_goals == null || row.away_goals == null)) {
+          if (["FT", "AET", "PEN", "FINISHED", "COMPLETED", "AWD", "WO"].includes(status) && (row.home_goals == null || row.away_goals == null)) {
             completedWithoutScoreCount++;
             if (completedWithoutScore.length < 100) completedWithoutScore.push({ source, fixtureId: row.fixture_id, leagueId, kickoff, home: row.home_team, away: row.away_team, homeGoals: row.home_goals, awayGoals: row.away_goals });
           }
           if ((row.home_goals != null && (!Number.isFinite(Number(row.home_goals)) || Number(row.home_goals) < 0 || Number(row.home_goals) > 30)) ||
               (row.away_goals != null && (!Number.isFinite(Number(row.away_goals)) || Number(row.away_goals) < 0 || Number(row.away_goals) > 30))) invalidScoreCount++;
-          const eligible = ["FT", "AET", "PEN", "LIVE", "1H", "2H", "HT", "ET", "P", "INT"].includes(status);
+          const eligible = ["FT", "AET", "PEN", "FINISHED", "COMPLETED", "AWD", "WO", "LIVE", "1H", "2H", "HT", "ET", "P", "INT"].includes(status);
           if (eligible) {
             let usable = false;
             if (row.statistics_json && row.statistics_json !== "null") {
@@ -1165,10 +1165,10 @@ export default {
           env.DB.prepare(
             "WITH appearances AS (" +
             "SELECT league_id, date(kickoff) AS match_day, lower(trim(home_team)) AS team_name, lower(trim(away_team)) AS opponent_name " +
-            "FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('FT','AET','PEN') AND home_goals IS NOT NULL AND away_goals IS NOT NULL " +
+            "FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('FT','AET','PEN','FINISHED','COMPLETED','AWD','WO') AND home_goals IS NOT NULL AND away_goals IS NOT NULL " +
             "UNION " +
             "SELECT league_id, date(kickoff) AS match_day, lower(trim(away_team)) AS team_name, lower(trim(home_team)) AS opponent_name " +
-            "FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('FT','AET','PEN') AND home_goals IS NOT NULL AND away_goals IS NOT NULL" +
+            "FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('FT','AET','PEN','FINISHED','COMPLETED','AWD','WO') AND home_goals IS NOT NULL AND away_goals IS NOT NULL" +
             "), team_counts AS (" +
             "SELECT league_id, team_name, COUNT(*) AS completed_matches, MAX(match_day) AS last_match FROM appearances GROUP BY league_id, team_name" +
             ") SELECT league_id AS leagueId, team_name AS teamName, completed_matches AS completedMatches, last_match AS lastMatch FROM team_counts ORDER BY league_id, completed_matches ASC, team_name"
@@ -1238,14 +1238,26 @@ export default {
             return { id:String(event.id||""),date:String(event.date||"").slice(0,10),home:String(home?.team?.displayName||home?.team?.name||""),away:String(away?.team?.displayName||away?.team?.name||""),completed };
           }).filter(event=>event.id&&event.date&&event.home&&event.away&&!event.completed&&event.date>=auditStart.toISOString().slice(0,10)&&event.date<=auditEnd.toISOString().slice(0,10));
           const found = [];
-          const walk = value => {
-            if (!value || typeof value !== "object") return;
-            if (Array.isArray(value)) { value.forEach(walk); return; }
-            if (value.team && typeof value.team === "object") found.push(value.team);
-            if (value.id && (value.displayName || value.name || value.shortDisplayName)) found.push(value);
-            for (const [key,child] of Object.entries(value)) if (key !== "team" && child && typeof child === "object") walk(child);
-          };
-          walk(payload);
+          // ESPN's teams endpoint nests actual clubs under sports[].leagues[].teams[].
+          // A recursive walk also picked up the sport ("Soccer") and league
+          // ("English Premier League") as if they were clubs, inflating the audit.
+          const leagueEntries = Array.isArray(payload?.sports)
+            ? payload.sports.flatMap(sport => Array.isArray(sport?.leagues) ? sport.leagues : [])
+            : [];
+          const teamEntries = leagueEntries.flatMap(league => Array.isArray(league?.teams) ? league.teams : []);
+          for (const entry of teamEntries) {
+            const team = entry?.team && typeof entry.team === "object" ? entry.team : entry;
+            if (team && typeof team === "object") found.push(team);
+          }
+          // Keep a narrow fallback for ESPN response variants, but only inspect
+          // explicit team collections; never recursively treat arbitrary id/name
+          // objects as clubs.
+          if (!found.length && Array.isArray(payload?.teams)) {
+            for (const entry of payload.teams) {
+              const team = entry?.team && typeof entry.team === "object" ? entry.team : entry;
+              if (team && typeof team === "object") found.push(team);
+            }
+          }
           const unique = new Map();
           for (const team of found) {
             const idValue = String(team.id || "");
