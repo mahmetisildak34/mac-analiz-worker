@@ -1061,7 +1061,7 @@ export default {
         const limit = Number.isFinite(limitValue) ? Math.max(100, Math.min(20000, limitValue)) : 10000;
         const daysValue = Number.parseInt(url.searchParams.get("days") || "30", 10);
         const days = Number.isFinite(daysValue) ? Math.max(1, Math.min(60, daysValue)) : 30;
-        const qualityCacheKey = "mam:quality-check-cache:v4:" + new Date().toISOString().slice(0,10) + ":" + scope + ":" + days + ":" + limit;
+        const qualityCacheKey = "mam:quality-check-cache:v5:" + new Date().toISOString().slice(0,10) + ":" + scope + ":" + days + ":" + limit;
         const cachedQualityReport = env.MAM_KV ? await env.MAM_KV.get(qualityCacheKey) : null;
         if (cachedQualityReport) {
           return new Response(cachedQualityReport, {
