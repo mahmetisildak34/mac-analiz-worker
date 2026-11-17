@@ -380,7 +380,11 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     const priorityIds = new Set(leagues.slice(0, 10).map(league => String(league[0])));
     const priorityPending = [];
     const secondaryPending = [];
-    const seenPriority = new Set();
+    const seenPriority = new Set(
+      completedPrefix
+        .filter(job => priorityIds.has(String(job?.league?.[0] || "")))
+        .map(job => String(job.league[0]) + "|" + String(job.date || ""))
+    );
     for (const job of pendingJobs) {
       const leagueId = String(job?.league?.[0] || "");
       if (priorityIds.has(leagueId)) {
