@@ -225,7 +225,7 @@ async function enrichExactCrossSourceMatches(env) {
     const best = safeCandidates[0];
     withinExpandedWindow++;
     updates.push(env.DB.prepare(
-      "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = ? AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 AND CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))"
+      "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = ? AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))"
     ).bind(best.statistics, row.source, row.fixture_id));
   }
 
@@ -1071,7 +1071,7 @@ export default {
           env.MAM_KV.get("mam:espn-sync-state:v2", "json"),
           env.MAM_KV.get("mam:espn-summary-queue:v1", "json"),
           env.MAM_KV.get("mam:espn-summary-last-run:v1", "json"),
-          env.DB ? env.DB.prepare("SELECT COUNT(*) AS total FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 AND CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))").first() : Promise.resolve(null)
+          env.DB ? env.DB.prepare("SELECT COUNT(*) AS total FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))").first() : Promise.resolve(null)
         ]);
         const jobs = Array.isArray(state?.jobs) ? state.jobs.length : 0;
         const cursor = Number(state?.cursor || 0);
