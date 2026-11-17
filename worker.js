@@ -600,7 +600,10 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     } catch (error) {
       failed++;
       const attempts = Number(job.attempts || 0);
-      if (attempts < 2) retryJobs.push({ ...job, attempts: attempts + 1 });
+      // Never discard a historical fixture job after a fixed retry count.
+      // Keep failed dates in the tail of the queue so transient ESPN errors,
+      // rate limits, and temporary outages are retried by later scheduled runs.
+      retryJobs.push({ ...job, attempts: attempts + 1 });
       console.log("ESPN archive sync failed", slug, job.date, String(error?.message || error), "attempt", attempts + 1);
     }
   };
