@@ -1191,7 +1191,7 @@ export default {
             "UNION " +
             "SELECT league_id, date(kickoff) AS match_day, lower(trim(away_team)) AS team_name, lower(trim(home_team)) AS opponent_name " +
             "FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('FT','AET','PEN','FINISHED','COMPLETED','AWD','WO') AND home_goals IS NOT NULL AND away_goals IS NOT NULL" +
-            ") SELECT league_id AS leagueId, date(kickoff) AS matchDay, lower(trim(home_team)) AS teamName, lower(trim(away_team)) AS opponentName FROM appearances"
+            ") SELECT league_id AS leagueId, match_day AS matchDay, team_name AS teamName, opponent_name AS opponentName FROM appearances"
           ).bind(...priorityLeagueIds, ...priorityLeagueIds).all(),
           env.DB.prepare(
             "SELECT league_id AS leagueId, COUNT(DISTINCT date(kickoff) || '|' || lower(trim(home_team)) || '|' || lower(trim(away_team))) AS upcomingMatches FROM matches WHERE source = 'ESPN' AND league_id IN (" + leaguePlaceholders + ") AND status IN ('NS','TBD','SCHEDULED') AND date(kickoff) >= date('now') AND date(kickoff) <= date('now','+30 days') GROUP BY league_id"
