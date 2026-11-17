@@ -582,11 +582,15 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   };
   for (let i = 0; i < summaryBatch.length; i += 4) {
     await Promise.all(summaryBatch.slice(i, i + 4).map(async item => {
+      let retryAfterHeader = null;
       try {
         const response = await fetch(ESPN_BASE + "/" + item.slug + "/summary?event=" + encodeURIComponent(item.eventId), {
           headers: { "Accept": "application/json" }
         });
-        if (!response.ok) throw new Error("ESPN summary HTTP " + response.status);
+        if (!response.ok) {
+          retryAfterHeader = response.headers.get("Retry-After");
+          throw new Error("ESPN summary HTTP " + response.status);
+        }
         const payload = await response.json();
         const teams = Array.isArray(payload?.boxscore?.teams) ? payload.boxscore.teams : [];
         const statistics = teams.map(team => ({
@@ -624,7 +628,6 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
             error: String(error?.message || error).slice(0, 240)
           });
         }
-        const retryAfterHeader = response?.headers?.get("Retry-After");
         const retryAfterSeconds = retryAfterHeader
           ? (Number.isFinite(Number(retryAfterHeader))
               ? Math.max(60, Number(retryAfterHeader))
