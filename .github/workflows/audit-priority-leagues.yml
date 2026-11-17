@@ -30,7 +30,7 @@ jobs:
           const report = JSON.parse(raw);
           let syncStatus = null;
           try {
-            const syncResponse = await fetch("https://odd-sunset-6c83.m-ahmetisildak34.workers.dev/api/archive/sync-status", { headers: { "Accept": "application/json" } });
+            const syncResponse = await fetch("https://odd-sunset-6c83.m-ahmetisildak34.workers.dev/api/archive/sync-status?fresh=1", { headers: { "Accept": "application/json" } });
             if (syncResponse.ok) syncStatus = await syncResponse.json();
           } catch (_) {}
           const leagues = Array.isArray(report.priorityLeagueCoverage) ? report.priorityLeagueCoverage : [];
