@@ -473,7 +473,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     }
     // Advance only through rows actually examined; never skip overflow when the queue fills.
     await env.MAM_KV.put(discoveryCursorKey, JSON.stringify(
-      discoveredRows.length === 300 && lastDiscoveryProcessed
+      discoveredRows.length === 100 && lastDiscoveryProcessed
         ? { kickoff: lastDiscoveryProcessed.kickoff, fixtureId: lastDiscoveryProcessed.fixtureId }
         : null
     ), { expirationTtl: 60 * 60 * 24 * 30 });
