@@ -480,6 +480,11 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     state.version = 2;
   }
 
+  // Historical fixture coverage is the active priority. While its queue is
+  // pending, reserve the hourly ESPN request budget for scoreboard backfill.
+  // Summary/statistics enrichment resumes automatically after this queue drains.
+  const archiveBackfillActive = state.cursor < state.jobs.length;
+
   let batch = [];
   const rows = [];
   const retryJobs = [];
@@ -498,7 +503,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   const discoveryThrottleKey = "mam:espn-summary-discovery-last:v1";
   const lastDiscoveryAt = Number(await env.MAM_KV.get(discoveryThrottleKey) || 0);
   const discoveryDue = !lastDiscoveryAt || Date.now() - lastDiscoveryAt >= 24 * 60 * 60 * 1000;
-  if (summaryQueue.length < 480 && discoveryDue) {
+  if (!archiveBackfillActive && summaryQueue.length < 480 && discoveryDue) {
     // D1 has a bounded bind-parameter budget. Do not generate one SQL placeholder
     // per queued fixture (a 458-item queue can make the query fail before summaries run).
     // Read a bounded candidate window and exclude queued IDs in JavaScript instead.
@@ -548,8 +553,8 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   // large. The daily TFF scrape uses 34 requests, so its ESPN allowance remains
   // 10 scoreboard + 4 summaries (48 total).
   const largeStatisticsBacklog = summaryQueue.length >= 100;
-  const summaryBudget = maxRequests <= 10 ? 4 : (largeStatisticsBacklog ? 24 : 16);
-  const scoreboardBudget = maxRequests <= 10 ? 10 : (largeStatisticsBacklog ? 24 : 32);
+  const summaryBudget = archiveBackfillActive ? 0 : (maxRequests <= 10 ? 4 : (largeStatisticsBacklog ? 24 : 16));
+  const scoreboardBudget = maxRequests <= 10 ? 10 : (archiveBackfillActive ? 48 : (largeStatisticsBacklog ? 24 : 32));
   const summaryBatchLimit = Math.min(summaryBudget, summaryQueue.length);
   const scoreboardBatchLimit = Math.min(maxRequests, scoreboardBudget);
   batch = state.jobs.slice(state.cursor, state.cursor + Math.max(1, scoreboardBatchLimit));
@@ -585,7 +590,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
           awayId: away.team?.id == null ? null : String(away.team.id), awayName,
           homeGoals: score(home.score), awayGoals: score(away.score), raw: JSON.stringify(event)
         });
-        if (status === "LIVE" || status === "FT") {
+        if (!archiveBackfillActive && (status === "LIVE" || status === "FT")) {
           const key = "ESPN:" + fixtureId;
           if (!summaryDoneSet.has(key) && !summaryQueue.some(item => item.key === key)) {
             summaryQueue.push({ key, slug, fixtureId, eventId: String(event.id), attempts: 0 });
@@ -883,13 +888,11 @@ export default {
           if (normalizedLeagueRows) console.log("Normalized league country metadata", { rows: normalizedLeagueRows });
           if (env.MAM_KV) await env.MAM_KV.put(maintenanceKey, String(Date.now()), { expirationTtl: 60 * 60 * 48 });
         }
-        // Keep a rolling 900-day history plus 180 days of upcoming fixtures across configured ESPN competitions.
-        // Each invocation also fetches up to 16 ESPN match summaries.
-        // Keep scoreboard (32) + summary (16) fetches at 48 total, below the 50-subrequest
-        // Workers Free limit while increasing archive throughput by one third.
-        // Build a deep historical D1 archive in the background (about 2.5 seasons),
-        // with the app's ten primary competitions processed first, followed by Conference League.
-        await syncEspnFixturesToD1(env, 365, 180, isHourlySync ? 32 : 10);
+        // Prioritize the ten main leagues' historical fixture backfill. During
+        // backfill, hourly runs use up to 48 scoreboard requests and defer summaries;
+        // summary enrichment resumes automatically once the archive queue is complete.
+        // The daily TFF scrape retains its smaller 10-request ESPN allowance.
+        await syncEspnFixturesToD1(env, 365, 180, isHourlySync ? 48 : 10);
         // Daily archive quality snapshot: one bounded D1 aggregation, then KV-served reads.
         if (isDailySync && env.MAM_KV) {
           try {
