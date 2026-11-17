@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: "10 0 * * *"
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "worker.js"
+      - ".github/workflows/audit-priority-leagues.yml"
 
 permissions:
   contents: read
