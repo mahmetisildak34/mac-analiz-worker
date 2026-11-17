@@ -624,8 +624,18 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
             error: String(error?.message || error).slice(0, 240)
           });
         }
-        if (Number(item.attempts || 0) < 1) summaryRetries.push({ ...item, attempts: Number(item.attempts || 0) + 1, retryAfter: Date.now() + 15 * 60 * 1000 });
-        else summaryRetries.push({ ...item, attempts: 0, retryAfter: Date.now() + 6 * 60 * 60 * 1000 });
+        const retryAfterHeader = response?.headers?.get("Retry-After");
+        const retryAfterSeconds = retryAfterHeader
+          ? (Number.isFinite(Number(retryAfterHeader))
+              ? Math.max(60, Number(retryAfterHeader))
+              : Math.max(60, Math.ceil((Date.parse(retryAfterHeader) - Date.now()) / 1000)))
+          : 0;
+        const attempt = Number(item.attempts || 0) + 1;
+        const fallbackDelayMs = Math.min(12 * 60 * 60 * 1000, 15 * 60 * 1000 * Math.pow(2, Math.min(attempt - 1, 3)));
+        const delayMs = retryAfterSeconds > 0
+          ? Math.min(24 * 60 * 60 * 1000, retryAfterSeconds * 1000)
+          : fallbackDelayMs;
+        summaryRetries.push({ ...item, attempts: attempt, retryAfter: Date.now() + delayMs });
         console.log("ESPN match statistics sync failed", item.fixtureId, String(error?.message || error));
       }
     }));
@@ -823,7 +833,7 @@ export default {
       try {
         const enrichmentThrottleKey = "mam:cross-source-enrichment-last:v1";
         const lastEnrichmentAt = Number(env.MAM_KV ? await env.MAM_KV.get(enrichmentThrottleKey) : 0);
-        if (!lastEnrichmentAt || Date.now() - lastEnrichmentAt >= 24 * 60 * 60 * 1000) {
+        if (!lastEnrichmentAt || Date.now() - lastEnrichmentAt >= 6 * 60 * 60 * 1000) {
           const crossSourceStats = await enrichExactCrossSourceMatches(env);
           console.log("Scheduled cross-source statistics enrichment", crossSourceStats);
           if (env.MAM_KV) await env.MAM_KV.put(enrichmentThrottleKey, String(Date.now()), { expirationTtl: 60 * 60 * 48 });
