@@ -165,10 +165,44 @@ async function enrichExactCrossSourceMatches(env) {
   const normalizeLeague = value => String(value || "").normalize("NFD").toLowerCase()
     .replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
   const matchKey = row => normalizeMatchTeam(row.home_team) + "|" + normalizeMatchTeam(row.away_team);
+  const normalizeCrossSourceStatistics = (value, homeName, awayName) => {
+    try {
+      const parsed = typeof value === "string" ? JSON.parse(value) : value;
+      if (!parsed || typeof parsed !== "object") return null;
+      const teams = Array.isArray(parsed.teams) ? parsed.teams : null;
+      if (teams && teams.length >= 2 &&
+          teams[0]?.statistics?.length && teams[1]?.statistics?.length) {
+        return { teams: teams.slice(0, 2), summaryAvailable: true, source: "cross-source" };
+      }
+      // API-Football stores box scores as [{ team: { name }, statistics: [] }],
+      // whereas the app's archive contract expects { teams: [{homeAway, team, statistics}] }.
+      const rows = Array.isArray(parsed) ? parsed : Array.isArray(parsed.response) ? parsed.response : null;
+      if (!rows) return null;
+      const normalizedHome = normalizeMatchTeam(homeName);
+      const normalizedAway = normalizeMatchTeam(awayName);
+      const mapped = rows.map(item => ({
+        name: normalizeMatchTeam(item?.team?.name || item?.team?.displayName || item?.name || ""),
+        team: item?.team?.name || item?.team?.displayName || item?.name || null,
+        statistics: Array.isArray(item?.statistics) ? item.statistics : []
+      }));
+      const home = mapped.find(item => item.name === normalizedHome && item.statistics.length);
+      const away = mapped.find(item => item.name === normalizedAway && item.statistics.length);
+      if (!home || !away) return null;
+      return {
+        teams: [
+          { homeAway: "home", team: home.team || homeName, statistics: home.statistics },
+          { homeAway: "away", team: away.team || awayName, statistics: away.statistics }
+        ],
+        summaryAvailable: true,
+        source: "cross-source"
+      };
+    } catch (_) { return null; }
+  };
   const statsIndex = new Map();
   let usableSourceStats = 0;
   for (const row of source) {
-    if (!hasUsableStatistics(row.statistics_json)) continue;
+    const normalizedStatistics = normalizeCrossSourceStatistics(row.statistics_json, row.home_team, row.away_team);
+    if (!normalizedStatistics) continue;
     usableSourceStats++;
     const key = matchKey(row);
     const time = Date.parse(row.kickoff || "");
@@ -178,7 +212,7 @@ async function enrichExactCrossSourceMatches(env) {
       source: row.source, fixtureId: row.fixture_id, time,
       country: normalizeLeague(row.country), league: normalizeLeague(row.league_name),
       homeGoals: row.home_goals, awayGoals: row.away_goals,
-      statistics: row.statistics_json
+      statistics: JSON.stringify(normalizedStatistics)
     });
     statsIndex.set(key, list);
   }
