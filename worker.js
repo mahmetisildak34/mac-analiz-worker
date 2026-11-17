@@ -40,14 +40,25 @@ async function createSessionToken(secret) {
 const TEAM_NAME_ALIASES = Object.freeze({
   "man-utd":"manchester-united", "man-united":"manchester-united",
   "man-city":"manchester-city", "hull":"hull-city", "hull-city-afc":"hull-city",
-  "brighton":"brighton-hove-albion", "west-ham":"west-ham-united",
+  "brighton":"brighton-hove-albion", "brighton-hove":"brighton-hove-albion",
+  "west-ham":"west-ham-united", "west-ham-united":"west-ham-united",
   "wolves":"wolverhampton-wanderers", "nottm-forest":"nottingham-forest",
-  "newcastle":"newcastle-united", "leeds":"leeds-united", "ipswich":"ipswich-town",
-  "bournemouth":"afc-bournemouth", "inter":"inter-milan", "internazionale":"inter-milan",
-  "ac-milan":"milan", "ath-madrid":"atletico-madrid", "atletico":"atletico-madrid",
+  "nott-m-forest":"nottingham-forest", "nott-s-forest":"nottingham-forest",
+  "notts-forest":"nottingham-forest", "newcastle":"newcastle-united",
+  "leeds":"leeds-united", "ipswich":"ipswich-town", "bournemouth":"afc-bournemouth",
+  "inter":"inter-milan", "internazionale":"inter-milan", "ac-milan":"milan",
+  "ath-madrid":"atletico-madrid", "atletico":"atletico-madrid",
   "psg":"paris-saint-germain", "paris":"paris-saint-germain", "bayern":"bayern-munich",
   "dortmund":"borussia-dortmund", "sporting":"sporting-cp",
-  "sporting-lisbon":"sporting-cp", "ajax-amsterdam":"ajax", "psv-eindhoven":"psv"
+  "sporting-lisbon":"sporting-cp", "ajax-amsterdam":"ajax", "psv-eindhoven":"psv",
+  "karagumruk":"fatih-karagumruk", "rizespor":"caykur-rizespor",
+  "buyuksehyr":"istanbul-basaksehir", "basaksehir":"istanbul-basaksehir",
+  "erzurumspor":"erzurum-bb", "amedspor":"amed-sk",
+  "vitoria-sc":"vitoria-guimaraes", "sl-benfica":"benfica",
+  "cd-nacional":"nacional", "maritimo-m":"maritimo",
+  "estoril-praia":"estoril", "casa-pia-ac":"casa-pia",
+  "mjallby":"mjallby-aif", "iberia-tbilisi":"iberia-1999",
+  "borac":"borac-banja-luka"
 });
 
 function normalizeTeamName(value) {
@@ -156,12 +167,8 @@ async function enrichExactCrossSourceMatches(env) {
   const source = Array.isArray(sourceRows?.results) ? sourceRows.results : [];
   const missing = Array.isArray(missingRows?.results) ? missingRows.results : [];
 
-  const normalizeMatchTeam = value => String(value || "").normalize("NFD").toLowerCase()
-    .replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i")
-    .replace(/&/g, " and ")
-    .replace(/\b(football club|soccer club|fc|afc|cf|sc|fk|sk|as|a\.s\.|club|calcio)\b/g, " ")
-    .replace(/\b(u\d{2}|women|womens|ladies)\b/g, " ")
-    .replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
+  // Share canonical aliases with archive coverage auditing and provider imports.
+  const normalizeMatchTeam = value => normalizeTeamName(value);
   const normalizeLeague = value => String(value || "").normalize("NFD").toLowerCase()
     .replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
   const matchKey = row => normalizeMatchTeam(row.home_team) + "|" + normalizeMatchTeam(row.away_team);
