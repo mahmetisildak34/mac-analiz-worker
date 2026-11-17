@@ -1684,15 +1684,16 @@ export default {
         let historyScanned = 0;
         let upcomingResult;
         try {
-          // Keep each D1 result well below the 50 MB response ceiling.
-          // raw_json is needed for verified half-time extraction, so page it in small batches.
-          const historyStatement = env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team, home_goals, away_goals, raw_json FROM matches WHERE status IN ('FT','AET','PEN','FINISHED','COMPLETED','AWD','WO') AND home_goals IS NOT NULL AND away_goals IS NOT NULL AND datetime(kickoff) >= datetime('now','-365 days') ORDER BY datetime(kickoff) DESC LIMIT 100 OFFSET ?");
-          for (let offset = 0; offset < 6000; offset += 100) {
+          // Use fewer, moderately sized pages: 100-row paging caused too many
+          // D1 operations inside the platform's rolling 10-second resource window.
+          // 500 rows keeps each response bounded while reducing query count 5x.
+          const historyStatement = env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team, home_goals, away_goals, raw_json FROM matches WHERE status IN ('FT','AET','PEN','FINISHED','COMPLETED','AWD','WO') AND home_goals IS NOT NULL AND away_goals IS NOT NULL AND datetime(kickoff) >= datetime('now','-365 days') ORDER BY datetime(kickoff) DESC LIMIT 500 OFFSET ?");
+          for (let offset = 0; offset < 6000; offset += 500) {
             const batch = await historyStatement.bind(offset).all();
             const rows = batch?.results || [];
             historyRows.push(...rows);
             historyScanned += rows.length;
-            if (rows.length < 100) break;
+            if (rows.length < 500) break;
           }
           upcomingResult = await env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team FROM matches WHERE status IN ('NS','TBD','SCHEDULED') AND datetime(kickoff) >= datetime('now') AND datetime(kickoff) <= datetime('now','+30 days') ORDER BY datetime(kickoff) ASC LIMIT 1500").all();
         } catch (archiveQueryError) {
