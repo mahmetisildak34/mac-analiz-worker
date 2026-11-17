@@ -431,11 +431,15 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     ), { expirationTtl: 60 * 60 * 24 * 30 });
   }
 
-  // When the statistics backlog is large (for example, hundreds of missing ESPN
-  // box scores), shift the safe 48-request budget toward summaries: 24 scoreboard
-  // + 24 summary calls. With a small queue retain 32 scoreboard + 16 summaries.
-  const summaryBatchLimit = Math.min(4, summaryQueue.length);
-  const scoreboardBatchLimit = Math.min(maxRequests, 8);
+  // Stay within the Workers 50-subrequest ceiling. Hourly runs use 32
+  // scoreboard + 16 summary requests, or 24 + 24 when the statistics queue is
+  // large. The daily TFF scrape uses 34 requests, so its ESPN allowance remains
+  // 10 scoreboard + 4 summaries (48 total).
+  const largeStatisticsBacklog = summaryQueue.length >= 100;
+  const summaryBudget = maxRequests <= 10 ? 4 : (largeStatisticsBacklog ? 24 : 16);
+  const scoreboardBudget = maxRequests <= 10 ? 10 : (largeStatisticsBacklog ? 24 : 32);
+  const summaryBatchLimit = Math.min(summaryBudget, summaryQueue.length);
+  const scoreboardBatchLimit = Math.min(maxRequests, scoreboardBudget);
   batch = state.jobs.slice(state.cursor, state.cursor + Math.max(1, scoreboardBatchLimit));
   const queueAfterDiscovery = summaryQueue.length;
 
@@ -1079,7 +1083,7 @@ export default {
         const limit = Number.isFinite(limitValue) ? Math.max(100, Math.min(20000, limitValue)) : 10000;
         const daysValue = Number.parseInt(url.searchParams.get("days") || "30", 10);
         const days = Number.isFinite(daysValue) ? Math.max(1, Math.min(60, daysValue)) : 30;
-        const qualityCacheKey = "mam:quality-check-cache:v5:" + new Date().toISOString().slice(0,10) + ":" + scope + ":" + days + ":" + limit;
+        const qualityCacheKey = "mam:quality-check-cache:v6:" + new Date().toISOString().slice(0,10) + ":" + scope + ":" + days + ":" + limit;
         const cachedQualityReport = env.MAM_KV ? await env.MAM_KV.get(qualityCacheKey) : null;
         if (cachedQualityReport) {
           return new Response(cachedQualityReport, {
@@ -1190,10 +1194,10 @@ export default {
             ") SELECT league_id AS leagueId, date(kickoff) AS matchDay, lower(trim(home_team)) AS teamName, lower(trim(away_team)) AS opponentName FROM appearances"
           ).bind(...priorityLeagueIds, ...priorityLeagueIds).all(),
           env.DB.prepare(
-            "SELECT league_id AS leagueId, COUNT(DISTINCT date(kickoff) || '|' || lower(trim(home_team)) || '|' || lower(trim(away_team))) AS upcomingMatches FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('NS','TBD','SCHEDULED') AND date(kickoff) >= date('now') AND date(kickoff) <= date('now','+180 days') GROUP BY league_id"
+            "SELECT league_id AS leagueId, COUNT(DISTINCT date(kickoff) || '|' || lower(trim(home_team)) || '|' || lower(trim(away_team))) AS upcomingMatches FROM matches WHERE source = 'ESPN' AND league_id IN (" + leaguePlaceholders + ") AND status IN ('NS','TBD','SCHEDULED') AND date(kickoff) >= date('now') AND date(kickoff) <= date('now','+30 days') GROUP BY league_id"
           ).bind(...priorityLeagueIds).all(),
           env.DB.prepare(
-            "SELECT league_id AS leagueId, date(kickoff) AS matchDay, home_team AS home, away_team AS away FROM matches WHERE league_id IN (" + leaguePlaceholders + ") AND status IN ('NS','TBD','SCHEDULED') AND date(kickoff) >= date('now') AND date(kickoff) <= date('now','+30 days')"
+            "SELECT league_id AS leagueId, date(kickoff) AS matchDay, home_team AS home, away_team AS away FROM matches WHERE source = 'ESPN' AND league_id IN (" + leaguePlaceholders + ") AND status IN ('NS','TBD','SCHEDULED') AND date(kickoff) >= date('now') AND date(kickoff) <= date('now','+30 days')"
           ).bind(...priorityLeagueIds).all()
         ]);
         const rawTeamAppearances = Array.isArray(teamCoverageResult?.results) ? teamCoverageResult.results : [];
