@@ -1061,7 +1061,7 @@ export default {
         const limit = Number.isFinite(limitValue) ? Math.max(100, Math.min(20000, limitValue)) : 10000;
         const daysValue = Number.parseInt(url.searchParams.get("days") || "30", 10);
         const days = Number.isFinite(daysValue) ? Math.max(1, Math.min(60, daysValue)) : 30;
-        const qualityCacheKey = "mam:quality-check-cache:v3:" + new Date().toISOString().slice(0,10) + ":" + scope + ":" + days + ":" + limit;
+        const qualityCacheKey = "mam:quality-check-cache:v4:" + new Date().toISOString().slice(0,10) + ":" + scope + ":" + days + ":" + limit;
         const cachedQualityReport = env.MAM_KV ? await env.MAM_KV.get(qualityCacheKey) : null;
         if (cachedQualityReport) {
           return new Response(cachedQualityReport, {
@@ -1207,17 +1207,29 @@ export default {
           const auditStart = new Date();
           auditStart.setUTCHours(0,0,0,0);
           const auditEnd = new Date(auditStart);
-          auditEnd.setUTCDate(auditEnd.getUTCDate()+180);
-          const dateRange = auditStart.toISOString().slice(0,10).replace(/-/g,"")+"-"+auditEnd.toISOString().slice(0,10).replace(/-/g,"");
-          const [teamResponse,scoreboardResponse] = await Promise.all([
+          auditEnd.setUTCDate(auditEnd.getUTCDate()+30);
+          // ESPN retired date-range scoreboard queries (they now return HTTP 400).
+          // Request calendar months separately, then filter the combined events to
+          // the exact audit window. This keeps the audit to at most two calls/league.
+          const auditMonths = [];
+          const monthCursor = new Date(Date.UTC(auditStart.getUTCFullYear(),auditStart.getUTCMonth(),1));
+          while (monthCursor <= auditEnd) {
+            auditMonths.push(monthCursor.toISOString().slice(0,7).replace(/-/g,""));
+            monthCursor.setUTCMonth(monthCursor.getUTCMonth()+1);
+          }
+          const [teamResponse,scoreboardResponses] = await Promise.all([
             fetch(ESPN_BASE + "/" + slug + "/teams?limit=500", { headers: { "Accept": "application/json" } }),
-            fetch(ESPN_BASE + "/" + slug + "/scoreboard?dates="+dateRange+"&limit=500", { headers: { "Accept": "application/json" } })
+            Promise.all(auditMonths.map(month =>
+              fetch(ESPN_BASE + "/" + slug + "/scoreboard?dates="+month+"&limit=500", { headers: { "Accept": "application/json" } })
+            ))
           ]);
           if (!teamResponse.ok) throw new Error("ESPN teams HTTP " + teamResponse.status);
-          if (!scoreboardResponse.ok) throw new Error("ESPN scoreboard HTTP " + scoreboardResponse.status);
+          const failedScoreboard = scoreboardResponses.find(response => !response.ok);
+          if (failedScoreboard) throw new Error("ESPN scoreboard HTTP " + failedScoreboard.status);
           const payload = await teamResponse.json();
-          const scoreboard = await scoreboardResponse.json();
-          const upcomingEvents = (Array.isArray(scoreboard.events)?scoreboard.events:[]).map(event=>{
+          const scoreboards = await Promise.all(scoreboardResponses.map(response => response.json()));
+          const allScoreboardEvents = scoreboards.flatMap(scoreboard => Array.isArray(scoreboard.events)?scoreboard.events:[]);
+          const upcomingEvents = allScoreboardEvents.map(event=>{
             const competitors=event.competitions?.[0]?.competitors||[];
             const home=competitors.find(side=>side.homeAway==="home");
             const away=competitors.find(side=>side.homeAway==="away");
