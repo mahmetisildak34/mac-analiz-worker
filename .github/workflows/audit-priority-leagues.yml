@@ -21,7 +21,7 @@ jobs:
       - name: Audit D1 archive against ESPN team directories and upcoming fixtures
         run: |
           node --input-type=module <<'NODE'
-          const endpoint = "https://odd-sunset-6c83.m-ahmetisildak34.workers.dev/api/archive/quality-check?limit=3000";
+          const endpoint = "https://odd-sunset-6c83.m-ahmetisildak34.workers.dev/api/archive/quality-check?limit=10000";
           const response = await fetch(endpoint, { headers: { "Accept": "application/json" } });
           const raw = await response.text();
           if (!response.ok) throw new Error("Coverage audit HTTP " + response.status + ": " + raw.slice(0, 1200));
