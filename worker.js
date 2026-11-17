@@ -1669,10 +1669,16 @@ export default {
         });
         const cacheKey = "mam:half-goals:v1:" + new Date().toISOString().slice(0, 13);
         if (env.MAM_KV) {
-          const cached = await env.MAM_KV.get(cacheKey);
-          if (cached) return new Response(cached, {
-            status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "public, max-age=300" }
-          });
+          // Cache is an optimization only: a KV read failure must not block
+          // the read-only archive response from D1.
+          try {
+            const cached = await env.MAM_KV.get(cacheKey);
+            if (cached) return new Response(cached, {
+              status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "public, max-age=300" }
+            });
+          } catch (cacheReadError) {
+            console.warn("half-goals KV read failed; falling back to D1:", String(cacheReadError?.message || cacheReadError));
+          }
         }
         const [historyResult, upcomingResult] = await Promise.all([
           env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team, home_goals, away_goals, raw_json FROM matches WHERE status IN ('FT','AET','PEN','FINISHED','COMPLETED','AWD','WO') AND home_goals IS NOT NULL AND away_goals IS NOT NULL AND datetime(kickoff) >= datetime('now','-365 days') ORDER BY datetime(kickoff) DESC LIMIT 6000").all(),
@@ -1745,7 +1751,15 @@ export default {
           upcomingCount: upcoming.length, leagues, history, upcoming,
           note: "Only fixtures with a verifiable half-time score are included in historical half-goal rates. No half-time score is inferred from full-time score."
         });
-        if (env.MAM_KV) await env.MAM_KV.put(cacheKey, body, { expirationTtl: 3 * 60 * 60 });
+        if (env.MAM_KV) {
+          // Large archive payloads can exceed KV's per-value limit. Keep the
+          // successful D1 response usable even when this optional cache write fails.
+          try {
+            await env.MAM_KV.put(cacheKey, body, { expirationTtl: 3 * 60 * 60 });
+          } catch (cacheWriteError) {
+            console.warn("half-goals KV write failed; returning uncached D1 response:", String(cacheWriteError?.message || cacheWriteError));
+          }
+        }
         return new Response(body, {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "public, max-age=300" }
         });
