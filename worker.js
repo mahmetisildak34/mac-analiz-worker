@@ -1,4 +1,5 @@
 // Deployment refresh: publish the reviewed Worker configuration and cache policy.
+// Audit trigger: deploy this verified revision so the post-deploy archive audit runs.
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
 const API_BASE = "https://v3.football.api-sports.io";
 const FOOTBALLDATA_BASE = "https://api.football-data.org/v4";
