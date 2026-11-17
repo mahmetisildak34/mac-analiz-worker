@@ -598,7 +598,8 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
           team: team.team?.displayName || team.team?.name || null,
           statistics: Array.isArray(team.statistics) ? team.statistics : []
         }));
-        const hasActualStatistics = statistics.some(team => team.statistics.length > 0);
+        const hasActualStatistics = statistics.length >= 2 &&
+          statistics.filter(team => team.statistics.length > 0).length >= 2;
         if (hasActualStatistics) {
           await env.DB.prepare(
             "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ?"
