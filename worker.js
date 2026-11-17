@@ -170,9 +170,33 @@ async function enrichExactCrossSourceMatches(env) {
       const parsed = typeof value === "string" ? JSON.parse(value) : value;
       if (!parsed || typeof parsed !== "object") return null;
       const teams = Array.isArray(parsed.teams) ? parsed.teams : null;
-      if (teams && teams.length >= 2 &&
-          teams[0]?.statistics?.length && teams[1]?.statistics?.length) {
-        return { teams: teams.slice(0, 2), summaryAvailable: true, source: "cross-source" };
+      if (teams && teams.length >= 2) {
+        const normalizedHome = normalizeMatchTeam(homeName);
+        const normalizedAway = normalizeMatchTeam(awayName);
+        const named = teams.map(item => ({
+          item,
+          name: normalizeMatchTeam(item?.team?.name || item?.team?.displayName || item?.team || item?.name || ""),
+          side: String(item?.homeAway || item?.side || "").toLowerCase(),
+          statistics: Array.isArray(item?.statistics) ? item.statistics : []
+        }));
+        const home = named.find(entry => entry.statistics.length &&
+          (entry.side === "home" || entry.side === "h" || entry.name === normalizedHome));
+        const away = named.find(entry => entry.statistics.length &&
+          (entry.side === "away" || entry.side === "a" || entry.name === normalizedAway));
+        if (home && away && home.item !== away.item) {
+          const homeNameMatches = !home.name || home.name === normalizedHome;
+          const awayNameMatches = !away.name || away.name === normalizedAway;
+          if (homeNameMatches && awayNameMatches) {
+            return {
+              teams: [
+                { ...home.item, homeAway: "home" },
+                { ...away.item, homeAway: "away" }
+              ],
+              summaryAvailable: true,
+              source: "cross-source"
+            };
+          }
+        }
       }
       // API-Football stores box scores as [{ team: { name }, statistics: [] }],
       // whereas the app's archive contract expects { teams: [{homeAway, team, statistics}] }.
@@ -884,8 +908,15 @@ export default {
           if (env.MAM_KV) await env.MAM_KV.put(enrichmentThrottleKey, String(Date.now()), { expirationTtl: 60 * 60 * 48 });
         }
       } catch (enrichmentError) {
-        const report = { ranAt: new Date().toISOString(), error: String(enrichmentError?.message || enrichmentError) };
-        if (env.MAM_KV) await env.MAM_KV.put("mam:cross-source-stats:last:v1", JSON.stringify(report), { expirationTtl: 60 * 60 * 24 * 30 });
+        const report = {
+          ranAt: new Date().toISOString(),
+          target: "ESPN rows missing either team's statistics",
+          error: String(enrichmentError?.message || enrichmentError),
+          stage: "scheduled-cross-source-enrichment"
+        };
+        if (env.MAM_KV) {
+          await env.MAM_KV.put("mam:cross-source-stats:last:v3", JSON.stringify(report), { expirationTtl: 60 * 60 * 24 * 30 });
+        }
         console.log("Cross-source statistics enrichment failed", report);
       }
     }
