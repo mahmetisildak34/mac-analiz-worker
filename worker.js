@@ -1068,11 +1068,13 @@ export default {
             status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
           });
         }
-        const [state, queueValue, lastSummaryRun, missingStatsResult] = await Promise.all([
+        const missingStatsSql = "SELECT fixture_id AS fixtureId, league_id AS leagueId, league_name AS leagueName, kickoff, home_team AS homeTeam, away_team AS awayTeam, status FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0)) ORDER BY kickoff DESC LIMIT 25";
+        const [state, queueValue, lastSummaryRun, missingStatsResult, missingStatsSample] = await Promise.all([
           env.MAM_KV.get("mam:espn-sync-state:v2", "json"),
           env.MAM_KV.get("mam:espn-summary-queue:v1", "json"),
           env.MAM_KV.get("mam:espn-summary-last-run:v1", "json"),
-          env.DB ? env.DB.prepare("SELECT COUNT(*) AS total FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))").first() : Promise.resolve(null)
+          env.DB ? env.DB.prepare("SELECT COUNT(*) AS total FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))").first() : Promise.resolve(null),
+          env.DB ? env.DB.prepare(missingStatsSql).all() : Promise.resolve({ results: [] })
         ]);
         const jobs = Array.isArray(state?.jobs) ? state.jobs.length : 0;
         const cursor = Number(state?.cursor || 0);
@@ -1103,6 +1105,12 @@ export default {
           missingStatisticsInD1,
           statisticsReadyToRetry: readyToRetry,
           statisticsCoolingDown: coolingDown,
+          missingStatisticsSample: (missingStatsSample?.results || []).map(row => ({
+            fixtureId: row.fixtureId, leagueId: row.leagueId, leagueName: row.leagueName,
+            kickoff: row.kickoff, homeTeam: row.homeTeam, awayTeam: row.awayTeam, status: row.status,
+            queued: queue.some(item => item.fixtureId === row.fixtureId),
+            retryAfter: queue.find(item => item.fixtureId === row.fixtureId)?.retryAfter || null
+          })),
           lastSummaryRun: lastSummaryRun || null,
           note: scoreboardActive
             ? "ESPN fixture archive scan is in progress"
