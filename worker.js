@@ -2038,6 +2038,19 @@ export default {
             status: 503, headers: { ...cors, "Content-Type": "application/json" }
           });
         }
+        const liveCacheKey = "mam:archive-live:v2";
+        if (env.MAM_KV) {
+          try {
+            const cachedLive = await env.MAM_KV.get(liveCacheKey);
+            if (cachedLive) {
+              return new Response(cachedLive, {
+                status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+              });
+            }
+          } catch (cacheReadError) {
+            console.warn("archive/live KV cache read failed; falling back to D1:", String(cacheReadError?.message || cacheReadError));
+          }
+        }
         const result = await env.DB.prepare(`
           SELECT source, fixture_id, league_id, league_name, country, kickoff, status,
                  home_team_id, home_team, away_team_id, away_team, home_goals, away_goals,
@@ -2063,7 +2076,15 @@ export default {
             statistics
           };
         });
-        return new Response(JSON.stringify({ ok: true, count: matches.length, response: matches }), {
+        const liveResponseBody = JSON.stringify({ ok: true, count: matches.length, response: matches });
+        if (env.MAM_KV) {
+          try {
+            await env.MAM_KV.put(liveCacheKey, liveResponseBody, { expirationTtl: 15 });
+          } catch (cacheWriteError) {
+            console.warn("archive/live KV cache write failed:", String(cacheWriteError?.message || cacheWriteError));
+          }
+        }
+        return new Response(liveResponseBody, {
           status: 200,
           headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
         });
