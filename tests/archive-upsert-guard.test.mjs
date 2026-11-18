@@ -9,4 +9,6 @@ for (const field of ["league_name","country","kickoff","status","home_team_id","
   assert.ok(sql.includes(`matches.${field} IS NOT excluded.${field}`), `no-op guard must compare ${field}`);
 }
 assert.ok(!sql.includes("statistics_json=excluded.statistics_json"), "upsert must not overwrite statistics");
-console.log("Archive upsert no-op guard tests passed.");
+assert.ok(!worker.includes("const quotaState = await env.DB.prepare"), "unused quota state read must remain removed");
+assert.ok(worker.includes("const reservation = await env.DB.prepare(\n          \"UPDATE mam_api_quota_guard SET used = used + 1"), "atomic quota reservation must remain in place");
+console.log("Archive upsert and quota-read regression tests passed.");
