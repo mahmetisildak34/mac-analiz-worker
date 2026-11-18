@@ -53,6 +53,7 @@ const TEAM_NAME_ALIASES = Object.freeze({
   "sporting-lisbon":"sporting-cp", "ajax-amsterdam":"ajax", "psv-eindhoven":"psv",
   "karagumruk":"fatih-karagumruk", "rizespor":"caykur-rizespor",
   "buyuksehyr":"istanbul-basaksehir", "basaksehir":"istanbul-basaksehir",
+  "istanbul-bb":"istanbul-basaksehir", "istanbul-basaksehir-fk":"istanbul-basaksehir", "basaksehir-fk":"istanbul-basaksehir",
   "erzurumspor":"erzurum-bb", "amedspor":"amed-sk",
   "vitoria-sc":"vitoria-guimaraes", "sl-benfica":"benfica",
   "cd-nacional":"nacional", "maritimo-m":"maritimo",
