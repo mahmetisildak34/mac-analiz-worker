@@ -68,6 +68,9 @@ jobs:
       - name: Run ESPN Core team-statistics fallback regression test
         run: node tests/espn-core-statistics-fallback.test.mjs
 
+      - name: Run actual statistics saved-count regression test
+        run: node tests/statistics-save-report.test.mjs
+
   deploy:
     needs: validate
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
