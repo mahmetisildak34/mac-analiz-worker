@@ -788,9 +788,12 @@ async function buildPriorityLeagueStatus(env) {
               SELECT *,
                      ROW_NUMBER() OVER (
                        PARTITION BY league_id,
-                       CASE WHEN COALESCE(trim(kickoff),'') = '' OR COALESCE(trim(home_team),'') = '' OR COALESCE(trim(away_team),'') = ''\n                         THEN source || ':' || fixture_id ELSE kickoff END,
-                       CASE WHEN COALESCE(trim(kickoff),'') = '' OR COALESCE(trim(home_team),'') = '' OR COALESCE(trim(away_team),'') = ''\n                         THEN source || ':' || fixture_id ELSE lower(trim(home_team)) END,
-                       CASE WHEN COALESCE(trim(kickoff),'') = '' OR COALESCE(trim(home_team),'') = '' OR COALESCE(trim(away_team),'') = ''\n                         THEN source || ':' || fixture_id ELSE lower(trim(away_team)) END
+                       CASE WHEN COALESCE(trim(kickoff),'') = '' OR COALESCE(trim(home_team),'') = '' OR COALESCE(trim(away_team),'') = ''
+                         THEN source || ':' || fixture_id ELSE kickoff END,
+                       CASE WHEN COALESCE(trim(kickoff),'') = '' OR COALESCE(trim(home_team),'') = '' OR COALESCE(trim(away_team),'') = ''
+                         THEN source || ':' || fixture_id ELSE lower(trim(home_team)) END,
+                       CASE WHEN COALESCE(trim(kickoff),'') = '' OR COALESCE(trim(home_team),'') = '' OR COALESCE(trim(away_team),'') = ''
+                         THEN source || ':' || fixture_id ELSE lower(trim(away_team)) END
                        ORDER BY
                          CASE WHEN statistics_json IS NOT NULL
                            AND statistics_json <> '' AND statistics_json <> 'null'
