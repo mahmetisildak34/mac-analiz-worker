@@ -873,7 +873,12 @@ async function buildPriorityLeagueStatus(env) {
                    SUM(CASE WHEN UPPER(COALESCE(status,'')) IN ('NS','TBD','PST','SCHEDULED') THEN 1 ELSE 0 END) AS upcoming_rows,
                    COUNT(DISTINCT source) AS source_count,
                    SUM(CASE WHEN statistics_json IS NOT NULL AND statistics_json <> '' AND statistics_json <> 'null'
-                             AND json_valid(statistics_json) = 1 THEN 1 ELSE 0 END) AS rows_with_statistics_payload
+                             AND json_valid(statistics_json) = 1
+                             AND json_type(statistics_json, '$.teams') = 'array'
+                             AND json_array_length(statistics_json, '$.teams') >= 2
+                             AND json_array_length(statistics_json, '$.teams[0].statistics') > 0
+                             AND json_array_length(statistics_json, '$.teams[1].statistics') > 0
+                             THEN 1 ELSE 0 END) AS rows_with_statistics_payload
             FROM scoped GROUP BY league_id
           )
           SELECT p.league_id, p.league_name, p.priority_order,
