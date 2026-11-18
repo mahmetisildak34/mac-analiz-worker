@@ -4,7 +4,7 @@ const worker = await readFile(new URL("../worker.js", import.meta.url), "utf8");
 const config = await readFile(new URL("../wrangler.jsonc", import.meta.url), "utf8");
 assert.match(worker, /adaptiveSpeedKey = "mam:espn-adaptive-speed:v1"/, "adaptive controller persists state in KV");
 assert.match(worker, /Math\.max\(16, current - 4\)/, "controller backs off after failures");
-assert.match(worker, /Math\.min\(32, current \+ 4\)/, "controller ramps up after healthy runs");
+assert.match(worker, /Math\.min\(24, current \+ 2\)/, "controller ramps up after healthy runs");
 assert.match(worker, /adaptiveRequests: effectiveMaxRequests/, "run report exposes adaptive budget");
 assert.match(worker, /adaptiveSpeed: adaptiveSpeedStatus/, "sync status exposes adaptive controller state");
 assert.match(config, /"\*\/5 \* \* \* \*"/, "scheduled archive runs every five minutes");
