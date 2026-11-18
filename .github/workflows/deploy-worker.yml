@@ -71,6 +71,9 @@ jobs:
       - name: Run actual statistics saved-count regression test
         run: node tests/statistics-save-report.test.mjs
 
+      - name: Run team-name alias regression test
+        run: node tests/team-name-aliases.test.mjs
+
   deploy:
     needs: validate
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
