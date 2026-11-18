@@ -854,7 +854,7 @@ async function buildPriorityLeagueStatus(env) {
           ),
           team_games AS (
             SELECT league_id, team_name,
-                   COUNT(DISTINCT date(kickoff) || '|' || home_team || '|' || away_team) AS games
+                   COUNT(*) AS games
             FROM team_appearances
             GROUP BY league_id, team_name
           ),
