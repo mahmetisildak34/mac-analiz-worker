@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   audit:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Audit D1 archive against ESPN team directories and upcoming fixtures
