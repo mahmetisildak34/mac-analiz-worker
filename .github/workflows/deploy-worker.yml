@@ -59,6 +59,9 @@ jobs:
       - name: Run archive backfill batch-size regression test
         run: node tests/archive-backfill-batch-size.test.mjs
 
+      - name: Run adaptive archive speed regression test
+        run: node tests/adaptive-archive-speed.test.mjs
+
       - name: Run statistics during archive backfill regression test
         run: node tests/statistics-during-archive.test.mjs
 
