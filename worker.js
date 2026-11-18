@@ -783,8 +783,34 @@ async function buildPriorityLeagueStatus(env) {
             FROM matches
             WHERE CAST(league_id AS TEXT) IN ('39','203','140','78','135','61','2','3','88','94')
           ),
+          deduplicated AS (
+            SELECT * FROM (
+              SELECT *,
+                     ROW_NUMBER() OVER (
+                       PARTITION BY league_id,
+                       CASE WHEN COALESCE(trim(kickoff),'') = '' OR COALESCE(trim(home_team),'') = '' OR COALESCE(trim(away_team),'') = ''
+                         THEN source || ':' || fixture_id ELSE kickoff END,
+                       CASE WHEN COALESCE(trim(kickoff),'') = '' OR COALESCE(trim(home_team),'') = '' OR COALESCE(trim(away_team),'') = ''
+                         THEN source || ':' || fixture_id ELSE lower(trim(home_team)) END,
+                       CASE WHEN COALESCE(trim(kickoff),'') = '' OR COALESCE(trim(home_team),'') = '' OR COALESCE(trim(away_team),'') = ''
+                         THEN source || ':' || fixture_id ELSE lower(trim(away_team)) END
+                       ORDER BY
+                         CASE WHEN statistics_json IS NOT NULL
+                           AND statistics_json <> '' AND statistics_json <> 'null'
+                           AND json_valid(statistics_json) = 1
+                           AND json_type(statistics_json, '$.teams') = 'array'
+                           AND json_array_length(statistics_json, '$.teams') >= 2
+                           AND json_array_length(statistics_json, '$.teams[0].statistics') > 0
+                           AND json_array_length(statistics_json, '$.teams[1].statistics') > 0
+                           THEN 0 ELSE 1 END,
+                         source ASC
+                     ) AS duplicate_rank
+              FROM scoped
+            )
+            WHERE duplicate_rank = 1
+          ),
           completed AS (
-            SELECT * FROM scoped
+            SELECT * FROM deduplicated
             WHERE UPPER(COALESCE(status,'')) IN ('FT','AET','PEN','FINISHED','COMPLETED')
               AND home_goals IS NOT NULL AND away_goals IS NOT NULL
           ),
