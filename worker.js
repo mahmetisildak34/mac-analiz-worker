@@ -552,13 +552,12 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     ), { expirationTtl: 60 * 60 * 24 * 30 });
   }
 
-  // Stay within the Workers 50-subrequest ceiling. Hourly runs use 32
-  // scoreboard + 16 summary requests, or 24 + 24 when the statistics queue is
-  // large. The daily TFF scrape uses 34 requests, so its ESPN allowance remains
-  // 10 scoreboard + 4 summaries (48 total).
+  // Stay within the Workers subrequest ceiling while preventing statistics
+  // starvation during historical backfill. Reserve a small summary slice and
+  // reduce scoreboard work by the same amount during archive backfill.
   const largeStatisticsBacklog = summaryQueue.length >= 100;
-  const summaryBudget = archiveBackfillActive ? 0 : (maxRequests <= 10 ? 4 : (largeStatisticsBacklog ? 24 : 16));
-  const scoreboardBudget = maxRequests <= 10 ? 10 : (archiveBackfillActive ? 48 : (largeStatisticsBacklog ? 24 : 32));
+  const summaryBudget = archiveBackfillActive ? (maxRequests <= 10 ? 4 : 8) : (maxRequests <= 10 ? 4 : (largeStatisticsBacklog ? 24 : 16));
+  const scoreboardBudget = maxRequests <= 10 ? 10 : (archiveBackfillActive ? 40 : (largeStatisticsBacklog ? 24 : 32));
   const summaryBatchLimit = Math.min(summaryBudget, summaryQueue.length);
   const scoreboardBatchLimit = Math.min(maxRequests, scoreboardBudget);
   batch = state.jobs.slice(state.cursor, state.cursor + Math.max(1, scoreboardBatchLimit));
