@@ -2190,8 +2190,9 @@ export default {
           });
         }
         const d1StatusCacheKey = "mam:d1-status-cache:v2";
-        const forceFreshD1Status = url.searchParams.get("fresh") === "1";
-        const cachedD1Status = env.MAM_KV && !forceFreshD1Status ? await env.MAM_KV.get(d1StatusCacheKey) : null;
+        // Status endpoints are expensive aggregate D1 reads. Ignore the legacy
+        // fresh=1 bypass and serve the KV snapshot to protect the daily read quota.
+        const cachedD1Status = env.MAM_KV ? await env.MAM_KV.get(d1StatusCacheKey) : null;
         if (cachedD1Status) {
           return new Response(cachedD1Status, {
             status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
