@@ -65,6 +65,9 @@ jobs:
       - name: Run statistics discovery during archive backfill regression test
         run: node tests/statistics-discovery-during-archive.test.mjs
 
+      - name: Run ESPN Core team-statistics fallback regression test
+        run: node tests/espn-core-statistics-fallback.test.mjs
+
   deploy:
     needs: validate
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
