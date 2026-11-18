@@ -6,5 +6,6 @@ assert.match(worker, /adaptiveSpeedKey = "mam:espn-adaptive-speed:v1"/, "adaptiv
 assert.match(worker, /Math\.max\(16, current - 8\)/, "controller backs off after failures");
 assert.match(worker, /Math\.min\(32, current \+ 4\)/, "controller ramps up after healthy runs");
 assert.match(worker, /adaptiveRequests: effectiveMaxRequests/, "run report exposes adaptive budget");
+assert.match(worker, /adaptiveSpeed: adaptiveSpeedStatus/, "sync status exposes adaptive controller state");
 assert.match(config, /"\*\/5 \* \* \* \*"/, "scheduled archive runs every five minutes");
 console.log("adaptive archive speed regression test passed");
