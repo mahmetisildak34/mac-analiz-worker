@@ -959,11 +959,9 @@ export default {
     const isDailySync = scheduledAt.getUTCHours() === 3 && scheduledAt.getUTCMinutes() === 0;
     const isHourlySync = !isDailySync;
     if (env.DB) {
+      // Maintenance is optional and must NEVER prevent the archive/summary worker
+      // from running. D1 quota errors in maintenance are isolated from ingestion.
       try {
-        // D1 maintenance scans are throttled; repeating full-table metadata updates every 15 minutes
-        // burns the free row-read allowance without improving fixture freshness.
-        // Bump the maintenance marker when introducing a new D1 schema migration.
-        // v3 maintains the existing shared minute guard schema.
         const maintenanceKey = "mam:d1-maintenance-last:v3";
         const lastMaintenanceAt = Number(env.MAM_KV ? await env.MAM_KV.get(maintenanceKey) : 0);
         if (!lastMaintenanceAt || Date.now() - lastMaintenanceAt >= 24 * 60 * 60 * 1000) {
@@ -972,28 +970,28 @@ export default {
           if (normalizedLeagueRows) console.log("Normalized league country metadata", { rows: normalizedLeagueRows });
           if (env.MAM_KV) await env.MAM_KV.put(maintenanceKey, String(Date.now()), { expirationTtl: 60 * 60 * 48 });
         }
-        // Prioritize the ten main leagues' historical fixture backfill. The 15-minute
-        // schedule uses 24 scoreboard requests per run (up to 96/hour, 2x the prior
-        // hourly budget) while keeping each invocation below the subrequest ceiling.
-        // Summary enrichment resumes automatically once the archive queue is complete.
-        // The daily TFF scrape retains its smaller 10-request ESPN allowance.
-        await syncEspnFixturesToD1(env, 900, 180, isHourlySync ? 32 : 10);
-        // Daily archive quality snapshot: one bounded D1 aggregation, then KV-served reads.
-        if (isDailySync && env.MAM_KV) {
-          try {
-            const report = await buildPriorityLeagueStatus(env);
-            await env.MAM_KV.put("mam:priority-league-status:v3", JSON.stringify(report), { expirationTtl: 60 * 60 * 48 });
-            console.log("Daily priority league archive quality check", {
-              generatedAt: report.generatedAt, leagues: report.leagues.length
-            });
-          } catch (qualityError) {
-            console.log("Daily priority league archive quality check failed", String(qualityError?.message || qualityError));
-          }
-        }
-      } catch (archiveError) {
-        console.log('ESPN D1 archive sync error', String(archiveError?.message || archiveError));
+      } catch (maintenanceError) {
+        console.log("D1 maintenance skipped; archive and summary sync will continue", String(maintenanceError?.message || maintenanceError));
       }
-      // Cross-provider enrichment scans historical rows, so run it at most every six hours.
+
+      try {
+        await syncEspnFixturesToD1(env, 900, 180, isHourlySync ? 32 : 10);
+      } catch (archiveError) {
+        console.log("ESPN archive/summary sync error", String(archiveError?.message || archiveError));
+      }
+
+      if (isDailySync && env.MAM_KV) {
+        try {
+          const report = await buildPriorityLeagueStatus(env);
+          await env.MAM_KV.put("mam:priority-league-status:v3", JSON.stringify(report), { expirationTtl: 60 * 60 * 48 });
+          console.log("Daily priority league archive quality check", {
+            generatedAt: report.generatedAt, leagues: report.leagues.length
+          });
+        } catch (qualityError) {
+          console.log("Daily priority league archive quality check failed", String(qualityError?.message || qualityError));
+        }
+      }
+
       try {
         const enrichmentThrottleKey = "mam:cross-source-enrichment-last:v3";
         const lastEnrichmentAt = Number(env.MAM_KV ? await env.MAM_KV.get(enrichmentThrottleKey) : 0);
