@@ -728,7 +728,6 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
         // while Core API exposes each competitor's statistics separately.
         if (!hasActualStatistics) {
           const competitors = payload?.header?.competitions?.[0]?.competitors
-            || payload?.header?.competitions?.[0]?.competitors
             || payload?.competitions?.[0]?.competitors
             || [];
           const teamIds = competitors.map(c => String(c?.id || c?.team?.id || ""))
