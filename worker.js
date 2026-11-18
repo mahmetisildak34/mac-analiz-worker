@@ -306,11 +306,15 @@ async function enrichExactCrossSourceMatches(env) {
   if (env.MAM_KV) await env.MAM_KV.put(cursorKey, JSON.stringify(nextCursors), { expirationTtl: 60 * 60 * 24 * 30 });
   const report = {
     ranAt: new Date().toISOString(), target: "ESPN rows missing either team's statistics",
-    sourceRowsScanned: source.length, sourceBatchLimit: 240, usableSourceStats,
+    sourceRowsScanned: source.length, sourceBatchLimit: 240,
+    sourceBatchFull: source.length === 240, sourceCursorReset: nextCursors.source === null,
+    usableSourceStats,
     missingEspnRowsScanned: missing.length, missingBatchLimit: 120,
+    missingBatchFull: missing.length === 120, missingCursorReset: nextCursors.missing === null,
     exactTeamMatches, scoreMismatches, ambiguousMatches,
     updateAttempts: updates.length, updated,
-    cursorsAdvanced: Boolean(nextCursors.source || nextCursors.missing)
+    cursorState: nextCursors,
+    scanStatus: source.length === 240 || missing.length === 120 ? "more-batches-available" : "batch-scan-complete"
   };
   if (env.MAM_KV) await env.MAM_KV.put("mam:cross-source-stats:last:v3", JSON.stringify(report), { expirationTtl: 60 * 60 * 24 * 30 });
   console.log("ESPN missing-statistics cross-source repair report", report);
