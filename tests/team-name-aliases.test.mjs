@@ -7,7 +7,7 @@ const start = worker.indexOf("const TEAM_NAME_ALIASES");
 const end = worker.indexOf("const ESPN_LEAGUE_COUNTRIES", start);
 assert.ok(start >= 0 && end > start, "team aliases and normalizer exist");
 
-const normalizationSource = worker.slice(start, end) + "\\nglobalThis.normalize = normalizeTeamName;";
+const normalizationSource = worker.slice(start, end) + "; globalThis.normalize = normalizeTeamName;";
 const sandbox = {};
 runInNewContext(normalizationSource, sandbox);
 
