@@ -1,0 +1,13 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+const worker = await readFile(new URL("../worker.js", import.meta.url), "utf8");
+const start = worker.indexOf('if (path === "archive/live" && request.method === "GET")');
+const end = worker.indexOf('if (path === "archive/d1-status")', start);
+assert.ok(start >= 0 && end > start, "archive/live route exists");
+const route = worker.slice(start, end);
+assert.match(route, /mam:archive-live:v2/, "live cache key versioned");
+assert.ok(route.indexOf("env.MAM_KV.get(liveCacheKey)") < route.indexOf("env.DB.prepare"), "cache checked before D1");
+assert.match(route, /expirationTtl: 15/, "cache TTL must be short for live data");
+assert.match(route, /cache read failed; falling back to D1/, "KV read failures safely fall back");
+assert.match(route, /cache write failed/, "KV write failures do not fail response");
+console.log("archive/live KV cache regression test passed");

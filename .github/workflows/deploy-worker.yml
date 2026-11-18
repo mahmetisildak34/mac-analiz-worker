@@ -53,6 +53,9 @@ jobs:
       - name: Run archive upcoming KV cache regression test
         run: node tests/archive-upcoming-cache.test.mjs
 
+      - name: Run archive live KV cache regression test
+        run: node tests/archive-live-cache.test.mjs
+
   deploy:
     needs: validate
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
