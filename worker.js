@@ -716,15 +716,66 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
         }
         const payload = await response.json();
         const teams = Array.isArray(payload?.boxscore?.teams) ? payload.boxscore.teams : [];
-        const statistics = teams.map(team => ({
+        let statistics = teams.map(team => ({
           homeAway: team.homeAway || null,
           team: team.team?.displayName || team.team?.name || null,
           statistics: Array.isArray(team.statistics) ? team.statistics : []
         }));
-        const hasActualStatistics = statistics.length >= 2 &&
+        let hasActualStatistics = statistics.length >= 2 &&
           statistics.filter(team => team.statistics.length > 0).length >= 2;
+
+        // Fallback: ESPN soccer summaries sometimes omit boxscore team stats,
+        // while Core API exposes each competitor's statistics separately.
+        if (!hasActualStatistics) {
+          const competitors = payload?.header?.competitions?.[0]?.competitors
+            || payload?.competitions?.[0]?.competitors
+            || [];
+          const teamIds = competitors.map(c => String(c?.id || c?.team?.id || ""))
+            .filter(Boolean).slice(0, 2);
+          if (teamIds.length === 2) {
+            const coreBase = "https://sports.core.api.espn.com/v2/sports/soccer/leagues/" +
+              encodeURIComponent(item.slug) + "/events/" + encodeURIComponent(item.eventId) +
+              "/competitions/" + encodeURIComponent(item.eventId) + "/competitors/";
+            const coreResults = await Promise.all(teamIds.map(async teamId => {
+              try {
+                const coreResponse = await fetch(coreBase + encodeURIComponent(teamId) + "/statistics", {
+                  headers: { "Accept": "application/json" }
+                });
+                if (!coreResponse.ok) return null;
+                const corePayload = await coreResponse.json();
+                let rawStats = Array.isArray(corePayload?.statistics) ? corePayload.statistics : [];
+                if (!rawStats.length && Array.isArray(corePayload?.splits?.categories)) {
+                  rawStats = corePayload.splits.categories.flatMap(category =>
+                    (Array.isArray(category?.stats) ? category.stats : []).map(stat => ({
+                      ...stat, category: category.name || category.displayName
+                    }))
+                  );
+                }
+                if (!rawStats.length && Array.isArray(corePayload?.categories)) {
+                  rawStats = corePayload.categories.flatMap(category =>
+                    (Array.isArray(category?.stats) ? category.stats : [])
+                  );
+                }
+                return rawStats.length ? { teamId, statistics: rawStats } : null;
+              } catch (coreError) {
+                console.log("ESPN Core team statistics fallback failed", item.fixtureId, teamId,
+                  String(coreError?.message || coreError));
+                return null;
+              }
+            }));
+            if (coreResults.filter(Boolean).length === 2) {
+              statistics = coreResults.map((result, index) => ({
+                homeAway: competitors[index]?.homeAway || null,
+                team: competitors[index]?.team?.displayName || competitors[index]?.team?.name || result.teamId,
+                statistics: result.statistics
+              }));
+              hasActualStatistics = statistics.every(team => team.statistics.length > 0);
+            }
+          }
+        }
+
         if (hasActualStatistics) {
-          fetchedStatsJson = JSON.stringify({ teams: statistics, summaryAvailable: true });
+          fetchedStatsJson = JSON.stringify({ teams: statistics, summaryAvailable: true, statisticsSource: "ESPN summary/core" });
           await env.DB.prepare(
             "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))"
           ).bind(fetchedStatsJson, item.fixtureId).run();
@@ -736,8 +787,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
           if (summaryRun.noStatisticsSamples.length < 10) {
             summaryRun.noStatisticsSamples.push({ fixtureId: item.fixtureId, slug: item.slug, eventId: item.eventId });
           }
-          // A successful summary with an empty box score is not a transient request
-          // failure. Retry this fixture once per day, without an extra 15-minute call.
+          // Do not burn requests on unavailable box scores; retain and retry later.
           summaryRetries.push({
             ...item,
             attempts: 0,
