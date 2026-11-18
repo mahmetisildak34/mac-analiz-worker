@@ -381,14 +381,14 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   // ramp up after healthy runs, and back off immediately on failures/write blocks.
   const adaptiveSpeedKey = "mam:espn-adaptive-speed:v1";
   let adaptiveSpeed = await env.MAM_KV.get(adaptiveSpeedKey, "json");
-  if (!adaptiveSpeed || typeof adaptiveSpeed !== "object") adaptiveSpeed = { requests: 24, healthyRuns: 0 };
+  if (!adaptiveSpeed || typeof adaptiveSpeed !== "object") adaptiveSpeed = { requests: 20, healthyRuns: 0 };
   let effectiveMaxRequests = maxRequests;
   if (maxRequests > 10) {
     const priorFailure = adaptiveSpeed.lastFailed > 0 || adaptiveSpeed.lastArchiveWriteBlocked === true ||
       adaptiveSpeed.lastSummaryFailures > 0 || adaptiveSpeed.lastPendingD1WriteFailure === true;
-    const current = Math.max(16, Math.min(32, Number(adaptiveSpeed.requests) || 24));
-    effectiveMaxRequests = priorFailure ? Math.max(16, current - 8) :
-      (Number(adaptiveSpeed.healthyRuns || 0) >= 1 ? Math.min(32, current + 4) : current);
+    const current = Math.max(16, Math.min(24, Number(adaptiveSpeed.requests) || 20));
+    effectiveMaxRequests = priorFailure ? Math.max(16, current - 4) :
+      (Number(adaptiveSpeed.healthyRuns || 0) >= 1 ? Math.min(24, current + 2) : current);
     adaptiveSpeed = { ...adaptiveSpeed, requests: effectiveMaxRequests };
   }
   // ESPN scoreboard coverage mirrors the app's supported ESPN fallback competitions.
@@ -1373,7 +1373,7 @@ export default {
           missingStatisticsInD1,
           statisticsReadyToRetry: readyToRetry,
           statisticsCoolingDown: coolingDown,
-          adaptiveSpeed: adaptiveSpeedStatus || { requests: 24, healthyRuns: 0, mode: "starting" },
+          adaptiveSpeed: adaptiveSpeedStatus || { requests: 20, healthyRuns: 0, mode: "starting" },
           summaryQueueSample: queue.slice(0, 25).map(item => ({
             fixtureId: item.fixtureId || null,
             slug: item.slug || null,
