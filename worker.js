@@ -916,7 +916,10 @@ async function buildPriorityLeagueStatus(env) {
 export default {
   // Daily TFF fixture sync: one KV write per run, keeping free-tier writes low.
   async scheduled(event, env, ctx) {
-    const isDailySync = event?.cron === '0 3 * * *';
+    // Single 15-minute cron trigger avoids account-wide trigger limits. Keep daily
+    // maintenance on the 03:00 UTC quarter-hour invocation.
+    const scheduledAt = new Date();
+    const isDailySync = scheduledAt.getUTCHours() === 3 && scheduledAt.getUTCMinutes() === 0;
     const isHourlySync = !isDailySync;
     if (env.DB) {
       try {
