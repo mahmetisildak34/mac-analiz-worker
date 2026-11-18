@@ -74,6 +74,9 @@ jobs:
       - name: Run team-name alias regression test
         run: node tests/team-name-aliases.test.mjs
 
+      - name: Run Paris FC / PSG alias collision regression test
+        run: node tests/paris-team-alias-collision.test.mjs
+
   deploy:
     needs: validate
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')

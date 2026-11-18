@@ -48,7 +48,7 @@ const TEAM_NAME_ALIASES = Object.freeze({
   "leeds":"leeds-united", "ipswich":"ipswich-town", "bournemouth":"afc-bournemouth",
   "inter":"inter-milan", "internazionale":"inter-milan", "ac-milan":"milan",
   "ath-madrid":"atletico-madrid", "atletico":"atletico-madrid",
-  "psg":"paris-saint-germain", "paris":"paris-saint-germain", "bayern":"bayern-munich",
+  "psg":"paris-saint-germain", "bayern":"bayern-munich",
   "dortmund":"borussia-dortmund", "sporting":"sporting-cp",
   "sporting-lisbon":"sporting-cp", "ajax-amsterdam":"ajax", "psv-eindhoven":"psv",
   "karagumruk":"fatih-karagumruk", "rizespor":"caykur-rizespor",
