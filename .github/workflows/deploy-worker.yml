@@ -1,6 +1,15 @@
 name: Deploy Cloudflare Worker
 
 on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "worker.js"
+      - "wrangler.jsonc"
+      - "package.json"
+      - "tests/**/*.mjs"
+      - ".github/workflows/deploy-worker.yml"
   push:
     branches:
       - main
@@ -8,11 +17,12 @@ on:
       - "worker.js"
       - "wrangler.jsonc"
       - "package.json"
+      - "tests/**/*.mjs"
       - ".github/workflows/deploy-worker.yml"
   workflow_dispatch:
 
 jobs:
-  deploy:
+  validate:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -30,6 +40,30 @@ jobs:
 
       - name: Run archive upsert regression test
         run: node tests/archive-upsert-guard.test.mjs
+
+      - name: Run cross-source matching regression test
+        run: node tests/cross-source-enrichment.test.mjs
+
+      - name: Run statistics overwrite guard regression test
+        run: node tests/summary-statistics-overwrite-guard.test.mjs
+
+      - name: Run D1 status cache optimization regression test
+        run: node tests/d1-status-cache-optimization.test.mjs
+
+  deploy:
+    needs: validate
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
 
       - name: Deploy Worker to Cloudflare
         run: npx --yes wrangler@latest deploy
