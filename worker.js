@@ -1644,6 +1644,22 @@ export default {
         // filter below. This handles both Z timestamps and explicit +03:00 offsets
         // without double-shifting already-localized kickoff values.
         const resultsOnly = url.searchParams.get("results") === "1";
+        // KV cache prevents repeated identical scoreboard/archive requests from
+        // scanning D1. Exact-date results (which may include live matches) use a
+        // short TTL; rolling upcoming/results windows use a slightly longer TTL.
+        const upcomingCacheKey = "mam:archive-upcoming:v2:" + [exactDate || "window", days, leagueId || "all", limit, resultsOnly ? "results" : "fixtures"].join(":");
+        if (env.MAM_KV) {
+          try {
+            const cachedUpcoming = await env.MAM_KV.get(upcomingCacheKey);
+            if (cachedUpcoming) {
+              return new Response(cachedUpcoming, {
+                status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+              });
+            }
+          } catch (cacheReadError) {
+            console.warn("archive/upcoming KV cache read failed; falling back to D1:", String(cacheReadError?.message || cacheReadError));
+          }
+        }
         const filters = exactDate
           ? ["date(kickoff) >= date(?, '-1 day')", "date(kickoff) < date(?, '+2 days')"]
           : resultsOnly
@@ -1702,7 +1718,7 @@ export default {
           },
           goals: { home: row.home_goals, away: row.away_goals }
         }));
-        return new Response(JSON.stringify({
+        const upcomingResponseBody = JSON.stringify({
           ok: true, days, date: exactDate || null, leagueId: leagueId || null,
           count: matches.length,
           rawCount: Array.isArray(result?.results) ? result.results.length : 0,
@@ -1710,7 +1726,15 @@ export default {
           duplicatesSuppressed: candidateRows.length - deduplicatedRows.length,
           dateDebug,
           response: matches
-        }), {
+        });
+        if (env.MAM_KV) {
+          try {
+            await env.MAM_KV.put(upcomingCacheKey, upcomingResponseBody, { expirationTtl: exactDate ? 30 : resultsOnly ? 300 : 300 });
+          } catch (cacheWriteError) {
+            console.warn("archive/upcoming KV cache write failed:", String(cacheWriteError?.message || cacheWriteError));
+          }
+        }
+        return new Response(upcomingResponseBody, {
           status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
         });
       }
