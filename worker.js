@@ -376,6 +376,21 @@ async function ensureArchiveIndexes(env) {
 
 async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, maxRequests = 40) {
   if (!env.DB || !env.MAM_KV) return { saved: 0, failed: 0, complete: false, reason: "DB or MAM_KV binding missing" };
+
+  // Adaptive archive speed: only the hourly backfill is adjusted. Start moderate,
+  // ramp up after healthy runs, and back off immediately on failures/write blocks.
+  const adaptiveSpeedKey = "mam:espn-adaptive-speed:v1";
+  let adaptiveSpeed = await env.MAM_KV.get(adaptiveSpeedKey, "json");
+  if (!adaptiveSpeed || typeof adaptiveSpeed !== "object") adaptiveSpeed = { requests: 20, healthyRuns: 0 };
+  let effectiveMaxRequests = maxRequests;
+  if (maxRequests > 10) {
+    const priorFailure = adaptiveSpeed.lastFailed > 0 || adaptiveSpeed.lastArchiveWriteBlocked === true ||
+      adaptiveSpeed.lastSummaryFailures > 0 || adaptiveSpeed.lastPendingD1WriteFailure === true;
+    const current = Math.max(16, Math.min(24, Number(adaptiveSpeed.requests) || 20));
+    effectiveMaxRequests = priorFailure ? Math.max(16, current - 4) :
+      (Number(adaptiveSpeed.healthyRuns || 0) >= 1 ? Math.min(24, current + 2) : current);
+    adaptiveSpeed = { ...adaptiveSpeed, requests: effectiveMaxRequests };
+  }
   // ESPN scoreboard coverage mirrors the app's supported ESPN fallback competitions.
   // Keep league IDs aligned with the app so every archived row is queryable by league.
   const leagues = [
@@ -558,9 +573,9 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   // reduce scoreboard work by the same amount during archive backfill.
   const largeStatisticsBacklog = summaryQueue.length >= 100;
   const summaryBudget = archiveBackfillActive ? (maxRequests <= 10 ? 4 : 8) : (maxRequests <= 10 ? 4 : (largeStatisticsBacklog ? 24 : 16));
-  const scoreboardBudget = maxRequests <= 10 ? 10 : (archiveBackfillActive ? 40 : (largeStatisticsBacklog ? 24 : 32));
+  const scoreboardBudget = effectiveMaxRequests <= 10 ? 10 : (archiveBackfillActive ? 40 : (largeStatisticsBacklog ? 24 : 32));
   const summaryBatchLimit = Math.min(summaryBudget, summaryQueue.length);
-  const scoreboardBatchLimit = Math.min(maxRequests, scoreboardBudget);
+  const scoreboardBatchLimit = Math.min(effectiveMaxRequests, scoreboardBudget);
   batch = state.jobs.slice(state.cursor, state.cursor + Math.max(1, scoreboardBatchLimit));
   const queueAfterDiscovery = summaryQueue.length;
 
@@ -850,10 +865,28 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   } else {
     await env.MAM_KV.put(stateKey, JSON.stringify(state));
   }
+  if (maxRequests > 10) {
+    const summaryFailures = Number(summaryRun.requestFailures || 0);
+    const pendingD1WriteFailure = pendingStats.length > 0 && summaryRun.requestFailureSamples.some(sample =>
+      String(sample?.error || "").includes("D1 write deferred")
+    );
+    const healthy = failed === 0 && !archiveWriteBlocked && summaryFailures === 0 && !pendingD1WriteFailure;
+    adaptiveSpeed = {
+      requests: effectiveMaxRequests,
+      healthyRuns: healthy ? Number(adaptiveSpeed.healthyRuns || 0) + 1 : 0,
+      lastFailed: failed,
+      lastArchiveWriteBlocked: archiveWriteBlocked,
+      lastSummaryFailures: summaryFailures,
+      lastPendingD1WriteFailure: pendingD1WriteFailure,
+      lastRunAt: new Date().toISOString()
+    };
+    await env.MAM_KV.put(adaptiveSpeedKey, JSON.stringify(adaptiveSpeed), { expirationTtl: 60 * 60 * 24 * 30 });
+  }
   console.log("ESPN D1 archive sync batch", {
     saved, failed, processed: batch.length, totalJobs: state.jobs.length,
     nextCursor: complete ? null : state.cursor, complete, retryQueued: retryJobs.length,
-    summariesProcessed: summaryBatch.length, summariesPending: summaryQueue.length
+    summariesProcessed: summaryBatch.length, summariesPending: summaryQueue.length,
+    adaptiveRequests: effectiveMaxRequests
   });
   if (complete) console.log("ESPN D1 archive sync complete", { saved, failed, leagues: leagues.length });
   return { saved, failed, complete, processed: batch.length, nextCursor: complete ? null : state.cursor };
@@ -1302,11 +1335,12 @@ export default {
           });
         }
         const missingStatsSql = "SELECT fixture_id AS fixtureId, league_id AS leagueId, league_name AS leagueName, kickoff, home_team AS homeTeam, away_team AS awayTeam, status FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0)) ORDER BY kickoff DESC LIMIT 25";
-        const [state, queueValue, lastSummaryRun, crossSourceStatsRun, missingStatsResult, missingStatsSample] = await Promise.all([
+        const [state, queueValue, lastSummaryRun, crossSourceStatsRun, adaptiveSpeedStatus, missingStatsResult, missingStatsSample] = await Promise.all([
           env.MAM_KV.get("mam:espn-sync-state:v2", "json"),
           env.MAM_KV.get("mam:espn-summary-queue:v1", "json"),
           env.MAM_KV.get("mam:espn-summary-last-run:v1", "json"),
           env.MAM_KV.get("mam:cross-source-stats:last:v3", "json"),
+          env.MAM_KV.get("mam:espn-adaptive-speed:v1", "json"),
           env.DB ? env.DB.prepare("SELECT COUNT(*) AS total FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))").first() : Promise.resolve(null),
           env.DB ? env.DB.prepare(missingStatsSql).all() : Promise.resolve({ results: [] })
         ]);
@@ -1339,6 +1373,7 @@ export default {
           missingStatisticsInD1,
           statisticsReadyToRetry: readyToRetry,
           statisticsCoolingDown: coolingDown,
+          adaptiveSpeed: adaptiveSpeedStatus || { requests: 20, healthyRuns: 0, mode: "starting" },
           summaryQueueSample: queue.slice(0, 25).map(item => ({
             fixtureId: item.fixtureId || null,
             slug: item.slug || null,
