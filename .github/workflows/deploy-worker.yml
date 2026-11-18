@@ -56,6 +56,9 @@ jobs:
       - name: Run archive live KV cache regression test
         run: node tests/archive-live-cache.test.mjs
 
+      - name: Run archive backfill batch-size regression test
+        run: node tests/archive-backfill-batch-size.test.mjs
+
   deploy:
     needs: validate
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
