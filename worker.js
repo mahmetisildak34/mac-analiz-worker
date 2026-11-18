@@ -593,7 +593,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
           awayId: away.team?.id == null ? null : String(away.team.id), awayName,
           homeGoals: score(home.score), awayGoals: score(away.score), raw: JSON.stringify(event)
         });
-        if (!archiveBackfillActive && (status === "LIVE" || status === "FT")) {
+        if ((status === "LIVE" || status === "FT") && summaryQueue.length < 500) {
           const key = "ESPN:" + fixtureId;
           if (!summaryDoneSet.has(key) && !summaryQueue.some(item => item.key === key)) {
             summaryQueue.push({ key, slug, fixtureId, eventId: String(event.id), attempts: 0 });
