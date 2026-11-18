@@ -2194,9 +2194,46 @@ export default {
         // fresh=1 bypass and serve the KV snapshot to protect the daily read quota.
         const cachedD1Status = env.MAM_KV ? await env.MAM_KV.get(d1StatusCacheKey) : null;
         if (cachedD1Status) {
-          return new Response(cachedD1Status, {
-            status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
-          });
+          // Keep expensive D1 aggregates cached, but refresh queue/run telemetry
+          // from KV on every status request so the dashboard never freezes for 6h.
+          try {
+            const [liveSummaryQueue, liveSummaryLastRun] = await Promise.all([
+              env.MAM_KV.get("mam:espn-summary-queue:v1", "json"),
+              env.MAM_KV.get("mam:espn-summary-last-run:v1", "json")
+            ]);
+            const report = JSON.parse(cachedD1Status);
+            const queueItems = Array.isArray(liveSummaryQueue) ? liveSummaryQueue : [];
+            const now = Date.now();
+            const readyToRetry = queueItems.filter(item => !Number(item.retryAfter || 0) || Number(item.retryAfter || 0) <= now);
+            const coolingDown = queueItems.length - readyToRetry.length;
+            let retryAttempts = {};
+            for (const item of queueItems) {
+              const attempt = Number(item.attempts || 0);
+              retryAttempts[String(attempt)] = (retryAttempts[String(attempt)] || 0) + 1;
+            }
+            const nextRetryAt = queueItems.reduce((min, item) => {
+              const retryAt = Number(item.retryAfter || 0);
+              return retryAt > now && (!min || retryAt < min) ? retryAt : min;
+            }, 0);
+            report.espnSummaryLastRun = liveSummaryLastRun || report.espnSummaryLastRun || null;
+            report.pendingSummaryRetries = queueItems.length;
+            report.summaryQueueStatus = {
+              queued: queueItems.length,
+              readyToRetry: readyToRetry.length,
+              coolingDown,
+              retryAttempts,
+              nextRetryAt: nextRetryAt ? new Date(nextRetryAt).toISOString() : null
+            };
+            report.liveStatusUpdatedAt = new Date().toISOString();
+            return new Response(JSON.stringify(report), {
+              status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+            });
+          } catch (liveStatusError) {
+            console.log("Live KV queue status refresh failed; serving cached status", String(liveStatusError?.message || liveStatusError));
+            return new Response(cachedD1Status, {
+              status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+            });
+          }
         }
         const [total, statsCoverage, bySource, missingBySource, byLeague, byStatus, latest, summaryQueue, crossSourceStatsReport, summaryLastRun] = await Promise.all([
           env.DB.prepare("SELECT COUNT(*) AS total FROM matches").first(),
