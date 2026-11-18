@@ -768,6 +768,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
           summaryRetries.push({ ...item, attempts: attempt, retryAfter: Date.now() + delayMs });
           console.log("ESPN match statistics sync failed", item.fixtureId, String(error?.message || error));
         }
+      }
     }));
   }
   if (summaryRetries.length) summaryQueue.push(...summaryRetries);
