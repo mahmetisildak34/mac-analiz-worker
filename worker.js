@@ -2052,7 +2052,8 @@ export default {
           });
         }
         const d1StatusCacheKey = "mam:d1-status-cache:v2";
-        const cachedD1Status = env.MAM_KV ? await env.MAM_KV.get(d1StatusCacheKey) : null;
+        const forceFreshD1Status = url.searchParams.get("fresh") === "1";
+        const cachedD1Status = env.MAM_KV && !forceFreshD1Status ? await env.MAM_KV.get(d1StatusCacheKey) : null;
         if (cachedD1Status) {
           return new Response(cachedD1Status, {
             status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
@@ -2113,7 +2114,7 @@ export default {
           statuses: Array.isArray(byStatus?.results) ? byStatus.results : []
         };
         const d1StatusBody = JSON.stringify(d1StatusReport);
-        if (env.MAM_KV) await env.MAM_KV.put(d1StatusCacheKey, d1StatusBody, { expirationTtl: 60 * 60 });
+        if (env.MAM_KV) await env.MAM_KV.put(d1StatusCacheKey, d1StatusBody, { expirationTtl: 6 * 60 * 60 });
         return new Response(d1StatusBody, {
           status: 200,
           headers: {

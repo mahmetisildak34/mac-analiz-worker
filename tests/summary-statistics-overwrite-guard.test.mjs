@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 
 const worker = readFileSync(new URL("../worker.js", import.meta.url), "utf8");
 const summaryStart = worker.indexOf("const summaryRun =");
-const summaryEnd = worker.indexOf("const summaryRetries", summaryStart);
+const summaryEnd = worker.indexOf("const doneList = Array.from(summaryDoneSet);", summaryStart);
 assert.ok(summaryStart >= 0 && summaryEnd > summaryStart, "summary processing block exists");
 const block = worker.slice(summaryStart, summaryEnd);
 const updateAt = block.indexOf("UPDATE matches SET statistics_json");
