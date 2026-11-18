@@ -59,6 +59,9 @@ jobs:
       - name: Run archive backfill batch-size regression test
         run: node tests/archive-backfill-batch-size.test.mjs
 
+      - name: Run statistics during archive backfill regression test
+        run: node tests/statistics-during-archive.test.mjs
+
   deploy:
     needs: validate
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
