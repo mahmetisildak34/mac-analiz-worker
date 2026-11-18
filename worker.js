@@ -932,11 +932,12 @@ export default {
           if (normalizedLeagueRows) console.log("Normalized league country metadata", { rows: normalizedLeagueRows });
           if (env.MAM_KV) await env.MAM_KV.put(maintenanceKey, String(Date.now()), { expirationTtl: 60 * 60 * 48 });
         }
-        // Prioritize the ten main leagues' historical fixture backfill. During
-        // backfill, hourly runs use up to 48 scoreboard requests and defer summaries;
-        // summary enrichment resumes automatically once the archive queue is complete.
+        // Prioritize the ten main leagues' historical fixture backfill. The 15-minute
+        // schedule uses 24 scoreboard requests per run (up to 96/hour, 2x the prior
+        // hourly budget) while keeping each invocation below the subrequest ceiling.
+        // Summary enrichment resumes automatically once the archive queue is complete.
         // The daily TFF scrape retains its smaller 10-request ESPN allowance.
-        await syncEspnFixturesToD1(env, 900, 180, isHourlySync ? 48 : 10);
+        await syncEspnFixturesToD1(env, 900, 180, isHourlySync ? 24 : 10);
         // Daily archive quality snapshot: one bounded D1 aggregation, then KV-served reads.
         if (isDailySync && env.MAM_KV) {
           try {
