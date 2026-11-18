@@ -940,7 +940,7 @@ export default {
         // hourly budget) while keeping each invocation below the subrequest ceiling.
         // Summary enrichment resumes automatically once the archive queue is complete.
         // The daily TFF scrape retains its smaller 10-request ESPN allowance.
-        await syncEspnFixturesToD1(env, 900, 180, isHourlySync ? 24 : 10);
+        await syncEspnFixturesToD1(env, 900, 180, isHourlySync ? 32 : 10);
         // Daily archive quality snapshot: one bounded D1 aggregation, then KV-served reads.
         if (isDailySync && env.MAM_KV) {
           try {
