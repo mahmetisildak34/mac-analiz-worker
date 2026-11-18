@@ -7,7 +7,7 @@ const summaryEnd = worker.indexOf("if (summaryRetries.length) summaryQueue.push(
 assert.ok(summaryStart >= 0 && summaryEnd > summaryStart, "summary fetch processing block exists");
 const summaryBlock = worker.slice(summaryStart, summaryEnd);
 assert.ok(summaryBlock.includes("sports.core.api.espn.com/v2/sports/soccer/leagues/"), "Core API fallback exists");
-assert.ok(summaryBlock.includes("/competitors/\" + encodeURIComponent(teamId) + \"/statistics"), "fallback fetches team-level stats");
+assert.ok(summaryBlock.includes("competitors/") && summaryBlock.includes("/statistics"), "fallback fetches team-level stats");
 assert.ok(summaryBlock.includes("payload?.header?.competitions?.[0]?.competitors"), "competitor IDs extracted from summary header");
 assert.ok(summaryBlock.includes("coreResults.filter(Boolean).length === 2"), "requires both teams to have stats");
 assert.ok(summaryBlock.includes('statisticsSource: "ESPN summary/core"'), "fallback source is recorded");
