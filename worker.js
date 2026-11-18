@@ -921,7 +921,7 @@ export default {
       try {
         const enrichmentThrottleKey = "mam:cross-source-enrichment-last:v3";
         const lastEnrichmentAt = Number(env.MAM_KV ? await env.MAM_KV.get(enrichmentThrottleKey) : 0);
-        if (!lastEnrichmentAt || Date.now() - lastEnrichmentAt >= 15 * 60 * 1000) {
+        if (!lastEnrichmentAt || Date.now() - lastEnrichmentAt >= 6 * 60 * 60 * 1000) {
           const crossSourceStats = await enrichExactCrossSourceMatches(env);
           console.log("Scheduled cross-source statistics enrichment", crossSourceStats);
           if (env.MAM_KV) await env.MAM_KV.put(enrichmentThrottleKey, String(Date.now()), { expirationTtl: 60 * 60 * 48 });
