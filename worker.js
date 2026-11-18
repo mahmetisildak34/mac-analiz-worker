@@ -618,13 +618,21 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
 
   const sql = "INSERT INTO matches (source, fixture_id, league_id, league_name, country, kickoff, status, home_team_id, home_team, away_team_id, away_team, home_goals, away_goals, statistics_json, raw_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(source, fixture_id) DO UPDATE SET league_id=excluded.league_id, league_name=excluded.league_name, country=excluded.country, kickoff=excluded.kickoff, status=excluded.status, home_team_id=excluded.home_team_id, home_team=excluded.home_team, away_team_id=excluded.away_team_id, away_team=excluded.away_team, home_goals=excluded.home_goals, away_goals=excluded.away_goals, raw_json=excluded.raw_json, updated_at=CURRENT_TIMESTAMP WHERE matches.league_id IS NOT excluded.league_id OR matches.league_name IS NOT excluded.league_name OR matches.country IS NOT excluded.country OR matches.kickoff IS NOT excluded.kickoff OR matches.status IS NOT excluded.status OR matches.home_team_id IS NOT excluded.home_team_id OR matches.home_team IS NOT excluded.home_team OR matches.away_team_id IS NOT excluded.away_team_id OR matches.away_team IS NOT excluded.away_team OR matches.home_goals IS NOT excluded.home_goals OR matches.away_goals IS NOT excluded.away_goals";
   let saved = 0;
+  let archiveWriteBlocked = false;
   for (let i = 0; i < rows.length; i += 50) {
     const statements = rows.slice(i, i + 50).map(m => env.DB.prepare(sql).bind(
       m.source, m.fixtureId, m.leagueId, m.leagueName, m.country, m.kickoff, m.status,
       m.homeId, m.homeName, m.awayId, m.awayName, m.homeGoals, m.awayGoals, null, m.raw
     ));
-    const result = await env.DB.batch(statements);
-    saved += result.reduce((sum, item) => sum + (Number(item?.meta?.changes) || 0), 0);
+    try {
+      const result = await env.DB.batch(statements);
+      saved += result.reduce((sum, item) => sum + (Number(item?.meta?.changes) || 0), 0);
+    } catch (archiveWriteError) {
+      archiveWriteBlocked = true;
+      retryJobs.push(...batch.map(job => ({ ...job, attempts: Number(job.attempts || 0) + 1 })));
+      console.log("ESPN archive D1 write blocked; preserving scoreboard jobs for retry", String(archiveWriteError?.message || archiveWriteError));
+      break;
+    }
   }
 
   // Fresh D1 fixture rows must invalidate the current half-goals snapshot immediately.
@@ -669,9 +677,27 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     noStatisticsSamples: [],
     saved: 0
   };
+  const pendingStatsKey = "mam:espn-summary-pending-d1:v1";
+  let pendingStats = await env.MAM_KV.get(pendingStatsKey, "json");
+  if (!Array.isArray(pendingStats)) pendingStats = [];
+  // Retry previously fetched box scores from KV before spending another ESPN request.
+  for (const pending of pendingStats.slice(0, 8)) {
+    try {
+      await env.DB.prepare(
+        "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))"
+      ).bind(pending.statisticsJson, pending.fixtureId).run();
+      pendingStats = pendingStats.filter(entry => entry.fixtureId !== pending.fixtureId);
+      summaryRun.saved++;
+    } catch (pendingWriteError) {
+      console.log("Pending ESPN summary D1 write retained for retry", pending.fixtureId, String(pendingWriteError?.message || pendingWriteError));
+      break;
+    }
+  }
+  await env.MAM_KV.put(pendingStatsKey, JSON.stringify(pendingStats));
   for (let i = 0; i < summaryBatch.length; i += 4) {
     await Promise.all(summaryBatch.slice(i, i + 4).map(async item => {
       let retryAfterHeader = null;
+      let fetchedStatsJson = null;
       try {
         const response = await fetch(ESPN_BASE + "/" + item.slug + "/summary?event=" + encodeURIComponent(item.eventId), {
           headers: { "Accept": "application/json" }
@@ -690,9 +716,10 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
         const hasActualStatistics = statistics.length >= 2 &&
           statistics.filter(team => team.statistics.length > 0).length >= 2;
         if (hasActualStatistics) {
+          fetchedStatsJson = JSON.stringify({ teams: statistics, summaryAvailable: true });
           await env.DB.prepare(
             "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))"
-          ).bind(JSON.stringify({ teams: statistics, summaryAvailable: true }), item.fixtureId).run();
+          ).bind(fetchedStatsJson, item.fixtureId).run();
           summaryDoneSet.add(item.key);
           summaryRun.fetchedWithStatistics++;
           summaryRun.saved++;
@@ -711,8 +738,17 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
           });
         }
       } catch (error) {
-        summaryRun.requestFailures++;
-        if (summaryRun.requestFailureSamples.length < 10) {
+        if (fetchedStatsJson) {
+          const pendingEntry = { fixtureId: item.fixtureId, key: item.key, statisticsJson: fetchedStatsJson, fetchedAt: new Date().toISOString() };
+          if (!pendingStats.some(entry => entry.fixtureId === item.fixtureId)) pendingStats.push(pendingEntry);
+          await env.MAM_KV.put(pendingStatsKey, JSON.stringify(pendingStats));
+          summaryRun.fetchedWithStatistics++;
+          summaryRun.requestFailureSamples.push({ fixtureId: item.fixtureId, error: "Box score downloaded; D1 write deferred to KV pending queue" });
+          console.log("ESPN box score buffered in KV because D1 write failed", item.fixtureId, String(error?.message || error));
+        } else {
+          summaryRun.requestFailures++;
+        }
+        if (!fetchedStatsJson && summaryRun.requestFailureSamples.length < 10) {
           summaryRun.requestFailureSamples.push({
             fixtureId: item.fixtureId, slug: item.slug, eventId: item.eventId,
             error: String(error?.message || error).slice(0, 240)
@@ -728,9 +764,10 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
         const delayMs = retryAfterSeconds > 0
           ? Math.min(24 * 60 * 60 * 1000, retryAfterSeconds * 1000)
           : fallbackDelayMs;
-        summaryRetries.push({ ...item, attempts: attempt, retryAfter: Date.now() + delayMs });
-        console.log("ESPN match statistics sync failed", item.fixtureId, String(error?.message || error));
-      }
+        if (!fetchedStatsJson) {
+          summaryRetries.push({ ...item, attempts: attempt, retryAfter: Date.now() + delayMs });
+          console.log("ESPN match statistics sync failed", item.fixtureId, String(error?.message || error));
+        }
     }));
   }
   if (summaryRetries.length) summaryQueue.push(...summaryRetries);
