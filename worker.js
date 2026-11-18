@@ -692,7 +692,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
           statistics.filter(team => team.statistics.length > 0).length >= 2;
         if (hasActualStatistics) {
           await env.DB.prepare(
-            "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ?"
+            "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))"
           ).bind(JSON.stringify({ teams: statistics, summaryAvailable: true }), item.fixtureId).run();
           summaryDoneSet.add(item.key);
           summaryRun.fetchedWithStatistics++;
