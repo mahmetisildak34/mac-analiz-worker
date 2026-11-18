@@ -2332,9 +2332,6 @@ export default {
         const nowMs = Date.now();
         const livePollIntervalMs = 5 * 60 * 1000;
         const minimumRequestSpacingMs = 8000; // Stay below the provider 10-requests/minute ceiling with headroom.
-        const quotaState = await env.DB.prepare(
-          "SELECT used, live_last_ms, minute_last_ms FROM mam_api_quota_guard WHERE day = ?"
-        ).bind(utcDay).first();
         const reservation = await env.DB.prepare(
           "UPDATE mam_api_quota_guard SET used = used + 1, live_last_ms = CASE WHEN ? = 1 THEN ? ELSE live_last_ms END, minute_last_ms = ? WHERE day = ? AND used < ? AND minute_last_ms <= ? AND (? = 0 OR live_last_ms = 0 OR live_last_ms <= ?) RETURNING used, live_last_ms, minute_last_ms"
         ).bind(isLive ? 1 : 0, nowMs, nowMs + minimumRequestSpacingMs, utcDay, dailyLimit, nowMs, isLive ? 1 : 0, nowMs - livePollIntervalMs).first();
