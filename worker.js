@@ -691,11 +691,12 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   // Retry previously fetched box scores from KV before spending another ESPN request.
   for (const pending of pendingStats.slice(0, 8)) {
     try {
-      await env.DB.prepare(
+      const pendingWriteResult = await env.DB.prepare(
         "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))"
       ).bind(pending.statisticsJson, pending.fixtureId).run();
+      const pendingChanges = Number(pendingWriteResult?.meta?.changes || 0);
+      if (pendingChanges > 0) summaryRun.saved += pendingChanges;
       pendingStats = pendingStats.filter(entry => entry.fixtureId !== pending.fixtureId);
-      summaryRun.saved++;
     } catch (pendingWriteError) {
       console.log("Pending ESPN summary D1 write retained for retry", pending.fixtureId, String(pendingWriteError?.message || pendingWriteError));
       break;
@@ -776,12 +777,13 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
 
         if (hasActualStatistics) {
           fetchedStatsJson = JSON.stringify({ teams: statistics, summaryAvailable: true, statisticsSource: "ESPN summary/core" });
-          await env.DB.prepare(
+          const statisticsWriteResult = await env.DB.prepare(
             "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))"
           ).bind(fetchedStatsJson, item.fixtureId).run();
+          const actualChanges = Number(statisticsWriteResult?.meta?.changes || 0);
           summaryDoneSet.add(item.key);
           summaryRun.fetchedWithStatistics++;
-          summaryRun.saved++;
+          summaryRun.saved += actualChanges;
         } else {
           summaryRun.noStatisticsReturned++;
           if (summaryRun.noStatisticsSamples.length < 10) {
