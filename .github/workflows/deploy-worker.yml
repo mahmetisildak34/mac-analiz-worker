@@ -28,6 +28,9 @@ jobs:
       - name: Validate Worker JavaScript syntax
         run: node --check worker.js
 
+      - name: Run archive upsert regression test
+        run: node tests/archive-upsert-guard.test.mjs
+
       - name: Deploy Worker to Cloudflare
         run: npx --yes wrangler@latest deploy
         env:
