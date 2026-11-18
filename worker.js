@@ -643,6 +643,14 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
 
   // Fetch detailed box-score statistics for live and completed matches in small batches.
   // Scoreboard sync remains the source of truth for status and goals; summaries enrich statistics_json.
+  // Keep the limited ESPN summary budget focused on the ten priority competitions.
+  // Existing queued jobs are retained; only their processing order changes.
+  const prioritySummarySlugs = new Set([
+    "eng.1", "tur.1", "esp.1", "ger.1", "ita.1",
+    "fra.1", "uefa.champions", "uefa.europa", "ned.1", "por.1"
+  ]);
+  const summaryLeaguePriority = item => prioritySummarySlugs.has(String(item?.slug || "")) ? 0 : 1;
+  summaryQueue.sort((a, b) => summaryLeaguePriority(a) - summaryLeaguePriority(b));
   const nowMs = Date.now();
   const readySummaries = [];
   const deferredSummaries = [];
