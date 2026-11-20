@@ -2241,9 +2241,10 @@ export default {
           // Keep expensive D1 aggregates cached, but refresh queue/run telemetry
           // from KV on every status request without reading D1.
           try {
-            const [liveSummaryQueue, liveSummaryLastRun] = await Promise.all([
+            const [liveSummaryQueue, liveSummaryLastRun, liveCrossSourceStats] = await Promise.all([
               env.MAM_KV.get("mam:espn-summary-queue:v1", "json"),
-              env.MAM_KV.get("mam:espn-summary-last-run:v1", "json")
+              env.MAM_KV.get("mam:espn-summary-last-run:v1", "json"),
+              env.MAM_KV.get("mam:cross-source-stats:last:v4", "json")
             ]);
             const report = JSON.parse(cachedD1Status);
             const queueItems = Array.isArray(liveSummaryQueue) ? liveSummaryQueue : [];
@@ -2260,6 +2261,7 @@ export default {
               return retryAt > now && (!min || retryAt < min) ? retryAt : min;
             }, 0);
             report.espnSummaryLastRun = liveSummaryLastRun || report.espnSummaryLastRun || null;
+            report.crossSourceStatisticsEnrichment = liveCrossSourceStats || report.crossSourceStatisticsEnrichment || null;
             report.pendingSummaryRetries = queueItems.length;
             report.summaryQueueStatus = {
               queued: queueItems.length,
