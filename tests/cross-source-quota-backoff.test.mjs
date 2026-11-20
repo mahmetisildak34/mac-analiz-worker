@@ -8,7 +8,7 @@ const end = worker.indexOf("\n      }\n    }", start);
 assert.ok(end > start, "cross-source enrichment error handler boundary must exist");
 const block = worker.slice(start, end);
 assert.ok(
-  block.includes('env.MAM_KV.put("mam:cross-source-enrichment-last:v3", String(Date.now())'),
+  block.includes('env.MAM_KV.put("mam:cross-source-enrichment-last:v4", String(Date.now())'),
   "failed D1 scans must set a throttle checkpoint to prevent retries on every 15-minute cron"
 );
 assert.ok(
