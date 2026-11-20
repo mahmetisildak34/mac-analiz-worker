@@ -497,10 +497,24 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   const retryJobs = [];
   const summaryQueueKey = "mam:espn-summary-queue:v1";
   const deferredSummaryQueueKey = "mam:espn-summary-deferred:v1";
-  let summaryQueue = await env.MAM_KV.get(summaryQueueKey, "json");
-  if (!Array.isArray(summaryQueue)) summaryQueue = [];
-  let deferredSummaryQueue = await env.MAM_KV.get(deferredSummaryQueueKey, "json");
-  if (!Array.isArray(deferredSummaryQueue)) deferredSummaryQueue = [];
+  const summaryQueueBackupKey = "mam:espn-summary-queue-backup:v1";
+  const deferredSummaryQueueBackupKey = "mam:espn-summary-deferred-backup:v1";
+  const readQueueSafely = async (key, backupKey) => {
+    const primary = await env.MAM_KV.get(key, "json");
+    if (Array.isArray(primary)) return primary;
+    if (primary !== null) {
+      const backup = await env.MAM_KV.get(backupKey, "json");
+      if (Array.isArray(backup)) return backup;
+      throw new Error("Refusing to overwrite malformed ESPN queue: " + key);
+    }
+    const backup = await env.MAM_KV.get(backupKey, "json");
+    if (Array.isArray(backup)) return backup;
+    return [];
+  };
+  let summaryQueue = await readQueueSafely(summaryQueueKey, summaryQueueBackupKey);
+  let deferredSummaryQueue = await readQueueSafely(deferredSummaryQueueKey, deferredSummaryQueueBackupKey);
+  const summaryQueueBeforeRun = summaryQueue.slice();
+  const deferredQueueBeforeRun = deferredSummaryQueue.slice();
   const summaryDoneKey = "mam:espn-summary-done:v1";
   let summaryDone = await env.MAM_KV.get(summaryDoneKey, "json");
   if (!Array.isArray(summaryDone)) summaryDone = [];
@@ -914,6 +928,10 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     deferredSummaryQueue = deferredSummaryQueue.slice(summaryQueue.length);
   }
   if (summaryQueue.length > 500) summaryQueue = summaryQueue.slice(0, 500);
+  // Keep a recoverable previous snapshot before replacing either active queue.
+  // If a later read is missing or malformed, the processor can restore this copy.
+  await env.MAM_KV.put(summaryQueueBackupKey, JSON.stringify(summaryQueueBeforeRun), { expirationTtl: 60 * 60 * 24 * 90 });
+  await env.MAM_KV.put(deferredSummaryQueueBackupKey, JSON.stringify(deferredQueueBeforeRun), { expirationTtl: 60 * 60 * 24 * 90 });
   await env.MAM_KV.put(summaryQueueKey, JSON.stringify(summaryQueue));
   await env.MAM_KV.put(deferredSummaryQueueKey, JSON.stringify(deferredSummaryQueue));
   summaryRun.pendingAfterRun = summaryQueue.length;
