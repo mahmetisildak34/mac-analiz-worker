@@ -177,7 +177,7 @@ async function enrichExactCrossSourceMatches(env) {
     nonEmptyPayloads: 0, invalidJson: 0, teamsPayloads: 0, teamsWithTwoSides: 0,
     teamsWithStatisticsOnBothSides: 0, responsePayloads: 0, arrayPayloads: 0,
     otherObjectPayloads: 0, normalizerAccepted: 0, normalizerRejected: 0,
-    topLevelKeySamples: [], teamObjectKeySamples: [], arrayItemKeySamples: [],
+    topLevelKeySamples: [], teamObjectKeySamples: [], arrayItemKeySamples: [], homeAwayObjectKeySamples: [], homeAwayValueShapeSamples: [],
     firstKickoff: sourceRows[0]?.kickoff || null,
     lastKickoff: sourceRows[sourceRows.length - 1]?.kickoff || null,
     missingFirstKickoff: scannedMissingRows[0]?.kickoff || null,
@@ -215,10 +215,32 @@ async function enrichExactCrossSourceMatches(env) {
         const encoded = JSON.stringify(keys);
         if (!sourcePayloadDiagnostics.topLevelKeySamples.includes(encoded)) sourcePayloadDiagnostics.topLevelKeySamples.push(encoded);
       }
-      for (const key of Object.keys(parsed)) if (Array.isArray(parsed[key])) addSample(sourcePayloadDiagnostics.arrayItemKeySamples, parsed[key]);
+      for (const side of ["home", "away"]) {
+        const sideValue = parsed[side];
+        if (sideValue && typeof sideValue === "object" && !Array.isArray(sideValue)) {
+          const keys = Object.keys(sideValue).slice(0, 20);
+          const encoded = JSON.stringify({ side, keys });
+          if (!sourcePayloadDiagnostics.homeAwayObjectKeySamples.includes(encoded) && sourcePayloadDiagnostics.homeAwayObjectKeySamples.length < 5) {
+            sourcePayloadDiagnostics.homeAwayObjectKeySamples.push(encoded);
+          }
+          const valueShapes = Object.fromEntries(Object.entries(sideValue).slice(0, 20).map(([key, value]) => [
+            key, Array.isArray(value) ? "array" : value === null ? "null" : typeof value
+          ]));
+          const shapeEncoded = JSON.stringify({ side, valueShapes });
+          if (!sourcePayloadDiagnostics.homeAwayValueShapeSamples.includes(shapeEncoded) && sourcePayloadDiagnostics.homeAwayValueShapeSamples.length < 5) {
+            sourcePayloadDiagnostics.homeAwayValueShapeSamples.push(shapeEncoded);
+          }
+          for (const key of Object.keys(sideValue)) if (Array.isArray(sideValue[key])) {
+            addSample(sourcePayloadDiagnostics.arrayItemKeySamples, sideValue[key]);
+          }
+        }
+      }
     }
   }
-  const source = sourceRows.filter(row => row.source !== "ESPN" && hasUsableStatistics(row.statistics_json));
+  // Count every non-empty source payload here. The normalizer itself classifies
+  // accepted vs rejected rows; pre-filtering by the legacy teams/response schema
+  // hid all home/away object payloads and left both counters misleadingly at 0.
+  const source = sourceRows.filter(row => row.source !== "ESPN" && row.statistics_json && row.statistics_json !== "null");
 
   const missing = scannedMissingRows.filter(row => {
     const value = row.statistics_json;
@@ -1261,7 +1283,7 @@ export default {
       }
 
       try {
-        const enrichmentThrottleKey = "mam:cross-source-enrichment-last:v7";
+        const enrichmentThrottleKey = "mam:cross-source-enrichment-last:v8";
         const lastEnrichmentAt = Number(env.MAM_KV ? await env.MAM_KV.get(enrichmentThrottleKey) : 0);
         if (!lastEnrichmentAt || Date.now() - lastEnrichmentAt >= 6 * 60 * 60 * 1000) {
           const crossSourceStats = await enrichExactCrossSourceMatches(env);
@@ -1279,7 +1301,7 @@ export default {
           await env.MAM_KV.put("mam:cross-source-stats:last:v4", JSON.stringify(report), { expirationTtl: 60 * 60 * 24 * 30 });
           // Back off after D1 quota/read errors too. Without this checkpoint,
           // every 15-minute cron run retries the same expensive full-table scan.
-          await env.MAM_KV.put("mam:cross-source-enrichment-last:v7", String(Date.now()), { expirationTtl: 60 * 60 * 48 });
+          await env.MAM_KV.put("mam:cross-source-enrichment-last:v8", String(Date.now()), { expirationTtl: 60 * 60 * 48 });
         }
         console.log("Cross-source statistics enrichment failed", report);
       }
