@@ -1229,7 +1229,7 @@ export default {
           await env.MAM_KV.put("mam:cross-source-stats:last:v3", JSON.stringify(report), { expirationTtl: 60 * 60 * 24 * 30 });
           // Back off after D1 quota/read errors too. Without this checkpoint,
           // every 15-minute cron run retries the same expensive full-table scan.
-          await env.MAM_KV.put("mam:cross-source-enrichment-last:v4", String(Date.now()), { expirationTtl: 60 * 60 * 48 });
+          await env.MAM_KV.put("mam:cross-source-enrichment-last:v5", String(Date.now()), { expirationTtl: 60 * 60 * 48 });
         }
         console.log("Cross-source statistics enrichment failed", report);
       }
