@@ -1211,7 +1211,7 @@ export default {
       }
 
       try {
-        const enrichmentThrottleKey = "mam:cross-source-enrichment-last:v4";
+        const enrichmentThrottleKey = "mam:cross-source-enrichment-last:v5";
         const lastEnrichmentAt = Number(env.MAM_KV ? await env.MAM_KV.get(enrichmentThrottleKey) : 0);
         if (!lastEnrichmentAt || Date.now() - lastEnrichmentAt >= 6 * 60 * 60 * 1000) {
           const crossSourceStats = await enrichExactCrossSourceMatches(env);
