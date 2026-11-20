@@ -176,7 +176,8 @@ async function enrichExactCrossSourceMatches(env) {
   const sourcePayloadDiagnostics = {
     nonEmptyPayloads: 0, invalidJson: 0, teamsPayloads: 0, teamsWithTwoSides: 0,
     teamsWithStatisticsOnBothSides: 0, responsePayloads: 0, arrayPayloads: 0,
-    otherObjectPayloads: 0, normalizerAccepted: 0,
+    otherObjectPayloads: 0, normalizerAccepted: 0, normalizerRejected: 0,
+    topLevelKeySamples: [], teamObjectKeySamples: [], arrayItemKeySamples: [],
     firstKickoff: sourceRows[0]?.kickoff || null,
     lastKickoff: sourceRows[sourceRows.length - 1]?.kickoff || null,
     missingFirstKickoff: scannedMissingRows[0]?.kickoff || null,
@@ -188,6 +189,11 @@ async function enrichExactCrossSourceMatches(env) {
     let parsed;
     try { parsed = typeof row.statistics_json === "string" ? JSON.parse(row.statistics_json) : row.statistics_json; }
     catch (_) { sourcePayloadDiagnostics.invalidJson++; continue; }
+    const addSample = (list, value) => {
+      const sample = Array.isArray(value) ? value.slice(0, 2).map(item => item && typeof item === "object" ? Object.keys(item).slice(0, 12) : typeof item) : [];
+      const encoded = JSON.stringify(sample);
+      if (sample.length && !list.includes(encoded) && list.length < 5) list.push(encoded);
+    };
     if (Array.isArray(parsed?.teams)) {
       sourcePayloadDiagnostics.teamsPayloads++;
       const teams = parsed.teams;
@@ -195,11 +201,25 @@ async function enrichExactCrossSourceMatches(env) {
       if (teams.length >= 2 && teams[0]?.statistics?.length && teams[1]?.statistics?.length) {
         sourcePayloadDiagnostics.teamsWithStatisticsOnBothSides++;
       }
-    } else if (Array.isArray(parsed?.response)) sourcePayloadDiagnostics.responsePayloads++;
-    else if (Array.isArray(parsed)) sourcePayloadDiagnostics.arrayPayloads++;
-    else if (parsed && typeof parsed === "object") sourcePayloadDiagnostics.otherObjectPayloads++;
+      addSample(sourcePayloadDiagnostics.teamObjectKeySamples, teams);
+    } else if (Array.isArray(parsed?.response)) {
+      sourcePayloadDiagnostics.responsePayloads++;
+      addSample(sourcePayloadDiagnostics.arrayItemKeySamples, parsed.response);
+    } else if (Array.isArray(parsed)) {
+      sourcePayloadDiagnostics.arrayPayloads++;
+      addSample(sourcePayloadDiagnostics.arrayItemKeySamples, parsed);
+    } else if (parsed && typeof parsed === "object") {
+      sourcePayloadDiagnostics.otherObjectPayloads++;
+      if (sourcePayloadDiagnostics.topLevelKeySamples.length < 5) {
+        const keys = Object.keys(parsed).slice(0, 20);
+        const encoded = JSON.stringify(keys);
+        if (!sourcePayloadDiagnostics.topLevelKeySamples.includes(encoded)) sourcePayloadDiagnostics.topLevelKeySamples.push(encoded);
+      }
+      for (const key of Object.keys(parsed)) if (Array.isArray(parsed[key])) addSample(sourcePayloadDiagnostics.arrayItemKeySamples, parsed[key]);
+    }
   }
   const source = sourceRows.filter(row => row.source !== "ESPN" && hasUsableStatistics(row.statistics_json));
+
   const missing = scannedMissingRows.filter(row => {
     const value = row.statistics_json;
     if (!value || value === "null") return true;
@@ -261,7 +281,8 @@ async function enrichExactCrossSourceMatches(env) {
   let usableSourceStats = 0;
   for (const row of source) {
     const normalizedStatistics = normalizeCrossSourceStatistics(row.statistics_json, row.home_team, row.away_team);
-    if (!normalizedStatistics) continue;
+    if (!normalizedStatistics) { sourcePayloadDiagnostics.normalizerRejected++; continue; }
+    sourcePayloadDiagnostics.normalizerAccepted++;
     usableSourceStats++;
     const key = matchKey(row);
     const time = Date.parse(row.kickoff || "");
@@ -1240,7 +1261,7 @@ export default {
       }
 
       try {
-        const enrichmentThrottleKey = "mam:cross-source-enrichment-last:v6";
+        const enrichmentThrottleKey = "mam:cross-source-enrichment-last:v7";
         const lastEnrichmentAt = Number(env.MAM_KV ? await env.MAM_KV.get(enrichmentThrottleKey) : 0);
         if (!lastEnrichmentAt || Date.now() - lastEnrichmentAt >= 6 * 60 * 60 * 1000) {
           const crossSourceStats = await enrichExactCrossSourceMatches(env);
@@ -1258,7 +1279,7 @@ export default {
           await env.MAM_KV.put("mam:cross-source-stats:last:v4", JSON.stringify(report), { expirationTtl: 60 * 60 * 24 * 30 });
           // Back off after D1 quota/read errors too. Without this checkpoint,
           // every 15-minute cron run retries the same expensive full-table scan.
-          await env.MAM_KV.put("mam:cross-source-enrichment-last:v6", String(Date.now()), { expirationTtl: 60 * 60 * 48 });
+          await env.MAM_KV.put("mam:cross-source-enrichment-last:v7", String(Date.now()), { expirationTtl: 60 * 60 * 48 });
         }
         console.log("Cross-source statistics enrichment failed", report);
       }
