@@ -10,5 +10,5 @@ const scheduledStart = worker.indexOf("async scheduled(event, env, ctx)");
 const scheduledEnd = worker.indexOf("if (isHourlySync || !env.MAM_KV) return;", scheduledStart);
 const scheduled = worker.slice(scheduledStart, scheduledEnd);
 assert.ok(!scheduled.includes("normalizeKnownLeagueCountries(env)"), "daily schedule must not run the broad LIKE-based country normalization scans");
-assert.ok(scheduled.includes('mam:cross-source-enrichment-last:v4'), "cross-source task must use the durable v4 throttle key");
+assert.ok(scheduled.includes('mam:cross-source-enrichment-last:v5'), "cross-source task must use the refreshed v5 throttle key");
 console.log("D1 bounded-read and maintenance regression tests passed.");
