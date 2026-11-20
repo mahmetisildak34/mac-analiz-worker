@@ -814,7 +814,6 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
             if (!pendingStats.some(entry => entry.fixtureId === item.fixtureId)) {
               pendingStats.push({ fixtureId: item.fixtureId, key: item.key, statisticsJson: fetchedStatsJson, fetchedAt: new Date().toISOString() });
             }
-            await env.MAM_KV.put(pendingStatsKey, JSON.stringify(pendingStats));
             summaryRun.requestFailureSamples.push({ fixtureId: item.fixtureId, error: "Statistics fetched but D1 persistence not verified; retained in KV pending queue" });
             console.log("ESPN box score retained in KV because D1 persistence could not be verified", item.fixtureId);
           }
@@ -865,6 +864,9 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
       }
     }));
   }
+  // Flush pending payloads once after the concurrent summary batch to avoid
+  // parallel KV puts overwriting one another with stale snapshots.
+  await env.MAM_KV.put(pendingStatsKey, JSON.stringify(pendingStats));
   if (summaryRetries.length) summaryQueue.push(...summaryRetries);
   // Keep the oldest pending items first; newer overflow can be rediscovered from D1.
   if (summaryQueue.length > 500) summaryQueue = summaryQueue.slice(0, 500);
