@@ -424,9 +424,24 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   ];
 
   const stateKey = "mam:espn-sync-state:v2";
+  const stateBackupKey = "mam:espn-sync-state-backup:v1";
+  const stateInitializedKey = "mam:espn-sync-state-initialized:v1";
   let state = await env.MAM_KV.get(stateKey, "json");
-  if (!state || !Array.isArray(state.jobs) || !Number.isInteger(state.cursor) || state.cursor < 0 || state.cursor > state.jobs.length) {
-    const dates = [];
+  const validArchiveState = value => value && Array.isArray(value.jobs) &&
+    Number.isInteger(value.cursor) && value.cursor >= 0 && value.cursor <= value.jobs.length;
+  if (!validArchiveState(state)) {
+    const backup = await env.MAM_KV.get(stateBackupKey, "json");
+    if (validArchiveState(backup)) {
+      state = backup;
+      // Write recovery copy first so an interrupted primary write cannot lose progress.
+  await env.MAM_KV.put(stateBackupKey, JSON.stringify(state));
+  await env.MAM_KV.put(stateInitializedKey, "1");
+  await env.MAM_KV.put(stateKey, JSON.stringify(state));
+      console.log("Restored ESPN archive checkpoint from backup", { cursor: state.cursor, totalJobs: state.jobs.length });
+    } else if (await env.MAM_KV.get(stateInitializedKey)) {
+      throw new Error("ESPN archive checkpoint and backup are missing or invalid; refusing to create a new queue and reset progress.");
+    } else {
+      const dates = [];
     const base = new Date();
     base.setUTCHours(12, 0, 0, 0);
     for (let offset = -Math.max(1, lookBackDays); offset <= lookAheadDays; offset++) {
@@ -441,8 +456,12 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     for (const league of leagues.slice(0, 10)) {
       for (const date of dates) jobs.push({ league, date, attempts: 0 });
     }
-    state = { version: 2, jobs, cursor: 0, createdAt: new Date().toISOString() };
+      state = { version: 2, jobs, cursor: 0, createdAt: new Date().toISOString() };
+    }
   } else {
+    // Preserve the last known-good checkpoint before any work mutates the cursor.
+    await env.MAM_KV.put(stateBackupKey, JSON.stringify(state));
+    await env.MAM_KV.put(stateInitializedKey, "1");
     // Extend an in-flight legacy queue without discarding its cursor or any
     // already archived data. Promote pending priority jobs ahead of secondary
     // competitions, then append only missing priority league/date pairs.
@@ -584,38 +603,11 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   batch = state.jobs.slice(state.cursor, state.cursor + Math.max(1, scoreboardBatchLimit));
   const queueAfterDiscovery = summaryQueue.length;
 
-  // Skip scoreboard requests for league/date pairs already represented in D1.
-  // This is deliberately additive: the original job batch still advances the
-  // durable cursor, while only dates with no ESPN rows consume provider calls.
-  // Existing rows are never overwritten with empty statistics by this path.
-  let jobsToFetch = batch;
-  let skippedExistingDays = 0;
-  if (batch.length) {
-    const clauses = [];
-    const bindings = [];
-    for (const job of batch) {
-      const leagueId = String(job?.league?.[0] || "");
-      const date = String(job?.date || "");
-      if (!/^\\d{8}$/.test(date) || !leagueId) continue;
-      const isoDate = date.slice(0, 4) + "-" + date.slice(4, 6) + "-" + date.slice(6, 8);
-      const nextDate = new Date(isoDate + "T00:00:00.000Z");
-      nextDate.setUTCDate(nextDate.getUTCDate() + 1);
-      clauses.push("(league_id = ? AND kickoff >= ? AND kickoff < ?)");
-      bindings.push(leagueId, isoDate, nextDate.toISOString());
-    }
-    if (clauses.length) {
-      const existingResult = await env.DB.prepare(
-        "SELECT DISTINCT league_id, substr(kickoff, 1, 10) AS match_day FROM matches WHERE source = 'ESPN' AND (" + clauses.join(" OR ") + ")"
-      ).bind(...bindings).all();
-      const existingDays = new Set((existingResult?.results || []).map(row =>
-        String(row.league_id) + "|" + String(row.match_day || "").replace(/-/g, "")
-      ));
-      jobsToFetch = batch.filter(job =>
-        !existingDays.has(String(job.league?.[0] || "") + "|" + String(job.date || ""))
-      );
-      skippedExistingDays = batch.length - jobsToFetch.length;
-    }
-  }
+  // Never treat one existing row as proof that an entire league/date is complete.
+  // Re-fetching is safe: the D1 upsert is idempotent and preserves statistics_json.
+  // This also repairs dates that were incorrectly skipped by the previous implementation.
+  const jobsToFetch = batch;
+  const skippedExistingDays = 0;
 
   let failed = 0;
 
