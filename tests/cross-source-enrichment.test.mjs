@@ -24,6 +24,8 @@ assert.ok(fn.includes("safeCandidates[1].delta - safeCandidates[0].delta < 30 * 
 assert.ok(fn.includes("WHERE source = 'ESPN' AND fixture_id = ? AND"), "only incomplete target ESPN rows can be updated");
 assert.ok(fn.includes("updates.slice(i, i + 25)"), "writes are bounded in batches of 25");
 assert.ok(fn.includes("sourceRowsScanned: sourceRows.length"), "source scan count is reported");
+assert.ok(fn.includes("sourcePayloadDiagnostics"), "bounded provider payload shape diagnostics are reported");
+assert.ok(fn.includes("missingFirstKickoff"), "source and target date ranges are reported");
 assert.ok(fn.includes("missingEspnRowsScanned: scannedMissingRows.length"), "ESPN window count is reported");
 assert.ok(fn.includes('scanStatus: sourceDone && missingDone ? "scan-complete" : "more-batches-available"'), "scan completion is explicit");
 console.log("Cross-source bounded keyset scan regression tests passed.");
