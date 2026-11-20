@@ -53,6 +53,9 @@ jobs:
       - name: Run cross-source D1 quota backoff regression test
         run: node tests/cross-source-quota-backoff.test.mjs
 
+      - name: Run sync-status D1 read-quota regression test
+        run: node tests/sync-status-d1-read-quota.test.mjs
+
       - name: Run archive upcoming KV cache regression test
         run: node tests/archive-upcoming-cache.test.mjs
 

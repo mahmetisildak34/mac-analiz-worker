@@ -1336,15 +1336,29 @@ export default {
             status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
           });
         }
-        const missingStatsSql = "SELECT fixture_id AS fixtureId, league_id AS leagueId, league_name AS leagueName, kickoff, home_team AS homeTeam, away_team AS awayTeam, status, COUNT(*) OVER() AS total FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0)) ORDER BY kickoff DESC LIMIT 25";
-        const [state, queueValue, lastSummaryRun, crossSourceStatsRun, adaptiveSpeedStatus, missingStatsSample] = await Promise.all([
+        // Never scan the matches table from this 15-minute telemetry endpoint.
+        // Reuse the six-hour D1 aggregate snapshot; this endpoint's job is to
+        // report KV queue progress without consuming another full-table read.
+        const [state, queueValue, lastSummaryRun, crossSourceStatsRun, adaptiveSpeedStatus, cachedD1StatusRaw] = await Promise.all([
           env.MAM_KV.get("mam:espn-sync-state:v2", "json"),
           env.MAM_KV.get("mam:espn-summary-queue:v1", "json"),
           env.MAM_KV.get("mam:espn-summary-last-run:v1", "json"),
           env.MAM_KV.get("mam:cross-source-stats:last:v3", "json"),
           env.MAM_KV.get("mam:espn-adaptive-speed:v1", "json"),
-          env.DB ? env.DB.prepare(missingStatsSql).all() : Promise.resolve({ results: [] })
+          env.MAM_KV.get("mam:d1-status-cache:v2")
         ]);
+        let missingStatisticsInD1 = null;
+        let missingStatisticsCountUpdatedAt = null;
+        try {
+          const cachedD1Status = cachedD1StatusRaw ? JSON.parse(cachedD1StatusRaw) : null;
+          if (Array.isArray(cachedD1Status?.missingStatisticsBySource)) {
+            const espnMissing = cachedD1Status.missingStatisticsBySource.find(item =>
+              String(item?.source || "").toUpperCase() === "ESPN"
+            );
+            missingStatisticsInD1 = Number(espnMissing?.missing || 0);
+            missingStatisticsCountUpdatedAt = cachedD1Status.lastUpdated || null;
+          }
+        } catch (_) { /* Keep the count unknown rather than issuing an expensive fallback scan. */ }
         const jobs = Array.isArray(state?.jobs) ? state.jobs.length : 0;
         const cursor = Number(state?.cursor || 0);
         const scoreboardActive = jobs > 0 && cursor < jobs;
@@ -1352,8 +1366,8 @@ export default {
         const now = Date.now();
         const readyToRetry = queue.filter(item => Number(item?.retryAfter || 0) <= now).length;
         const coolingDown = queue.length - readyToRetry;
-        const missingStatisticsInD1 = Number(missingStatsSample?.results?.[0]?.total || 0);
-        const active = scoreboardActive || queue.length > 0 || missingStatisticsInD1 > 0;
+        const missingStatsSample = [];
+        const active = scoreboardActive || queue.length > 0 || missingStatisticsInD1 === null || missingStatisticsInD1 > 0;
         const syncStatusReport = {
           ok: true,
           active,
@@ -1372,6 +1386,7 @@ export default {
           scoreboardComplete: !scoreboardActive,
           statisticsQueuePending: queue.length,
           missingStatisticsInD1,
+          missingStatisticsCountUpdatedAt,
           statisticsReadyToRetry: readyToRetry,
           statisticsCoolingDown: coolingDown,
           adaptiveSpeed: adaptiveSpeedStatus || { requests: 20, healthyRuns: 0, mode: "starting" },
