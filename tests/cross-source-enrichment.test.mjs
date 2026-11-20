@@ -15,6 +15,9 @@ const selectionSql = fn.slice(fn.indexOf("const sourceSql"), fn.indexOf("const s
 assert.ok(selectionSql.includes("kickoff >= ? AND kickoff <= ?"), "source rows must be selected in the current missing ESPN date window");
 assert.ok(!selectionSql.includes("json_array_length"), "selection queries must not use unbounded JSON predicates");
 assert.ok(fn.includes("const sameWindow = sourceState.windowStart === windowStart && sourceState.windowEnd === windowEnd"), "source cursor is reused only for the same target date window");
+assert.ok(fn.includes("const validMissingTimes = missing.map(row => Date.parse(row.kickoff || \"\")).filter(Number.isFinite)"), "provider date window must be based only on ESPN rows needing repair");
+assert.ok(fn.includes("const sourceBatchDone = sourceRows.length < 240"), "full source batches must retain their cursor for the next bounded scan");
+assert.ok(fn.includes("const advanceMissing = sourceDone && scannedMissingRows.length > 0"), "missing cursor advances only after the provider window is exhausted");
 assert.ok(fn.includes("const advanceMissing = sourceDone && scannedMissingRows.length > 0"), "missing cursor advances only after its source date window is exhausted");
 assert.ok(fn.includes("await env.MAM_KV.put(cursorKey, JSON.stringify(nextCursors))"), "cursor checkpoint must persist without expiry");
 assert.ok(fn.includes("candidate.delta <= 6 * 60 * 60 * 1000"), "kickoff tolerance stays at six hours");
