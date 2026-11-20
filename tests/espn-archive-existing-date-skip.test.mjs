@@ -13,7 +13,7 @@ assert.match(worker, /state\.cursor \+= batch\.length/,
   "the durable cursor advances only across the considered batch");
 assert.match(worker, /mam:espn-sync-state-backup:v1/,
   "the archive checkpoint has a recovery backup");
-assert.match(worker, /Refusing to create a new queue and reset progress/,
+assert.match(worker, /refusing to create a new queue and reset progress/,
   "missing primary and backup checkpoints fail closed instead of silently resetting");
 
 console.log("ESPN archive partial-day and checkpoint recovery regression test passed");
