@@ -7,14 +7,15 @@ const end = worker.indexOf("// Safe, additive D1 indexes", start);
 assert.ok(start >= 0 && end > start, "cross-source enrichment function exists");
 const fn = worker.slice(start, end);
 
-assert.ok(fn.includes('mam:cross-source-scan-cursors:v4'), "scan uses a versioned durable checkpoint");
+assert.ok(fn.includes('mam:cross-source-scan-cursors:v5'), "date-aligned scan uses a new durable checkpoint without resetting v4");
 assert.ok(fn.includes('if (!env.MAM_KV) return'), "scan must pause rather than run without durable checkpoints");
 assert.ok(fn.includes("LIMIT 240"), "source scan is bounded at 240 rows");
 assert.ok(fn.includes("LIMIT 120"), "ESPN scan is bounded at 120 rows");
-const selectionSql = fn.slice(fn.indexOf("const sourceSql"), fn.indexOf("const [sourceResult"));
+const selectionSql = fn.slice(fn.indexOf("const sourceSql"), fn.indexOf("const sourceRows"));
+assert.ok(selectionSql.includes("kickoff >= ? AND kickoff <= ?"), "source rows must be selected in the current missing ESPN date window");
 assert.ok(!selectionSql.includes("json_array_length"), "selection queries must not use unbounded JSON predicates");
-assert.ok(fn.includes("sourceState.complete ? Promise.resolve({ results: [] })"), "completed source scan must not restart");
-assert.ok(fn.includes("missingState.complete ? Promise.resolve({ results: [] })"), "completed ESPN scan must not restart");
+assert.ok(fn.includes("const sameWindow = sourceState.windowStart === windowStart && sourceState.windowEnd === windowEnd"), "source cursor is reused only for the same target date window");
+assert.ok(fn.includes("const advanceMissing = sourceDone && scannedMissingRows.length > 0"), "missing cursor advances only after its source date window is exhausted");
 assert.ok(fn.includes("await env.MAM_KV.put(cursorKey, JSON.stringify(nextCursors))"), "cursor checkpoint must persist without expiry");
 assert.ok(fn.includes("candidate.delta <= 6 * 60 * 60 * 1000"), "kickoff tolerance stays at six hours");
 assert.ok(fn.includes("candidate.sameCountry && candidate.sameLeague"), "competition context is checked");
@@ -35,4 +36,6 @@ assert.ok(fn.includes("const source = sourceRows.filter(row => row.source !== \"
 assert.ok(fn.includes("missingFirstKickoff"), "source and target date ranges are reported");
 assert.ok(fn.includes("missingEspnRowsScanned: scannedMissingRows.length"), "ESPN window count is reported");
 assert.ok(fn.includes('scanStatus: sourceDone && missingDone ? "scan-complete" : "more-batches-available"'), "scan completion is explicit");
+assert.ok(fn.includes("verifiedPersisted"), "writes are verified by reading the target ESPN rows");
+assert.ok(fn.includes("SELECT fixture_id, statistics_json FROM matches WHERE source = 'ESPN' AND fixture_id IN"), "persistence verification is bounded to attempted fixture IDs");
 console.log("Cross-source bounded keyset scan regression tests passed.");
