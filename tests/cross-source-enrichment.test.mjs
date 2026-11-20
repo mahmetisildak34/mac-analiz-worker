@@ -25,6 +25,10 @@ assert.ok(fn.includes("WHERE source = 'ESPN' AND fixture_id = ? AND"), "only inc
 assert.ok(fn.includes("updates.slice(i, i + 25)"), "writes are bounded in batches of 25");
 assert.ok(fn.includes("sourceRowsScanned: sourceRows.length"), "source scan count is reported");
 assert.ok(fn.includes("sourcePayloadDiagnostics"), "bounded provider payload shape diagnostics are reported");
+assert.ok(fn.includes("normalizerAccepted++"), "successful source payload normalization is counted");
+assert.ok(fn.includes("normalizerRejected++"), "rejected source payload normalization is counted");
+assert.ok(fn.includes("topLevelKeySamples"), "top-level source JSON keys are sampled");
+assert.ok(fn.includes("teamObjectKeySamples"), "team JSON object keys are sampled");
 assert.ok(fn.includes("missingFirstKickoff"), "source and target date ranges are reported");
 assert.ok(fn.includes("missingEspnRowsScanned: scannedMissingRows.length"), "ESPN window count is reported");
 assert.ok(fn.includes('scanStatus: sourceDone && missingDone ? "scan-complete" : "more-batches-available"'), "scan completion is explicit");
