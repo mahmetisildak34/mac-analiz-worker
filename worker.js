@@ -1418,20 +1418,15 @@ export default {
             status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
           });
         }
-        try {
-          const report = await buildPriorityLeagueStatus(env);
-          const body = JSON.stringify(report);
-          if (env.MAM_KV) {
-            try { await env.MAM_KV.put(cacheKey, body, { expirationTtl: 60 * 60 * 48 }); } catch (_) {}
-          }
-          return new Response(body, {
-            status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
-          });
-        } catch (error) {
-          return new Response(JSON.stringify({ error: "Priority league archive check failed", detail: String(error?.message || error) }), {
-            status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
-          });
-        }
+        // A cache miss must never trigger a ten-league full-table D1 scan.
+        // The scheduled daily job is the sole producer of this snapshot.
+        return new Response(JSON.stringify({
+          ok: false,
+          status: "cached-snapshot-unavailable",
+          note: "Daily league quality snapshot is not available yet; no D1 scan was started."
+        }), {
+          status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+        });
       }
 
       if (path === "archive/quality-check" && request.method === "GET") {
@@ -1454,16 +1449,17 @@ export default {
             status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
           });
         }
-        const where = scope === "upcoming"
-          ? "WHERE date(kickoff) >= date('now') AND date(kickoff) <= date('now', '+' || ? || ' days') AND status IN ('NS','TBD','SCHEDULED')"
-          : "";
-        const countQuery = scope === "upcoming"
-          ? env.DB.prepare("SELECT COUNT(*) AS total FROM matches " + where).bind(days)
-          : env.DB.prepare("SELECT COUNT(*) AS total FROM matches");
-        const rowsQuery = scope === "upcoming"
-          ? env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team, home_goals, away_goals, statistics_json FROM matches " + where + " ORDER BY datetime(kickoff) DESC LIMIT ?").bind(days, limit)
-          : env.DB.prepare("SELECT source, fixture_id, league_id, league_name, country, kickoff, status, home_team, away_team, home_goals, away_goals, statistics_json FROM matches ORDER BY datetime(kickoff) DESC LIMIT ?").bind(limit);
-        const [countResult, rowsResult] = await Promise.all([countQuery.first(), rowsQuery.all()]);
+        // Never launch an archive-wide D1 audit from a public cache miss.
+        // Cached reports remain readable; a missing snapshot is reported explicitly.
+        // This protects the free-tier row-read budget from repeated manual refreshes.
+        return new Response(JSON.stringify({
+          ok: false,
+          status: "cached-snapshot-unavailable",
+          scope,
+          note: "No cached quality report exists for this scope today; D1 was not scanned."
+        }), {
+          status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+        });
         const rows = Array.isArray(rowsResult?.results) ? rowsResult.results : [];
         const totalRecords = Number(countResult?.total || 0);
         const norm = value => String(value || "").normalize("NFD").toLowerCase()
