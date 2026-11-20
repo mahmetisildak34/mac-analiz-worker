@@ -562,11 +562,11 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   // starvation during historical backfill. Reserve a small summary slice and
   // reduce scoreboard work by the same amount during archive backfill.
   const largeStatisticsBacklog = summaryQueue.length >= 100;
-  // During archive backfill, reserve 12 of the 48-request external-call budget
-  // for ESPN summaries and cap scoreboard requests at 36. This raises backlog
-  // throughput from 8 to 12 per invocation without exceeding the shared budget.
-  const summaryBudget = archiveBackfillActive ? (maxRequests <= 10 ? 4 : 12) : (maxRequests <= 10 ? 4 : (largeStatisticsBacklog ? 24 : 16));
-  const scoreboardBudget = effectiveMaxRequests <= 10 ? 10 : (archiveBackfillActive ? 36 : (largeStatisticsBacklog ? 24 : 32));
+  // During archive backfill, reserve up to 16 of the shared 48-call budget
+  // for ESPN summaries and cap scoreboard requests at 32 to keep the combined
+  // planned upstream request count bounded. Four-wide concurrency is retained.
+  const summaryBudget = archiveBackfillActive ? (maxRequests <= 10 ? 4 : 16) : (maxRequests <= 10 ? 4 : (largeStatisticsBacklog ? 24 : 16));
+  const scoreboardBudget = effectiveMaxRequests <= 10 ? 10 : (archiveBackfillActive ? 32 : (largeStatisticsBacklog ? 24 : 32));
   const summaryBatchLimit = Math.min(summaryBudget, summaryQueue.length);
   const scoreboardBatchLimit = Math.min(effectiveMaxRequests, scoreboardBudget);
   batch = state.jobs.slice(state.cursor, state.cursor + Math.max(1, scoreboardBatchLimit));
