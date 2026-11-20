@@ -168,7 +168,9 @@ async function enrichExactCrossSourceMatches(env) {
       return teams.length < 2 || !teams[0]?.statistics?.length || !teams[1]?.statistics?.length;
     } catch (_) { return true; }
   });
-  const validMissingTimes = scannedMissingRows.map(row => Date.parse(row.kickoff || "")).filter(Number.isFinite);
+  // Build the provider window only from ESPN fixtures that actually need repair.
+  // Complete ESPN rows in the same 120-row page must not widen the provider scan.
+  const validMissingTimes = missing.map(row => Date.parse(row.kickoff || "")).filter(Number.isFinite);
   const windowStartMs = validMissingTimes.length ? Math.min(...validMissingTimes) - 6 * 60 * 60 * 1000 : null;
   const windowEndMs = validMissingTimes.length ? Math.max(...validMissingTimes) + 6 * 60 * 60 * 1000 : null;
   const windowStart = windowStartMs == null ? null : new Date(windowStartMs).toISOString();
