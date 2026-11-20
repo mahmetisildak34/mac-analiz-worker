@@ -184,7 +184,7 @@ async function enrichExactCrossSourceMatches(env) {
 
   const normalizeMatchTeam = value => normalizeTeamName(value);
   const normalizeLeague = value => String(value || "").normalize("NFD").toLowerCase()
-    .replace(/[\\u0300-\\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim().replace(/\\s+/g, " ");
+    .replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
   const matchKey = row => normalizeMatchTeam(row.home_team) + "|" + normalizeMatchTeam(row.away_team);
   const normalizeCrossSourceStatistics = (value, homeName, awayName) => {
     try {
