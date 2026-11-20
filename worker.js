@@ -1561,6 +1561,33 @@ export default {
         }
       }
 
+      // Preview-only, bounded 2024 inventory. Read-only: no writes and no cursor changes.
+      if (path === "archive/cross-source-preview-diagnose" && request.method === "GET") {
+        if (env.HISTORY_BACKFILL_PILOT_ENABLED !== "true") {
+          return new Response(JSON.stringify({ ok: false, error: "Preview-only diagnostic is disabled" }), {
+            status: 404, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+          });
+        }
+        if (!env.DB) {
+          return new Response(JSON.stringify({ ok: false, error: "Preview D1 binding is missing" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+          });
+        }
+        const from = "2024-01-01T00:00:00.000Z";
+        const to = "2025-01-01T00:00:00.000Z";
+        const [bySource, espnMissing] = await Promise.all([
+          env.DB.prepare("SELECT source, COUNT(*) AS rows, MIN(kickoff) AS firstKickoff, MAX(kickoff) AS lastKickoff FROM matches WHERE kickoff >= ? AND kickoff < ? GROUP BY source ORDER BY source LIMIT 20").bind(from, to).all(),
+          env.DB.prepare("SELECT COUNT(*) AS rows FROM matches WHERE source = 'ESPN' AND kickoff >= ? AND kickoff < ? AND (statistics_json IS NULL OR TRIM(statistics_json) = '' OR TRIM(statistics_json) = 'null')").bind(from, to).first()
+        ]);
+        return new Response(JSON.stringify({
+          ok: true, environment: "preview", year: 2024, readOnly: true,
+          bySource: Array.isArray(bySource?.results) ? bySource.results : [],
+          espnRowsWithNullOrEmptyStatistics: Number(espnMissing?.rows || 0)
+        }), {
+          status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+        });
+      }
+
       if (path === "archive/cross-source-preview-test" && request.method === "POST") {
         if (env.HISTORY_BACKFILL_PILOT_ENABLED !== "true") {
           return new Response(JSON.stringify({ ok: false, error: "Preview-only test endpoint is disabled" }), {
