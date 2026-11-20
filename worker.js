@@ -438,7 +438,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
 
   const stateKey = "mam:espn-sync-state:v2";
   let state = await env.MAM_KV.get(stateKey, "json");
-  if (!state || !Array.isArray(state.jobs) || !Number.isInteger(state.cursor) || state.cursor >= state.jobs.length) {
+  if (!state || !Array.isArray(state.jobs) || !Number.isInteger(state.cursor) || state.cursor < 0 || state.cursor > state.jobs.length) {
     const dates = [];
     const base = new Date();
     base.setUTCHours(12, 0, 0, 0);
@@ -859,12 +859,10 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
 
   state.cursor += batch.length;
   if (retryJobs.length) state.jobs.push(...retryJobs);
-  const complete = state.cursor >= state.jobs.length;
-  if (complete) {
-    await env.MAM_KV.delete(stateKey);
-  } else {
-    await env.MAM_KV.put(stateKey, JSON.stringify(state));
-  }
+  // Keep the completed cursor as a durable checkpoint. Deleting this key
+  // makes the next 5-minute cron invocation rebuild the entire 1,081-day queue.
+  // The next run can extend this completed prefix with only newly-entered dates.
+  await env.MAM_KV.put(stateKey, JSON.stringify(state));
   if (maxRequests > 10) {
     const summaryFailures = Number(summaryRun.requestFailures || 0);
     const pendingD1WriteFailure = pendingStats.length > 0 && summaryRun.requestFailureSamples.some(sample =>
