@@ -138,7 +138,13 @@ function hasUsableStatistics(value) {
 // Reuse a completed ESPN box score only when another provider's row has the
 // same normalized home/away names and kickoff within 10 minutes. Never overwrite
 // existing statistics or infer a match from league IDs alone.
-async function enrichExactCrossSourceMatches(env) {
+async function enrichExactCrossSourceMatches(env, options = {}) {
+  const minKickoff = options.minKickoff || null;
+  const maxKickoff = options.maxKickoff || null;
+  const missingLimit = Math.max(1, Math.min(120, Number(options.missingLimit) || 120));
+  const sourceLimit = Math.max(1, Math.min(240, Number(options.sourceLimit) || 240));
+  const cursorKey = options.cursorKey || "mam:cross-source-scan-cursors:v5";
+  const reportKey = options.reportKey || "mam:cross-source-stats:last:v4";
   if (!env.DB) return { checked: 0, updated: 0, reason: "DB binding missing" };
   if (!env.MAM_KV) return { checked: 0, updated: 0, reason: "Durable KV checkpoint unavailable; scan safely paused" };
 
@@ -146,18 +152,18 @@ async function enrichExactCrossSourceMatches(env) {
   // missing-ESPN batch. The previous independent source cursor walked 2026
   // first while the missing cursor was still in 2024, so the two windows never met.
   // v4 is deliberately left untouched; v5 has its own durable checkpoint.
-  const cursorKey = "mam:cross-source-scan-cursors:v5";
   const cursors = (await env.MAM_KV.get(cursorKey, "json")) || {};
   const sourceState = cursors.source || { cursor: null, windowStart: null, windowEnd: null };
   const missingState = cursors.missing || { cursor: null, complete: false };
   const missingCursor = missingState.cursor || null;
   const missingSql = "SELECT source, fixture_id, kickoff, country, league_name, home_team, away_team, home_goals, away_goals, statistics_json FROM matches WHERE source = 'ESPN'" +
+    (minKickoff ? " AND kickoff >= ?" : "") + (maxKickoff ? " AND kickoff < ?" : "") +
     (missingCursor ? " AND (kickoff > ? OR (kickoff = ? AND fixture_id > ?))" : "") +
-    " ORDER BY kickoff ASC, fixture_id ASC LIMIT 120";
+    " ORDER BY kickoff ASC, fixture_id ASC LIMIT " + missingLimit;
+  const missingBinds = [ ...(minKickoff ? [minKickoff] : []), ...(maxKickoff ? [maxKickoff] : []),
+    ...(missingCursor ? [missingCursor.kickoff, missingCursor.kickoff, missingCursor.fixtureId] : []) ];
   const missingResult = missingState.complete ? { results: [] } :
-    (missingCursor
-      ? await env.DB.prepare(missingSql).bind(missingCursor.kickoff, missingCursor.kickoff, missingCursor.fixtureId).all()
-      : await env.DB.prepare(missingSql).all());
+    (missingBinds.length ? await env.DB.prepare(missingSql).bind(...missingBinds).all() : await env.DB.prepare(missingSql).all());
   const scannedMissingRows = Array.isArray(missingResult?.results) ? missingResult.results : [];
   const missing = scannedMissingRows.filter(row => {
     const value = row.statistics_json;
@@ -179,14 +185,14 @@ async function enrichExactCrossSourceMatches(env) {
   const sourceCursor = sameWindow ? sourceState.cursor || null : null;
   const sourceSql = "SELECT source, fixture_id, kickoff, country, league_name, home_team, away_team, home_goals, away_goals, statistics_json FROM matches WHERE source != 'ESPN' AND statistics_json IS NOT NULL AND TRIM(statistics_json) NOT IN ('', 'null') AND kickoff >= ? AND kickoff <= ?" +
     (sourceCursor ? " AND (kickoff > ? OR (kickoff = ? AND (fixture_id > ? OR (fixture_id = ? AND source > ?))))" : "") +
-    " ORDER BY kickoff ASC, fixture_id ASC, source ASC LIMIT 240";
+    " ORDER BY kickoff ASC, fixture_id ASC, source ASC LIMIT " + sourceLimit;
   const sourceResult = windowStart && windowEnd
     ? (sourceCursor
       ? await env.DB.prepare(sourceSql).bind(windowStart, windowEnd, sourceCursor.kickoff, sourceCursor.kickoff, sourceCursor.fixtureId, sourceCursor.fixtureId, sourceCursor.source || "").all()
       : await env.DB.prepare(sourceSql).bind(windowStart, windowEnd).all())
     : { results: [] };
   const sourceRows = Array.isArray(sourceResult?.results) ? sourceResult.results : [];
-  const sourceBatchDone = sourceRows.length < 240;
+  const sourceBatchDone = sourceRows.length < sourceLimit;
   // Diagnose the provider payload shape before normalization. This is bounded to
   // the already-selected 240 source rows and does not add any D1 reads.
   const sourcePayloadDiagnostics = {
@@ -382,7 +388,7 @@ async function enrichExactCrossSourceMatches(env) {
   }
 
   const sourceDone = sourceBatchDone;
-  const missingDone = missingState.complete || (sourceDone && scannedMissingRows.length < 120);
+  const missingDone = missingState.complete || (sourceDone && scannedMissingRows.length < missingLimit);
   const advanceMissing = sourceDone && scannedMissingRows.length > 0;
   const nextCursors = {
     source: {
@@ -402,16 +408,16 @@ async function enrichExactCrossSourceMatches(env) {
   await env.MAM_KV.put(cursorKey, JSON.stringify(nextCursors));
   const report = {
     ranAt: new Date().toISOString(), target: "ESPN rows missing either team's statistics",
-    sourceRowsScanned: sourceRows.length, sourceBatchLimit: 240, sourceBatchFull: sourceRows.length === 240,
+    sourceRowsScanned: sourceRows.length, sourceBatchLimit: sourceLimit, sourceBatchFull: sourceRows.length === sourceLimit,
     sourceWindowStart: windowStart, sourceWindowEnd: windowEnd, sourceWindowDone: sourceDone,
     missingEspnRowsScanned: scannedMissingRows.length, missingRowsNeedingRepair: missing.length,
-    missingBatchLimit: 120, missingBatchFull: scannedMissingRows.length === 120,
+    missingBatchLimit: missingLimit, missingBatchFull: scannedMissingRows.length === missingLimit,
     usableSourceStats, exactTeamMatches, scoreMismatches, ambiguousMatches,
     sourcePayloadDiagnostics,
     updateAttempts: updates.length, updated, verifiedPersisted, verifiedPersistenceSamples, cursorState: nextCursors,
     scanStatus: sourceDone && missingDone ? "scan-complete" : "more-batches-available"
   };
-  await env.MAM_KV.put("mam:cross-source-stats:last:v4", JSON.stringify(report), { expirationTtl: 60 * 60 * 24 * 30 });
+  await env.MAM_KV.put(reportKey, JSON.stringify(report), { expirationTtl: 60 * 60 * 24 * 30 });
   console.log("ESPN missing-statistics cross-source repair report", report);
   return report;
 }
@@ -1505,7 +1511,8 @@ export default {
       return new Response(null, { status: 204, headers: cors });
     }
 
-    if (request.method !== "GET" && !(request.method === "POST" && requestUrl.pathname === "/api/archive/matches")) {
+    if (request.method !== "GET" && !(request.method === "POST" &&
+      (requestUrl.pathname === "/api/archive/matches" || requestUrl.pathname === "/api/archive/cross-source-preview-test"))) {
       return new Response(JSON.stringify({ error: "Method not allowed" }), {
         status: 405,
         headers: { ...cors, "Content-Type": "application/json" }
@@ -1552,6 +1559,30 @@ export default {
             status: 401, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
           });
         }
+      }
+
+      if (path === "archive/cross-source-preview-test" && request.method === "POST") {
+        if (env.HISTORY_BACKFILL_PILOT_ENABLED !== "true") {
+          return new Response(JSON.stringify({ ok: false, error: "Preview-only test endpoint is disabled" }), {
+            status: 404, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+          });
+        }
+        if (!env.DB || !env.MAM_KV) {
+          return new Response(JSON.stringify({ ok: false, error: "Preview D1/KV binding is missing" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+          });
+        }
+        const report = await enrichExactCrossSourceMatches(env, {
+          minKickoff: "2024-01-01T00:00:00.000Z",
+          maxKickoff: "2025-01-01T00:00:00.000Z",
+          missingLimit: 20,
+          sourceLimit: 40,
+          cursorKey: "mam:cross-source-preview-test:cursors:v1",
+          reportKey: "mam:cross-source-preview-test:last:v1"
+        });
+        return new Response(JSON.stringify({ ok: true, environment: "preview", year: 2024, report }), {
+          status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+        });
       }
 
       if (path === "archive/sync-status" && request.method === "GET") {
