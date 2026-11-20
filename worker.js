@@ -702,7 +702,8 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   };
   // Retry previously fetched box scores from KV before spending another ESPN request.
   const pendingConfirmed = new Set();
-  for (const pending of pendingStats.slice(0, 8)) {
+  const pendingAttempted = pendingStats.slice(0, 8);
+  for (const pending of pendingAttempted) {
     try {
       const pendingWriteResult = await env.DB.prepare(
         "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))"
@@ -723,6 +724,11 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     }
   }
   pendingStats = pendingStats.filter(entry => !pendingConfirmed.has(entry.fixtureId));
+  // Rotate unconfirmed attempts to the back so one missing fixture cannot starve
+  // every later pending payload on subsequent scheduled runs.
+  const attemptedIds = new Set(pendingAttempted.map(entry => entry.fixtureId));
+  const deferredPending = pendingStats.filter(entry => attemptedIds.has(entry.fixtureId));
+  pendingStats = pendingStats.filter(entry => !attemptedIds.has(entry.fixtureId)).concat(deferredPending);
   await env.MAM_KV.put(pendingStatsKey, JSON.stringify(pendingStats));
   for (let i = 0; i < summaryBatch.length; i += 4) {
     await Promise.all(summaryBatch.slice(i, i + 4).map(async item => {
