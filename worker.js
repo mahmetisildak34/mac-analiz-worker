@@ -577,8 +577,8 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   // During archive backfill, reserve up to 16 of the shared 48-call budget
   // for ESPN summaries and cap scoreboard requests at 32 to keep the combined
   // planned upstream request count bounded. Four-wide concurrency is retained.
-  const summaryBudget = archiveBackfillActive ? (maxRequests <= 10 ? 4 : 16) : (maxRequests <= 10 ? 4 : (largeStatisticsBacklog ? 24 : 16));
-  const scoreboardBudget = effectiveMaxRequests <= 10 ? 10 : (archiveBackfillActive ? 32 : (largeStatisticsBacklog ? 24 : 32));
+  const summaryBudget = archiveBackfillActive ? (maxRequests <= 10 ? 4 : 24) : (maxRequests <= 10 ? 4 : (largeStatisticsBacklog ? 24 : 16));
+  const scoreboardBudget = effectiveMaxRequests <= 10 ? 10 : (archiveBackfillActive ? 24 : (largeStatisticsBacklog ? 24 : 32));
   const summaryBatchLimit = Math.min(summaryBudget, summaryQueue.length);
   const scoreboardBatchLimit = Math.min(effectiveMaxRequests, scoreboardBudget);
   batch = state.jobs.slice(state.cursor, state.cursor + Math.max(1, scoreboardBatchLimit));
@@ -793,8 +793,8 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   const deferredPending = pendingStats.filter(entry => attemptedIds.has(entry.fixtureId));
   pendingStats = pendingStats.filter(entry => !attemptedIds.has(entry.fixtureId)).concat(deferredPending);
   await env.MAM_KV.put(pendingStatsKey, JSON.stringify(pendingStats));
-  for (let i = 0; i < summaryBatch.length; i += 4) {
-    await Promise.all(summaryBatch.slice(i, i + 4).map(async item => {
+  for (let i = 0; i < summaryBatch.length; i += 6) {
+    await Promise.all(summaryBatch.slice(i, i + 6).map(async item => {
       let retryAfterHeader = null;
       let fetchedStatsJson = null;
       try {
