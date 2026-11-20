@@ -433,10 +433,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     const backup = await env.MAM_KV.get(stateBackupKey, "json");
     if (validArchiveState(backup)) {
       state = backup;
-      // Write recovery copy first so an interrupted primary write cannot lose progress.
-  await env.MAM_KV.put(stateBackupKey, JSON.stringify(state));
-  await env.MAM_KV.put(stateInitializedKey, "1");
-  await env.MAM_KV.put(stateKey, JSON.stringify(state));
+      await env.MAM_KV.put(stateKey, JSON.stringify(state));
       console.log("Restored ESPN archive checkpoint from backup", { cursor: state.cursor, totalJobs: state.jobs.length });
     } else if (await env.MAM_KV.get(stateInitializedKey)) {
       throw new Error("ESPN archive checkpoint and backup are missing or invalid; refusing to create a new queue and reset progress.");
@@ -977,6 +974,9 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   // Keep the completed cursor as a durable checkpoint. Deleting this key
   // makes the next 5-minute cron invocation rebuild the entire 1,081-day queue.
   // The next run can extend this completed prefix with only newly-entered dates.
+  // Write recovery copy first so an interrupted primary write cannot lose progress.
+  await env.MAM_KV.put(stateBackupKey, JSON.stringify(state));
+  await env.MAM_KV.put(stateInitializedKey, "1");
   await env.MAM_KV.put(stateKey, JSON.stringify(state));
   if (maxRequests > 10) {
     const summaryFailures = Number(summaryRun.requestFailures || 0);
