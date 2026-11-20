@@ -55,6 +55,8 @@ jobs:
 
       - name: Run sync-status D1 read-quota regression test
         run: node tests/sync-status-d1-read-quota.test.mjs
+      - name: Run D1 bounded-read regression test
+        run: node tests/d1-read-bounds.test.mjs
 
       - name: Run archive upcoming KV cache regression test
         run: node tests/archive-upcoming-cache.test.mjs
