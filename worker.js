@@ -584,6 +584,39 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   batch = state.jobs.slice(state.cursor, state.cursor + Math.max(1, scoreboardBatchLimit));
   const queueAfterDiscovery = summaryQueue.length;
 
+  // Skip scoreboard requests for league/date pairs already represented in D1.
+  // This is deliberately additive: the original job batch still advances the
+  // durable cursor, while only dates with no ESPN rows consume provider calls.
+  // Existing rows are never overwritten with empty statistics by this path.
+  let jobsToFetch = batch;
+  let skippedExistingDays = 0;
+  if (batch.length) {
+    const clauses = [];
+    const bindings = [];
+    for (const job of batch) {
+      const leagueId = String(job?.league?.[0] || "");
+      const date = String(job?.date || "");
+      if (!/^\\d{8}$/.test(date) || !leagueId) continue;
+      const isoDate = date.slice(0, 4) + "-" + date.slice(4, 6) + "-" + date.slice(6, 8);
+      const nextDate = new Date(isoDate + "T00:00:00.000Z");
+      nextDate.setUTCDate(nextDate.getUTCDate() + 1);
+      clauses.push("(league_id = ? AND kickoff >= ? AND kickoff < ?)");
+      bindings.push(leagueId, isoDate, nextDate.toISOString());
+    }
+    if (clauses.length) {
+      const existingResult = await env.DB.prepare(
+        "SELECT DISTINCT league_id, substr(kickoff, 1, 10) AS match_day FROM matches WHERE source = 'ESPN' AND (" + clauses.join(" OR ") + ")"
+      ).bind(...bindings).all();
+      const existingDays = new Set((existingResult?.results || []).map(row =>
+        String(row.league_id) + "|" + String(row.match_day || "").replace(/-/g, "")
+      ));
+      jobsToFetch = batch.filter(job =>
+        !existingDays.has(String(job.league?.[0] || "") + "|" + String(job.date || ""))
+      );
+      skippedExistingDays = batch.length - jobsToFetch.length;
+    }
+  }
+
   let failed = 0;
 
   const fetchJob = async job => {
@@ -642,8 +675,8 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   };
 
   // Small concurrent groups keep the invocation comfortably below the Workers subrequest ceiling.
-  for (let i = 0; i < batch.length; i += 4) {
-    await Promise.all(batch.slice(i, i + 4).map(fetchJob));
+  for (let i = 0; i < jobsToFetch.length; i += 4) {
+    await Promise.all(jobsToFetch.slice(i, i + 4).map(fetchJob));
   }
 
   const sql = "INSERT INTO matches (source, fixture_id, league_id, league_name, country, kickoff, status, home_team_id, home_team, away_team_id, away_team, home_goals, away_goals, statistics_json, raw_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(source, fixture_id) DO UPDATE SET league_id=excluded.league_id, league_name=excluded.league_name, country=excluded.country, kickoff=excluded.kickoff, status=excluded.status, home_team_id=excluded.home_team_id, home_team=excluded.home_team, away_team_id=excluded.away_team_id, away_team=excluded.away_team, home_goals=excluded.home_goals, away_goals=excluded.away_goals, raw_json=excluded.raw_json, updated_at=CURRENT_TIMESTAMP WHERE matches.league_id IS NOT excluded.league_id OR matches.league_name IS NOT excluded.league_name OR matches.country IS NOT excluded.country OR matches.kickoff IS NOT excluded.kickoff OR matches.status IS NOT excluded.status OR matches.home_team_id IS NOT excluded.home_team_id OR matches.home_team IS NOT excluded.home_team OR matches.away_team_id IS NOT excluded.away_team_id OR matches.away_team IS NOT excluded.away_team OR matches.home_goals IS NOT excluded.home_goals OR matches.away_goals IS NOT excluded.away_goals";
@@ -659,7 +692,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
       saved += result.reduce((sum, item) => sum + (Number(item?.meta?.changes) || 0), 0);
     } catch (archiveWriteError) {
       archiveWriteBlocked = true;
-      retryJobs.push(...batch.map(job => ({ ...job, attempts: Number(job.attempts || 0) + 1 })));
+      retryJobs.push(...jobsToFetch.map(job => ({ ...job, attempts: Number(job.attempts || 0) + 1 })));
       console.log("ESPN archive D1 write blocked; preserving scoreboard jobs for retry", String(archiveWriteError?.message || archiveWriteError));
       break;
     }
@@ -941,6 +974,14 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   state.cursor += batch.length;
   if (retryJobs.length) state.jobs.push(...retryJobs);
   const complete = state.cursor >= state.jobs.length;
+  // Report avoided provider calls so operators can verify deduplication live.
+  const archiveSkipReport = {
+    ranAt: new Date().toISOString(),
+    consideredJobs: batch.length,
+    fetchedJobs: jobsToFetch.length,
+    skippedExistingDays
+  };
+  await env.MAM_KV.put("mam:espn-archive-skip-last:v1", JSON.stringify(archiveSkipReport), { expirationTtl: 60 * 60 * 24 * 30 });
   // Keep the completed cursor as a durable checkpoint. Deleting this key
   // makes the next 5-minute cron invocation rebuild the entire 1,081-day queue.
   // The next run can extend this completed prefix with only newly-entered dates.
