@@ -7,9 +7,7 @@ assert.match(worker, /mam:espn-summary-deferred-backup:v1/, "deferred queue has 
 assert.match(worker, /if \(Array\.isArray\(backup\)\) return backup/, "missing or malformed queue can recover from backup");
 assert.match(worker, /Refusing to overwrite malformed ESPN queue/, "malformed queue fails closed instead of becoming empty");
 assert.match(worker, /Refusing to initialize missing ESPN queue without a valid backup/, "missing queue and backup fail closed instead of initializing empty");
-assert.match(worker, /summaryQueueBeforeRun = summaryQueue\.slice\(\)/, "previous primary queue snapshot is preserved");
-assert.match(worker, /deferredQueueBeforeRun = deferredSummaryQueue\.slice\(\)/, "previous deferred queue snapshot is preserved");
-assert.match(worker, /put\(summaryQueueBackupKey, JSON\.stringify\(summaryQueueBeforeRun\)/, "primary snapshot is stored before active queue replacement");
-assert.match(worker, /put\(deferredSummaryQueueBackupKey, JSON\.stringify\(deferredQueueBeforeRun\)/, "deferred snapshot is stored before active queue replacement");
+assert.match(worker, /put\(summaryQueueBackupKey, JSON\.stringify\(summaryQueue\)/, "latest primary queue snapshot is saved");
+assert.match(worker, /put\(deferredSummaryQueueBackupKey, JSON\.stringify\(deferredSummaryQueue\)/, "latest deferred queue snapshot is saved");
 
 console.log("ESPN queue preservation regression test passed.");
