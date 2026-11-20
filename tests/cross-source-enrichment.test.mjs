@@ -59,6 +59,7 @@ assert.ok(previewEndpoint.includes('maxKickoff: "2025-01-01T00:00:00.000Z"'), "p
 assert.ok(previewEndpoint.includes("missingLimit: 20"), "preview ESPN batch is limited to 20 rows");
 assert.ok(previewEndpoint.includes("sourceLimit: 40"), "preview provider batch is limited to 40 rows");
 assert.ok(previewEndpoint.includes('cursorKey: "mam:cross-source-preview-test:cursors:v1"'), "preview test uses an isolated cursor");
+assert.ok(previewEndpoint.includes("reportKey: \"mam:cross-source-preview-test:last:v1\""), "preview report is isolated from scheduled enrichment status");
 assert.ok(previewEndpoint.includes('reportKey: "mam:cross-source-preview-test:last:v1"'), "preview test uses an isolated report key");
 assert.ok(worker.includes('requestUrl.pathname === "/api/archive/cross-source-preview-test"'), "preview test endpoint is POST-only");
 
