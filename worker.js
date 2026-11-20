@@ -503,6 +503,11 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     state.version = 2;
   }
 
+  // Persist a known-good checkpoint before any archive work begins.
+  await env.MAM_KV.put(stateBackupKey, JSON.stringify(state));
+  await env.MAM_KV.put(stateInitializedKey, "1");
+  await env.MAM_KV.put(stateKey, JSON.stringify(state));
+
   // Historical fixture coverage is the active priority. While its queue is
   // pending, reserve the hourly ESPN request budget for scoreboard backfill.
   // Summary/statistics enrichment resumes automatically after this queue drains.
