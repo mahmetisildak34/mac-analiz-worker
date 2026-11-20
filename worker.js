@@ -1561,6 +1561,49 @@ export default {
         }
       }
 
+      // Preview-only inventory diagnostic. Read-only: no writes, no KV changes, no cursor changes.
+      // It reports global source/date inventory plus bounded raw kickoff samples so
+      // alternate source casing and non-ISO kickoff formats are visible.
+      if (path === "archive/cross-source-preview-diagnose" && request.method === "GET") {
+        if (env.HISTORY_BACKFILL_PILOT_ENABLED !== "true") {
+          return new Response(JSON.stringify({ ok: false, error: "Preview-only diagnostic is disabled" }), {
+            status: 404, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+          });
+        }
+        if (!env.DB) {
+          return new Response(JSON.stringify({ ok: false, error: "Preview D1 binding is missing" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+          });
+        }
+        const [total, bySource, kickoff2024Like, espnVariants] = await Promise.all([
+          env.DB.prepare("SELECT COUNT(*) AS total FROM matches").first(),
+          env.DB.prepare("SELECT source, COUNT(*) AS rows, MIN(kickoff) AS firstKickoff, MAX(kickoff) AS lastKickoff FROM matches GROUP BY source ORDER BY rows DESC, source LIMIT 30").all(),
+          env.DB.prepare("SELECT source, fixture_id AS fixtureId, kickoff, typeof(kickoff) AS kickoffType, league_id AS leagueId, league_name AS leagueName, home_team AS homeTeam, away_team AS awayTeam FROM matches WHERE kickoff LIKE '%2024%' ORDER BY kickoff LIMIT 30").all(),
+          env.DB.prepare("SELECT source, fixture_id AS fixtureId, kickoff, typeof(kickoff) AS kickoffType, league_id AS leagueId, league_name AS leagueName, home_team AS homeTeam, away_team AS awayTeam FROM matches WHERE lower(trim(source)) LIKE '%espn%' ORDER BY kickoff LIMIT 20").all()
+        ]);
+        const sourceRows = Array.isArray(bySource?.results) ? bySource.results : [];
+        const rawYearRows = Array.isArray(kickoff2024Like?.results) ? kickoff2024Like.results : [];
+        const espnRows = Array.isArray(espnVariants?.results) ? espnVariants.results : [];
+        const exactIso2024Rows = rawYearRows.filter(row =>
+          typeof row.kickoff === "string" && row.kickoff >= "2024-01-01T00:00:00.000Z" && row.kickoff < "2025-01-01T00:00:00.000Z"
+        );
+        return new Response(JSON.stringify({
+          ok: true, environment: "preview", year: 2024, readOnly: true,
+          totalRecords: Number(total?.total || 0),
+          bySource: sourceRows,
+          kickoffContaining2024Sample: rawYearRows,
+          espnSourceSamples: espnRows,
+          sampleCounts: {
+            kickoffContaining2024: rawYearRows.length,
+            exactIso2024WithinSample: exactIso2024Rows.length,
+            espnSourceSamples: espnRows.length
+          },
+          note: "Samples are bounded. Global source totals and MIN/MAX kickoff values reveal whether the Preview database has records outside the strict ISO 2024 filter."
+        }), {
+          status: 200, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+        });
+      }
+
       if (path === "archive/cross-source-preview-test" && request.method === "POST") {
         if (env.HISTORY_BACKFILL_PILOT_ENABLED !== "true") {
           return new Response(JSON.stringify({ ok: false, error: "Preview-only test endpoint is disabled" }), {
