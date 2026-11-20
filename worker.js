@@ -859,7 +859,6 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
 
   state.cursor += batch.length;
   if (retryJobs.length) state.jobs.push(...retryJobs);
-  const complete = state.cursor >= state.jobs.length;
   // Keep the completed cursor as a durable checkpoint. Deleting this key
   // makes the next 5-minute cron invocation rebuild the entire 1,081-day queue.
   // The next run can extend this completed prefix with only newly-entered dates.
