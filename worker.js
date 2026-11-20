@@ -171,6 +171,34 @@ async function enrichExactCrossSourceMatches(env) {
   ]);
   const sourceRows = Array.isArray(sourceResult?.results) ? sourceResult.results : [];
   const scannedMissingRows = Array.isArray(missingResult?.results) ? missingResult.results : [];
+  // Diagnose the provider payload shape before normalization. This is bounded to
+  // the already-selected 240 source rows and does not add any D1 reads.
+  const sourcePayloadDiagnostics = {
+    nonEmptyPayloads: 0, invalidJson: 0, teamsPayloads: 0, teamsWithTwoSides: 0,
+    teamsWithStatisticsOnBothSides: 0, responsePayloads: 0, arrayPayloads: 0,
+    otherObjectPayloads: 0, normalizerAccepted: 0,
+    firstKickoff: sourceRows[0]?.kickoff || null,
+    lastKickoff: sourceRows[sourceRows.length - 1]?.kickoff || null,
+    missingFirstKickoff: scannedMissingRows[0]?.kickoff || null,
+    missingLastKickoff: scannedMissingRows[scannedMissingRows.length - 1]?.kickoff || null
+  };
+  for (const row of sourceRows) {
+    if (row.source === "ESPN" || !row.statistics_json) continue;
+    sourcePayloadDiagnostics.nonEmptyPayloads++;
+    let parsed;
+    try { parsed = typeof row.statistics_json === "string" ? JSON.parse(row.statistics_json) : row.statistics_json; }
+    catch (_) { sourcePayloadDiagnostics.invalidJson++; continue; }
+    if (Array.isArray(parsed?.teams)) {
+      sourcePayloadDiagnostics.teamsPayloads++;
+      const teams = parsed.teams;
+      if (teams.length >= 2) sourcePayloadDiagnostics.teamsWithTwoSides++;
+      if (teams.length >= 2 && teams[0]?.statistics?.length && teams[1]?.statistics?.length) {
+        sourcePayloadDiagnostics.teamsWithStatisticsOnBothSides++;
+      }
+    } else if (Array.isArray(parsed?.response)) sourcePayloadDiagnostics.responsePayloads++;
+    else if (Array.isArray(parsed)) sourcePayloadDiagnostics.arrayPayloads++;
+    else if (parsed && typeof parsed === "object") sourcePayloadDiagnostics.otherObjectPayloads++;
+  }
   const source = sourceRows.filter(row => row.source !== "ESPN" && hasUsableStatistics(row.statistics_json));
   const missing = scannedMissingRows.filter(row => {
     const value = row.statistics_json;
@@ -301,6 +329,7 @@ async function enrichExactCrossSourceMatches(env) {
     missingEspnRowsScanned: scannedMissingRows.length, missingRowsNeedingRepair: missing.length,
     missingBatchLimit: 120, missingBatchFull: scannedMissingRows.length === 120,
     usableSourceStats, exactTeamMatches, scoreMismatches, ambiguousMatches,
+    sourcePayloadDiagnostics,
     updateAttempts: updates.length, updated, cursorState: nextCursors,
     scanStatus: sourceDone && missingDone ? "scan-complete" : "more-batches-available"
   };
