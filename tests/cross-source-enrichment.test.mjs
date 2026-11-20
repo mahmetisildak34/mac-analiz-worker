@@ -29,6 +29,9 @@ assert.ok(fn.includes("normalizerAccepted++"), "successful source payload normal
 assert.ok(fn.includes("normalizerRejected++"), "rejected source payload normalization is counted");
 assert.ok(fn.includes("topLevelKeySamples"), "top-level source JSON keys are sampled");
 assert.ok(fn.includes("teamObjectKeySamples"), "team JSON object keys are sampled");
+assert.ok(fn.includes("homeAwayObjectKeySamples"), "nested home/away object keys are sampled");
+assert.ok(fn.includes("homeAwayValueShapeSamples"), "nested home/away field value shapes are sampled");
+assert.ok(fn.includes("const source = sourceRows.filter(row => row.source !== \"ESPN\" && row.statistics_json && row.statistics_json !== \"null\")"), "all non-empty provider payloads reach the normalizer counters");
 assert.ok(fn.includes("missingFirstKickoff"), "source and target date ranges are reported");
 assert.ok(fn.includes("missingEspnRowsScanned: scannedMissingRows.length"), "ESPN window count is reported");
 assert.ok(fn.includes('scanStatus: sourceDone && missingDone ? "scan-complete" : "more-batches-available"'), "scan completion is explicit");
