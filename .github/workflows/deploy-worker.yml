@@ -43,6 +43,8 @@ jobs:
 
       - name: Run cross-source matching regression test
         run: node tests/cross-source-enrichment.test.mjs
+      - name: Run cross-source side-aware matching regression test
+        run: node tests/cross-source-side-matching.test.mjs
 
       - name: Run statistics overwrite guard regression test
         run: node tests/summary-statistics-overwrite-guard.test.mjs

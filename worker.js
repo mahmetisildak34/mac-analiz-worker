@@ -200,12 +200,17 @@ async function enrichExactCrossSourceMatches(env) {
           side: String(item?.homeAway || item?.side || "").toLowerCase(),
           statistics: Array.isArray(item?.statistics) ? item.statistics : []
         }));
-        const home = named.find(entry => entry.statistics.length && (entry.side === "home" || entry.side === "h" || entry.name === normalizedHome));
-        const away = named.find(entry => entry.statistics.length && (entry.side === "away" || entry.side === "a" || entry.name === normalizedAway));
-        if (home && away && home.item !== away.item) {
-          if ((!home.name || home.name === normalizedHome) && (!away.name || away.name === normalizedAway)) {
-            return { teams: [{ ...home.item, homeAway: "home" }, { ...away.item, homeAway: "away" }], summaryAvailable: true, source: "cross-source" };
-          }
+        // Prefer explicit home/away metadata when present. Providers often use
+        // display-name variants that differ from the target fixture's canonical
+        // team name; the old guard rejected those rows even when side metadata
+        // was unambiguous. Still reject an explicitly reversed team assignment.
+        const home = named.find(entry => entry.statistics.length &&
+          (entry.side === "home" || entry.side === "h" || (!entry.side && entry.name === normalizedHome)));
+        const away = named.find(entry => entry.statistics.length &&
+          (entry.side === "away" || entry.side === "a" || (!entry.side && entry.name === normalizedAway)));
+        const reversedSides = home?.name === normalizedAway || away?.name === normalizedHome;
+        if (home && away && home.item !== away.item && !reversedSides) {
+          return { teams: [{ ...home.item, homeAway: "home" }, { ...away.item, homeAway: "away" }], summaryAvailable: true, source: "cross-source" };
         }
       }
       const rows = Array.isArray(parsed) ? parsed : Array.isArray(parsed.response) ? parsed.response : null;
