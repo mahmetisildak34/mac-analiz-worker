@@ -691,20 +691,38 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   const pendingStatsKey = "mam:espn-summary-pending-d1:v1";
   let pendingStats = await env.MAM_KV.get(pendingStatsKey, "json");
   if (!Array.isArray(pendingStats)) pendingStats = [];
+  // A zero-change UPDATE is not proof of persistence: the row may be missing,
+  // or it may already contain valid stats. Verify the stored row before dropping KV data.
+  const hasPersistedTeamStats = value => {
+    try {
+      const parsed = typeof value === "string" ? JSON.parse(value) : value;
+      return Array.isArray(parsed?.teams) && parsed.teams.length >= 2 &&
+        parsed.teams[0]?.statistics?.length > 0 && parsed.teams[1]?.statistics?.length > 0;
+    } catch (_) { return false; }
+  };
   // Retry previously fetched box scores from KV before spending another ESPN request.
+  const pendingConfirmed = new Set();
   for (const pending of pendingStats.slice(0, 8)) {
     try {
       const pendingWriteResult = await env.DB.prepare(
         "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))"
       ).bind(pending.statisticsJson, pending.fixtureId).run();
       const pendingChanges = Number(pendingWriteResult?.meta?.changes || 0);
-      if (pendingChanges > 0) summaryRun.saved += pendingChanges;
-      pendingStats = pendingStats.filter(entry => entry.fixtureId !== pending.fixtureId);
+      const stored = await env.DB.prepare(
+        "SELECT statistics_json FROM matches WHERE source = 'ESPN' AND fixture_id = ? LIMIT 1"
+      ).bind(pending.fixtureId).first();
+      if (hasPersistedTeamStats(stored?.statistics_json)) {
+        if (pendingChanges > 0) summaryRun.saved += pendingChanges;
+        pendingConfirmed.add(pending.fixtureId);
+      } else {
+        console.log("Pending ESPN summary remains queued: D1 row/statistics not verified", pending.fixtureId);
+      }
     } catch (pendingWriteError) {
       console.log("Pending ESPN summary D1 write retained for retry", pending.fixtureId, String(pendingWriteError?.message || pendingWriteError));
       break;
     }
   }
+  pendingStats = pendingStats.filter(entry => !pendingConfirmed.has(entry.fixtureId));
   await env.MAM_KV.put(pendingStatsKey, JSON.stringify(pendingStats));
   for (let i = 0; i < summaryBatch.length; i += 4) {
     await Promise.all(summaryBatch.slice(i, i + 4).map(async item => {
@@ -784,9 +802,22 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
             "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))"
           ).bind(fetchedStatsJson, item.fixtureId).run();
           const actualChanges = Number(statisticsWriteResult?.meta?.changes || 0);
-          summaryDoneSet.add(item.key);
+          const stored = await env.DB.prepare(
+            "SELECT statistics_json FROM matches WHERE source = 'ESPN' AND fixture_id = ? LIMIT 1"
+          ).bind(item.fixtureId).first();
           summaryRun.fetchedWithStatistics++;
-          summaryRun.saved += actualChanges;
+          if (hasPersistedTeamStats(stored?.statistics_json)) {
+            summaryDoneSet.add(item.key);
+            summaryRun.saved += actualChanges;
+          } else {
+            // Preserve successfully fetched data if the fixture row is not present yet.
+            if (!pendingStats.some(entry => entry.fixtureId === item.fixtureId)) {
+              pendingStats.push({ fixtureId: item.fixtureId, key: item.key, statisticsJson: fetchedStatsJson, fetchedAt: new Date().toISOString() });
+            }
+            await env.MAM_KV.put(pendingStatsKey, JSON.stringify(pendingStats));
+            summaryRun.requestFailureSamples.push({ fixtureId: item.fixtureId, error: "Statistics fetched but D1 persistence not verified; retained in KV pending queue" });
+            console.log("ESPN box score retained in KV because D1 persistence could not be verified", item.fixtureId);
+          }
         } else {
           summaryRun.noStatisticsReturned++;
           if (summaryRun.noStatisticsSamples.length < 10) {
