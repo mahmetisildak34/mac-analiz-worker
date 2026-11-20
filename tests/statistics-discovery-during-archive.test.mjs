@@ -2,8 +2,9 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 const worker = readFileSync(new URL("../worker.js", import.meta.url), "utf8");
-const discovery = worker.indexOf('if ((status === "LIVE" || status === "FT") && summaryQueue.length < 500) {');
+const discovery = worker.indexOf('if (status === "LIVE" || status === "FT") {');
 assert.ok(discovery >= 0, "completed/live ESPN events can enqueue statistics during archive backfill");
+assert.ok(worker.includes("deferredSummaryQueue.push"), "new ESPN summaries are deferred while an older backlog exists");
 assert.ok(!worker.includes('if (!archiveBackfillActive && (status === "LIVE" || status === "FT"))'), "archive backfill must not gate queue discovery");
 assert.ok(worker.includes("summaryBudget = archiveBackfillActive ? (maxRequests <= 10 ? 4 : 8)"), "summary work remains capped during backfill");
 console.log("Statistics discovery during archive backfill regression test passed.");
