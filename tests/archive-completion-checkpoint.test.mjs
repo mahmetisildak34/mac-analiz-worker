@@ -30,4 +30,10 @@ assert.doesNotMatch(
   "completed archive cursor must not be deleted"
 );
 
+assert.match(
+  completionBlock,
+  /const complete = state\.cursor >= state\.jobs\.length;/,
+  "completion status must be calculated after cursor and retry jobs are updated"
+);
+
 console.log("archive completion checkpoint regression test passed");
