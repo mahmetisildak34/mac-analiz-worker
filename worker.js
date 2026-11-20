@@ -577,8 +577,8 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   // During archive backfill, reserve up to 16 of the shared 48-call budget
   // for ESPN summaries and cap scoreboard requests at 32 to keep the combined
   // planned upstream request count bounded. Four-wide concurrency is retained.
-  const summaryBudget = archiveBackfillActive ? (maxRequests <= 10 ? 4 : 16) : (maxRequests <= 10 ? 4 : (largeStatisticsBacklog ? 24 : 16));
-  const scoreboardBudget = effectiveMaxRequests <= 10 ? 10 : (archiveBackfillActive ? 32 : (largeStatisticsBacklog ? 24 : 32));
+  const summaryBudget = archiveBackfillActive ? (maxRequests <= 10 ? 4 : 24) : (maxRequests <= 10 ? 4 : (largeStatisticsBacklog ? 24 : 16));
+  const scoreboardBudget = effectiveMaxRequests <= 10 ? 10 : (archiveBackfillActive ? 24 : (largeStatisticsBacklog ? 24 : 32));
   const summaryBatchLimit = Math.min(summaryBudget, summaryQueue.length);
   const scoreboardBatchLimit = Math.min(effectiveMaxRequests, scoreboardBudget);
   batch = state.jobs.slice(state.cursor, state.cursor + Math.max(1, scoreboardBatchLimit));
@@ -674,9 +674,10 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     }
   };
 
-  // Small concurrent groups keep the invocation comfortably below the Workers subrequest ceiling.
-  for (let i = 0; i < jobsToFetch.length; i += 4) {
-    await Promise.all(jobsToFetch.slice(i, i + 4).map(fetchJob));
+  // Six-wide scoreboard concurrency reduces wall-clock time without increasing the per-run request budget.
+  // Keep the existing 32-request scoreboard cap and shared Workers subrequest budget unchanged.
+  for (let i = 0; i < jobsToFetch.length; i += 6) {
+    await Promise.all(jobsToFetch.slice(i, i + 6).map(fetchJob));
   }
 
   const sql = "INSERT INTO matches (source, fixture_id, league_id, league_name, country, kickoff, status, home_team_id, home_team, away_team_id, away_team, home_goals, away_goals, statistics_json, raw_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(source, fixture_id) DO UPDATE SET league_id=excluded.league_id, league_name=excluded.league_name, country=excluded.country, kickoff=excluded.kickoff, status=excluded.status, home_team_id=excluded.home_team_id, home_team=excluded.home_team, away_team_id=excluded.away_team_id, away_team=excluded.away_team, home_goals=excluded.home_goals, away_goals=excluded.away_goals, raw_json=excluded.raw_json, updated_at=CURRENT_TIMESTAMP WHERE matches.league_id IS NOT excluded.league_id OR matches.league_name IS NOT excluded.league_name OR matches.country IS NOT excluded.country OR matches.kickoff IS NOT excluded.kickoff OR matches.status IS NOT excluded.status OR matches.home_team_id IS NOT excluded.home_team_id OR matches.home_team IS NOT excluded.home_team OR matches.away_team_id IS NOT excluded.away_team_id OR matches.away_team IS NOT excluded.away_team OR matches.home_goals IS NOT excluded.home_goals OR matches.away_goals IS NOT excluded.away_goals";
@@ -792,8 +793,8 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   const deferredPending = pendingStats.filter(entry => attemptedIds.has(entry.fixtureId));
   pendingStats = pendingStats.filter(entry => !attemptedIds.has(entry.fixtureId)).concat(deferredPending);
   await env.MAM_KV.put(pendingStatsKey, JSON.stringify(pendingStats));
-  for (let i = 0; i < summaryBatch.length; i += 4) {
-    await Promise.all(summaryBatch.slice(i, i + 4).map(async item => {
+  for (let i = 0; i < summaryBatch.length; i += 6) {
+    await Promise.all(summaryBatch.slice(i, i + 6).map(async item => {
       let retryAfterHeader = null;
       let fetchedStatsJson = null;
       try {
