@@ -14,4 +14,5 @@ assert.ok(block.includes('expirationTtl: 6 * 60 * 60'), "D1 status cache should 
 assert.ok(block.includes('env.MAM_KV.get("mam:espn-summary-queue:v1", "json")'), "live queue telemetry must refresh from KV without D1 reads");
 assert.ok(block.includes('env.MAM_KV.get("mam:espn-summary-last-run:v1", "json")'), "last summary run must refresh from KV without D1 reads");
 assert.ok(block.includes("report.liveStatusUpdatedAt = new Date().toISOString()"), "cached aggregate response must include live status refresh timestamp");
+assert.ok(block.includes('env.MAM_KV.get("mam:cross-source-stats:last:v3", "json")'), "status must read current cross-source report version v3");
 console.log("D1 status cache optimization regression tests passed.");

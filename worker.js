@@ -1102,6 +1102,9 @@ export default {
         };
         if (env.MAM_KV) {
           await env.MAM_KV.put("mam:cross-source-stats:last:v3", JSON.stringify(report), { expirationTtl: 60 * 60 * 24 * 30 });
+          // Back off after D1 quota/read errors too. Without this checkpoint,
+          // every 15-minute cron run retries the same expensive full-table scan.
+          await env.MAM_KV.put("mam:cross-source-enrichment-last:v3", String(Date.now()), { expirationTtl: 60 * 60 * 48 });
         }
         console.log("Cross-source statistics enrichment failed", report);
       }
@@ -2280,7 +2283,7 @@ export default {
           env.DB.prepare("SELECT status, COUNT(*) AS total FROM matches GROUP BY status ORDER BY total DESC").all(),
           env.DB.prepare("SELECT MAX(updated_at) AS lastUpdated FROM matches").first(),
           env.MAM_KV ? env.MAM_KV.get("mam:espn-summary-queue:v1", "json") : Promise.resolve([]),
-          env.MAM_KV ? env.MAM_KV.get("mam:cross-source-stats:last:v1", "json") : Promise.resolve(null),
+          env.MAM_KV ? env.MAM_KV.get("mam:cross-source-stats:last:v3", "json") : Promise.resolve(null),
           env.MAM_KV ? env.MAM_KV.get("mam:espn-summary-last-run:v1", "json") : Promise.resolve(null)
         ]);
         const statsTotal = Number(statsCoverage?.total || 0);

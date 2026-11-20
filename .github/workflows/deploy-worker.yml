@@ -50,6 +50,9 @@ jobs:
       - name: Run D1 status cache optimization regression test
         run: node tests/d1-status-cache-optimization.test.mjs
 
+      - name: Run cross-source D1 quota backoff regression test
+        run: node tests/cross-source-quota-backoff.test.mjs
+
       - name: Run archive upcoming KV cache regression test
         run: node tests/archive-upcoming-cache.test.mjs
 
