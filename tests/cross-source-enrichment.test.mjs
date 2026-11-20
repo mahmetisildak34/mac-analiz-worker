@@ -36,3 +36,13 @@ assert.ok(fn.includes("missingFirstKickoff"), "source and target date ranges are
 assert.ok(fn.includes("missingEspnRowsScanned: scannedMissingRows.length"), "ESPN window count is reported");
 assert.ok(fn.includes('scanStatus: sourceDone && missingDone ? "scan-complete" : "more-batches-available"'), "scan completion is explicit");
 console.log("Cross-source bounded keyset scan regression tests passed.");
+
+
+// Date-window regression: source candidates must be selected against the active
+// missing ESPN batch, not an independent cursor that can be years ahead.
+assert.match(source, /mam:cross-source-scan-cursors:v5/);
+assert.match(source, /kickoff >= \? AND kickoff <= \?/);
+assert.match(source, /sourceWindowStart/);
+assert.match(source, /sourceWindowDone/);
+assert.match(source, /verifiedPersisted/);
+assert.match(source, /SELECT fixture_id, statistics_json FROM matches WHERE source = 'ESPN' AND fixture_id IN/);
