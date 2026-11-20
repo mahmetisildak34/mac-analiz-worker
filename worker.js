@@ -496,8 +496,11 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   const rows = [];
   const retryJobs = [];
   const summaryQueueKey = "mam:espn-summary-queue:v1";
+  const deferredSummaryQueueKey = "mam:espn-summary-deferred:v1";
   let summaryQueue = await env.MAM_KV.get(summaryQueueKey, "json");
   if (!Array.isArray(summaryQueue)) summaryQueue = [];
+  let deferredSummaryQueue = await env.MAM_KV.get(deferredSummaryQueueKey, "json");
+  if (!Array.isArray(deferredSummaryQueue)) deferredSummaryQueue = [];
   const summaryDoneKey = "mam:espn-summary-done:v1";
   let summaryDone = await env.MAM_KV.get(summaryDoneKey, "json");
   if (!Array.isArray(summaryDone)) summaryDone = [];
@@ -596,10 +599,19 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
           awayId: away.team?.id == null ? null : String(away.team.id), awayName,
           homeGoals: score(home.score), awayGoals: score(away.score), raw: JSON.stringify(event)
         });
-        if ((status === "LIVE" || status === "FT") && summaryQueue.length < 500) {
+        if (status === "LIVE" || status === "FT") {
           const key = "ESPN:" + fixtureId;
-          if (!summaryDoneSet.has(key) && !summaryQueue.some(item => item.key === key)) {
-            summaryQueue.push({ key, slug, fixtureId, eventId: String(event.id), attempts: 0 });
+          const queued = summaryQueue.some(item => item.key === key) ||
+            deferredSummaryQueue.some(item => item.key === key);
+          if (!summaryDoneSet.has(key) && !queued) {
+            // Preserve new live/completed fixtures without starving the older backlog.
+            if (summaryQueue.length > 0) {
+              if (deferredSummaryQueue.length < 500) {
+                deferredSummaryQueue.push({ key, slug, fixtureId, eventId: String(event.id), attempts: 0 });
+              }
+            } else if (summaryQueue.length < 500) {
+              summaryQueue.push({ key, slug, fixtureId, eventId: String(event.id), attempts: 0 });
+            }
           }
         }
       }
@@ -893,9 +905,14 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   // parallel KV puts overwriting one another with stale snapshots.
   await env.MAM_KV.put(pendingStatsKey, JSON.stringify(pendingStats));
   if (summaryRetries.length) summaryQueue.push(...summaryRetries);
-  // Keep the oldest pending items first; newer overflow can be rediscovered from D1.
+  // Promote deferred scoreboard summaries only after the older queue is drained.
+  if (summaryQueue.length === 0 && deferredSummaryQueue.length > 0) {
+    summaryQueue = deferredSummaryQueue.slice(0, 480);
+    deferredSummaryQueue = deferredSummaryQueue.slice(summaryQueue.length);
+  }
   if (summaryQueue.length > 500) summaryQueue = summaryQueue.slice(0, 500);
   await env.MAM_KV.put(summaryQueueKey, JSON.stringify(summaryQueue));
+  await env.MAM_KV.put(deferredSummaryQueueKey, JSON.stringify(deferredSummaryQueue));
   summaryRun.pendingAfterRun = summaryQueue.length;
   if (env.MAM_KV) await env.MAM_KV.put("mam:espn-summary-last-run:v1", JSON.stringify(summaryRun), { expirationTtl: 60 * 60 * 24 * 30 });
   console.log("ESPN summary processing report", summaryRun);
