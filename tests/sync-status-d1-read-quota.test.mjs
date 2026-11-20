@@ -9,6 +9,10 @@ assert.ok(end > start, "sync-status endpoint boundary must exist");
 const block = worker.slice(start, end);
 
 assert.ok(
+  block.includes('env.MAM_KV.get("mam:cross-source-stats:last:v4", "json")'),
+  "sync-status must read the current v4 cross-source enrichment report"
+);
+assert.ok(
   block.includes('env.MAM_KV.get("mam:d1-status-cache:v2")'),
   "sync-status must reuse the cached D1 aggregate"
 );
