@@ -153,8 +153,8 @@ async function enrichExactCrossSourceMatches(env) {
 
   // Use bounded keyset windows. JSON completeness is checked in JS only after
   // selecting at most 120 ESPN rows, avoiding an unbounded JSON predicate scan.
-  const sourceSql = "SELECT source, fixture_id, kickoff, country, league_name, home_team, away_team, home_goals, away_goals, statistics_json FROM matches WHERE source != 'ESPN'" +
-    (sourceCursor ? " AND (kickoff > ? OR (kickoff = ? AND (fixture_id > ? OR (fixture_id = ? AND source > ?))))" : "") +
+  const sourceSql = "SELECT source, fixture_id, kickoff, country, league_name, home_team, away_team, home_goals, away_goals, statistics_json FROM matches" +
+    (sourceCursor ? " WHERE (kickoff > ? OR (kickoff = ? AND (fixture_id > ? OR (fixture_id = ? AND source > ?))))" : "") +
     " ORDER BY kickoff ASC, fixture_id ASC, source ASC LIMIT 240";
   const missingSql = "SELECT source, fixture_id, kickoff, country, league_name, home_team, away_team, home_goals, away_goals, statistics_json FROM matches WHERE source = 'ESPN'" +
     (missingCursor ? " AND (kickoff > ? OR (kickoff = ? AND fixture_id > ?))" : "") +
@@ -171,7 +171,7 @@ async function enrichExactCrossSourceMatches(env) {
   ]);
   const sourceRows = Array.isArray(sourceResult?.results) ? sourceResult.results : [];
   const scannedMissingRows = Array.isArray(missingResult?.results) ? missingResult.results : [];
-  const source = sourceRows.filter(row => row.statistics_json && row.statistics_json !== "null");
+  const source = sourceRows.filter(row => row.source !== "ESPN" && row.statistics_json && row.statistics_json !== "null");
   const missing = scannedMissingRows.filter(row => {
     const value = row.statistics_json;
     if (!value || value === "null") return true;
