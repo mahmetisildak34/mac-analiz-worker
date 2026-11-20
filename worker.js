@@ -509,12 +509,10 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     }
     const backup = await env.MAM_KV.get(backupKey, "json");
     if (Array.isArray(backup)) return backup;
-    return [];
+    throw new Error("Refusing to initialize missing ESPN queue without a valid backup: " + key);
   };
   let summaryQueue = await readQueueSafely(summaryQueueKey, summaryQueueBackupKey);
   let deferredSummaryQueue = await readQueueSafely(deferredSummaryQueueKey, deferredSummaryQueueBackupKey);
-  const summaryQueueBeforeRun = summaryQueue.slice();
-  const deferredQueueBeforeRun = deferredSummaryQueue.slice();
   const summaryDoneKey = "mam:espn-summary-done:v1";
   let summaryDone = await env.MAM_KV.get(summaryDoneKey, "json");
   if (!Array.isArray(summaryDone)) summaryDone = [];
@@ -928,10 +926,10 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     deferredSummaryQueue = deferredSummaryQueue.slice(summaryQueue.length);
   }
   if (summaryQueue.length > 500) summaryQueue = summaryQueue.slice(0, 500);
-  // Keep a recoverable previous snapshot before replacing either active queue.
-  // If a later read is missing or malformed, the processor can restore this copy.
-  await env.MAM_KV.put(summaryQueueBackupKey, JSON.stringify(summaryQueueBeforeRun), { expirationTtl: 60 * 60 * 24 * 90 });
-  await env.MAM_KV.put(deferredSummaryQueueBackupKey, JSON.stringify(deferredQueueBeforeRun), { expirationTtl: 60 * 60 * 24 * 90 });
+  // Persist the latest complete queue state as the recovery snapshot before
+  // replacing either active key. Missing primary + missing backup fails closed.
+  await env.MAM_KV.put(summaryQueueBackupKey, JSON.stringify(summaryQueue), { expirationTtl: 60 * 60 * 24 * 90 });
+  await env.MAM_KV.put(deferredSummaryQueueBackupKey, JSON.stringify(deferredSummaryQueue), { expirationTtl: 60 * 60 * 24 * 90 });
   await env.MAM_KV.put(summaryQueueKey, JSON.stringify(summaryQueue));
   await env.MAM_KV.put(deferredSummaryQueueKey, JSON.stringify(deferredSummaryQueue));
   summaryRun.pendingAfterRun = summaryQueue.length;
