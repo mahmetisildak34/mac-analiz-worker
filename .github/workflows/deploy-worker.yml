@@ -84,6 +84,9 @@ jobs:
       - name: Run actual statistics saved-count regression test
         run: node tests/statistics-save-report.test.mjs
 
+      - name: Run ESPN summary backlog drain regression test
+        run: node tests/espn-summary-backlog-drain.test.mjs
+
       - name: Run team-name alias regression test
         run: node tests/team-name-aliases.test.mjs
 
