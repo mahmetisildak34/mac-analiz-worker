@@ -1468,7 +1468,7 @@ export default {
           env.MAM_KV.get("mam:espn-sync-state:v2", "json"),
           env.MAM_KV.get("mam:espn-summary-queue:v1", "json"),
           env.MAM_KV.get("mam:espn-summary-last-run:v1", "json"),
-          env.MAM_KV.get("mam:cross-source-stats:last:v3", "json"),
+          env.MAM_KV.get("mam:cross-source-stats:last:v4", "json"),
           env.MAM_KV.get("mam:espn-adaptive-speed:v1", "json"),
           env.MAM_KV.get("mam:d1-status-cache:v2")
         ]);
