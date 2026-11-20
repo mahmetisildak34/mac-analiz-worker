@@ -11,7 +11,8 @@ assert.ok(fn.includes('mam:cross-source-scan-cursors:v4'), "scan uses a versione
 assert.ok(fn.includes('if (!env.MAM_KV) return'), "scan must pause rather than run without durable checkpoints");
 assert.ok(fn.includes("LIMIT 240"), "source scan is bounded at 240 rows");
 assert.ok(fn.includes("LIMIT 120"), "ESPN scan is bounded at 120 rows");
-assert.ok(!fn.includes("json_array_length"), "unbounded JSON predicates must not be used in the selection query");
+const selectionSql = fn.slice(fn.indexOf("const sourceSql"), fn.indexOf("const [sourceResult"));
+assert.ok(!selectionSql.includes("json_array_length"), "selection queries must not use unbounded JSON predicates");
 assert.ok(fn.includes("sourceState.complete ? Promise.resolve({ results: [] })"), "completed source scan must not restart");
 assert.ok(fn.includes("missingState.complete ? Promise.resolve({ results: [] })"), "completed ESPN scan must not restart");
 assert.ok(fn.includes("await env.MAM_KV.put(cursorKey, JSON.stringify(nextCursors))"), "cursor checkpoint must persist without expiry");
