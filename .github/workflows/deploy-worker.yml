@@ -87,6 +87,9 @@ jobs:
       - name: Run ESPN summary backlog drain regression test
         run: node tests/espn-summary-backlog-drain.test.mjs
 
+      - name: Run ESPN queue preservation regression test
+        run: node tests/espn-queue-preservation.test.mjs
+
       - name: Run team-name alias regression test
         run: node tests/team-name-aliases.test.mjs
 
