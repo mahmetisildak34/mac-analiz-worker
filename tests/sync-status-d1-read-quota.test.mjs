@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 const worker = readFileSync(new URL("../worker.js", import.meta.url), "utf8");
 const start = worker.indexOf('if (path === "archive/sync-status"');
 assert.ok(start >= 0, "sync-status endpoint must exist");
-const end = worker.indexOf('if (path === "archive/d1-status")', start);
+const end = worker.indexOf('if (path === "archive/priority-league-status"', start);
 assert.ok(end > start, "sync-status endpoint boundary must exist");
 const block = worker.slice(start, end);
 
