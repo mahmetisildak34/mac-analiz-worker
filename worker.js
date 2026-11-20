@@ -686,7 +686,9 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     requestFailures: 0,
     requestFailureSamples: [],
     noStatisticsSamples: [],
-    saved: 0
+    saved: 0,
+    verifiedPersisted: 0,
+    unverifiedPersistenceSamples: []
   };
   const pendingStatsKey = "mam:espn-summary-pending-d1:v1";
   let pendingStats = await env.MAM_KV.get(pendingStatsKey, "json");
@@ -815,7 +817,24 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
           if (hasPersistedTeamStats(stored?.statistics_json)) {
             summaryDoneSet.add(item.key);
             summaryRun.saved += actualChanges;
+            summaryRun.verifiedPersisted++;
           } else {
+            // Record enough evidence to distinguish a missing row, source/ID mismatch,
+            // malformed stored JSON, and a failed D1 write without exposing full payloads.
+            const anySourceRow = await env.DB.prepare(
+              "SELECT source, fixture_id, typeof(statistics_json) AS statsType, length(statistics_json) AS statsLength FROM matches WHERE fixture_id = ? LIMIT 1"
+            ).bind(item.fixtureId).first();
+            if (summaryRun.unverifiedPersistenceSamples.length < 10) {
+              summaryRun.unverifiedPersistenceSamples.push({
+                fixtureId: item.fixtureId,
+                updateChanges: actualChanges,
+                espnRowFound: Boolean(stored),
+                anySourceRowFound: Boolean(anySourceRow),
+                actualSource: anySourceRow?.source || null,
+                statsType: stored?.statistics_json == null ? null : typeof stored.statistics_json,
+                statsLength: stored?.statistics_json == null ? 0 : String(stored.statistics_json).length
+              });
+            }
             // Preserve successfully fetched data if the fixture row is not present yet.
             if (!pendingStats.some(entry => entry.fixtureId === item.fixtureId)) {
               pendingStats.push({ fixtureId: item.fixtureId, key: item.key, statisticsJson: fetchedStatsJson, fetchedAt: new Date().toISOString() });
