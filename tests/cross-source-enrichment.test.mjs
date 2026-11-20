@@ -41,4 +41,12 @@ assert.ok(fn.includes("missingEspnRowsScanned: scannedMissingRows.length"), "ESP
 assert.ok(fn.includes('scanStatus: sourceDone && missingDone ? "scan-complete" : "more-batches-available"'), "scan completion is explicit");
 assert.ok(fn.includes("verifiedPersisted"), "writes are verified by reading the target ESPN rows");
 assert.ok(fn.includes("SELECT fixture_id, statistics_json FROM matches WHERE source = 'ESPN' AND fixture_id IN"), "persistence verification is bounded to attempted fixture IDs");
+
+const scheduledStart = worker.indexOf('const enrichmentThrottleKey = "mam:cross-source-enrichment-last:v8"');
+const scheduledEnd = worker.indexOf("const crossSourceStats = await enrichExactCrossSourceMatches(env)", scheduledStart);
+assert.ok(scheduledStart >= 0 && scheduledEnd > scheduledStart, "scheduled enrichment throttle exists");
+const scheduledThrottle = worker.slice(scheduledStart, scheduledEnd);
+assert.ok(scheduledThrottle.includes("Date.now() - lastEnrichmentAt >= 30 * 60 * 1000"), "successful enrichment batches are throttled to 30 minutes");
+assert.ok(worker.includes('await env.MAM_KV.put("mam:cross-source-enrichment-last:v8", String(Date.now()), { expirationTtl: 60 * 60 * 48 })'), "D1/read failures retain the 48-hour backoff checkpoint");
+
 console.log("Cross-source bounded keyset scan regression tests passed.");
