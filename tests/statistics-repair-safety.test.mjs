@@ -1,0 +1,11 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+import {runStatisticsRepair} from "../statistics-repair.js";
+const code=readFileSync(new URL("../statistics-repair.js",import.meta.url),"utf8");
+assert.match(code,/STATISTICS_REPAIR_ENABLED/);
+assert.match(code,/status IN \('FT','FINISHED','AET','PEN'\)/);
+assert.match(code,/statistics_json IS NULL OR length\(trim\(statistics_json\)\)<=5/);
+assert.match(code,/matches\.length===1/);
+assert.doesNotMatch(code,/api-sports\.io|API_FOOTBALL_KEY|fetch\(/);
+assert.deepEqual(await runStatisticsRepair({}),{skipped:"disabled"});
+console.log("Statistics repair safety guards passed");
