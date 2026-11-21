@@ -7,7 +7,7 @@ const end = worker.indexOf("// Safe, additive D1 indexes", start);
 assert.ok(start >= 0 && end > start, "cross-source enrichment function exists");
 const fn = worker.slice(start, end);
 
-assert.ok(fn.includes('mam:cross-source-scan-cursors:v4'), "scan uses a versioned durable checkpoint");
+assert.ok(fn.includes('mam:cross-source-scan-cursors:v5'), "scan uses a versioned durable checkpoint");
 assert.ok(fn.includes('if (!env.MAM_KV) return'), "scan must pause rather than run without durable checkpoints");
 assert.ok(fn.includes("LIMIT 240"), "source scan is bounded at 240 rows");
 assert.ok(fn.includes("LIMIT 120"), "ESPN scan is bounded at 120 rows");
@@ -21,7 +21,7 @@ assert.ok(fn.includes("candidate.sameCountry && candidate.sameLeague"), "competi
 assert.ok(fn.includes("Number(row.home_goals) === Number(candidate.homeGoals)"), "home score must match");
 assert.ok(fn.includes("Number(row.away_goals) === Number(candidate.awayGoals)"), "away score must match");
 assert.ok(fn.includes("safeCandidates[1].delta - safeCandidates[0].delta < 30 * 60 * 1000"), "near-tied candidates are rejected as ambiguous");
-assert.ok(fn.includes("WHERE source = 'ESPN' AND fixture_id = ? AND"), "only incomplete target ESPN rows can be updated");
+assert.ok(fn.includes("WHERE source = ? AND fixture_id = ? AND (statistics_json IS NULL OR TRIM(statistics_json) IN"), "only exact empty target rows can be updated");
 assert.ok(fn.includes("updates.slice(i, i + 25)"), "writes are bounded in batches of 25");
 assert.ok(fn.includes("sourceRowsScanned: sourceRows.length"), "source scan count is reported");
 assert.ok(fn.includes("sourcePayloadDiagnostics"), "bounded provider payload shape diagnostics are reported");
@@ -31,7 +31,7 @@ assert.ok(fn.includes("topLevelKeySamples"), "top-level source JSON keys are sam
 assert.ok(fn.includes("teamObjectKeySamples"), "team JSON object keys are sampled");
 assert.ok(fn.includes("homeAwayObjectKeySamples"), "nested home/away object keys are sampled");
 assert.ok(fn.includes("homeAwayValueShapeSamples"), "nested home/away field value shapes are sampled");
-assert.ok(fn.includes("const source = sourceRows.filter(row => row.source !== \"ESPN\" && row.statistics_json && row.statistics_json !== \"null\")"), "all non-empty provider payloads reach the normalizer counters");
+assert.ok(fn.includes('const source = sourceRows.filter(row => String(row.source || "").toLowerCase() !== "espn"'), "non-ESPN providers are normalized as source candidates");
 assert.ok(fn.includes("missingFirstKickoff"), "source and target date ranges are reported");
 assert.ok(fn.includes("missingEspnRowsScanned: scannedMissingRows.length"), "ESPN window count is reported");
 assert.ok(fn.includes('scanStatus: sourceDone && missingDone ? "scan-complete" : "more-batches-available"'), "scan completion is explicit");
