@@ -11,6 +11,7 @@ on:
       - "statistics-data-quality.js"
       - "trusted-goal-poisson.js"
       - "tests/trusted-goal-poisson.test.mjs"
+      - "tests/archive-provider-proof.test.mjs"
       - "tests/statistics-data-quality.test.mjs"
       - "statistics-api-backfill.js"
       - "statistics-api-cron.js"
@@ -39,6 +40,7 @@ on:
       - "statistics-data-quality.js"
       - "trusted-goal-poisson.js"
       - "tests/trusted-goal-poisson.test.mjs"
+      - "tests/archive-provider-proof.test.mjs"
       - "tests/statistics-data-quality.test.mjs"
       - "statistics-api-backfill.js"
       - "statistics-api-cron.js"
@@ -76,6 +78,8 @@ jobs:
           node --check statistics-api-backfill.js
           node --check statistics-api-cron.js
           node --check statistics-api-persistence.js
+      - name: Run archive original-provider proof tests
+        run: node tests/archive-provider-proof.test.mjs
       - name: Run trusted goal Poisson tests
         run: node tests/trusted-goal-poisson.test.mjs
       - name: Run strict data quality tests
