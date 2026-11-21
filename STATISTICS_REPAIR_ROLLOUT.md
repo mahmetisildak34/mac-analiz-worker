@@ -12,7 +12,7 @@ This branch is deliberately **disabled by default**. Do not merge until CI and s
 
 ## Before production approval
 1. Validate CI including the SQLite-backed D1 integration test, plus a preview-only deployment test.
-2. Add the preview database as a second binding named `PREVIEW_DB` in wrangler.jsonc, pointing to database ID `704a5c24-491f-455f-b62a-23752083f085`. This is intentionally **not** configured in this branch yet; deployment configuration and cross-database access require a final review.
+2. Review the staged `PREVIEW_DB` binding in wrangler.jsonc (preview database ID `704a5c24-491f-455f-b62a-23752083f085`). It is configured in the development branch only and has not been deployed. The repair module uses this binding only for SELECT.
 3. Confirm the GitHub Actions Cloudflare token can deploy and that D1 schema migrations are permitted. ChatGPT's D1 write failure does not establish the Actions token's permissions.
 4. Explicitly set `STATISTICS_REPAIR_ENABLED=true` only after a successful preview test and final production authorization.
 5. Confirm queue growth, 715-candidate coverage, zero overwrite, errors, and remaining backlog through D1 read-only queries.
