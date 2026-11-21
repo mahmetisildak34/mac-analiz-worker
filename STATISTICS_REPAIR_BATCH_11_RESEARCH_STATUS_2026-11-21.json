@@ -303,8 +303,91 @@
       "provider_event_id": "1577600",
       "score": "3-3",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "statistics_availability": "partial",
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "source_urls": [
+        "https://www.footballinfo.net/Fixtures/Details/1577600"
+      ],
+      "alternate_statistic_evidence": {
+        "provider": "FootballInfo",
+        "provider_event_id": "1577600",
+        "source_url": "https://www.footballinfo.net/Fixtures/Details/1577600",
+        "source_sha256": "2b76913b28033d77ce08ed8e71d0e09d9113c9a3ad586729a289dffea3f841c8",
+        "kickoff": "2026-11-15T11:30:00+00:00",
+        "source_competition": "First League",
+        "coverage": 6,
+        "statistics": {
+          "teams": [
+            {
+              "homeAway": "home",
+              "team": {
+                "id": "1078",
+                "name": "FC UFA"
+              },
+              "statistics": [
+                {
+                  "name": "redCards",
+                  "value": 0
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 5
+                },
+                {
+                  "name": "shotsOnTarget",
+                  "value": 3
+                },
+                {
+                  "name": "wonCorners",
+                  "value": 0
+                },
+                {
+                  "name": "possessionPct",
+                  "value": 45
+                },
+                {
+                  "name": "totalShots",
+                  "value": 5
+                }
+              ]
+            },
+            {
+              "homeAway": "away",
+              "team": {
+                "id": "19449",
+                "name": "Spartak Kostroma"
+              },
+              "statistics": [
+                {
+                  "name": "redCards",
+                  "value": 0
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 7
+                },
+                {
+                  "name": "shotsOnTarget",
+                  "value": 6
+                },
+                {
+                  "name": "wonCorners",
+                  "value": 5
+                },
+                {
+                  "name": "possessionPct",
+                  "value": 55
+                },
+                {
+                  "name": "totalShots",
+                  "value": 8
+                }
+              ]
+            }
+          ],
+          "statisticsSource": "FootballInfo public match statistics table"
+        }
+      }
     },
     {
       "source": "app",

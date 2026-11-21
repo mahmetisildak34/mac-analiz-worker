@@ -6,10 +6,10 @@
   "protected_existing_manifest": "STATISTICS_REPAIR_INVENTORY_2026-11-21.json",
   "candidate_inventory": "STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json",
   "counts": {
-    "full": 74,
+    "full": 78,
     "partial": 0,
     "ambiguous": 0,
-    "unavailable_or_not_yet_checked": 604,
+    "unavailable_or_not_yet_checked": 600,
     "pending_source_provenance_review": 1
   },
   "policy": {
@@ -2588,6 +2588,146 @@
         "all_required_metrics": true
       },
       "transfer_ready": false
+    },
+    {
+      "source": "app",
+      "fixture_id": "1649519",
+      "kickoff": "2026-11-15T06:00:00+03:00",
+      "status": "FT",
+      "league": {
+        "id": "263",
+        "name": "Liga de Expansión MX",
+        "season": "2026"
+      },
+      "home": {
+        "name": "CA La Paz",
+        "id": "19024",
+        "goals": 1
+      },
+      "away": {
+        "name": "Piratas",
+        "id": "27935",
+        "goals": 1
+      },
+      "provider": "FootballInfo",
+      "source_url": "https://www.footballinfo.net/Fixtures/Details/1649519",
+      "statistics_class": "full",
+      "statistics_sha256": "8d7fc3f5cc3cf02f6e9aeb079d80ca97348329e1564710d0e51fe5cb28bd86f5",
+      "source_payload_sha256": "abd2c8441c4f9c8e95c3905c93fc3cf80a9b79fc8240e3ed47e2dbcc94fef42f",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"19024\",\"name\":\"CA La Paz\"},\"statistics\":[{\"name\":\"shotsOnTarget\",\"value\":8},{\"name\":\"totalShots\",\"value\":20},{\"name\":\"yellowCards\",\"value\":3},{\"name\":\"wonCorners\",\"value\":7},{\"name\":\"foulsCommitted\",\"value\":10},{\"name\":\"redCards\",\"value\":0},{\"name\":\"possessionPct\",\"value\":62}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"27935\",\"name\":\"Piratas\"},\"statistics\":[{\"name\":\"shotsOnTarget\",\"value\":3},{\"name\":\"totalShots\",\"value\":7},{\"name\":\"yellowCards\",\"value\":5},{\"name\":\"wonCorners\",\"value\":3},{\"name\":\"foulsCommitted\",\"value\":21},{\"name\":\"redCards\",\"value\":0},{\"name\":\"possessionPct\",\"value\":38}]}],\"statisticsSource\":\"FootballInfo public match statistics table\"}",
+      "transfer_ready": false,
+      "verification": {
+        "fixture_id_matches_event_id": true,
+        "ordered_team_names_match": true,
+        "kickoff_matches": true,
+        "score_matches_competitors": true,
+        "both_sides_have_all_seven_required_metrics": true
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "1649033",
+      "kickoff": "2026-11-17T03:00:00+03:00",
+      "status": "FT",
+      "league": {
+        "id": "536",
+        "name": "CONCACAF Nations League",
+        "season": "2025"
+      },
+      "home": {
+        "name": "Martinique",
+        "id": "8117",
+        "goals": 1
+      },
+      "away": {
+        "name": "Aruba",
+        "id": "8167",
+        "goals": 1
+      },
+      "provider": "FootballInfo",
+      "source_url": "https://www.footballinfo.net/Fixtures/Details/1649033",
+      "statistics_class": "full",
+      "statistics_sha256": "e49facee75962862bd27a6343c265ec05a3c702ddbaf3c9ef40f5b460c70ab7a",
+      "source_payload_sha256": "43c4c6276fa69597dbb34434a6995808c09604dc8b37f58fcb90d3730654dc57",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"8117\",\"name\":\"Martinique\"},\"statistics\":[{\"name\":\"shotsOnTarget\",\"value\":7},{\"name\":\"redCards\",\"value\":1},{\"name\":\"totalShots\",\"value\":18},{\"name\":\"yellowCards\",\"value\":2},{\"name\":\"wonCorners\",\"value\":8},{\"name\":\"foulsCommitted\",\"value\":19},{\"name\":\"possessionPct\",\"value\":73}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"8167\",\"name\":\"Aruba\"},\"statistics\":[{\"name\":\"shotsOnTarget\",\"value\":2},{\"name\":\"redCards\",\"value\":0},{\"name\":\"totalShots\",\"value\":5},{\"name\":\"yellowCards\",\"value\":3},{\"name\":\"wonCorners\",\"value\":1},{\"name\":\"foulsCommitted\",\"value\":17},{\"name\":\"possessionPct\",\"value\":27}]}],\"statisticsSource\":\"FootballInfo public match statistics table\"}",
+      "transfer_ready": false,
+      "verification": {
+        "fixture_id_matches_event_id": true,
+        "ordered_team_names_match": true,
+        "kickoff_matches": true,
+        "score_matches_competitors": true,
+        "both_sides_have_all_seven_required_metrics": true
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "1649034",
+      "kickoff": "2026-11-17T03:00:00+03:00",
+      "status": "FT",
+      "league": {
+        "id": "536",
+        "name": "CONCACAF Nations League",
+        "season": "2025"
+      },
+      "home": {
+        "name": "Trinidad and Tobago",
+        "id": "5168",
+        "goals": 1
+      },
+      "away": {
+        "name": "Antigua and Barbuda",
+        "id": "5526",
+        "goals": 1
+      },
+      "provider": "FootballInfo",
+      "source_url": "https://www.footballinfo.net/Fixtures/Details/1649034",
+      "statistics_class": "full",
+      "statistics_sha256": "0512561f692ce5278fd75b9c8c07c0d4f0e5a4f1ae595f15338a57db590207d4",
+      "source_payload_sha256": "469c609ea2f2c91be0b3cabb492d9fc8893635eeef67aa69b1ab377b09ec2896",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"5168\",\"name\":\"Trinidad and Tobago\"},\"statistics\":[{\"name\":\"shotsOnTarget\",\"value\":8},{\"name\":\"totalShots\",\"value\":20},{\"name\":\"wonCorners\",\"value\":11},{\"name\":\"yellowCards\",\"value\":0},{\"name\":\"foulsCommitted\",\"value\":11},{\"name\":\"redCards\",\"value\":0},{\"name\":\"possessionPct\",\"value\":61}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"5526\",\"name\":\"Antigua and Barbuda\"},\"statistics\":[{\"name\":\"shotsOnTarget\",\"value\":3},{\"name\":\"totalShots\",\"value\":5},{\"name\":\"wonCorners\",\"value\":4},{\"name\":\"yellowCards\",\"value\":1},{\"name\":\"foulsCommitted\",\"value\":16},{\"name\":\"redCards\",\"value\":0},{\"name\":\"possessionPct\",\"value\":39}]}],\"statisticsSource\":\"FootballInfo public match statistics table\"}",
+      "transfer_ready": false,
+      "verification": {
+        "fixture_id_matches_event_id": true,
+        "ordered_team_names_match": true,
+        "kickoff_matches": true,
+        "score_matches_competitors": true,
+        "both_sides_have_all_seven_required_metrics": true
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "1644694",
+      "kickoff": "2026-11-17T04:00:00+03:00",
+      "status": "FT",
+      "league": {
+        "id": "536",
+        "name": "CONCACAF Nations League",
+        "season": "2025"
+      },
+      "home": {
+        "name": "Canada",
+        "id": "5529",
+        "goals": 4
+      },
+      "away": {
+        "name": "Guatemala",
+        "id": "5161",
+        "goals": 1
+      },
+      "provider": "FootballInfo",
+      "source_url": "https://www.footballinfo.net/Fixtures/Details/1644694",
+      "statistics_class": "full",
+      "statistics_sha256": "f18738ea827613dfb690674935c74aaf444420eb700ea3666c04c161123cd318",
+      "source_payload_sha256": "c0f303f5208313b9726401829ab257150d5a32fb47eb9d7481a3d8f8b5ad129c",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"5529\",\"name\":\"Canada\"},\"statistics\":[{\"name\":\"shotsOnTarget\",\"value\":9},{\"name\":\"totalShots\",\"value\":26},{\"name\":\"wonCorners\",\"value\":10},{\"name\":\"yellowCards\",\"value\":0},{\"name\":\"foulsCommitted\",\"value\":14},{\"name\":\"redCards\",\"value\":0},{\"name\":\"possessionPct\",\"value\":68}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"5161\",\"name\":\"Guatemala\"},\"statistics\":[{\"name\":\"shotsOnTarget\",\"value\":1},{\"name\":\"totalShots\",\"value\":4},{\"name\":\"wonCorners\",\"value\":0},{\"name\":\"yellowCards\",\"value\":4},{\"name\":\"foulsCommitted\",\"value\":12},{\"name\":\"redCards\",\"value\":0},{\"name\":\"possessionPct\",\"value\":32}]}],\"statisticsSource\":\"FootballInfo public match statistics table\"}",
+      "transfer_ready": false,
+      "verification": {
+        "fixture_id_matches_event_id": true,
+        "ordered_team_names_match": true,
+        "kickoff_matches": true,
+        "score_matches_competitors": true,
+        "both_sides_have_all_seven_required_metrics": true
+      }
     }
   ],
   "partialMatches": []

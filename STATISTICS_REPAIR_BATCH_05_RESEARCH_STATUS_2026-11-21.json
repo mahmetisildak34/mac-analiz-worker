@@ -6,9 +6,9 @@
   "branch": "feature/bulk-statistics-repair-hardening",
   "policy": "Single-origin match statistics and exact event identity; do not blend providers; absent metrics not zero; copied mirrors not independent; no production writes.",
   "counts": {
-    "full_verified": 0,
+    "full_verified": 1,
     "blocked": 2,
-    "source_review": 23,
+    "source_review": 22,
     "pending": 0
   },
   "rows": [
@@ -339,18 +339,108 @@
       "away": "Piratas",
       "league": "Liga de Expansión MX",
       "provider_group": "API-Football",
-      "status": "source_review",
+      "status": "full_verified",
       "score": "1-1",
-      "source_urls": [],
+      "source_urls": [
+        "https://www.footballinfo.net/Fixtures/Details/1649519"
+      ],
       "research_date": "2026-11-21",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
-      "statistics_sha256": null,
+      "reason": "Exact fixture and ordered sides confirmed against archived provider identity. Seven explicitly populated metric pairs in public match table. Pending separate import review.",
+      "statistics_sha256": "8d7fc3f5cc3cf02f6e9aeb079d80ca97348329e1564710d0e51fe5cb28bd86f5",
       "identity_verified": true,
       "score_verified": true,
       "transfer_ready": false,
       "provider_event_id": "1649519",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota"
+      "statistics_availability": "full",
+      "alternate_statistic_evidence": {
+        "provider": "FootballInfo",
+        "provider_event_id": "1649519",
+        "source_url": "https://www.footballinfo.net/Fixtures/Details/1649519",
+        "source_sha256": "abd2c8441c4f9c8e95c3905c93fc3cf80a9b79fc8240e3ed47e2dbcc94fef42f",
+        "kickoff": "2026-11-15T03:00:00+00:00",
+        "source_competition": "Liga de Expansión MX",
+        "coverage": 7,
+        "statistics": {
+          "teams": [
+            {
+              "homeAway": "home",
+              "team": {
+                "id": "19024",
+                "name": "CA La Paz"
+              },
+              "statistics": [
+                {
+                  "name": "shotsOnTarget",
+                  "value": 8
+                },
+                {
+                  "name": "totalShots",
+                  "value": 20
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 3
+                },
+                {
+                  "name": "wonCorners",
+                  "value": 7
+                },
+                {
+                  "name": "foulsCommitted",
+                  "value": 10
+                },
+                {
+                  "name": "redCards",
+                  "value": 0
+                },
+                {
+                  "name": "possessionPct",
+                  "value": 62
+                }
+              ]
+            },
+            {
+              "homeAway": "away",
+              "team": {
+                "id": "27935",
+                "name": "Piratas"
+              },
+              "statistics": [
+                {
+                  "name": "shotsOnTarget",
+                  "value": 3
+                },
+                {
+                  "name": "totalShots",
+                  "value": 7
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 5
+                },
+                {
+                  "name": "wonCorners",
+                  "value": 3
+                },
+                {
+                  "name": "foulsCommitted",
+                  "value": 21
+                },
+                {
+                  "name": "redCards",
+                  "value": 0
+                },
+                {
+                  "name": "possessionPct",
+                  "value": 38
+                }
+              ]
+            }
+          ],
+          "statisticsSource": "FootballInfo public match statistics table"
+        }
+      }
     },
     {
       "fixture_id": "1649468",

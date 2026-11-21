@@ -6,9 +6,9 @@
   "branch": "feature/bulk-statistics-repair-hardening",
   "policy": "Read-only research. No transfer authorized.",
   "counts": {
-    "full_verified": 0,
+    "full_verified": 3,
     "blocked": 0,
-    "source_review": 25,
+    "source_review": 22,
     "pending": 0
   },
   "rows": [
@@ -303,8 +303,91 @@
       "provider_event_id": "1649063",
       "score": "2-1",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "statistics_availability": "partial",
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "source_urls": [
+        "https://www.footballinfo.net/Fixtures/Details/1649063"
+      ],
+      "alternate_statistic_evidence": {
+        "provider": "FootballInfo",
+        "provider_event_id": "1649063",
+        "source_url": "https://www.footballinfo.net/Fixtures/Details/1649063",
+        "source_sha256": "ec019f803ff754b73ed7594ba877a3322f7178618902d2700d1b32cdb3be60a3",
+        "kickoff": "2026-11-16T23:00:00+00:00",
+        "source_competition": "Primera División",
+        "coverage": 6,
+        "statistics": {
+          "teams": [
+            {
+              "homeAway": "home",
+              "team": {
+                "id": "2360",
+                "name": "Wanderers"
+              },
+              "statistics": [
+                {
+                  "name": "shotsOnTarget",
+                  "value": 4
+                },
+                {
+                  "name": "redCards",
+                  "value": 1
+                },
+                {
+                  "name": "possessionPct",
+                  "value": 45
+                },
+                {
+                  "name": "wonCorners",
+                  "value": 5
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 3
+                },
+                {
+                  "name": "totalShots",
+                  "value": 7
+                }
+              ]
+            },
+            {
+              "homeAway": "away",
+              "team": {
+                "id": "2353",
+                "name": "Juventud"
+              },
+              "statistics": [
+                {
+                  "name": "shotsOnTarget",
+                  "value": 5
+                },
+                {
+                  "name": "redCards",
+                  "value": 0
+                },
+                {
+                  "name": "possessionPct",
+                  "value": 55
+                },
+                {
+                  "name": "wonCorners",
+                  "value": 1
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 4
+                },
+                {
+                  "name": "totalShots",
+                  "value": 13
+                }
+              ]
+            }
+          ],
+          "statisticsSource": "FootballInfo public match statistics table"
+        }
+      }
     },
     {
       "source": "app",
@@ -408,8 +491,8 @@
       "away": "Aruba",
       "league": "CONCACAF Nations League",
       "provider_group": "API-Football",
-      "status": "source_review",
-      "statistics_sha256": null,
+      "status": "full_verified",
+      "statistics_sha256": "e49facee75962862bd27a6343c265ec05a3c702ddbaf3c9ef40f5b460c70ab7a",
       "research_date": "2026-11-21",
       "identity_verified": true,
       "score_verified": true,
@@ -417,66 +500,99 @@
       "provider_event_id": "1649033",
       "score": "1-1",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "partial",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "statistics_availability": "full",
+      "reason": "Exact fixture and ordered sides confirmed against archived provider identity. Seven explicitly populated metric pairs in public match table. Pending separate import review.",
       "source_urls": [
-        "https://sportscore.com/football/match/martinique-vs-aruba/23xmvkhy3zgxqg8/"
+        "https://sportscore.com/football/match/martinique-vs-aruba/23xmvkhy3zgxqg8/",
+        "https://www.footballinfo.net/Fixtures/Details/1649033"
       ],
       "alternate_statistic_evidence": {
-        "provider": "SportScore",
-        "provider_event_id": "23xmvkhy3zgxqg8",
-        "source_url": "https://sportscore.com/football/match/martinique-vs-aruba/23xmvkhy3zgxqg8/",
-        "source_sha256": "5cae1e839281c71b6c7318cec5cded7afd32d1123f5d1618901d58eaebb276b5",
-        "score": [
-          1,
-          1
-        ],
+        "provider": "FootballInfo",
+        "provider_event_id": "1649033",
+        "source_url": "https://www.footballinfo.net/Fixtures/Details/1649033",
+        "source_sha256": "43c4c6276fa69597dbb34434a6995808c09604dc8b37f58fcb90d3730654dc57",
         "kickoff": "2026-11-17T00:00:00+00:00",
         "source_competition": "CONCACAF Nations League",
+        "coverage": 7,
         "statistics": {
           "teams": [
             {
+              "homeAway": "home",
               "team": {
+                "id": "8117",
                 "name": "Martinique"
               },
               "statistics": [
                 {
-                  "name": "wonCorners",
-                  "value": 8
+                  "name": "shotsOnTarget",
+                  "value": 7
+                },
+                {
+                  "name": "redCards",
+                  "value": 1
+                },
+                {
+                  "name": "totalShots",
+                  "value": 18
                 },
                 {
                   "name": "yellowCards",
                   "value": 2
                 },
                 {
-                  "name": "redCards",
-                  "value": 1
+                  "name": "wonCorners",
+                  "value": 8
+                },
+                {
+                  "name": "foulsCommitted",
+                  "value": 19
+                },
+                {
+                  "name": "possessionPct",
+                  "value": 73
                 }
               ]
             },
             {
+              "homeAway": "away",
               "team": {
+                "id": "8167",
                 "name": "Aruba"
               },
               "statistics": [
                 {
-                  "name": "wonCorners",
-                  "value": 1
+                  "name": "shotsOnTarget",
+                  "value": 2
+                },
+                {
+                  "name": "redCards",
+                  "value": 0
+                },
+                {
+                  "name": "totalShots",
+                  "value": 5
                 },
                 {
                   "name": "yellowCards",
                   "value": 3
                 },
                 {
-                  "name": "redCards",
-                  "value": 0
+                  "name": "wonCorners",
+                  "value": 1
+                },
+                {
+                  "name": "foulsCommitted",
+                  "value": 17
+                },
+                {
+                  "name": "possessionPct",
+                  "value": 27
                 }
               ]
             }
-          ]
-        },
-        "coverage": 3,
-        "api_football_queried": false
+          ],
+          "statisticsSource": "FootballInfo public match statistics table"
+        }
       }
     },
     {
@@ -488,8 +604,8 @@
       "away": "Antigua and Barbuda",
       "league": "CONCACAF Nations League",
       "provider_group": "API-Football",
-      "status": "source_review",
-      "statistics_sha256": null,
+      "status": "full_verified",
+      "statistics_sha256": "0512561f692ce5278fd75b9c8c07c0d4f0e5a4f1ae595f15338a57db590207d4",
       "research_date": "2026-11-21",
       "identity_verified": true,
       "score_verified": true,
@@ -497,29 +613,37 @@
       "provider_event_id": "1649034",
       "score": "1-1",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "partial",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "statistics_availability": "full",
+      "reason": "Exact fixture and ordered sides confirmed against archived provider identity. Seven explicitly populated metric pairs in public match table. Pending separate import review.",
       "source_urls": [
-        "https://sportscore.com/football/match/trinidad-and-tobago-vs-antigua-and-barbuda/zp5rzgh3je22q82/"
+        "https://sportscore.com/football/match/trinidad-and-tobago-vs-antigua-and-barbuda/zp5rzgh3je22q82/",
+        "https://www.footballinfo.net/Fixtures/Details/1649034"
       ],
       "alternate_statistic_evidence": {
-        "provider": "SportScore",
-        "provider_event_id": "zp5rzgh3je22q82",
-        "source_url": "https://sportscore.com/football/match/trinidad-and-tobago-vs-antigua-and-barbuda/zp5rzgh3je22q82/",
-        "source_sha256": "3fb3a0bdea93d353146792db4b3530cea0753b8745f6aeecdf152abfe9926406",
-        "score": [
-          1,
-          1
-        ],
+        "provider": "FootballInfo",
+        "provider_event_id": "1649034",
+        "source_url": "https://www.footballinfo.net/Fixtures/Details/1649034",
+        "source_sha256": "469c609ea2f2c91be0b3cabb492d9fc8893635eeef67aa69b1ab377b09ec2896",
         "kickoff": "2026-11-17T00:00:00+00:00",
         "source_competition": "CONCACAF Nations League",
+        "coverage": 7,
         "statistics": {
           "teams": [
             {
+              "homeAway": "home",
               "team": {
+                "id": "5168",
                 "name": "Trinidad and Tobago"
               },
               "statistics": [
+                {
+                  "name": "shotsOnTarget",
+                  "value": 8
+                },
+                {
+                  "name": "totalShots",
+                  "value": 20
+                },
                 {
                   "name": "wonCorners",
                   "value": 11
@@ -527,14 +651,36 @@
                 {
                   "name": "yellowCards",
                   "value": 0
+                },
+                {
+                  "name": "foulsCommitted",
+                  "value": 11
+                },
+                {
+                  "name": "redCards",
+                  "value": 0
+                },
+                {
+                  "name": "possessionPct",
+                  "value": 61
                 }
               ]
             },
             {
+              "homeAway": "away",
               "team": {
+                "id": "5526",
                 "name": "Antigua and Barbuda"
               },
               "statistics": [
+                {
+                  "name": "shotsOnTarget",
+                  "value": 3
+                },
+                {
+                  "name": "totalShots",
+                  "value": 5
+                },
                 {
                   "name": "wonCorners",
                   "value": 4
@@ -542,13 +688,24 @@
                 {
                   "name": "yellowCards",
                   "value": 1
+                },
+                {
+                  "name": "foulsCommitted",
+                  "value": 16
+                },
+                {
+                  "name": "redCards",
+                  "value": 0
+                },
+                {
+                  "name": "possessionPct",
+                  "value": 39
                 }
               ]
             }
-          ]
-        },
-        "coverage": 2,
-        "api_football_queried": false
+          ],
+          "statisticsSource": "FootballInfo public match statistics table"
+        }
       }
     },
     {
@@ -581,8 +738,8 @@
       "away": "Guatemala",
       "league": "CONCACAF Nations League",
       "provider_group": "API-Football",
-      "status": "source_review",
-      "statistics_sha256": null,
+      "status": "full_verified",
+      "statistics_sha256": "f18738ea827613dfb690674935c74aaf444420eb700ea3666c04c161123cd318",
       "research_date": "2026-11-21",
       "identity_verified": true,
       "score_verified": true,
@@ -590,29 +747,37 @@
       "provider_event_id": "1644694",
       "score": "4-1",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "partial",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "statistics_availability": "full",
+      "reason": "Exact fixture and ordered sides confirmed against archived provider identity. Seven explicitly populated metric pairs in public match table. Pending separate import review.",
       "source_urls": [
-        "https://sportscore.com/football/match/canada-vs-guatemala/jw2r09h5l6eprz8/"
+        "https://sportscore.com/football/match/canada-vs-guatemala/jw2r09h5l6eprz8/",
+        "https://www.footballinfo.net/Fixtures/Details/1644694"
       ],
       "alternate_statistic_evidence": {
-        "provider": "SportScore",
-        "provider_event_id": "jw2r09h5l6eprz8",
-        "source_url": "https://sportscore.com/football/match/canada-vs-guatemala/jw2r09h5l6eprz8/",
-        "source_sha256": "6bbfab5a5af220ed494a34193a76140f863ae6c5eb6b5fb2cfb55562f65fd80e",
-        "score": [
-          4,
-          1
-        ],
+        "provider": "FootballInfo",
+        "provider_event_id": "1644694",
+        "source_url": "https://www.footballinfo.net/Fixtures/Details/1644694",
+        "source_sha256": "c0f303f5208313b9726401829ab257150d5a32fb47eb9d7481a3d8f8b5ad129c",
         "kickoff": "2026-11-17T01:00:00+00:00",
         "source_competition": "CONCACAF Nations League",
+        "coverage": 7,
         "statistics": {
           "teams": [
             {
+              "homeAway": "home",
               "team": {
+                "id": "5529",
                 "name": "Canada"
               },
               "statistics": [
+                {
+                  "name": "shotsOnTarget",
+                  "value": 9
+                },
+                {
+                  "name": "totalShots",
+                  "value": 26
+                },
                 {
                   "name": "wonCorners",
                   "value": 10
@@ -620,14 +785,36 @@
                 {
                   "name": "yellowCards",
                   "value": 0
+                },
+                {
+                  "name": "foulsCommitted",
+                  "value": 14
+                },
+                {
+                  "name": "redCards",
+                  "value": 0
+                },
+                {
+                  "name": "possessionPct",
+                  "value": 68
                 }
               ]
             },
             {
+              "homeAway": "away",
               "team": {
+                "id": "5161",
                 "name": "Guatemala"
               },
               "statistics": [
+                {
+                  "name": "shotsOnTarget",
+                  "value": 1
+                },
+                {
+                  "name": "totalShots",
+                  "value": 4
+                },
                 {
                   "name": "wonCorners",
                   "value": 0
@@ -635,13 +822,24 @@
                 {
                   "name": "yellowCards",
                   "value": 4
+                },
+                {
+                  "name": "foulsCommitted",
+                  "value": 12
+                },
+                {
+                  "name": "redCards",
+                  "value": 0
+                },
+                {
+                  "name": "possessionPct",
+                  "value": 32
                 }
               ]
             }
-          ]
-        },
-        "coverage": 2,
-        "api_football_queried": false
+          ],
+          "statisticsSource": "FootballInfo public match statistics table"
+        }
       }
     },
     {

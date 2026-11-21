@@ -429,8 +429,91 @@
       "provider_event_id": "1576530",
       "score": "1-1",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "statistics_availability": "partial",
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "source_urls": [
+        "https://www.footballinfo.net/Fixtures/Details/1576530"
+      ],
+      "alternate_statistic_evidence": {
+        "provider": "FootballInfo",
+        "provider_event_id": "1576530",
+        "source_url": "https://www.footballinfo.net/Fixtures/Details/1576530",
+        "source_sha256": "7d03787b90c71bca51cd7d474ba535c05934489ea5cfe7a7a13c40a52117b14a",
+        "kickoff": "2026-11-15T11:00:00+00:00",
+        "source_competition": "Segunda Liga",
+        "coverage": 6,
+        "statistics": {
+          "teams": [
+            {
+              "homeAway": "home",
+              "team": {
+                "id": "4725",
+                "name": "Amarante"
+              },
+              "statistics": [
+                {
+                  "name": "redCards",
+                  "value": 0
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 5
+                },
+                {
+                  "name": "shotsOnTarget",
+                  "value": 6
+                },
+                {
+                  "name": "wonCorners",
+                  "value": 6
+                },
+                {
+                  "name": "possessionPct",
+                  "value": 53
+                },
+                {
+                  "name": "totalShots",
+                  "value": 16
+                }
+              ]
+            },
+            {
+              "homeAway": "away",
+              "team": {
+                "id": "4744",
+                "name": "Felgueiras 1932"
+              },
+              "statistics": [
+                {
+                  "name": "redCards",
+                  "value": 0
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 3
+                },
+                {
+                  "name": "shotsOnTarget",
+                  "value": 5
+                },
+                {
+                  "name": "wonCorners",
+                  "value": 2
+                },
+                {
+                  "name": "possessionPct",
+                  "value": 47
+                },
+                {
+                  "name": "totalShots",
+                  "value": 12
+                }
+              ]
+            }
+          ],
+          "statisticsSource": "FootballInfo public match statistics table"
+        }
+      }
     },
     {
       "source": "app",
@@ -450,8 +533,91 @@
       "provider_event_id": "1576537",
       "score": "2-0",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "statistics_availability": "partial",
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "source_urls": [
+        "https://www.footballinfo.net/Fixtures/Details/1576537"
+      ],
+      "alternate_statistic_evidence": {
+        "provider": "FootballInfo",
+        "provider_event_id": "1576537",
+        "source_url": "https://www.footballinfo.net/Fixtures/Details/1576537",
+        "source_sha256": "5e63f962dc07757a3f8839f4753a060976ed4bb915758a6c9542d374ec10cfb8",
+        "kickoff": "2026-11-15T11:00:00+00:00",
+        "source_competition": "Segunda Liga",
+        "coverage": 6,
+        "statistics": {
+          "teams": [
+            {
+              "homeAway": "home",
+              "team": {
+                "id": "218",
+                "name": "Tondela"
+              },
+              "statistics": [
+                {
+                  "name": "redCards",
+                  "value": 0
+                },
+                {
+                  "name": "shotsOnTarget",
+                  "value": 5
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 4
+                },
+                {
+                  "name": "possessionPct",
+                  "value": 50
+                },
+                {
+                  "name": "wonCorners",
+                  "value": 1
+                },
+                {
+                  "name": "totalShots",
+                  "value": 7
+                }
+              ]
+            },
+            {
+              "homeAway": "away",
+              "team": {
+                "id": "231",
+                "name": "Farense"
+              },
+              "statistics": [
+                {
+                  "name": "redCards",
+                  "value": 0
+                },
+                {
+                  "name": "shotsOnTarget",
+                  "value": 0
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 3
+                },
+                {
+                  "name": "possessionPct",
+                  "value": 50
+                },
+                {
+                  "name": "wonCorners",
+                  "value": 7
+                },
+                {
+                  "name": "totalShots",
+                  "value": 8
+                }
+              ]
+            }
+          ],
+          "statisticsSource": "FootballInfo public match statistics table"
+        }
+      }
     },
     {
       "source": "app",
