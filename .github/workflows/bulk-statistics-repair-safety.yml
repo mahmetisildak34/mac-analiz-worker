@@ -9,6 +9,8 @@ on:
       - "statistics-repair.js"
       - "statistics-repair-bulk.js"
       - "statistics-data-quality.js"
+      - "trusted-goal-poisson.js"
+      - "tests/trusted-goal-poisson.test.mjs"
       - "tests/statistics-data-quality.test.mjs"
       - "statistics-api-backfill.js"
       - "statistics-api-cron.js"
@@ -35,6 +37,8 @@ on:
       - "statistics-repair.js"
       - "statistics-repair-bulk.js"
       - "statistics-data-quality.js"
+      - "trusted-goal-poisson.js"
+      - "tests/trusted-goal-poisson.test.mjs"
       - "tests/statistics-data-quality.test.mjs"
       - "statistics-api-backfill.js"
       - "statistics-api-cron.js"
@@ -67,10 +71,13 @@ jobs:
           node --check worker.js
           node --check statistics-repair-bulk.js
           node --check statistics-data-quality.js
+          node --check trusted-goal-poisson.js
           node --check statistics-repair.js
           node --check statistics-api-backfill.js
           node --check statistics-api-cron.js
           node --check statistics-api-persistence.js
+      - name: Run trusted goal Poisson tests
+        run: node tests/trusted-goal-poisson.test.mjs
       - name: Run strict data quality tests
         run: node tests/statistics-data-quality.test.mjs
       - name: Run repair safety tests
