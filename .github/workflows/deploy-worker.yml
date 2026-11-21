@@ -47,6 +47,9 @@ jobs:
       - name: Run gated API backfill policy test
         run: node tests/statistics-api-backfill.test.mjs
 
+      - name: Run production-preview D1 integration test
+        run: node tests/statistics-preview-integration.test.mjs
+
       - name: Run statistics repair safety test
         run: node tests/statistics-repair-safety.test.mjs
 
