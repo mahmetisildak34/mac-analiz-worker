@@ -1,0 +1,43 @@
+name: Bulk statistics repair safety tests
+
+on:
+  push:
+    branches:
+      - feature/bulk-statistics-repair-hardening
+    paths:
+      - "statistics-repair.js"
+      - "statistics-repair-bulk.js"
+      - "tests/statistics-repair-*.test.mjs"
+      - "tests/statistics-preview-integration.test.mjs"
+      - ".github/workflows/bulk-statistics-repair-safety.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "statistics-repair.js"
+      - "statistics-repair-bulk.js"
+      - "tests/statistics-repair-*.test.mjs"
+      - "tests/statistics-preview-integration.test.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  sqlite-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check repair module syntax
+        run: |
+          node --check statistics-repair-bulk.js
+          node --check statistics-repair.js
+      - name: Run repair safety tests
+        run: node tests/statistics-repair-safety.test.mjs
+      - name: Run Preview matching tests
+        run: node tests/statistics-preview-integration.test.mjs
+      - name: Run full 722-candidate SQLite pool and failure scenarios
+        run: node tests/statistics-repair-bulk.test.mjs
