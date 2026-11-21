@@ -1,0 +1,29 @@
+name: Five-match SQLite safety pilot (manual launcher)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  isolated-sqlite-tests:
+    name: Run pinned offline SQLite tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout pinned test commit (not main)
+        uses: actions/checkout@v4
+        with:
+          repository: mahmetisildak34/mac-analiz-worker
+          ref: d48b179bf6ce728e57056932ee8ae37e4ac9a3b1
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run local SQLite safety suite
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python -m unittest discover -s tests -p 'test_five_match_sqlite_pilot.py' -v
