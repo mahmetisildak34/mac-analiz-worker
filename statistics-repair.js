@@ -24,7 +24,7 @@ export async function runStatisticsRepair(env) {
   for(const target of targets) {
     try {
       const prior=await db.prepare("SELECT state FROM mam_statistics_repair_queue WHERE source=? AND fixture_id=?").bind(target.source,target.fixture_id).first();
-      if(prior?.state==="unmatched") {unmatched++;continue;}
+      if(prior?.state==="repaired") continue;
       // Same-date candidate scan is bounded and uses the existing kickoff index.
       const candidates=(await db.prepare("SELECT source,fixture_id,kickoff,home_team,away_team,home_goals,away_goals,statistics_json FROM matches WHERE kickoff >= ? AND kickoff < ? AND statistics_json IS NOT NULL AND length(trim(statistics_json))>5 LIMIT 150").bind(date(target.kickoff),new Date(Date.parse(date(target.kickoff)+"T00:00:00Z")+86400000).toISOString().slice(0,10)).all()).results || [];
       const matches=candidates.filter(x=>sameFixture(target,x)&&nonempty(x.statistics_json));
