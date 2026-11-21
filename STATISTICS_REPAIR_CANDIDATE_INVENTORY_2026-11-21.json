@@ -17473,8 +17473,8 @@
       "provider_group": "ESPN",
       "provider_identity_verified": true,
       "identity_evidence": "ESPN event ID namespace",
-      "statistics_status": "awaiting-source-research",
-      "statistics_sha256": null
+      "statistics_status": "full-source-payload-verified",
+      "statistics_sha256": "cfd260df6d449c7489b75e37f6d64d51fa072d2918e796b65c38f1feb3ed7580"
     },
     {
       "source": "app",
@@ -17658,5 +17658,11 @@
       "statistics_status": "awaiting-source-research",
       "statistics_sha256": null
     }
-  ]
+  ],
+  "verified_counts": {
+    "full": 1,
+    "partial": 0,
+    "ambiguous": 0,
+    "not_yet_verified": 677
+  }
 }
