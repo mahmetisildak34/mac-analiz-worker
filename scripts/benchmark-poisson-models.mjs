@@ -3,6 +3,7 @@ import fs from "node:fs";
 import { createHash } from "node:crypto";
 import { selectOnValidation } from "./poisson-validation-selection.mjs";
 import { evaluateMarkets } from "./poisson-market-metrics.mjs";
+import { pairedOutcomeDiagnostics } from "./poisson-paired-diagnostics.mjs";
 import { predictTrustedGoals } from "../trusted-goal-poisson.js";
 
 const directory=process.argv[2];
@@ -15,7 +16,8 @@ const trainingEnd=turkeyEarly?"2024-11-01":"2025-01-01";
 const validationEnd=turkeyEarly?"2025-01-01":"2025-07-01";
 const nextSeason=process.argv.includes("--next-season");
 const lateHoldout=process.argv.includes("--late-holdout");
-const testStart=lateHoldout?"2026-09-21":nextSeason?"2026-07-01":validationEnd;
+const espnHoldout=process.argv.includes("--espn-holdout");
+const testStart=espnHoldout?"2026-11-21":lateHoldout?"2026-09-21":nextSeason?"2026-07-01":validationEnd;
 const testEnd=turkeyEarly?"2025-07-01":"9999-01-01";
 const seasons=extended?["2023-24","2024-25","2025-26","2026-27"]:["2024-25","2025-26"];
 const cap=15;
@@ -221,6 +223,7 @@ const reports=leagues.map(league=>{
   }));
   return {league,hashes,training,validation:validation.length,temperature:t,mixWeight,testFixtures:test.length,comparisonFixtures:comparison.length,selection,
     test_date_range:test.length?[test[0].target.kickoff,test.at(-1).target.kickoff]:null,
+    paired_1x2:pairedOutcomeDiagnostics(comparison,selection.model),
     belowVenueMinimum:test.filter(r=>r.homeVenueMatches<5||r.awayVenueMatches<5).length,
     ...(allMarkets?{eloTemperature}:{}),results};
 });

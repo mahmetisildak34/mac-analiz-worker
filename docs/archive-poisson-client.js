@@ -31,3 +31,15 @@ export function analyzeArchiveResponse({ status, body } = {}, options) {
   const firstHalf = predictTrustedHalfTime(history, options);
   return { available: fullTime.available || firstHalf.available, fullTime, firstHalf };
 }
+
+export async function analyzeArchiveFetchResponse(response, options) {
+  const status = response?.status ?? null;
+  if (status !== 200) return analyzeArchiveResponse({ status }, options);
+  let body;
+  try {
+    body = await response.json();
+  } catch {
+    return { available: false, reason: "archive_invalid_json", http_status: status };
+  }
+  return analyzeArchiveResponse({ status, body }, options);
+}

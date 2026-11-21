@@ -55,6 +55,9 @@ jobs:
       - name: Verify mobile archive Poisson integration
         run: node --test tests/archive-poisson-mobile.test.mjs
 
+      - name: Verify paired benchmark diagnostics
+        run: node --test tests/poisson-paired-diagnostics.test.mjs
+
       - name: Check pinned offline integration checksums
         run: sha256sum -c docs/poisson-integration.sha256
 

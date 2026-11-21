@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { analyzeArchiveResponse } from "../docs/archive-poisson-client.js";
+import { analyzeArchiveFetchResponse, analyzeArchiveResponse } from "../docs/archive-poisson-client.js";
 
 const archive = JSON.parse(readFileSync(new URL("../docs/archive-espn-example.json", import.meta.url)));
 const options = {
@@ -51,4 +51,13 @@ test("periods, league identity and conflict flags are enforced independently", (
     const blocked = analyzeArchiveResponse(request([{ ...verified[0], ...changed }, ...verified.slice(1)]), options);
     assert.equal(blocked.available, false);
   }
+});
+
+test("fetch response adapter distinguishes invalid JSON from HTTP 503 and never forecasts either", async () => {
+  const broken = await analyzeArchiveFetchResponse(new Response('{"response":', { status: 200 }), options);
+  assert.deepEqual(broken, { available: false, reason: "archive_invalid_json", http_status: 200 });
+  const down = await analyzeArchiveFetchResponse(new Response(JSON.stringify(archive), { status: 503 }), options);
+  assert.deepEqual(down, { available: false, reason: "archive_unavailable", http_status: 503 });
+  const good = await analyzeArchiveFetchResponse(Response.json(archive), options);
+  assert.deepEqual(good, analyzeArchiveResponse({ status: 200, body: archive }, options));
 });
