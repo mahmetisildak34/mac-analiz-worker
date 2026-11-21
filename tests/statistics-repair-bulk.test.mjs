@@ -116,6 +116,11 @@ assert.equal(rolled.rolledBack,true);
 assert.equal(production.prepare("SELECT statistics_json FROM matches WHERE source=? AND fixture_id=?").get(backup.source,backup.fixture_id).statistics_json,null);
 assert.equal((await rollbackStatisticsRepair(p,backup.source,backup.fixture_id,backup.candidate_sha256)).rolledBack,false);
 
+// Tampered backup payload is rejected by SHA-256 before rollback.
+const corrupt=production.prepare("SELECT source,fixture_id,candidate_sha256 FROM mam_statistics_repair_backup WHERE state='applied' LIMIT 1").get();
+production.prepare("UPDATE mam_statistics_repair_backup SET candidate_statistics_json='tampered' WHERE source=? AND fixture_id=? AND candidate_sha256=?").run(corrupt.source,corrupt.fixture_id,corrupt.candidate_sha256);
+await assert.rejects(()=>rollbackStatisticsRepair(p,corrupt.source,corrupt.fixture_id,corrupt.candidate_sha256),/backup-candidate-sha256-mismatch/);
+
 // Missing explicit apply gates always remain read-only dry-run.
 const gated=await runStatisticsRepair({DB:p,PREVIEW_DB:v,STATISTICS_REPAIR_ENABLED:"true",STATISTICS_REPAIR_APPLY_ENABLED:"true"});
 assert.equal(gated.dryRun,true);
@@ -132,6 +137,21 @@ assert.equal(failingProd.prepare("SELECT statistics_json FROM matches WHERE fixt
 assert.equal(failingProd.prepare("SELECT cursor_fixture_id FROM mam_statistics_repair_control").get().cursor_fixture_id,"");
 assert.equal(failingProd.prepare("SELECT lease_until FROM mam_statistics_repair_control").get().lease_until,0);
 
+// A stale Production snapshot must fail closed before any statistics are copied.
+const staleProd=createProduction(), stalePreview=createPreview();
+addProd(staleProd,2); addPreview(stalePreview,2);
+let staleInjected=false;
+const staleWrap=wrapper(staleProd,{beforeBatch:async(db,statements)=>{
+  if(!staleInjected && statements.some(s=>s.sql.startsWith("UPDATE matches SET statistics_json"))){
+    db.prepare("UPDATE matches SET updated_at='2025-01-03T00:00:00Z' WHERE fixture_id='p-0002'").run();
+    staleInjected=true;
+  }
+}});
+await assert.rejects(()=>runStatisticsRepair(env(staleWrap,wrapper(stalePreview,{readOnly:true}))),/conditional-update-did-not-change-exactly-one-row/);
+assert.equal(staleProd.prepare("SELECT statistics_json FROM matches WHERE fixture_id='p-0002'").get().statistics_json,null);
+assert.equal(staleProd.prepare("SELECT COUNT(*) n FROM mam_statistics_repair_backup").get().n,0);
+assert.equal(staleProd.prepare("SELECT cursor_fixture_id FROM mam_statistics_repair_control").get().cursor_fixture_id,"");
+
 // Preview ambiguity, invalid JSON, and team-ID conflict are all rejected.
 const singleProd=createProduction(), singlePrev=createPreview();
 addProd(singleProd,1); addPreview(singlePrev,1);
@@ -145,4 +165,4 @@ const conflictPrev=createPreview(); addPreview(conflictPrev,1,{homeId:"999"});
 plan=await planStatisticsRepairTarget(wrapper(conflictPrev,{readOnly:true}),singleProd.prepare("SELECT * FROM matches WHERE fixture_id='p-0001'").get());
 assert.equal(plan.state,"rejected");
 
-console.log(JSON.stringify({ok:true,productionCandidatePool:722,previewMatchedFixtureRows:44,applied:43,ambiguous:1,unmatched:678,batchLimit:25,batches:runs,backupRows:43,rollback:true,idempotence:true,failStop:true,previewReadOnly:true}));
+console.log(JSON.stringify({ok:true,productionCandidatePool:722,previewMatchedFixtureRows:44,applied:43,ambiguous:1,unmatched:678,batchLimit:25,batches:runs,backupRows:43,rollback:true,shaTamperRejected:true,staleSnapshotRejected:true,idempotence:true,failStop:true,previewReadOnly:true}));
