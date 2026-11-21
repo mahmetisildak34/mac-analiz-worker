@@ -531,20 +531,18 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
       dates.push(d.toISOString().slice(0, 10).replace(/-/g, ""));
     }
     const jobs = [];
-    // The active archive target is the ten agreed priority competitions.
-    // Secondary competitions remain queryable from already archived D1 rows,
-    // but do not consume the primary historical backfill budget.
-    for (const league of leagues.slice(0, 10)) {
+    // Queue every league explicitly configured in the ESPN provider catalog.
+    // Provider namespaces remain separate; this list is not inferred from D1 league IDs.
+    for (const league of leagues) {
       for (const date of dates) jobs.push({ league, date, attempts: 0 });
     }
     state = { version: 2, jobs, cursor: 0, createdAt: new Date().toISOString() };
   } else {
-    // Extend an in-flight legacy queue without discarding its cursor or any
-    // already archived data. Promote pending priority jobs ahead of secondary
-    // competitions, then append only missing priority league/date pairs.
+    // Extend an in-flight queue without discarding its cursor or any archived data.
+    // Append missing league/date pairs for every configured ESPN competition.
     const completedPrefix = state.jobs.slice(0, state.cursor);
     const pendingJobs = state.jobs.slice(state.cursor);
-    const priorityIds = new Set(leagues.slice(0, 10).map(league => String(league[0])));
+    const priorityIds = new Set(leagues.map(league => String(league[0])));
     const priorityPending = [];
     const secondaryPending = [];
     const seenPriority = new Set(
@@ -570,7 +568,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
       const d = new Date(base);
       d.setUTCDate(d.getUTCDate() + offset);
       const date = d.toISOString().slice(0, 10).replace(/-/g, "");
-      for (const league of leagues.slice(0, 10)) {
+      for (const league of leagues) {
         const key = String(league[0]) + "|" + date;
         if (!seenPriority.has(key)) {
           seenPriority.add(key);
@@ -1307,7 +1305,7 @@ export default {
       }
 
       try {
-        await syncEspnFixturesToD1(env, 900, 180, isHourlySync ? 32 : 10);
+        await syncEspnFixturesToD1(env, 1100, 180, isHourlySync ? 32 : 10);
       } catch (archiveError) {
         console.log("ESPN archive/summary sync error", String(archiveError?.message || archiveError));
       }
