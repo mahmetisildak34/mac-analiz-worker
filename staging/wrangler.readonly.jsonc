@@ -5,8 +5,6 @@
   "compatibility_date": "2026-11-12",
   "workers_dev": false,
   "d1_databases": [
-    {"binding":"PRODUCTION_READ_DB","database_name":"mac-analiz-arsiv","database_id":"b3103550-8f93-4109-8a24-e0095c49e666"},
-    {"binding":"PREVIEW_READ_DB","database_name":"mac-analiz-preview","database_id":"704a5c24-491f-455f-b62a-23752083f085"},
     {"binding":"TEST_WRITE_DB","database_name":"mam-statistics-isolated-test","database_id":"fb9b42cc-8d96-4911-b193-0983527ee593"}
   ],
   "vars": {"STATISTICS_REPAIR_ENABLED":"false","STATISTICS_API_BACKFILL_ENABLED":"false"}
