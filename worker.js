@@ -1,3 +1,7 @@
+import { assessStatistics } from "./statistics-data-quality.js";
+import { fixtureDownloadFeed, resolveFixtureDownloadImport } from "./uefa-fixture-import.js";
+import { runStatisticsRepair } from "./statistics-repair.js";
+import { runStatisticsApiCron } from "./statistics-api-cron.js";
 // Deployment refresh: publish the reviewed Worker configuration and cache policy.
 // Audit trigger: deploy this verified revision so the post-deploy archive audit runs.
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
@@ -1282,6 +1286,23 @@ export default {
         }
       }
 
+      // Disabled unless explicitly enabled after production approval; never calls football APIs.
+      try {
+        const repairReport = await runStatisticsRepair(env);
+        if (!repairReport.skipped) console.log("Scheduled statistics repair", repairReport);
+      } catch (repairError) {
+        console.log("Scheduled statistics repair failed", String(repairError?.message || repairError));
+      }
+
+      // Explicitly opt-in only after provider subscription and shared quota audits.
+      // By default this returns without database mutations or outbound requests.
+      try {
+        const apiRepair = await runStatisticsApiCron(env);
+        if (!apiRepair.skipped) console.log("Scheduled API statistics repair", apiRepair);
+      } catch (apiRepairError) {
+        console.log("Scheduled API statistics repair failed", String(apiRepairError?.message || apiRepairError));
+      }
+
       try {
         const enrichmentThrottleKey = "mam:cross-source-enrichment-last:v8";
         const lastEnrichmentAt = Number(env.MAM_KV ? await env.MAM_KV.get(enrichmentThrottleKey) : 0);
@@ -2278,8 +2299,58 @@ export default {
           try { statistics = row.statistics_json ? JSON.parse(row.statistics_json) : null; } catch (_) {}
           try { raw = row.raw_json ? JSON.parse(row.raw_json) : null; } catch (_) {}
           const halftime = raw?.score?.halftime || raw?.score?.halfTime || null;
+          // Only original provider-shaped payloads can attest identity/score.
+          // Reconstructed mamSource/fixture/goals wrappers are NOT independent evidence.
+          const sameDate = (x,y) => Number.isFinite(Date.parse(x)) && Date.parse(x) === Date.parse(y);
+          const sameName = (x,y) => typeof x === "string" && typeof y === "string" &&
+            normalizeTeamName(x) === normalizeTeamName(y) && normalizeTeamName(x).length > 0;
+          const validGoal = v => (typeof v === "number" || typeof v === "string" && v.trim() !== "") &&
+            Number.isSafeInteger(Number(v)) && Number(v) >= 0 && Number(v) <= 30;
+          let identityVerified = false, scoreVerified = false;
+          let proofType = "unknown";
+          if (row.source === "app" && raw?.fixture?.timestamp != null &&
+              raw?.fixture?.id != null && raw?.teams?.home?.name && raw?.teams?.away?.name) {
+            identityVerified = String(raw.fixture.id) === String(row.fixture_id) &&
+              sameDate(raw.fixture.date,row.kickoff) &&
+              sameName(raw.teams.home.name,row.home_team) &&
+              sameName(raw.teams.away.name,row.away_team);
+            if (identityVerified) {
+              proofType = "archived_api_football_provider_payload";
+              scoreVerified = ["FT","AET","PEN","AWD","WO","FINISHED"].includes(String(raw?.fixture?.status?.short || "").toUpperCase()) &&
+                validGoal(raw?.goals?.home) && validGoal(raw?.goals?.away) &&
+                validGoal(row.home_goals) && validGoal(row.away_goals) &&
+                Number(raw.goals.home) === Number(row.home_goals) &&
+                Number(raw.goals.away) === Number(row.away_goals);
+            }
+          } else if (row.source === "ESPN" && raw?.id != null &&
+                     Array.isArray(raw?.competitions?.[0]?.competitors)) {
+            const competitors = raw.competitions[0].competitors;
+            const home = competitors.find(c => c?.homeAway === "home");
+            const away = competitors.find(c => c?.homeAway === "away");
+            identityVerified = String(row.fixture_id).startsWith("espn-") &&
+              String(row.fixture_id).endsWith("-"+String(raw.id)) &&
+              sameDate(raw.date,row.kickoff) &&
+              sameName(home?.team?.displayName,row.home_team) &&
+              sameName(away?.team?.displayName,row.away_team);
+            if (identityVerified) {
+              proofType = "archived_espn_provider_payload";
+              scoreVerified = raw?.competitions?.[0]?.status?.type?.completed === true &&
+                validGoal(home?.score) && validGoal(away?.score) &&
+                validGoal(row.home_goals) && validGoal(row.away_goals) &&
+                Number(home.score) === Number(row.home_goals) &&
+                Number(away.score) === Number(row.away_goals);
+            }
+          }
           return {
             source: row.source || "app",
+            mamSource: row.source || "app",
+            identity_verified: identityVerified,
+            score_verified: scoreVerified,
+            halftime_score_verified: scoreVerified && proofType === "archived_api_football_provider_payload" &&
+              validGoal(raw?.score?.halftime?.home) && validGoal(raw?.score?.halftime?.away) &&
+              Number(raw.score.halftime.home) <= Number(row.home_goals) &&
+              Number(raw.score.halftime.away) <= Number(row.away_goals),
+            verification_evidence: proofType,
             fixture: { id: row.fixture_id, date: row.kickoff, status: { short: row.status || "FT" } },
             league: { id: String(row.league_id), name: row.league_name || "", country: canonicalLeagueCountry(row.source, row.league_id, row.league_name, row.country) },
             teams: {
@@ -2288,11 +2359,13 @@ export default {
             },
             goals: { home: row.home_goals, away: row.away_goals },
             score: halftime ? { halftime } : null,
-            statistics
+            statistics,
+            data_quality: assessStatistics(statistics, {home_team:row.home_team,away_team:row.away_team})
           };
         });
         return new Response(JSON.stringify({
           ok: true, leagueId, count: matches.length,
+          data_quality_counts: matches.reduce((counts,match)=>{ const status=match.data_quality?.status||"missing"; counts[status]=(counts[status]||0)+1; return counts; }, {verified_full:0,partial:0,provenance_review:0,missing:0,conflicting:0}),
           rawCount: archivedRows.length,
           teamFilterApplied: requestedTeamNames.size > 0,
           response: matches
@@ -2332,9 +2405,19 @@ export default {
            home_team_id=excluded.home_team_id, home_team=excluded.home_team,
            away_team_id=excluded.away_team_id, away_team=excluded.away_team,
            home_goals=excluded.home_goals, away_goals=excluded.away_goals,
-           statistics_json=excluded.statistics_json, raw_json=excluded.raw_json,
-           updated_at=CURRENT_TIMESTAMP`;
+           statistics_json=CASE WHEN excluded.source='fixture-download-uefa' THEN matches.statistics_json ELSE excluded.statistics_json END,
+           raw_json=excluded.raw_json, updated_at=CURRENT_TIMESTAMP
+          WHERE excluded.source<>'fixture-download-uefa' OR (
+            matches.league_id=excluded.league_id AND matches.home_team=excluded.home_team AND matches.away_team=excluded.away_team
+            AND matches.home_goals=excluded.home_goals AND matches.away_goals=excluded.away_goals
+            AND (
+              julianday(matches.kickoff)=julianday(excluded.kickoff)
+              OR matches.kickoff=substr(excluded.kickoff,1,10)||'T12:00:00Z'
+            )
+            AND (matches.kickoff<>excluded.kickoff OR matches.raw_json IS NOT excluded.raw_json)
+          )`;
         const statements = [];
+        const uefaFeeds = new Map();
         let skipped = 0;
         for (const m of incoming) {
           const fixture = m?.fixture || {};
@@ -2342,7 +2425,7 @@ export default {
           const home = teams.home || {};
           const away = teams.away || {};
           const league = m?.league || {};
-          const kickoff = String(fixture.date || m?.kickoff || "");
+          let kickoff = String(fixture.date || m?.kickoff || "");
           const homeName = String(home.name || m?.home_team || "").trim();
           const awayName = String(away.name || m?.away_team || "").trim();
           if (!kickoff || !homeName || !awayName) { skipped++; continue; }
@@ -2353,6 +2436,23 @@ export default {
           const status = String(fixture.status?.short || m?.status || "UNK").slice(0, 30);
           const homeGoals = m?.goals?.home == null ? null : Number(m.goals.home);
           const awayGoals = m?.goals?.away == null ? null : Number(m.goals.away);
+          let raw = m;
+          let statistics = m?.statistics ?? null;
+          if (source === "fixture-download-uefa") {
+            const spec = fixtureDownloadFeed(fixtureId, leagueId);
+            if (!spec) { skipped++; continue; }
+            if (!uefaFeeds.has(spec.slug)) {
+              try {
+                const response = await fetch("https://fixturedownload.com/feed/json/"+spec.slug, {signal:AbortSignal.timeout(5000)});
+                uefaFeeds.set(spec.slug, response.ok ? await response.json() : null);
+              } catch { uefaFeeds.set(spec.slug, null); }
+            }
+            const verified = resolveFixtureDownloadImport({kickoff,homeName,awayName,homeGoals:m?.goals?.home,awayGoals:m?.goals?.away,status},spec,uefaFeeds.get(spec.slug));
+            if (!verified) { skipped++; continue; }
+            kickoff = verified.kickoff;
+            statistics = null;
+            raw = {...m, fixture:{...fixture,date:kickoff}, statistics:null, provider_evidence:verified.evidence};
+          }
           statements.push(env.DB.prepare(sql).bind(
             source, fixtureId, leagueId,
             String(league.name || m?.league_name || "").slice(0, 120),
@@ -2362,8 +2462,8 @@ export default {
             away.id == null ? null : String(away.id).slice(0, 40), awayName.slice(0, 120),
             Number.isFinite(homeGoals) ? homeGoals : null,
             Number.isFinite(awayGoals) ? awayGoals : null,
-            m?.statistics == null ? null : JSON.stringify(m.statistics),
-            JSON.stringify(m)
+            statistics == null ? null : JSON.stringify(statistics),
+            JSON.stringify(raw)
           ));
         }
         let saved = 0;

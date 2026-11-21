@@ -6,6 +6,11 @@ on:
       - main
     paths:
       - "worker.js"
+      - "statistics-repair.js"
+      - "statistics-api-backfill.js"
+      - "statistics-api-persistence.js"
+      - "statistics-api-cron.js"
+      - "staging/**"
       - "wrangler.jsonc"
       - "package.json"
       - "tests/**/*.mjs"
@@ -37,6 +42,51 @@ jobs:
 
       - name: Validate Worker JavaScript syntax
         run: node --check worker.js
+
+      - name: Run trusted goal Poisson tests
+        run: node tests/trusted-goal-poisson.test.mjs
+
+      - name: Verify experimental market metrics
+        run: node --test tests/poisson-market-metrics.test.mjs
+
+      - name: Verify model selection and conflict acceptance
+        run: node --test tests/poisson-acceptance.test.mjs
+
+      - name: Verify mobile archive Poisson integration
+        run: node --test tests/archive-poisson-mobile.test.mjs
+
+      - name: Verify paired benchmark diagnostics
+        run: node --test tests/poisson-paired-diagnostics.test.mjs
+
+      - name: Check pinned offline integration checksums
+        run: sha256sum -c docs/poisson-integration.sha256
+
+      - name: Verify archive evidence and Poisson integration
+        run: node tests/archive-evidence-integration.test.mjs
+
+      - name: Verify offline analysis scenarios
+        run: node tests/offline-analysis-fixture-client.test.mjs
+
+      - name: Verify UEFA fixture import UTC and source evidence
+        run: node tests/uefa-fixture-import.test.mjs
+
+      - name: Verify isolated Cloudflare read-only bindings
+        run: node tests/statistics-cloudflare-readonly.test.mjs
+
+      - name: Verify API cron is disabled without quota audit
+        run: node tests/statistics-api-cron.test.mjs
+
+      - name: Run safe API persistence integration test
+        run: node tests/statistics-api-persistence.test.mjs
+
+      - name: Run gated API backfill policy test
+        run: node tests/statistics-api-backfill.test.mjs
+
+      - name: Run production-preview D1 integration test
+        run: node tests/statistics-preview-integration.test.mjs
+
+      - name: Run statistics repair safety test
+        run: node tests/statistics-repair-safety.test.mjs
 
       - name: Run archive upsert regression test
         run: node tests/archive-upsert-guard.test.mjs

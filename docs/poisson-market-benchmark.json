@@ -1,0 +1,276 @@
+{
+  "data_source": "https://github.com/openfootball/football.json",
+  "cutoff": "2025-07-01",
+  "report": [
+    {
+      "league": "tr",
+      "periods": [
+        {
+          "period": "full_time",
+          "fixtures": 90,
+          "predicted": 59,
+          "metrics": {
+            "outcome_brier": 0.6099488125274778,
+            "outcome_log_loss": 1.0142329749052632,
+            "btts_brier": 0.2735364954020795,
+            "score_log_loss": 3.0260401935074634,
+            "top_score_accuracy": 0.13559322033898305,
+            "home_goal_mae": 0.7565828199922938,
+            "away_goal_mae": 1.0347660944458534,
+            "total_goal_mae": 1.1475262133837414,
+            "over_0.5_brier": 0.0073647448494461335,
+            "over_1.5_brier": 0.15275467514263882,
+            "over_2.5_brier": 0.26346302726979537,
+            "over_3.5_brier": 0.23777848448555794,
+            "over_4.5_brier": 0.09642953797821445
+          }
+        },
+        {
+          "period": "first_half",
+          "fixtures": 90,
+          "predicted": 60,
+          "metrics": {
+            "outcome_brier": 0.7162968134813202,
+            "outcome_log_loss": 1.2055718346150384,
+            "btts_brier": 0.15471841942933304,
+            "score_log_loss": 2.4153608967532865,
+            "top_score_accuracy": 0.16666666666666666,
+            "home_goal_mae": 0.6920879012271859,
+            "away_goal_mae": 0.7170751801829733,
+            "total_goal_mae": 0.9602969015329794,
+            "over_0.5_brier": 0.19927779145697164,
+            "over_1.5_brier": 0.27425606633579086,
+            "over_2.5_brier": 0.17093684490898953,
+            "over_3.5_brier": 0.022449581928067064,
+            "over_4.5_brier": 0.0011284758770082695
+          }
+        }
+      ]
+    },
+    {
+      "league": "en",
+      "periods": [
+        {
+          "period": "full_time",
+          "fixtures": 353,
+          "predicted": 318,
+          "metrics": {
+            "outcome_brier": 0.6347598252457193,
+            "outcome_log_loss": 1.058240784800067,
+            "btts_brier": 0.25878920092509183,
+            "score_log_loss": 3.07540362928032,
+            "top_score_accuracy": 0.10377358490566038,
+            "home_goal_mae": 0.9754424911538676,
+            "away_goal_mae": 0.8849680385753844,
+            "total_goal_mae": 1.2531781651564058,
+            "over_0.5_brier": 0.006809284233106958,
+            "over_1.5_brier": 0.14675122445371278,
+            "over_2.5_brier": 0.27285255183103124,
+            "over_3.5_brier": 0.24143816803153165,
+            "over_4.5_brier": 0.13250732209661809
+          }
+        },
+        {
+          "period": "first_half",
+          "fixtures": 353,
+          "predicted": 325,
+          "metrics": {
+            "outcome_brier": 0.6776390613700759,
+            "outcome_log_loss": 1.1313556366211637,
+            "btts_brier": 0.16802718896637378,
+            "score_log_loss": 2.252766369302658,
+            "top_score_accuracy": 0.2553846153846154,
+            "home_goal_mae": 0.7163386590400992,
+            "away_goal_mae": 0.608506155351625,
+            "total_goal_mae": 0.9008311272294243,
+            "over_0.5_brier": 0.19645125705779115,
+            "over_1.5_brier": 0.26664536562133245,
+            "over_2.5_brier": 0.12628684956211636,
+            "over_3.5_brier": 0.028789015680347682,
+            "over_4.5_brier": 0.004017966857847478
+          }
+        }
+      ]
+    },
+    {
+      "league": "es",
+      "periods": [
+        {
+          "period": "full_time",
+          "fixtures": 365,
+          "predicted": 327,
+          "metrics": {
+            "outcome_brier": 0.614797348439256,
+            "outcome_log_loss": 1.0332870015759024,
+            "btts_brier": 0.261938665206198,
+            "score_log_loss": 2.918487787031108,
+            "top_score_accuracy": 0.14678899082568808,
+            "home_goal_mae": 0.9186358497314018,
+            "away_goal_mae": 0.8084935059298763,
+            "total_goal_mae": 1.2169512234215496,
+            "over_0.5_brier": 0.009597977753001327,
+            "over_1.5_brier": 0.1666020277595942,
+            "over_2.5_brier": 0.2575630926064441,
+            "over_3.5_brier": 0.20581781701240323,
+            "over_4.5_brier": 0.12465161029155457
+          }
+        },
+        {
+          "period": "first_half",
+          "fixtures": 365,
+          "predicted": 338,
+          "metrics": {
+            "outcome_brier": 0.6965289259794858,
+            "outcome_log_loss": 1.1746887661133136,
+            "btts_brier": 0.16482042482026113,
+            "score_log_loss": 2.2794545177698238,
+            "top_score_accuracy": 0.2485207100591716,
+            "home_goal_mae": 0.6997412990685423,
+            "away_goal_mae": 0.5994413882091445,
+            "total_goal_mae": 0.89647332660636,
+            "over_0.5_brier": 0.22612225697472815,
+            "over_1.5_brier": 0.24168048304807094,
+            "over_2.5_brier": 0.10322960621729742,
+            "over_3.5_brier": 0.04193323671106283,
+            "over_4.5_brier": 0.009123247689419972
+          }
+        }
+      ]
+    },
+    {
+      "league": "de",
+      "periods": [
+        {
+          "period": "full_time",
+          "fixtures": 294,
+          "predicted": 255,
+          "metrics": {
+            "outcome_brier": 0.6275905483697145,
+            "outcome_log_loss": 1.0570536217388184,
+            "btts_brier": 0.2643049058550546,
+            "score_log_loss": 3.2834405460922773,
+            "top_score_accuracy": 0.054901960784313725,
+            "home_goal_mae": 1.1172251796629136,
+            "away_goal_mae": 0.9888597465476422,
+            "total_goal_mae": 1.4376008852495292,
+            "over_0.5_brier": 0.004360634653755775,
+            "over_1.5_brier": 0.12955594256720557,
+            "over_2.5_brier": 0.2568389948582393,
+            "over_3.5_brier": 0.27592357795877337,
+            "over_4.5_brier": 0.17362703914028718
+          }
+        },
+        {
+          "period": "first_half",
+          "fixtures": 294,
+          "predicted": 275,
+          "metrics": {
+            "outcome_brier": 0.68525145618165,
+            "outcome_log_loss": 1.266856937655528,
+            "btts_brier": 0.18538777068090984,
+            "score_log_loss": 2.5615357750150474,
+            "top_score_accuracy": 0.19636363636363635,
+            "home_goal_mae": 0.7473309989840087,
+            "away_goal_mae": 0.6996960648148158,
+            "total_goal_mae": 0.9591056703957772,
+            "over_0.5_brier": 0.17717960925210774,
+            "over_1.5_brier": 0.25920936221888785,
+            "over_2.5_brier": 0.15321875102365656,
+            "over_3.5_brier": 0.0653770489454707,
+            "over_4.5_brier": 0.012907506983398698
+          }
+        }
+      ]
+    },
+    {
+      "league": "it",
+      "periods": [
+        {
+          "period": "full_time",
+          "fixtures": 344,
+          "predicted": 311,
+          "metrics": {
+            "outcome_brier": 0.5979369743040893,
+            "outcome_log_loss": 1.0156577596343321,
+            "btts_brier": 0.2696419877906629,
+            "score_log_loss": 2.928765569255155,
+            "top_score_accuracy": 0.0932475884244373,
+            "home_goal_mae": 0.9143779655766435,
+            "away_goal_mae": 0.8677629097579128,
+            "total_goal_mae": 1.2068861676255174,
+            "over_0.5_brier": 0.01300239737789756,
+            "over_1.5_brier": 0.20423522597533592,
+            "over_2.5_brier": 0.27058384844057193,
+            "over_3.5_brier": 0.1979426026164146,
+            "over_4.5_brier": 0.10067218114494343
+          }
+        },
+        {
+          "period": "first_half",
+          "fixtures": 344,
+          "predicted": 316,
+          "metrics": {
+            "outcome_brier": 0.7031007849820133,
+            "outcome_log_loss": 1.3944093032575784,
+            "btts_brier": 0.15650612621756776,
+            "score_log_loss": 2.3509601051325153,
+            "top_score_accuracy": 0.26582278481012656,
+            "home_goal_mae": 0.6408055110816216,
+            "away_goal_mae": 0.6144316156968801,
+            "total_goal_mae": 0.8376097113066634,
+            "over_0.5_brier": 0.225298024678229,
+            "over_1.5_brier": 0.23597851558422026,
+            "over_2.5_brier": 0.09922480124399212,
+            "over_3.5_brier": 0.017821063778414907,
+            "over_4.5_brier": 0.0033694577229854603
+          }
+        }
+      ]
+    },
+    {
+      "league": "fr",
+      "periods": [
+        {
+          "period": "full_time",
+          "fixtures": 282,
+          "predicted": 243,
+          "metrics": {
+            "outcome_brier": 0.5899791142659706,
+            "outcome_log_loss": 1.0014740075397848,
+            "btts_brier": 0.2701650015333698,
+            "score_log_loss": 3.2362790787853783,
+            "top_score_accuracy": 0.102880658436214,
+            "home_goal_mae": 1.1135725024604657,
+            "away_goal_mae": 1.0328550014494924,
+            "total_goal_mae": 1.4665812672524285,
+            "over_0.5_brier": 0.0055104217608911215,
+            "over_1.5_brier": 0.19855789186886033,
+            "over_2.5_brier": 0.2695671243993198,
+            "over_3.5_brier": 0.24687313182430645,
+            "over_4.5_brier": 0.16862340432872505
+          }
+        },
+        {
+          "period": "first_half",
+          "fixtures": 282,
+          "predicted": 254,
+          "metrics": {
+            "outcome_brier": 0.7223233795944537,
+            "outcome_log_loss": 1.2009449195165127,
+            "btts_brier": 0.18012864388865127,
+            "score_log_loss": 2.4809320491202156,
+            "top_score_accuracy": 0.20078740157480315,
+            "home_goal_mae": 0.6837066159337029,
+            "away_goal_mae": 0.7255795462265845,
+            "total_goal_mae": 0.9761431762658179,
+            "over_0.5_brier": 0.22651229169412418,
+            "over_1.5_brier": 0.2580424411033438,
+            "over_2.5_brier": 0.13388870748294834,
+            "over_3.5_brier": 0.04989542144763891,
+            "over_4.5_brier": 0.016597339314055697
+          }
+        }
+      ]
+    }
+  ]
+}

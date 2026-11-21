@@ -1,0 +1,3643 @@
+{
+  "source": "https://github.com/openfootball/football.json",
+  "period": "ht",
+  "split": {
+    "training_before": "2025-01-01",
+    "validation_from": "2025-01-01",
+    "test_from": "2025-07-01",
+    "test_before": "9999-01-01"
+  },
+  "reports": [
+    {
+      "league": "tr.1",
+      "hashes": {
+        "2018-19": "407a582676db6d428d386e9c8c111c28fb20f3680fd257f55262cb3da6b317db",
+        "2019-20": "c3a614f624716930f46df0f32b535c2de0576a3c6dca8e0c9b817097aadf641e",
+        "2020-21": "d866888f862353a6858321c03159f9b84e880608c716cf8a29700acad1804ec9",
+        "2024-25": "6bfa0c16f87ea59ab79c60873ad3d3c0288e3198e4d6d0f56a2ebcb117e708c4",
+        "2025-26": "31236abf06ccb59fdcdd7105138810157e3312faa29070ec9fbebf6f87c29ea2"
+      },
+      "training": 1093,
+      "validation": 173,
+      "temperature": 1.5,
+      "mixWeight": 0.5,
+      "testFixtures": 90,
+      "comparisonFixtures": 80,
+      "belowVenueMinimum": 10,
+      "results": {
+        "frequency": {
+          "coverage": 1,
+          "count": 80,
+          "brier": 0.6835047088084314,
+          "logLoss": 1.125697165279257,
+          "ece": 0.06804618070097282,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 80,
+              "confidence": 0.3805461807009728,
+              "observed": 0.3125
+            }
+          ],
+          "bttsBrier": 0.1461794378201385,
+          "over25Brier": 0.1276092790479482,
+          "scoreLogLoss": 2.137558051631434,
+          "exactScoreAccuracy": 0.2125
+        },
+        "current": {
+          "coverage": 0.8888888888888888,
+          "count": 80,
+          "brier": 0.6915964336781324,
+          "logLoss": 1.1710191750272476,
+          "ece": 0.17740233902002406,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 9,
+              "confidence": 0.3744306377985013,
+              "observed": 0.2222222222222222
+            },
+            {
+              "lower": 0.4,
+              "count": 32,
+              "confidence": 0.4584653239006957,
+              "observed": 0.28125
+            },
+            {
+              "lower": 0.5,
+              "count": 26,
+              "confidence": 0.5394294323740708,
+              "observed": 0.34615384615384615
+            },
+            {
+              "lower": 0.6,
+              "count": 7,
+              "confidence": 0.6307927772291456,
+              "observed": 0.42857142857142855
+            },
+            {
+              "lower": 0.7,
+              "count": 3,
+              "confidence": 0.7326371212721902,
+              "observed": 0.6666666666666666
+            },
+            {
+              "lower": 0.8,
+              "count": 3,
+              "confidence": 0.83759832348224,
+              "observed": 0.6666666666666666
+            }
+          ],
+          "bttsBrier": 0.1628940238111754,
+          "over25Brier": 0.1578261066967814,
+          "scoreLogLoss": 2.3470419733943833,
+          "exactScoreAccuracy": 0.225
+        },
+        "window5": {
+          "coverage": 0.8888888888888888,
+          "count": 80,
+          "brier": 0.7620323131103324,
+          "logLoss": 3.2389879691642163,
+          "ece": 0.19946121002160222,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 1,
+              "confidence": 0.37046026166739526,
+              "observed": 0
+            },
+            {
+              "lower": 0.4,
+              "count": 29,
+              "confidence": 0.45346457844253024,
+              "observed": 0.3793103448275862
+            },
+            {
+              "lower": 0.5,
+              "count": 21,
+              "confidence": 0.5474392852021301,
+              "observed": 0.3333333333333333
+            },
+            {
+              "lower": 0.6,
+              "count": 10,
+              "confidence": 0.6515792220589216,
+              "observed": 0.4
+            },
+            {
+              "lower": 0.7,
+              "count": 9,
+              "confidence": 0.7470980542277401,
+              "observed": 0.4444444444444444
+            },
+            {
+              "lower": 0.8,
+              "count": 8,
+              "confidence": 0.8498060093017294,
+              "observed": 0.5
+            },
+            {
+              "lower": 0.9,
+              "count": 2,
+              "confidence": 0.9508079964649802,
+              "observed": 0.5
+            }
+          ],
+          "bttsBrier": 0.1866575606997138,
+          "over25Brier": 0.1699863416075938,
+          "scoreLogLoss": 5.561955303562856,
+          "exactScoreAccuracy": 0.25
+        },
+        "window10": {
+          "coverage": 0.8888888888888888,
+          "count": 80,
+          "brier": 0.6915963502154289,
+          "logLoss": 1.17101907966325,
+          "ece": 0.17740260738162134,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 9,
+              "confidence": 0.3744306407717135,
+              "observed": 0.2222222222222222
+            },
+            {
+              "lower": 0.4,
+              "count": 32,
+              "confidence": 0.45846532635675474,
+              "observed": 0.28125
+            },
+            {
+              "lower": 0.5,
+              "count": 26,
+              "confidence": 0.5394294567058074,
+              "observed": 0.34615384615384615
+            },
+            {
+              "lower": 0.6,
+              "count": 7,
+              "confidence": 0.6307931269477381,
+              "observed": 0.42857142857142855
+            },
+            {
+              "lower": 0.7,
+              "count": 3,
+              "confidence": 0.7326379864504234,
+              "observed": 0.6666666666666666
+            },
+            {
+              "lower": 0.8,
+              "count": 3,
+              "confidence": 0.8376035526105672,
+              "observed": 0.6666666666666666
+            }
+          ],
+          "bttsBrier": 0.1628940484637696,
+          "over25Brier": 0.15782680724277096,
+          "scoreLogLoss": 2.3470434021859066,
+          "exactScoreAccuracy": 0.225
+        },
+        "window15": {
+          "coverage": 0.8888888888888888,
+          "count": 80,
+          "brier": 0.6925701885129605,
+          "logLoss": 1.1607471888476626,
+          "ece": 0.14337017673155344,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 10,
+              "confidence": 0.3797017927257382,
+              "observed": 0.3
+            },
+            {
+              "lower": 0.4,
+              "count": 30,
+              "confidence": 0.45539259482789457,
+              "observed": 0.43333333333333335
+            },
+            {
+              "lower": 0.5,
+              "count": 25,
+              "confidence": 0.5430385084432242,
+              "observed": 0.24
+            },
+            {
+              "lower": 0.6,
+              "count": 9,
+              "confidence": 0.6594236937896192,
+              "observed": 0.4444444444444444
+            },
+            {
+              "lower": 0.7,
+              "count": 5,
+              "confidence": 0.7390153847923353,
+              "observed": 0.8
+            },
+            {
+              "lower": 0.8,
+              "count": 1,
+              "confidence": 0.8048806647954478,
+              "observed": 1
+            }
+          ],
+          "bttsBrier": 0.1545790489513017,
+          "over25Brier": 0.1436392751901854,
+          "scoreLogLoss": 2.2347261828881315,
+          "exactScoreAccuracy": 0.2375
+        },
+        "window20": {
+          "coverage": 0.8888888888888888,
+          "count": 80,
+          "brier": 0.6659842470545385,
+          "logLoss": 1.1074710289067786,
+          "ece": 0.16693289543244666,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 14,
+              "confidence": 0.38061628602075676,
+              "observed": 0.14285714285714285
+            },
+            {
+              "lower": 0.4,
+              "count": 39,
+              "confidence": 0.44751131824984836,
+              "observed": 0.358974358974359
+            },
+            {
+              "lower": 0.5,
+              "count": 14,
+              "confidence": 0.5467040882332219,
+              "observed": 0.2857142857142857
+            },
+            {
+              "lower": 0.6,
+              "count": 12,
+              "confidence": 0.6486540787491867,
+              "observed": 0.8333333333333334
+            },
+            {
+              "lower": 0.7,
+              "count": 1,
+              "confidence": 0.7030539282861866,
+              "observed": 0
+            }
+          ],
+          "bttsBrier": 0.1564607605679283,
+          "over25Brier": 0.13972452614501882,
+          "scoreLogLoss": 2.175850098459242,
+          "exactScoreAccuracy": 0.225
+        },
+        "recency": {
+          "coverage": 0.8888888888888888,
+          "count": 80,
+          "brier": 0.677469263173054,
+          "logLoss": 1.1305346550998838,
+          "ece": 0.12366316897066332,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 7,
+              "confidence": 0.37117826415628646,
+              "observed": 0.42857142857142855
+            },
+            {
+              "lower": 0.4,
+              "count": 41,
+              "confidence": 0.4477342752407431,
+              "observed": 0.36585365853658536
+            },
+            {
+              "lower": 0.5,
+              "count": 21,
+              "confidence": 0.5399709631423439,
+              "observed": 0.2857142857142857
+            },
+            {
+              "lower": 0.6,
+              "count": 5,
+              "confidence": 0.6359134452360039,
+              "observed": 0.6
+            },
+            {
+              "lower": 0.7,
+              "count": 6,
+              "confidence": 0.7307935617154399,
+              "observed": 0.8333333333333334
+            }
+          ],
+          "bttsBrier": 0.15861161737447144,
+          "over25Brier": 0.14682132729577252,
+          "scoreLogLoss": 2.2384774988505485,
+          "exactScoreAccuracy": 0.225
+        },
+        "shrinkage": {
+          "coverage": 0.8888888888888888,
+          "count": 80,
+          "brier": 0.6612778984986263,
+          "logLoss": 1.095574533224843,
+          "ece": 0.12127629837561575,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 22,
+              "confidence": 0.38209765850118954,
+              "observed": 0.2727272727272727
+            },
+            {
+              "lower": 0.4,
+              "count": 38,
+              "confidence": 0.44105620566443504,
+              "observed": 0.3157894736842105
+            },
+            {
+              "lower": 0.5,
+              "count": 17,
+              "confidence": 0.5473585806226337,
+              "observed": 0.6470588235294118
+            },
+            {
+              "lower": 0.6,
+              "count": 3,
+              "confidence": 0.61363847945311,
+              "observed": 0.3333333333333333
+            }
+          ],
+          "bttsBrier": 0.1538424042681709,
+          "over25Brier": 0.13532901732685637,
+          "scoreLogLoss": 2.1426550214815534,
+          "exactScoreAccuracy": 0.25
+        },
+        "opponent": {
+          "coverage": 0.8888888888888888,
+          "count": 80,
+          "brier": 0.6640565344753206,
+          "logLoss": 1.0994485246171024,
+          "ece": 0.09213815304342338,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 20,
+              "confidence": 0.38090255430204023,
+              "observed": 0.25
+            },
+            {
+              "lower": 0.4,
+              "count": 42,
+              "confidence": 0.43661025692932026,
+              "observed": 0.35714285714285715
+            },
+            {
+              "lower": 0.5,
+              "count": 17,
+              "confidence": 0.5404616817438492,
+              "observed": 0.5882352941176471
+            },
+            {
+              "lower": 0.6,
+              "count": 1,
+              "confidence": 0.603218956047051,
+              "observed": 0
+            }
+          ],
+          "bttsBrier": 0.153729418793254,
+          "over25Brier": 0.13450054975564676,
+          "scoreLogLoss": 2.1441217120162306,
+          "exactScoreAccuracy": 0.2375
+        },
+        "dixon_coles": {
+          "coverage": 0.8888888888888888,
+          "count": 80,
+          "brier": 0.6632024605242377,
+          "logLoss": 1.0992281314020798,
+          "ece": 0.09757650265406705,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 13,
+              "confidence": 0.3789584384003551,
+              "observed": 0.15384615384615385
+            },
+            {
+              "lower": 0.4,
+              "count": 48,
+              "confidence": 0.43727178657203886,
+              "observed": 0.3541666666666667
+            },
+            {
+              "lower": 0.5,
+              "count": 17,
+              "confidence": 0.5491120204007264,
+              "observed": 0.5882352941176471
+            },
+            {
+              "lower": 0.6,
+              "count": 2,
+              "confidence": 0.6127595522376142,
+              "observed": 0.5
+            }
+          ],
+          "bttsBrier": 0.15466353373047356,
+          "over25Brier": 0.13532901732685634,
+          "scoreLogLoss": 2.148582405239335,
+          "exactScoreAccuracy": 0.25
+        },
+        "elo": {
+          "coverage": 0.8888888888888888,
+          "count": 80,
+          "brier": 0.6572903896554588,
+          "logLoss": 1.0899084860215493,
+          "ece": 0.12096275116379203,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 19,
+              "confidence": 0.382227445273809,
+              "observed": 0.2631578947368421
+            },
+            {
+              "lower": 0.4,
+              "count": 39,
+              "confidence": 0.44463565221607565,
+              "observed": 0.3076923076923077
+            },
+            {
+              "lower": 0.5,
+              "count": 11,
+              "confidence": 0.54537109114561,
+              "observed": 0.45454545454545453
+            },
+            {
+              "lower": 0.6,
+              "count": 11,
+              "confidence": 0.6295612551025153,
+              "observed": 0.7272727272727273
+            }
+          ],
+          "bttsBrier": 0.15329581584788077,
+          "over25Brier": 0.13677747167150028,
+          "scoreLogLoss": 2.1394048573701547,
+          "exactScoreAccuracy": 0.2375
+        },
+        "dynamic_home": {
+          "coverage": 0.8888888888888888,
+          "count": 80,
+          "brier": 0.6491310129930306,
+          "logLoss": 1.0744912130115347,
+          "ece": 0.1042923019562065,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 20,
+              "confidence": 0.38276029305638,
+              "observed": 0.25
+            },
+            {
+              "lower": 0.4,
+              "count": 41,
+              "confidence": 0.4400551209882571,
+              "observed": 0.36585365853658536
+            },
+            {
+              "lower": 0.5,
+              "count": 15,
+              "confidence": 0.5435944423867487,
+              "observed": 0.4666666666666667
+            },
+            {
+              "lower": 0.6,
+              "count": 4,
+              "confidence": 0.6269995752377131,
+              "observed": 1
+            }
+          ],
+          "bttsBrier": 0.15413055840872408,
+          "over25Brier": 0.134710327239693,
+          "scoreLogLoss": 2.1270320565013803,
+          "exactScoreAccuracy": 0.2375
+        },
+        "league_mix": {
+          "coverage": 0.8888888888888888,
+          "count": 80,
+          "brier": 0.6638058772639214,
+          "logLoss": 1.096273309588782,
+          "ece": 0.04605106684442675,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 42,
+              "confidence": 0.3765744613006302,
+              "observed": 0.42857142857142855
+            },
+            {
+              "lower": 0.4,
+              "count": 37,
+              "confidence": 0.4323513363529816,
+              "observed": 0.40540540540540543
+            },
+            {
+              "lower": 0.5,
+              "count": 1,
+              "confidence": 0.5032132771202905,
+              "observed": 0
+            }
+          ],
+          "bttsBrier": 0.14900240188906563,
+          "over25Brier": 0.13035622273135017,
+          "scoreLogLoss": 2.1163531304258933,
+          "exactScoreAccuracy": 0.2125
+        },
+        "calibrated": {
+          "coverage": 0.8888888888888888,
+          "count": 80,
+          "brier": 0.6512897464161694,
+          "logLoss": 1.0777924710877427,
+          "ece": 0.14808838323885554,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 23,
+              "confidence": 0.3706507291258012,
+              "observed": 0.30434782608695654
+            },
+            {
+              "lower": 0.4,
+              "count": 38,
+              "confidence": 0.43732103679791245,
+              "observed": 0.2631578947368421
+            },
+            {
+              "lower": 0.5,
+              "count": 18,
+              "confidence": 0.5504346954808201,
+              "observed": 0.7222222222222222
+            },
+            {
+              "lower": 0.6,
+              "count": 1,
+              "confidence": 0.6117290095491053,
+              "observed": 0
+            }
+          ],
+          "bttsBrier": 0.17026907512235903,
+          "over25Brier": 0.1594734750705468,
+          "scoreLogLoss": 2.2204219413594406,
+          "exactScoreAccuracy": 0.25
+        }
+      }
+    },
+    {
+      "league": "en.1",
+      "hashes": {
+        "2023-24": "03e13eafbf78dfe00d7e89dd3bf6643986eb6e8fd86c7664aeb8c5bc0bed88d0",
+        "2024-25": "c3d18f552d83382cd4b6b21127adbbfe38e7f8618ddc979fb5404f2df07d0a75",
+        "2025-26": "d6070bdf731546ccf97767f062e8af4bd26dd309dee69f6092025bf9c78f43c1",
+        "2026-27": "bb91f0ab3e8359df163bb9ec98549bfed85e200dd4c32f3bd606b5890d932dd2"
+      },
+      "training": 546,
+      "validation": 187,
+      "temperature": 1.3,
+      "mixWeight": 0.75,
+      "testFixtures": 398,
+      "comparisonFixtures": 370,
+      "belowVenueMinimum": 28,
+      "results": {
+        "frequency": {
+          "coverage": 1,
+          "count": 370,
+          "brier": 0.6593080596504955,
+          "logLoss": 1.0873179798679489,
+          "ece": 0.023555875751666896,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 370,
+              "confidence": 0.3791468269510358,
+              "observed": 0.4027027027027027
+            }
+          ],
+          "bttsBrier": 0.15792083740980334,
+          "over25Brier": 0.11553189287465472,
+          "scoreLogLoss": 2.14762174824845,
+          "exactScoreAccuracy": 0.1972972972972973
+        },
+        "current": {
+          "coverage": 0.9296482412060302,
+          "count": 370,
+          "brier": 0.6780950002572935,
+          "logLoss": 1.1334802758308473,
+          "ece": 0.1437912125004998,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 18,
+              "confidence": 0.3754206021325469,
+              "observed": 0.2222222222222222
+            },
+            {
+              "lower": 0.4,
+              "count": 170,
+              "confidence": 0.4537959749049584,
+              "observed": 0.31176470588235294
+            },
+            {
+              "lower": 0.5,
+              "count": 119,
+              "confidence": 0.5389776441628491,
+              "observed": 0.42016806722689076
+            },
+            {
+              "lower": 0.6,
+              "count": 46,
+              "confidence": 0.6390157560164939,
+              "observed": 0.43478260869565216
+            },
+            {
+              "lower": 0.7,
+              "count": 14,
+              "confidence": 0.7364296663653567,
+              "observed": 0.5714285714285714
+            },
+            {
+              "lower": 0.8,
+              "count": 2,
+              "confidence": 0.8130635641294046,
+              "observed": 1
+            },
+            {
+              "lower": 0.9,
+              "count": 1,
+              "confidence": 0.9170905800377764,
+              "observed": 1
+            }
+          ],
+          "bttsBrier": 0.17208716723789455,
+          "over25Brier": 0.1298709063307188,
+          "scoreLogLoss": 2.2716879100632186,
+          "exactScoreAccuracy": 0.24594594594594596
+        },
+        "window5": {
+          "coverage": 0.9296482412060302,
+          "count": 370,
+          "brier": 0.7385714818847952,
+          "logLoss": 2.3482860275037956,
+          "ece": 0.20006003057353774,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 18,
+              "confidence": 0.3776243641276494,
+              "observed": 0.3888888888888889
+            },
+            {
+              "lower": 0.4,
+              "count": 104,
+              "confidence": 0.45922609975199236,
+              "observed": 0.34615384615384615
+            },
+            {
+              "lower": 0.5,
+              "count": 123,
+              "confidence": 0.5482225742413751,
+              "observed": 0.37398373983739835
+            },
+            {
+              "lower": 0.6,
+              "count": 70,
+              "confidence": 0.6490153226702522,
+              "observed": 0.32857142857142857
+            },
+            {
+              "lower": 0.7,
+              "count": 36,
+              "confidence": 0.7392286142929165,
+              "observed": 0.4166666666666667
+            },
+            {
+              "lower": 0.8,
+              "count": 16,
+              "confidence": 0.8401490667085254,
+              "observed": 0.4375
+            },
+            {
+              "lower": 0.9,
+              "count": 3,
+              "confidence": 0.9523763027295793,
+              "observed": 1
+            }
+          ],
+          "bttsBrier": 0.18011453745247116,
+          "over25Brier": 0.1367038374284956,
+          "scoreLogLoss": 4.3783651530444025,
+          "exactScoreAccuracy": 0.22702702702702704
+        },
+        "window10": {
+          "coverage": 0.9296482412060302,
+          "count": 370,
+          "brier": 0.6780950705902066,
+          "logLoss": 1.1334804184343112,
+          "ece": 0.14379125473839735,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 18,
+              "confidence": 0.37542060238165204,
+              "observed": 0.2222222222222222
+            },
+            {
+              "lower": 0.4,
+              "count": 170,
+              "confidence": 0.4537959901137108,
+              "observed": 0.31176470588235294
+            },
+            {
+              "lower": 0.5,
+              "count": 119,
+              "confidence": 0.5389776663370357,
+              "observed": 0.42016806722689076
+            },
+            {
+              "lower": 0.6,
+              "count": 46,
+              "confidence": 0.6390158492922574,
+              "observed": 0.43478260869565216
+            },
+            {
+              "lower": 0.7,
+              "count": 14,
+              "confidence": 0.736431024279261,
+              "observed": 0.5714285714285714
+            },
+            {
+              "lower": 0.8,
+              "count": 2,
+              "confidence": 0.8130645438001205,
+              "observed": 1
+            },
+            {
+              "lower": 0.9,
+              "count": 1,
+              "confidence": 0.9171015228540602,
+              "observed": 1
+            }
+          ],
+          "bttsBrier": 0.17208717829018647,
+          "over25Brier": 0.12987121762115786,
+          "scoreLogLoss": 2.2716885832718,
+          "exactScoreAccuracy": 0.24594594594594596
+        },
+        "window15": {
+          "coverage": 0.9296482412060302,
+          "count": 370,
+          "brier": 0.6490286176034143,
+          "logLoss": 1.085743721273585,
+          "ece": 0.03905262495293209,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 44,
+              "confidence": 0.3787172258026088,
+              "observed": 0.36363636363636365
+            },
+            {
+              "lower": 0.4,
+              "count": 179,
+              "confidence": 0.4532204983196178,
+              "observed": 0.44692737430167595
+            },
+            {
+              "lower": 0.5,
+              "count": 116,
+              "confidence": 0.5409445603548118,
+              "observed": 0.4482758620689655
+            },
+            {
+              "lower": 0.6,
+              "count": 23,
+              "confidence": 0.6474684535912932,
+              "observed": 0.6086956521739131
+            },
+            {
+              "lower": 0.7,
+              "count": 8,
+              "confidence": 0.7522625830375749,
+              "observed": 0.625
+            }
+          ],
+          "bttsBrier": 0.16665979806847567,
+          "over25Brier": 0.12239748857269685,
+          "scoreLogLoss": 2.1745693972384155,
+          "exactScoreAccuracy": 0.2648648648648649
+        },
+        "window20": {
+          "coverage": 0.9296482412060302,
+          "count": 370,
+          "brier": 0.6394871430897353,
+          "logLoss": 1.0657482391956343,
+          "ece": 0.03300253791327398,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 53,
+              "confidence": 0.3821177407927239,
+              "observed": 0.32075471698113206
+            },
+            {
+              "lower": 0.4,
+              "count": 190,
+              "confidence": 0.4515272270109965,
+              "observed": 0.4631578947368421
+            },
+            {
+              "lower": 0.5,
+              "count": 98,
+              "confidence": 0.5386880304272771,
+              "observed": 0.5
+            },
+            {
+              "lower": 0.6,
+              "count": 25,
+              "confidence": 0.6361733329806067,
+              "observed": 0.52
+            },
+            {
+              "lower": 0.7,
+              "count": 4,
+              "confidence": 0.7367221021004966,
+              "observed": 0.75
+            }
+          ],
+          "bttsBrier": 0.1633264158465022,
+          "over25Brier": 0.12000671695008927,
+          "scoreLogLoss": 2.1312494127359702,
+          "exactScoreAccuracy": 0.25135135135135134
+        },
+        "recency": {
+          "coverage": 0.9296482412060302,
+          "count": 370,
+          "brier": 0.659172233923394,
+          "logLoss": 1.0995136299949582,
+          "ece": 0.08552826855376304,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 35,
+              "confidence": 0.3838075953664939,
+              "observed": 0.2571428571428571
+            },
+            {
+              "lower": 0.4,
+              "count": 195,
+              "confidence": 0.4551414474490339,
+              "observed": 0.38974358974358975
+            },
+            {
+              "lower": 0.5,
+              "count": 98,
+              "confidence": 0.5431841270849542,
+              "observed": 0.4489795918367347
+            },
+            {
+              "lower": 0.6,
+              "count": 34,
+              "confidence": 0.6439508167391235,
+              "observed": 0.5
+            },
+            {
+              "lower": 0.7,
+              "count": 7,
+              "confidence": 0.7420307350723518,
+              "observed": 0.7142857142857143
+            },
+            {
+              "lower": 0.8,
+              "count": 1,
+              "confidence": 0.8609760944587368,
+              "observed": 1
+            }
+          ],
+          "bttsBrier": 0.1673069149816344,
+          "over25Brier": 0.12458287381469017,
+          "scoreLogLoss": 2.1968150804171653,
+          "exactScoreAccuracy": 0.24594594594594596
+        },
+        "shrinkage": {
+          "coverage": 0.9296482412060302,
+          "count": 370,
+          "brier": 0.6350728419313565,
+          "logLoss": 1.0525216368815808,
+          "ece": 0.01085862394035465,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 69,
+              "confidence": 0.38014393929259627,
+              "observed": 0.4057971014492754
+            },
+            {
+              "lower": 0.4,
+              "count": 244,
+              "confidence": 0.44413721043797766,
+              "observed": 0.4385245901639344
+            },
+            {
+              "lower": 0.5,
+              "count": 50,
+              "confidence": 0.5339529252199157,
+              "observed": 0.54
+            },
+            {
+              "lower": 0.6,
+              "count": 7,
+              "confidence": 0.6320300595357723,
+              "observed": 0.7142857142857143
+            }
+          ],
+          "bttsBrier": 0.1603978230020154,
+          "over25Brier": 0.1174554786896457,
+          "scoreLogLoss": 2.091092265621829,
+          "exactScoreAccuracy": 0.24324324324324326
+        },
+        "opponent": {
+          "coverage": 0.9296482412060302,
+          "count": 370,
+          "brier": 0.6374448160097343,
+          "logLoss": 1.0553817426980958,
+          "ece": 0.014108791325112852,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 70,
+              "confidence": 0.3805370696197988,
+              "observed": 0.4142857142857143
+            },
+            {
+              "lower": 0.4,
+              "count": 251,
+              "confidence": 0.4436118094526138,
+              "observed": 0.4342629482071713
+            },
+            {
+              "lower": 0.5,
+              "count": 46,
+              "confidence": 0.5303277710861971,
+              "observed": 0.5217391304347826
+            },
+            {
+              "lower": 0.6,
+              "count": 3,
+              "confidence": 0.6279313262978207,
+              "observed": 0.6666666666666666
+            }
+          ],
+          "bttsBrier": 0.16037252509331051,
+          "over25Brier": 0.11709732008928297,
+          "scoreLogLoss": 2.0922704090652,
+          "exactScoreAccuracy": 0.23243243243243245
+        },
+        "dixon_coles": {
+          "coverage": 0.9296482412060302,
+          "count": 370,
+          "brier": 0.6374775200611309,
+          "logLoss": 1.0561646568232743,
+          "ece": 0.02965141633970595,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 49,
+              "confidence": 0.37970101656425065,
+              "observed": 0.4897959183673469
+            },
+            {
+              "lower": 0.4,
+              "count": 266,
+              "confidence": 0.4453762207220665,
+              "observed": 0.42857142857142855
+            },
+            {
+              "lower": 0.5,
+              "count": 48,
+              "confidence": 0.531361907217417,
+              "observed": 0.5416666666666666
+            },
+            {
+              "lower": 0.6,
+              "count": 7,
+              "confidence": 0.6269041868991695,
+              "observed": 0.7142857142857143
+            }
+          ],
+          "bttsBrier": 0.16069900832264733,
+          "over25Brier": 0.1174554786896457,
+          "scoreLogLoss": 2.0948650719164292,
+          "exactScoreAccuracy": 0.24054054054054055
+        },
+        "elo": {
+          "coverage": 0.9296482412060302,
+          "count": 370,
+          "brier": 0.6320422130135178,
+          "logLoss": 1.048938717621423,
+          "ece": 0.019426758895175214,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 61,
+              "confidence": 0.3808645873235194,
+              "observed": 0.4098360655737705
+            },
+            {
+              "lower": 0.4,
+              "count": 236,
+              "confidence": 0.44606644094181686,
+              "observed": 0.4364406779661017
+            },
+            {
+              "lower": 0.5,
+              "count": 56,
+              "confidence": 0.5389696880529882,
+              "observed": 0.5714285714285714
+            },
+            {
+              "lower": 0.6,
+              "count": 14,
+              "confidence": 0.6296296095150806,
+              "observed": 0.7142857142857143
+            },
+            {
+              "lower": 0.7,
+              "count": 3,
+              "confidence": 0.7153592066197358,
+              "observed": 0.6666666666666666
+            }
+          ],
+          "bttsBrier": 0.1602580245863727,
+          "over25Brier": 0.11811371818007181,
+          "scoreLogLoss": 2.091105938579269,
+          "exactScoreAccuracy": 0.25675675675675674
+        },
+        "dynamic_home": {
+          "coverage": 0.9296482412060302,
+          "count": 370,
+          "brier": 0.6371557700754381,
+          "logLoss": 1.0602813374917865,
+          "ece": 0.02514693833766314,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 65,
+              "confidence": 0.3814954700719298,
+              "observed": 0.4307692307692308
+            },
+            {
+              "lower": 0.4,
+              "count": 228,
+              "confidence": 0.4446639986107038,
+              "observed": 0.4517543859649123
+            },
+            {
+              "lower": 0.5,
+              "count": 61,
+              "confidence": 0.5418680097404106,
+              "observed": 0.4918032786885246
+            },
+            {
+              "lower": 0.6,
+              "count": 13,
+              "confidence": 0.6359404789781915,
+              "observed": 0.5384615384615384
+            },
+            {
+              "lower": 0.7,
+              "count": 3,
+              "confidence": 0.721263200656578,
+              "observed": 0.6666666666666666
+            }
+          ],
+          "bttsBrier": 0.16028125426580334,
+          "over25Brier": 0.11762435551149272,
+          "scoreLogLoss": 2.1012433637918027,
+          "exactScoreAccuracy": 0.25675675675675674
+        },
+        "league_mix": {
+          "coverage": 0.9296482412060302,
+          "count": 370,
+          "brier": 0.6355966705727589,
+          "logLoss": 1.051718202336505,
+          "ece": 0.03796293263588574,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 108,
+              "confidence": 0.37997912702875075,
+              "observed": 0.3611111111111111
+            },
+            {
+              "lower": 0.4,
+              "count": 240,
+              "confidence": 0.43436116535085084,
+              "observed": 0.475
+            },
+            {
+              "lower": 0.5,
+              "count": 21,
+              "confidence": 0.5303982083484685,
+              "observed": 0.6190476190476191
+            },
+            {
+              "lower": 0.6,
+              "count": 1,
+              "confidence": 0.6064185843053247,
+              "observed": 1
+            }
+          ],
+          "bttsBrier": 0.15890712056094156,
+          "over25Brier": 0.11617845122302355,
+          "scoreLogLoss": 2.0798798877918667,
+          "exactScoreAccuracy": 0.23513513513513515
+        },
+        "calibrated": {
+          "coverage": 0.9296482412060302,
+          "count": 370,
+          "brier": 0.6307453570952577,
+          "logLoss": 1.045081983433394,
+          "ece": 0.037266159355053806,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 134,
+              "confidence": 0.37580087626583925,
+              "observed": 0.41044776119402987
+            },
+            {
+              "lower": 0.4,
+              "count": 180,
+              "confidence": 0.440714695714024,
+              "observed": 0.4888888888888889
+            },
+            {
+              "lower": 0.5,
+              "count": 52,
+              "confidence": 0.538280146227271,
+              "observed": 0.5384615384615384
+            },
+            {
+              "lower": 0.6,
+              "count": 4,
+              "confidence": 0.6337476966663027,
+              "observed": 0.75
+            }
+          ],
+          "bttsBrier": 0.1645801034126136,
+          "over25Brier": 0.12668769079300174,
+          "scoreLogLoss": 2.1193802433345974,
+          "exactScoreAccuracy": 0.24324324324324326
+        }
+      }
+    },
+    {
+      "league": "es.1",
+      "hashes": {
+        "2023-24": "e4c1e1a958f224ba3c815c898982ab495b9577315cc58ee7a5e7b532960f738b",
+        "2024-25": "da5bfa1b3634e1039d9e71aec50bdc847f8761189e3de235a4e730e0dc64ca38",
+        "2025-26": "b40397d8e62c640138548d57a1a9f76150549213d2a07fcbbb90ed0eabc6ccea",
+        "2026-27": "4b1a9906e3f2b279a1f25497a38f2f58e21ec19ea726b882fa646da7c07bc0e0"
+      },
+      "training": 517,
+      "validation": 182,
+      "temperature": 1.15,
+      "mixWeight": 0.5,
+      "testFixtures": 429,
+      "comparisonFixtures": 383,
+      "belowVenueMinimum": 46,
+      "results": {
+        "frequency": {
+          "coverage": 1,
+          "count": 383,
+          "brier": 0.6507940348229296,
+          "logLoss": 1.0734856078647537,
+          "ece": 0.014582692930792557,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 383,
+              "confidence": 0.39272801203004293,
+              "observed": 0.4073107049608355
+            }
+          ],
+          "bttsBrier": 0.15612506111534094,
+          "over25Brier": 0.09390612396042221,
+          "scoreLogLoss": 2.0338685067762547,
+          "exactScoreAccuracy": 0.2793733681462141
+        },
+        "current": {
+          "coverage": 0.8927738927738927,
+          "count": 383,
+          "brier": 0.694551361768441,
+          "logLoss": 1.169095257911224,
+          "ece": 0.1525317130028717,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 29,
+              "confidence": 0.38459358791588183,
+              "observed": 0.3793103448275862
+            },
+            {
+              "lower": 0.4,
+              "count": 143,
+              "confidence": 0.45498541233198864,
+              "observed": 0.34965034965034963
+            },
+            {
+              "lower": 0.5,
+              "count": 105,
+              "confidence": 0.5475546159581051,
+              "observed": 0.3238095238095238
+            },
+            {
+              "lower": 0.6,
+              "count": 65,
+              "confidence": 0.6481056774200639,
+              "observed": 0.5230769230769231
+            },
+            {
+              "lower": 0.7,
+              "count": 29,
+              "confidence": 0.7428477745684795,
+              "observed": 0.5172413793103449
+            },
+            {
+              "lower": 0.8,
+              "count": 12,
+              "confidence": 0.8367357413894844,
+              "observed": 0.4166666666666667
+            }
+          ],
+          "bttsBrier": 0.1629772297485985,
+          "over25Brier": 0.10063460652208521,
+          "scoreLogLoss": 2.280252568817938,
+          "exactScoreAccuracy": 0.2506527415143603
+        },
+        "window5": {
+          "coverage": 0.8927738927738927,
+          "count": 383,
+          "brier": 0.7262784817699539,
+          "logLoss": 2.5212060243662826,
+          "ece": 0.20813009740551253,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 18,
+              "confidence": 0.38109992152723227,
+              "observed": 0.3888888888888889
+            },
+            {
+              "lower": 0.4,
+              "count": 97,
+              "confidence": 0.4606301403363411,
+              "observed": 0.26804123711340205
+            },
+            {
+              "lower": 0.5,
+              "count": 111,
+              "confidence": 0.5493689798246942,
+              "observed": 0.3783783783783784
+            },
+            {
+              "lower": 0.6,
+              "count": 64,
+              "confidence": 0.6475800383357905,
+              "observed": 0.453125
+            },
+            {
+              "lower": 0.7,
+              "count": 58,
+              "confidence": 0.7432072696970551,
+              "observed": 0.46551724137931033
+            },
+            {
+              "lower": 0.8,
+              "count": 22,
+              "confidence": 0.8528126182757699,
+              "observed": 0.45454545454545453
+            },
+            {
+              "lower": 0.9,
+              "count": 13,
+              "confidence": 0.9691941402037387,
+              "observed": 0.6153846153846154
+            }
+          ],
+          "bttsBrier": 0.1729642993283475,
+          "over25Brier": 0.11156805586480449,
+          "scoreLogLoss": 4.909769508526643,
+          "exactScoreAccuracy": 0.26370757180156656
+        },
+        "window10": {
+          "coverage": 0.8927738927738927,
+          "count": 383,
+          "brier": 0.6945518509972076,
+          "logLoss": 1.169096315319557,
+          "ece": 0.15253198025542059,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 29,
+              "confidence": 0.3845935922629795,
+              "observed": 0.3793103448275862
+            },
+            {
+              "lower": 0.4,
+              "count": 143,
+              "confidence": 0.4549854140762824,
+              "observed": 0.34965034965034963
+            },
+            {
+              "lower": 0.5,
+              "count": 105,
+              "confidence": 0.5475546219012688,
+              "observed": 0.3238095238095238
+            },
+            {
+              "lower": 0.6,
+              "count": 65,
+              "confidence": 0.648105771264087,
+              "observed": 0.5230769230769231
+            },
+            {
+              "lower": 0.7,
+              "count": 29,
+              "confidence": 0.7428488927890737,
+              "observed": 0.5172413793103449
+            },
+            {
+              "lower": 0.8,
+              "count": 12,
+              "confidence": 0.836740977217441,
+              "observed": 0.4166666666666667
+            }
+          ],
+          "bttsBrier": 0.16297721784610938,
+          "over25Brier": 0.10063516173848121,
+          "scoreLogLoss": 2.280254021818517,
+          "exactScoreAccuracy": 0.2506527415143603
+        },
+        "window15": {
+          "coverage": 0.8927738927738927,
+          "count": 383,
+          "brier": 0.6616205238802854,
+          "logLoss": 1.105174608260329,
+          "ece": 0.1051609310013578,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 22,
+              "confidence": 0.3699304618647299,
+              "observed": 0.3181818181818182
+            },
+            {
+              "lower": 0.4,
+              "count": 175,
+              "confidence": 0.4530972384430951,
+              "observed": 0.36
+            },
+            {
+              "lower": 0.5,
+              "count": 106,
+              "confidence": 0.5483852928295244,
+              "observed": 0.44339622641509435
+            },
+            {
+              "lower": 0.6,
+              "count": 58,
+              "confidence": 0.6428398627793067,
+              "observed": 0.46551724137931033
+            },
+            {
+              "lower": 0.7,
+              "count": 18,
+              "confidence": 0.726967886635024,
+              "observed": 0.7222222222222222
+            },
+            {
+              "lower": 0.8,
+              "count": 4,
+              "confidence": 0.8367936610986342,
+              "observed": 0.5
+            }
+          ],
+          "bttsBrier": 0.16174447933524702,
+          "over25Brier": 0.09629924403564602,
+          "scoreLogLoss": 2.117238562391949,
+          "exactScoreAccuracy": 0.2950391644908616
+        },
+        "window20": {
+          "coverage": 0.8927738927738927,
+          "count": 383,
+          "brier": 0.6493373328156001,
+          "logLoss": 1.0761237172552853,
+          "ece": 0.0715660691991839,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 26,
+              "confidence": 0.382181974142961,
+              "observed": 0.34615384615384615
+            },
+            {
+              "lower": 0.4,
+              "count": 184,
+              "confidence": 0.45291318066874175,
+              "observed": 0.4076086956521739
+            },
+            {
+              "lower": 0.5,
+              "count": 119,
+              "confidence": 0.5461396528507748,
+              "observed": 0.42016806722689076
+            },
+            {
+              "lower": 0.6,
+              "count": 43,
+              "confidence": 0.6423289017354392,
+              "observed": 0.6046511627906976
+            },
+            {
+              "lower": 0.7,
+              "count": 9,
+              "confidence": 0.7569921574659612,
+              "observed": 0.6666666666666666
+            },
+            {
+              "lower": 0.8,
+              "count": 2,
+              "confidence": 0.8566785257311185,
+              "observed": 0.5
+            }
+          ],
+          "bttsBrier": 0.1610646433123762,
+          "over25Brier": 0.09430141035395277,
+          "scoreLogLoss": 2.071537318171113,
+          "exactScoreAccuracy": 0.30809399477806787
+        },
+        "recency": {
+          "coverage": 0.8927738927738927,
+          "count": 383,
+          "brier": 0.6658615199997843,
+          "logLoss": 1.1077564870818721,
+          "ece": 0.09879531647824541,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 37,
+              "confidence": 0.3811543307458774,
+              "observed": 0.40540540540540543
+            },
+            {
+              "lower": 0.4,
+              "count": 151,
+              "confidence": 0.4550199179234817,
+              "observed": 0.3973509933774834
+            },
+            {
+              "lower": 0.5,
+              "count": 110,
+              "confidence": 0.5474858646162319,
+              "observed": 0.37272727272727274
+            },
+            {
+              "lower": 0.6,
+              "count": 60,
+              "confidence": 0.6402138707818473,
+              "observed": 0.55
+            },
+            {
+              "lower": 0.7,
+              "count": 22,
+              "confidence": 0.733563162407662,
+              "observed": 0.6818181818181818
+            },
+            {
+              "lower": 0.8,
+              "count": 3,
+              "confidence": 0.8195473048849378,
+              "observed": 0
+            }
+          ],
+          "bttsBrier": 0.16199312899447138,
+          "over25Brier": 0.09626377866350747,
+          "scoreLogLoss": 2.1170444374509785,
+          "exactScoreAccuracy": 0.2741514360313316
+        },
+        "shrinkage": {
+          "coverage": 0.8927738927738927,
+          "count": 383,
+          "brier": 0.638853634441932,
+          "logLoss": 1.0566250100128263,
+          "ece": 0.030687912834112013,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 33,
+              "confidence": 0.38565587252853045,
+              "observed": 0.3333333333333333
+            },
+            {
+              "lower": 0.4,
+              "count": 234,
+              "confidence": 0.44778503648688256,
+              "observed": 0.41452991452991456
+            },
+            {
+              "lower": 0.5,
+              "count": 97,
+              "confidence": 0.5345300709469463,
+              "observed": 0.5257731958762887
+            },
+            {
+              "lower": 0.6,
+              "count": 15,
+              "confidence": 0.6304723756726182,
+              "observed": 0.6
+            },
+            {
+              "lower": 0.7,
+              "count": 4,
+              "confidence": 0.7346564417874535,
+              "observed": 0.5
+            }
+          ],
+          "bttsBrier": 0.15777308208062488,
+          "over25Brier": 0.09243826835673329,
+          "scoreLogLoss": 2.023896987810938,
+          "exactScoreAccuracy": 0.32114882506527415
+        },
+        "opponent": {
+          "coverage": 0.8927738927738927,
+          "count": 383,
+          "brier": 0.6392460538264431,
+          "logLoss": 1.0572305816475904,
+          "ece": 0.04283629100342971,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 32,
+              "confidence": 0.3854163311386766,
+              "observed": 0.46875
+            },
+            {
+              "lower": 0.4,
+              "count": 237,
+              "confidence": 0.4467286877561826,
+              "observed": 0.4050632911392405
+            },
+            {
+              "lower": 0.5,
+              "count": 98,
+              "confidence": 0.533365982974786,
+              "observed": 0.5
+            },
+            {
+              "lower": 0.6,
+              "count": 14,
+              "confidence": 0.6343244183826707,
+              "observed": 0.6428571428571429
+            },
+            {
+              "lower": 0.7,
+              "count": 2,
+              "confidence": 0.7377992891821665,
+              "observed": 0.5
+            }
+          ],
+          "bttsBrier": 0.157720702173314,
+          "over25Brier": 0.09224261289498309,
+          "scoreLogLoss": 2.0242580618935953,
+          "exactScoreAccuracy": 0.32114882506527415
+        },
+        "dixon_coles": {
+          "coverage": 0.8927738927738927,
+          "count": 383,
+          "brier": 0.6393157109884677,
+          "logLoss": 1.0576494172298336,
+          "ece": 0.04299775898551394,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 17,
+              "confidence": 0.3880075634245353,
+              "observed": 0.5294117647058824
+            },
+            {
+              "lower": 0.4,
+              "count": 241,
+              "confidence": 0.44838954938250375,
+              "observed": 0.4066390041493776
+            },
+            {
+              "lower": 0.5,
+              "count": 108,
+              "confidence": 0.5358975276273791,
+              "observed": 0.5092592592592593
+            },
+            {
+              "lower": 0.6,
+              "count": 13,
+              "confidence": 0.6309319837610368,
+              "observed": 0.6153846153846154
+            },
+            {
+              "lower": 0.7,
+              "count": 4,
+              "confidence": 0.7308350239587812,
+              "observed": 0.5
+            }
+          ],
+          "bttsBrier": 0.15774398796934236,
+          "over25Brier": 0.09243826835673329,
+          "scoreLogLoss": 2.0248325914553678,
+          "exactScoreAccuracy": 0.3185378590078329
+        },
+        "elo": {
+          "coverage": 0.8927738927738927,
+          "count": 383,
+          "brier": 0.6385015637306964,
+          "logLoss": 1.056138175557185,
+          "ece": 0.05513691971171201,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 30,
+              "confidence": 0.38570127850488234,
+              "observed": 0.3333333333333333
+            },
+            {
+              "lower": 0.4,
+              "count": 226,
+              "confidence": 0.448960846383273,
+              "observed": 0.39823008849557523
+            },
+            {
+              "lower": 0.5,
+              "count": 99,
+              "confidence": 0.5352190370501679,
+              "observed": 0.47474747474747475
+            },
+            {
+              "lower": 0.6,
+              "count": 22,
+              "confidence": 0.6380059946372625,
+              "observed": 0.6818181818181818
+            },
+            {
+              "lower": 0.7,
+              "count": 5,
+              "confidence": 0.7342736622628884,
+              "observed": 0.8
+            },
+            {
+              "lower": 0.8,
+              "count": 1,
+              "confidence": 0.8020661371871212,
+              "observed": 0
+            }
+          ],
+          "bttsBrier": 0.15785239692539568,
+          "over25Brier": 0.09265109651016243,
+          "scoreLogLoss": 2.0242520773997286,
+          "exactScoreAccuracy": 0.31592689295039167
+        },
+        "dynamic_home": {
+          "coverage": 0.8927738927738927,
+          "count": 383,
+          "brier": 0.6414840780555648,
+          "logLoss": 1.063154330222799,
+          "ece": 0.05939818515842,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 33,
+              "confidence": 0.38626846008076665,
+              "observed": 0.3939393939393939
+            },
+            {
+              "lower": 0.4,
+              "count": 225,
+              "confidence": 0.45005388522611783,
+              "observed": 0.35555555555555557
+            },
+            {
+              "lower": 0.5,
+              "count": 100,
+              "confidence": 0.534646875257547,
+              "observed": 0.53
+            },
+            {
+              "lower": 0.6,
+              "count": 20,
+              "confidence": 0.641739187191895,
+              "observed": 0.65
+            },
+            {
+              "lower": 0.7,
+              "count": 5,
+              "confidence": 0.7208672281093718,
+              "observed": 0.6
+            }
+          ],
+          "bttsBrier": 0.15770295955550154,
+          "over25Brier": 0.09284780297667776,
+          "scoreLogLoss": 2.0315298632180054,
+          "exactScoreAccuracy": 0.31592689295039167
+        },
+        "league_mix": {
+          "coverage": 0.8927738927738927,
+          "count": 383,
+          "brier": 0.6374608197925257,
+          "logLoss": 1.0533662921535738,
+          "ece": 0.029095917113691097,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 73,
+              "confidence": 0.38876498521721053,
+              "observed": 0.4657534246575342
+            },
+            {
+              "lower": 0.4,
+              "count": 300,
+              "confidence": 0.434058222372526,
+              "observed": 0.45
+            },
+            {
+              "lower": 0.5,
+              "count": 10,
+              "confidence": 0.5258953112842147,
+              "observed": 0.6
+            }
+          ],
+          "bttsBrier": 0.15587570910932697,
+          "over25Brier": 0.0920940374049096,
+          "scoreLogLoss": 2.005791328345692,
+          "exactScoreAccuracy": 0.2898172323759791
+        },
+        "calibrated": {
+          "coverage": 0.8927738927738927,
+          "count": 383,
+          "brier": 0.6378002663872533,
+          "logLoss": 1.0539222798327987,
+          "ece": 0.05860267237217326,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 67,
+              "confidence": 0.3812584365523126,
+              "observed": 0.31343283582089554
+            },
+            {
+              "lower": 0.4,
+              "count": 243,
+              "confidence": 0.44521018222890313,
+              "observed": 0.3950617283950617
+            },
+            {
+              "lower": 0.5,
+              "count": 57,
+              "confidence": 0.5391989437586802,
+              "observed": 0.6140350877192983
+            },
+            {
+              "lower": 0.6,
+              "count": 12,
+              "confidence": 0.6301277703560076,
+              "observed": 0.5833333333333334
+            },
+            {
+              "lower": 0.7,
+              "count": 4,
+              "confidence": 0.7218101344716573,
+              "observed": 0.5
+            }
+          ],
+          "bttsBrier": 0.15763084540047895,
+          "over25Brier": 0.0953331768981584,
+          "scoreLogLoss": 2.0243681408711494,
+          "exactScoreAccuracy": 0.32114882506527415
+        }
+      }
+    },
+    {
+      "league": "de.1",
+      "hashes": {
+        "2023-24": "d104edde48a5e254545eac3d3ed379a09801e1ebcef5c6480e28bc36fcfa202d",
+        "2024-25": "f473d6595e6c29ebedc08b09177aed6a6b2ff0fa8378b82f51dea469139f44c3",
+        "2025-26": "17d0999db6281e6365823acdbce41a4f01dd469eac63e1f897e4e47c02906672",
+        "2026-27": "07fab65d4a1de8ce4c8472da9ccf4d1d2b145ecd5abdc5b6d4250a5c119d7681"
+      },
+      "training": 417,
+      "validation": 159,
+      "temperature": 1.5,
+      "mixWeight": 0.75,
+      "testFixtures": 327,
+      "comparisonFixtures": 309,
+      "belowVenueMinimum": 18,
+      "results": {
+        "frequency": {
+          "coverage": 1,
+          "count": 309,
+          "brier": 0.6627221889349199,
+          "logLoss": 1.0928428763480411,
+          "ece": 0.024125825640580814,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 309,
+              "confidence": 0.36745993487721856,
+              "observed": 0.39158576051779936
+            }
+          ],
+          "bttsBrier": 0.17849478043251496,
+          "over25Brier": 0.14452255652872167,
+          "scoreLogLoss": 2.3230738346437745,
+          "exactScoreAccuracy": 0.20711974110032363
+        },
+        "current": {
+          "coverage": 0.944954128440367,
+          "count": 309,
+          "brier": 0.671995872612915,
+          "logLoss": 1.2309322898632395,
+          "ece": 0.1130631169630152,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 35,
+              "confidence": 0.3782287952870057,
+              "observed": 0.4
+            },
+            {
+              "lower": 0.4,
+              "count": 105,
+              "confidence": 0.4519663800621774,
+              "observed": 0.3333333333333333
+            },
+            {
+              "lower": 0.5,
+              "count": 105,
+              "confidence": 0.5431630160609541,
+              "observed": 0.45714285714285713
+            },
+            {
+              "lower": 0.6,
+              "count": 36,
+              "confidence": 0.6437926108801079,
+              "observed": 0.5277777777777778
+            },
+            {
+              "lower": 0.7,
+              "count": 19,
+              "confidence": 0.7393812053305416,
+              "observed": 0.47368421052631576
+            },
+            {
+              "lower": 0.8,
+              "count": 9,
+              "confidence": 0.8290163878582129,
+              "observed": 0.4444444444444444
+            }
+          ],
+          "bttsBrier": 0.18386140604556261,
+          "over25Brier": 0.15175403713152058,
+          "scoreLogLoss": 2.509472856233137,
+          "exactScoreAccuracy": 0.18446601941747573
+        },
+        "window5": {
+          "coverage": 0.944954128440367,
+          "count": 309,
+          "brier": 0.724142845813423,
+          "logLoss": 2.2286253381830123,
+          "ece": 0.17489453292100574,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 12,
+              "confidence": 0.38754476292205303,
+              "observed": 0.5
+            },
+            {
+              "lower": 0.4,
+              "count": 98,
+              "confidence": 0.4554886514645029,
+              "observed": 0.3979591836734694
+            },
+            {
+              "lower": 0.5,
+              "count": 95,
+              "confidence": 0.5471050044176954,
+              "observed": 0.4
+            },
+            {
+              "lower": 0.6,
+              "count": 41,
+              "confidence": 0.6540042921672893,
+              "observed": 0.34146341463414637
+            },
+            {
+              "lower": 0.7,
+              "count": 29,
+              "confidence": 0.7423524987031398,
+              "observed": 0.4827586206896552
+            },
+            {
+              "lower": 0.8,
+              "count": 23,
+              "confidence": 0.8456534989020497,
+              "observed": 0.43478260869565216
+            },
+            {
+              "lower": 0.9,
+              "count": 11,
+              "confidence": 0.9352414225869097,
+              "observed": 0.6363636363636364
+            }
+          ],
+          "bttsBrier": 0.19985276501593374,
+          "over25Brier": 0.17007785226206573,
+          "scoreLogLoss": 4.507572736314285,
+          "exactScoreAccuracy": 0.15857605177993528
+        },
+        "window10": {
+          "coverage": 0.944954128440367,
+          "count": 309,
+          "brier": 0.671995939190424,
+          "logLoss": 1.230932359849902,
+          "ece": 0.11306347665684009,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 35,
+              "confidence": 0.3782288037270639,
+              "observed": 0.4
+            },
+            {
+              "lower": 0.4,
+              "count": 105,
+              "confidence": 0.45196638391135563,
+              "observed": 0.3333333333333333
+            },
+            {
+              "lower": 0.5,
+              "count": 105,
+              "confidence": 0.5431630801575907,
+              "observed": 0.45714285714285713
+            },
+            {
+              "lower": 0.6,
+              "count": 36,
+              "confidence": 0.6437931256648756,
+              "observed": 0.5277777777777778
+            },
+            {
+              "lower": 0.7,
+              "count": 19,
+              "confidence": 0.7393833352161701,
+              "observed": 0.47368421052631576
+            },
+            {
+              "lower": 0.8,
+              "count": 9,
+              "confidence": 0.8290214219031893,
+              "observed": 0.4444444444444444
+            }
+          ],
+          "bttsBrier": 0.1838614216261691,
+          "over25Brier": 0.1517545875707312,
+          "scoreLogLoss": 2.5094746399079857,
+          "exactScoreAccuracy": 0.18446601941747573
+        },
+        "window15": {
+          "coverage": 0.944954128440367,
+          "count": 309,
+          "brier": 0.6573569712757443,
+          "logLoss": 1.202187698832114,
+          "ece": 0.06601595346473317,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 32,
+              "confidence": 0.37636546011574296,
+              "observed": 0.375
+            },
+            {
+              "lower": 0.4,
+              "count": 140,
+              "confidence": 0.45243604687740674,
+              "observed": 0.42142857142857143
+            },
+            {
+              "lower": 0.5,
+              "count": 82,
+              "confidence": 0.539486064488142,
+              "observed": 0.4268292682926829
+            },
+            {
+              "lower": 0.6,
+              "count": 34,
+              "confidence": 0.6340537545622579,
+              "observed": 0.5882352941176471
+            },
+            {
+              "lower": 0.7,
+              "count": 16,
+              "confidence": 0.7531075029941388,
+              "observed": 0.5625
+            },
+            {
+              "lower": 0.8,
+              "count": 5,
+              "confidence": 0.8337566686022411,
+              "observed": 0.4
+            }
+          ],
+          "bttsBrier": 0.18210354395562342,
+          "over25Brier": 0.14555814609561643,
+          "scoreLogLoss": 2.4423164016745846,
+          "exactScoreAccuracy": 0.21035598705501618
+        },
+        "window20": {
+          "coverage": 0.944954128440367,
+          "count": 309,
+          "brier": 0.6438674695499074,
+          "logLoss": 1.1714180775291871,
+          "ece": 0.054637372160051594,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 49,
+              "confidence": 0.3735799473375452,
+              "observed": 0.3469387755102041
+            },
+            {
+              "lower": 0.4,
+              "count": 138,
+              "confidence": 0.44713775737410355,
+              "observed": 0.39855072463768115
+            },
+            {
+              "lower": 0.5,
+              "count": 75,
+              "confidence": 0.5400601468465324,
+              "observed": 0.5333333333333333
+            },
+            {
+              "lower": 0.6,
+              "count": 30,
+              "confidence": 0.6484448057814168,
+              "observed": 0.43333333333333335
+            },
+            {
+              "lower": 0.7,
+              "count": 14,
+              "confidence": 0.7459880074453352,
+              "observed": 0.7142857142857143
+            },
+            {
+              "lower": 0.8,
+              "count": 3,
+              "confidence": 0.8236109230409374,
+              "observed": 0.3333333333333333
+            }
+          ],
+          "bttsBrier": 0.1833848210373777,
+          "over25Brier": 0.1464021110990668,
+          "scoreLogLoss": 2.4010850764557836,
+          "exactScoreAccuracy": 0.18122977346278318
+        },
+        "recency": {
+          "coverage": 0.944954128440367,
+          "count": 309,
+          "brier": 0.6578727469141825,
+          "logLoss": 1.2001801300093025,
+          "ece": 0.07615521219828095,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 32,
+              "confidence": 0.3777705986861387,
+              "observed": 0.28125
+            },
+            {
+              "lower": 0.4,
+              "count": 143,
+              "confidence": 0.4487014184284619,
+              "observed": 0.4125874125874126
+            },
+            {
+              "lower": 0.5,
+              "count": 83,
+              "confidence": 0.5457751857817449,
+              "observed": 0.4578313253012048
+            },
+            {
+              "lower": 0.6,
+              "count": 28,
+              "confidence": 0.6526908239697428,
+              "observed": 0.6428571428571429
+            },
+            {
+              "lower": 0.7,
+              "count": 17,
+              "confidence": 0.75003512471977,
+              "observed": 0.35294117647058826
+            },
+            {
+              "lower": 0.8,
+              "count": 6,
+              "confidence": 0.8256196607947691,
+              "observed": 0.6666666666666666
+            }
+          ],
+          "bttsBrier": 0.1843987454014913,
+          "over25Brier": 0.150084077870784,
+          "scoreLogLoss": 2.4555013951525826,
+          "exactScoreAccuracy": 0.1941747572815534
+        },
+        "shrinkage": {
+          "coverage": 0.944954128440367,
+          "count": 309,
+          "brier": 0.6340934040069968,
+          "logLoss": 1.0487269258786132,
+          "ece": 0.04785348990154179,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 82,
+              "confidence": 0.3760716297155765,
+              "observed": 0.3048780487804878
+            },
+            {
+              "lower": 0.4,
+              "count": 159,
+              "confidence": 0.4433450080429339,
+              "observed": 0.4716981132075472
+            },
+            {
+              "lower": 0.5,
+              "count": 42,
+              "confidence": 0.5385578039659209,
+              "observed": 0.47619047619047616
+            },
+            {
+              "lower": 0.6,
+              "count": 23,
+              "confidence": 0.6372666190114696,
+              "observed": 0.5652173913043478
+            },
+            {
+              "lower": 0.7,
+              "count": 3,
+              "confidence": 0.7213836726310504,
+              "observed": 0.6666666666666666
+            }
+          ],
+          "bttsBrier": 0.17995274658866556,
+          "over25Brier": 0.14386966814828714,
+          "scoreLogLoss": 2.252195310228838,
+          "exactScoreAccuracy": 0.18770226537216828
+        },
+        "opponent": {
+          "coverage": 0.944954128440367,
+          "count": 309,
+          "brier": 0.6352012403752884,
+          "logLoss": 1.0503283439113318,
+          "ece": 0.07368987452115755,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 86,
+              "confidence": 0.3763864440545428,
+              "observed": 0.2558139534883721
+            },
+            {
+              "lower": 0.4,
+              "count": 166,
+              "confidence": 0.44248016046539523,
+              "observed": 0.4819277108433735
+            },
+            {
+              "lower": 0.5,
+              "count": 43,
+              "confidence": 0.5478423856683742,
+              "observed": 0.46511627906976744
+            },
+            {
+              "lower": 0.6,
+              "count": 13,
+              "confidence": 0.6467771852957441,
+              "observed": 0.7692307692307693
+            },
+            {
+              "lower": 0.7,
+              "count": 1,
+              "confidence": 0.7035245007071961,
+              "observed": 0
+            }
+          ],
+          "bttsBrier": 0.1798268242143915,
+          "over25Brier": 0.1435751323679054,
+          "scoreLogLoss": 2.2545148338057617,
+          "exactScoreAccuracy": 0.16828478964401294
+        },
+        "dixon_coles": {
+          "coverage": 0.944954128440367,
+          "count": 309,
+          "brier": 0.6362227107681956,
+          "logLoss": 1.0518109510397806,
+          "ece": 0.052357692570684386,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 68,
+              "confidence": 0.377537327895608,
+              "observed": 0.19117647058823528
+            },
+            {
+              "lower": 0.4,
+              "count": 175,
+              "confidence": 0.4420560547712057,
+              "observed": 0.44
+            },
+            {
+              "lower": 0.5,
+              "count": 42,
+              "confidence": 0.5393801324682512,
+              "observed": 0.47619047619047616
+            },
+            {
+              "lower": 0.6,
+              "count": 22,
+              "confidence": 0.6381305911955446,
+              "observed": 0.6363636363636364
+            },
+            {
+              "lower": 0.7,
+              "count": 2,
+              "confidence": 0.726670276255299,
+              "observed": 0.5
+            }
+          ],
+          "bttsBrier": 0.18033191696061288,
+          "over25Brier": 0.1438696681482871,
+          "scoreLogLoss": 2.254374349723872,
+          "exactScoreAccuracy": 0.17475728155339806
+        },
+        "elo": {
+          "coverage": 0.944954128440367,
+          "count": 309,
+          "brier": 0.633425701407817,
+          "logLoss": 1.048073739419308,
+          "ece": 0.03285073092819626,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 69,
+              "confidence": 0.3741645524247285,
+              "observed": 0.4057971014492754
+            },
+            {
+              "lower": 0.4,
+              "count": 154,
+              "confidence": 0.44700464635322856,
+              "observed": 0.44805194805194803
+            },
+            {
+              "lower": 0.5,
+              "count": 47,
+              "confidence": 0.5400400137228291,
+              "observed": 0.48936170212765956
+            },
+            {
+              "lower": 0.6,
+              "count": 29,
+              "confidence": 0.6479977557713801,
+              "observed": 0.4827586206896552
+            },
+            {
+              "lower": 0.7,
+              "count": 10,
+              "confidence": 0.7366870049826881,
+              "observed": 0.8
+            }
+          ],
+          "bttsBrier": 0.1799335882371975,
+          "over25Brier": 0.1442724636839765,
+          "scoreLogLoss": 2.2520158260836918,
+          "exactScoreAccuracy": 0.18770226537216828
+        },
+        "dynamic_home": {
+          "coverage": 0.944954128440367,
+          "count": 309,
+          "brier": 0.6364208196732313,
+          "logLoss": 1.053299050337779,
+          "ece": 0.04012747524155591,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 75,
+              "confidence": 0.37594747956550906,
+              "observed": 0.30666666666666664
+            },
+            {
+              "lower": 0.4,
+              "count": 160,
+              "confidence": 0.44541887180730866,
+              "observed": 0.41875
+            },
+            {
+              "lower": 0.5,
+              "count": 41,
+              "confidence": 0.5339698828297273,
+              "observed": 0.5121951219512195
+            },
+            {
+              "lower": 0.6,
+              "count": 25,
+              "confidence": 0.6395622188247104,
+              "observed": 0.56
+            },
+            {
+              "lower": 0.7,
+              "count": 8,
+              "confidence": 0.7431889091972961,
+              "observed": 0.75
+            }
+          ],
+          "bttsBrier": 0.18004093688704367,
+          "over25Brier": 0.14389493957879107,
+          "scoreLogLoss": 2.256340706920411,
+          "exactScoreAccuracy": 0.18446601941747573
+        },
+        "league_mix": {
+          "coverage": 0.944954128440367,
+          "count": 309,
+          "brier": 0.6332803511135492,
+          "logLoss": 1.0471708811062532,
+          "ece": 0.030547803655483652,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 126,
+              "confidence": 0.37284416007751436,
+              "observed": 0.40476190476190477
+            },
+            {
+              "lower": 0.4,
+              "count": 144,
+              "confidence": 0.4363625154950744,
+              "observed": 0.4583333333333333
+            },
+            {
+              "lower": 0.5,
+              "count": 33,
+              "confidence": 0.544847540411433,
+              "observed": 0.5151515151515151
+            },
+            {
+              "lower": 0.6,
+              "count": 6,
+              "confidence": 0.6210218504958857,
+              "observed": 0.8333333333333334
+            }
+          ],
+          "bttsBrier": 0.17855107050765753,
+          "over25Brier": 0.1428091446186087,
+          "scoreLogLoss": 2.2395194659034856,
+          "exactScoreAccuracy": 0.18446601941747573
+        },
+        "calibrated": {
+          "coverage": 0.944954128440367,
+          "count": 309,
+          "brier": 0.6312793043618884,
+          "logLoss": 1.0454112237649296,
+          "ece": 0.0682407691053796,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 111,
+              "confidence": 0.3699889818056043,
+              "observed": 0.5135135135135135
+            },
+            {
+              "lower": 0.4,
+              "count": 133,
+              "confidence": 0.44611382063113875,
+              "observed": 0.45864661654135336
+            },
+            {
+              "lower": 0.5,
+              "count": 47,
+              "confidence": 0.5446782782205779,
+              "observed": 0.48936170212765956
+            },
+            {
+              "lower": 0.6,
+              "count": 17,
+              "confidence": 0.6360948960947631,
+              "observed": 0.6470588235294118
+            },
+            {
+              "lower": 0.7,
+              "count": 1,
+              "confidence": 0.7020469351696452,
+              "observed": 0
+            }
+          ],
+          "bttsBrier": 0.18923470631075992,
+          "over25Brier": 0.1651073589415479,
+          "scoreLogLoss": 2.3096523759177883,
+          "exactScoreAccuracy": 0.18770226537216828
+        }
+      }
+    },
+    {
+      "league": "it.1",
+      "hashes": {
+        "2023-24": "47734fc8d2ec34c5529ca814c97d1c86ecddc4a2c8095506d9b12f29cb283308",
+        "2024-25": "7d9bb936de3ccaeec54d57371512a58a5eeb21277e7d5f0882911a834d22b659",
+        "2025-26": "28f7773dea86345aeb0cbb4aff2f90231033f7ed855219e70fdd1cf45d4d7e7f",
+        "2026-27": "721a6c220fecb8208287e41401fa2fce652cd23765ce58a39bf98cdaa3d528ad"
+      },
+      "training": 516,
+      "validation": 176,
+      "temperature": 1.3,
+      "mixWeight": 0.5,
+      "testFixtures": 394,
+      "comparisonFixtures": 375,
+      "belowVenueMinimum": 19,
+      "results": {
+        "frequency": {
+          "coverage": 1,
+          "count": 375,
+          "brier": 0.6625174554791126,
+          "logLoss": 1.0925293475209539,
+          "ece": 0.011665692105162861,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 375,
+              "confidence": 0.38033430789483713,
+              "observed": 0.392
+            }
+          ],
+          "bttsBrier": 0.14354383614343505,
+          "over25Brier": 0.09339720375492061,
+          "scoreLogLoss": 1.9982645052375905,
+          "exactScoreAccuracy": 0.2906666666666667
+        },
+        "current": {
+          "coverage": 0.9517766497461929,
+          "count": 375,
+          "brier": 0.6954545798018708,
+          "logLoss": 1.3456075658994622,
+          "ece": 0.14709071628954046,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 16,
+              "confidence": 0.3794647585069185,
+              "observed": 0.3125
+            },
+            {
+              "lower": 0.4,
+              "count": 140,
+              "confidence": 0.45674940524636126,
+              "observed": 0.3142857142857143
+            },
+            {
+              "lower": 0.5,
+              "count": 149,
+              "confidence": 0.5425707372944522,
+              "observed": 0.40268456375838924
+            },
+            {
+              "lower": 0.6,
+              "count": 57,
+              "confidence": 0.6396933897488198,
+              "observed": 0.47368421052631576
+            },
+            {
+              "lower": 0.7,
+              "count": 12,
+              "confidence": 0.7435563200784744,
+              "observed": 0.5
+            },
+            {
+              "lower": 0.9,
+              "count": 1,
+              "confidence": 0.9144268244785978,
+              "observed": 0
+            }
+          ],
+          "bttsBrier": 0.1511185695536523,
+          "over25Brier": 0.10057713234368218,
+          "scoreLogLoss": 2.296773795039103,
+          "exactScoreAccuracy": 0.272
+        },
+        "window5": {
+          "coverage": 0.9517766497461929,
+          "count": 375,
+          "brier": 0.7462535231317436,
+          "logLoss": 3.3596922828092266,
+          "ece": 0.17902464422925182,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 15,
+              "confidence": 0.37450903871305247,
+              "observed": 0.06666666666666667
+            },
+            {
+              "lower": 0.4,
+              "count": 91,
+              "confidence": 0.4540851115045007,
+              "observed": 0.46153846153846156
+            },
+            {
+              "lower": 0.5,
+              "count": 130,
+              "confidence": 0.5448993377226442,
+              "observed": 0.3923076923076923
+            },
+            {
+              "lower": 0.6,
+              "count": 79,
+              "confidence": 0.6414740909543772,
+              "observed": 0.3924050632911392
+            },
+            {
+              "lower": 0.7,
+              "count": 37,
+              "confidence": 0.7423862548114628,
+              "observed": 0.43243243243243246
+            },
+            {
+              "lower": 0.8,
+              "count": 18,
+              "confidence": 0.8363941798392062,
+              "observed": 0.3333333333333333
+            },
+            {
+              "lower": 0.9,
+              "count": 5,
+              "confidence": 0.9603194795427635,
+              "observed": 0.6
+            }
+          ],
+          "bttsBrier": 0.1640841158708402,
+          "over25Brier": 0.11120237067921304,
+          "scoreLogLoss": 5.563553039752317,
+          "exactScoreAccuracy": 0.28
+        },
+        "window10": {
+          "coverage": 0.9517766497461929,
+          "count": 375,
+          "brier": 0.6954546249365535,
+          "logLoss": 1.345607633290595,
+          "ece": 0.14709074634779323,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 16,
+              "confidence": 0.3794647592915631,
+              "observed": 0.3125
+            },
+            {
+              "lower": 0.4,
+              "count": 140,
+              "confidence": 0.45674940787953633,
+              "observed": 0.3142857142857143
+            },
+            {
+              "lower": 0.5,
+              "count": 149,
+              "confidence": 0.5425707433634986,
+              "observed": 0.40268456375838924
+            },
+            {
+              "lower": 0.6,
+              "count": 57,
+              "confidence": 0.6396935418343958,
+              "observed": 0.47368421052631576
+            },
+            {
+              "lower": 0.7,
+              "count": 12,
+              "confidence": 0.7435564298684945,
+              "observed": 0.5
+            },
+            {
+              "lower": 0.9,
+              "count": 1,
+              "confidence": 0.9144268244785979,
+              "observed": 0
+            }
+          ],
+          "bttsBrier": 0.15111857408035345,
+          "over25Brier": 0.10057716711692084,
+          "scoreLogLoss": 2.2967738822103128,
+          "exactScoreAccuracy": 0.272
+        },
+        "window15": {
+          "coverage": 0.9517766497461929,
+          "count": 375,
+          "brier": 0.6666891225412628,
+          "logLoss": 1.1898557260789255,
+          "ece": 0.09346753381990196,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 24,
+              "confidence": 0.38524529363052046,
+              "observed": 0.3333333333333333
+            },
+            {
+              "lower": 0.4,
+              "count": 183,
+              "confidence": 0.4523002790904306,
+              "observed": 0.41530054644808745
+            },
+            {
+              "lower": 0.5,
+              "count": 129,
+              "confidence": 0.541255797689702,
+              "observed": 0.4108527131782946
+            },
+            {
+              "lower": 0.6,
+              "count": 34,
+              "confidence": 0.6378894880542171,
+              "observed": 0.4117647058823529
+            },
+            {
+              "lower": 0.7,
+              "count": 3,
+              "confidence": 0.7161360919535368,
+              "observed": 1
+            },
+            {
+              "lower": 0.8,
+              "count": 2,
+              "confidence": 0.8358274209138083,
+              "observed": 0
+            }
+          ],
+          "bttsBrier": 0.1471762076602319,
+          "over25Brier": 0.09843856914202088,
+          "scoreLogLoss": 2.116025551562466,
+          "exactScoreAccuracy": 0.296
+        },
+        "window20": {
+          "coverage": 0.9517766497461929,
+          "count": 375,
+          "brier": 0.6583125204276292,
+          "logLoss": 1.1711757795195517,
+          "ece": 0.07337434600646729,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 24,
+              "confidence": 0.3792650120422247,
+              "observed": 0.375
+            },
+            {
+              "lower": 0.4,
+              "count": 210,
+              "confidence": 0.45370429910458154,
+              "observed": 0.4142857142857143
+            },
+            {
+              "lower": 0.5,
+              "count": 113,
+              "confidence": 0.5432738510085622,
+              "observed": 0.415929203539823
+            },
+            {
+              "lower": 0.6,
+              "count": 21,
+              "confidence": 0.643502030858801,
+              "observed": 0.47619047619047616
+            },
+            {
+              "lower": 0.7,
+              "count": 6,
+              "confidence": 0.729423517913042,
+              "observed": 0.6666666666666666
+            },
+            {
+              "lower": 0.8,
+              "count": 1,
+              "confidence": 0.8550877319691176,
+              "observed": 0
+            }
+          ],
+          "bttsBrier": 0.14546548913938392,
+          "over25Brier": 0.09797995811697768,
+          "scoreLogLoss": 2.075819545250891,
+          "exactScoreAccuracy": 0.288
+        },
+        "recency": {
+          "coverage": 0.9517766497461929,
+          "count": 375,
+          "brier": 0.6759341364862413,
+          "logLoss": 1.2101906686239279,
+          "ece": 0.12340786643650743,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 21,
+              "confidence": 0.37987415002392094,
+              "observed": 0.3333333333333333
+            },
+            {
+              "lower": 0.4,
+              "count": 179,
+              "confidence": 0.45746068706737114,
+              "observed": 0.36312849162011174
+            },
+            {
+              "lower": 0.5,
+              "count": 134,
+              "confidence": 0.5418998572840068,
+              "observed": 0.417910447761194
+            },
+            {
+              "lower": 0.6,
+              "count": 33,
+              "confidence": 0.6345982902135578,
+              "observed": 0.3333333333333333
+            },
+            {
+              "lower": 0.7,
+              "count": 7,
+              "confidence": 0.7198773693225335,
+              "observed": 0.8571428571428571
+            },
+            {
+              "lower": 0.8,
+              "count": 1,
+              "confidence": 0.8979469102819354,
+              "observed": 0
+            }
+          ],
+          "bttsBrier": 0.14967275283914017,
+          "over25Brier": 0.1000425565589742,
+          "scoreLogLoss": 2.144193292160416,
+          "exactScoreAccuracy": 0.2826666666666667
+        },
+        "shrinkage": {
+          "coverage": 0.9517766497461929,
+          "count": 375,
+          "brier": 0.6500727434736256,
+          "logLoss": 1.0720951677448172,
+          "ece": 0.04380647525014813,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 29,
+              "confidence": 0.38415609703721054,
+              "observed": 0.3793103448275862
+            },
+            {
+              "lower": 0.4,
+              "count": 263,
+              "confidence": 0.4478549082393035,
+              "observed": 0.42585551330798477
+            },
+            {
+              "lower": 0.5,
+              "count": 80,
+              "confidence": 0.5318343471194937,
+              "observed": 0.4125
+            },
+            {
+              "lower": 0.6,
+              "count": 3,
+              "confidence": 0.6514375894100414,
+              "observed": 0.3333333333333333
+            }
+          ],
+          "bttsBrier": 0.14376520310013177,
+          "over25Brier": 0.09562378070748417,
+          "scoreLogLoss": 1.9631545154686607,
+          "exactScoreAccuracy": 0.27466666666666667
+        },
+        "opponent": {
+          "coverage": 0.9517766497461929,
+          "count": 375,
+          "brier": 0.6511128594410254,
+          "logLoss": 1.0733216657548954,
+          "ece": 0.05357482625225081,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 29,
+              "confidence": 0.3838745196612393,
+              "observed": 0.3103448275862069
+            },
+            {
+              "lower": 0.4,
+              "count": 268,
+              "confidence": 0.44867852100216415,
+              "observed": 0.417910447761194
+            },
+            {
+              "lower": 0.5,
+              "count": 74,
+              "confidence": 0.5297538573820921,
+              "observed": 0.40540540540540543
+            },
+            {
+              "lower": 0.6,
+              "count": 4,
+              "confidence": 0.6276424248908264,
+              "observed": 0.5
+            }
+          ],
+          "bttsBrier": 0.14371737908358956,
+          "over25Brier": 0.09547578083131149,
+          "scoreLogLoss": 1.964228647730212,
+          "exactScoreAccuracy": 0.2826666666666667
+        },
+        "dixon_coles": {
+          "coverage": 0.9517766497461929,
+          "count": 375,
+          "brier": 0.6515864472423458,
+          "logLoss": 1.0746003760009781,
+          "ece": 0.06890333939366028,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 22,
+              "confidence": 0.3872536506884673,
+              "observed": 0.3181818181818182
+            },
+            {
+              "lower": 0.4,
+              "count": 261,
+              "confidence": 0.4522358522264033,
+              "observed": 0.4099616858237548
+            },
+            {
+              "lower": 0.5,
+              "count": 88,
+              "confidence": 0.5310325138180163,
+              "observed": 0.38636363636363635
+            },
+            {
+              "lower": 0.6,
+              "count": 4,
+              "confidence": 0.6386883275999098,
+              "observed": 0.5
+            }
+          ],
+          "bttsBrier": 0.14384991126112084,
+          "over25Brier": 0.09562378070748417,
+          "scoreLogLoss": 1.965923826721643,
+          "exactScoreAccuracy": 0.2826666666666667
+        },
+        "elo": {
+          "coverage": 0.9517766497461929,
+          "count": 375,
+          "brier": 0.649650500757199,
+          "logLoss": 1.0724658654489225,
+          "ece": 0.0484112480725976,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 26,
+              "confidence": 0.3838925485257991,
+              "observed": 0.3076923076923077
+            },
+            {
+              "lower": 0.4,
+              "count": 252,
+              "confidence": 0.44827610072453417,
+              "observed": 0.42063492063492064
+            },
+            {
+              "lower": 0.5,
+              "count": 88,
+              "confidence": 0.5334447851096265,
+              "observed": 0.4772727272727273
+            },
+            {
+              "lower": 0.6,
+              "count": 8,
+              "confidence": 0.6262723589049681,
+              "observed": 0.125
+            },
+            {
+              "lower": 0.7,
+              "count": 1,
+              "confidence": 0.7458855779161603,
+              "observed": 1
+            }
+          ],
+          "bttsBrier": 0.1437606330749593,
+          "over25Brier": 0.095868781615827,
+          "scoreLogLoss": 1.9643175677163354,
+          "exactScoreAccuracy": 0.2826666666666667
+        },
+        "dynamic_home": {
+          "coverage": 0.9517766497461929,
+          "count": 375,
+          "brier": 0.652290373876965,
+          "logLoss": 1.0763423704045356,
+          "ece": 0.0663806664212996,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 28,
+              "confidence": 0.3842776575398143,
+              "observed": 0.2857142857142857
+            },
+            {
+              "lower": 0.4,
+              "count": 262,
+              "confidence": 0.44663551049685557,
+              "observed": 0.3931297709923664
+            },
+            {
+              "lower": 0.5,
+              "count": 81,
+              "confidence": 0.5311832840669151,
+              "observed": 0.4567901234567901
+            },
+            {
+              "lower": 0.6,
+              "count": 3,
+              "confidence": 0.6139092179207394,
+              "observed": 0
+            },
+            {
+              "lower": 0.7,
+              "count": 1,
+              "confidence": 0.7531019164859548,
+              "observed": 1
+            }
+          ],
+          "bttsBrier": 0.14364457066433303,
+          "over25Brier": 0.09575118173766213,
+          "scoreLogLoss": 1.968954603560355,
+          "exactScoreAccuracy": 0.2826666666666667
+        },
+        "league_mix": {
+          "coverage": 0.9517766497461929,
+          "count": 375,
+          "brier": 0.6484044002322088,
+          "logLoss": 1.0696871725697823,
+          "ece": 0.02759586266151178,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 110,
+              "confidence": 0.3865501901545469,
+              "observed": 0.32727272727272727
+            },
+            {
+              "lower": 0.4,
+              "count": 264,
+              "confidence": 0.4254606173248055,
+              "observed": 0.4128787878787879
+            },
+            {
+              "lower": 0.5,
+              "count": 1,
+              "confidence": 0.506324607318109,
+              "observed": 0
+            }
+          ],
+          "bttsBrier": 0.1428434353298232,
+          "over25Brier": 0.09365601839457026,
+          "scoreLogLoss": 1.959785159943435,
+          "exactScoreAccuracy": 0.29333333333333333
+        },
+        "calibrated": {
+          "coverage": 0.9517766497461929,
+          "count": 375,
+          "brier": 0.6465998320964572,
+          "logLoss": 1.066289894154931,
+          "ece": 0.04280649360732015,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 119,
+              "confidence": 0.3797376157668623,
+              "observed": 0.4369747899159664
+            },
+            {
+              "lower": 0.4,
+              "count": 218,
+              "confidence": 0.4363095841378031,
+              "observed": 0.44495412844036697
+            },
+            {
+              "lower": 0.5,
+              "count": 36,
+              "confidence": 0.5296087187070552,
+              "observed": 0.3333333333333333
+            },
+            {
+              "lower": 0.6,
+              "count": 2,
+              "confidence": 0.6453934237943797,
+              "observed": 0.5
+            }
+          ],
+          "bttsBrier": 0.1467110994945839,
+          "over25Brier": 0.10260569799427526,
+          "scoreLogLoss": 1.9903140670539867,
+          "exactScoreAccuracy": 0.27466666666666667
+        }
+      }
+    },
+    {
+      "league": "fr.1",
+      "hashes": {
+        "2023-24": "fa328cecf4c12232ac77a5d477059eebe16b68b3712ec87800b89efda8ddfb70",
+        "2024-25": "90e9974afe6597452622387ad218f6b0011a5f91f1b426f05152f5b9c105e355",
+        "2025-26": "3e9403445dd96f4bb7f740de22d4ea7e3ea7d640777a12eab621ae4d4dbf3bc7",
+        "2026-27": "f875275f835e378fc8c4e7d48c7a2f327e7d426237bd057fe652fd47f30b5a4f"
+      },
+      "training": 408,
+      "validation": 162,
+      "temperature": 1.5,
+      "mixWeight": 0.5,
+      "testFixtures": 323,
+      "comparisonFixtures": 304,
+      "belowVenueMinimum": 19,
+      "results": {
+        "frequency": {
+          "coverage": 1,
+          "count": 304,
+          "brier": 0.6651757884507261,
+          "logLoss": 1.0963000191561036,
+          "ece": 0.045263313987606246,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 304,
+              "confidence": 0.36105278767181676,
+              "observed": 0.3157894736842105
+            }
+          ],
+          "bttsBrier": 0.1615457167485194,
+          "over25Brier": 0.11711025886594997,
+          "scoreLogLoss": 2.112694938780129,
+          "exactScoreAccuracy": 0.2565789473684211
+        },
+        "current": {
+          "coverage": 0.9411764705882353,
+          "count": 304,
+          "brier": 0.7081117808926742,
+          "logLoss": 1.1802027490731255,
+          "ece": 0.13192912532201684,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 32,
+              "confidence": 0.37314394686973773,
+              "observed": 0.4375
+            },
+            {
+              "lower": 0.4,
+              "count": 133,
+              "confidence": 0.45598480407808706,
+              "observed": 0.39849624060150374
+            },
+            {
+              "lower": 0.5,
+              "count": 90,
+              "confidence": 0.5423033963525266,
+              "observed": 0.4
+            },
+            {
+              "lower": 0.6,
+              "count": 38,
+              "confidence": 0.6436452828225193,
+              "observed": 0.3157894736842105
+            },
+            {
+              "lower": 0.7,
+              "count": 10,
+              "confidence": 0.7288864800854294,
+              "observed": 0.3
+            },
+            {
+              "lower": 0.8,
+              "count": 1,
+              "confidence": 0.8463902355017279,
+              "observed": 0
+            }
+          ],
+          "bttsBrier": 0.17144916850323066,
+          "over25Brier": 0.12702305373464734,
+          "scoreLogLoss": 2.385444411370412,
+          "exactScoreAccuracy": 0.22697368421052633
+        },
+        "window5": {
+          "coverage": 0.9411764705882353,
+          "count": 304,
+          "brier": 0.7861205534556579,
+          "logLoss": 2.751676165226075,
+          "ece": 0.24027911555794473,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 25,
+              "confidence": 0.3751069064758923,
+              "observed": 0.12
+            },
+            {
+              "lower": 0.4,
+              "count": 80,
+              "confidence": 0.4555714099931126,
+              "observed": 0.3625
+            },
+            {
+              "lower": 0.5,
+              "count": 96,
+              "confidence": 0.5417394430297308,
+              "observed": 0.34375
+            },
+            {
+              "lower": 0.6,
+              "count": 53,
+              "confidence": 0.638366099243238,
+              "observed": 0.3584905660377358
+            },
+            {
+              "lower": 0.7,
+              "count": 23,
+              "confidence": 0.7430184123608737,
+              "observed": 0.21739130434782608
+            },
+            {
+              "lower": 0.8,
+              "count": 19,
+              "confidence": 0.8294478073927094,
+              "observed": 0.3157894736842105
+            },
+            {
+              "lower": 0.9,
+              "count": 8,
+              "confidence": 0.9415180065951945,
+              "observed": 0.5
+            }
+          ],
+          "bttsBrier": 0.18275598693562062,
+          "over25Brier": 0.14374943246138852,
+          "scoreLogLoss": 4.571280079603718,
+          "exactScoreAccuracy": 0.22039473684210525
+        },
+        "window10": {
+          "coverage": 0.9411764705882353,
+          "count": 304,
+          "brier": 0.7081119199062471,
+          "logLoss": 1.1802029576183224,
+          "ece": 0.13192921442690722,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 32,
+              "confidence": 0.373143948280602,
+              "observed": 0.4375
+            },
+            {
+              "lower": 0.4,
+              "count": 133,
+              "confidence": 0.4559848130164206,
+              "observed": 0.39849624060150374
+            },
+            {
+              "lower": 0.5,
+              "count": 90,
+              "confidence": 0.5423034111530477,
+              "observed": 0.4
+            },
+            {
+              "lower": 0.6,
+              "count": 38,
+              "confidence": 0.6436458147644014,
+              "observed": 0.3157894736842105
+            },
+            {
+              "lower": 0.7,
+              "count": 10,
+              "confidence": 0.7288869199251848,
+              "observed": 0.3
+            },
+            {
+              "lower": 0.8,
+              "count": 1,
+              "confidence": 0.8463902355017279,
+              "observed": 0
+            }
+          ],
+          "bttsBrier": 0.1714491823737677,
+          "over25Brier": 0.1270231595738387,
+          "scoreLogLoss": 2.385444679156058,
+          "exactScoreAccuracy": 0.22697368421052633
+        },
+        "window15": {
+          "coverage": 0.9411764705882353,
+          "count": 304,
+          "brier": 0.689114553529184,
+          "logLoss": 1.1442834751692263,
+          "ece": 0.10030203269521691,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 49,
+              "confidence": 0.3762004750518749,
+              "observed": 0.3673469387755102
+            },
+            {
+              "lower": 0.4,
+              "count": 160,
+              "confidence": 0.4518085261360638,
+              "observed": 0.3625
+            },
+            {
+              "lower": 0.5,
+              "count": 76,
+              "confidence": 0.5455043022676284,
+              "observed": 0.40789473684210525
+            },
+            {
+              "lower": 0.6,
+              "count": 15,
+              "confidence": 0.6293559608494942,
+              "observed": 0.3333333333333333
+            },
+            {
+              "lower": 0.7,
+              "count": 4,
+              "confidence": 0.7174910237379216,
+              "observed": 0.5
+            }
+          ],
+          "bttsBrier": 0.16842012750953414,
+          "over25Brier": 0.12386353405659548,
+          "scoreLogLoss": 2.2176631492835126,
+          "exactScoreAccuracy": 0.24013157894736842
+        },
+        "window20": {
+          "coverage": 0.9411764705882353,
+          "count": 304,
+          "brier": 0.6761043665908829,
+          "logLoss": 1.114228996523008,
+          "ece": 0.09220339218061532,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 49,
+              "confidence": 0.37688156375477505,
+              "observed": 0.24489795918367346
+            },
+            {
+              "lower": 0.4,
+              "count": 187,
+              "confidence": 0.4498549174137478,
+              "observed": 0.40641711229946526
+            },
+            {
+              "lower": 0.5,
+              "count": 55,
+              "confidence": 0.5430538969889824,
+              "observed": 0.34545454545454546
+            },
+            {
+              "lower": 0.6,
+              "count": 10,
+              "confidence": 0.6372929643381281,
+              "observed": 0.4
+            },
+            {
+              "lower": 0.7,
+              "count": 3,
+              "confidence": 0.7329570215923135,
+              "observed": 0.6666666666666666
+            }
+          ],
+          "bttsBrier": 0.1658267829789332,
+          "over25Brier": 0.12026818110287593,
+          "scoreLogLoss": 2.15642734587457,
+          "exactScoreAccuracy": 0.2236842105263158
+        },
+        "recency": {
+          "coverage": 0.9411764705882353,
+          "count": 304,
+          "brier": 0.6924291903923314,
+          "logLoss": 1.1464578441610291,
+          "ece": 0.11264816874121593,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 43,
+              "confidence": 0.3756259629592514,
+              "observed": 0.3953488372093023
+            },
+            {
+              "lower": 0.4,
+              "count": 154,
+              "confidence": 0.4503129581518982,
+              "observed": 0.35064935064935066
+            },
+            {
+              "lower": 0.5,
+              "count": 77,
+              "confidence": 0.5392649331895668,
+              "observed": 0.44155844155844154
+            },
+            {
+              "lower": 0.6,
+              "count": 26,
+              "confidence": 0.6379300419272719,
+              "observed": 0.3076923076923077
+            },
+            {
+              "lower": 0.7,
+              "count": 4,
+              "confidence": 0.734795800869854,
+              "observed": 0.25
+            }
+          ],
+          "bttsBrier": 0.17000372126181368,
+          "over25Brier": 0.12492627941987759,
+          "scoreLogLoss": 2.2157775210854016,
+          "exactScoreAccuracy": 0.24671052631578946
+        },
+        "shrinkage": {
+          "coverage": 0.9411764705882353,
+          "count": 304,
+          "brier": 0.6662273997510127,
+          "logLoss": 1.097327386423111,
+          "ece": 0.05454580702923464,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 76,
+              "confidence": 0.37863721700299136,
+              "observed": 0.35526315789473684
+            },
+            {
+              "lower": 0.4,
+              "count": 197,
+              "confidence": 0.440987805543966,
+              "observed": 0.39086294416243655
+            },
+            {
+              "lower": 0.5,
+              "count": 28,
+              "confidence": 0.5315652712483668,
+              "observed": 0.35714285714285715
+            },
+            {
+              "lower": 0.6,
+              "count": 3,
+              "confidence": 0.6509761474851959,
+              "observed": 0.6666666666666666
+            }
+          ],
+          "bttsBrier": 0.1635555171838099,
+          "over25Brier": 0.1177801513949046,
+          "scoreLogLoss": 2.122025624515195,
+          "exactScoreAccuracy": 0.2532894736842105
+        },
+        "opponent": {
+          "coverage": 0.9411764705882353,
+          "count": 304,
+          "brier": 0.6665709684306776,
+          "logLoss": 1.0978785636922346,
+          "ece": 0.05927748604663645,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 77,
+              "confidence": 0.37875539851823986,
+              "observed": 0.2987012987012987
+            },
+            {
+              "lower": 0.4,
+              "count": 199,
+              "confidence": 0.4399763837702378,
+              "observed": 0.40703517587939697
+            },
+            {
+              "lower": 0.5,
+              "count": 25,
+              "confidence": 0.5276967526191678,
+              "observed": 0.32
+            },
+            {
+              "lower": 0.6,
+              "count": 3,
+              "confidence": 0.6305097044945018,
+              "observed": 0.6666666666666666
+            }
+          ],
+          "bttsBrier": 0.163398027706148,
+          "over25Brier": 0.11761828724409543,
+          "scoreLogLoss": 2.121338117037537,
+          "exactScoreAccuracy": 0.2532894736842105
+        },
+        "dixon_coles": {
+          "coverage": 0.9411764705882353,
+          "count": 304,
+          "brier": 0.6679643752833379,
+          "logLoss": 1.1001254316593723,
+          "ece": 0.05306993392785256,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 52,
+              "confidence": 0.3788551595905503,
+              "observed": 0.34615384615384615
+            },
+            {
+              "lower": 0.4,
+              "count": 221,
+              "confidence": 0.44106714295585037,
+              "observed": 0.40271493212669685
+            },
+            {
+              "lower": 0.5,
+              "count": 28,
+              "confidence": 0.5319772255761689,
+              "observed": 0.32142857142857145
+            },
+            {
+              "lower": 0.6,
+              "count": 3,
+              "confidence": 0.6461364313390315,
+              "observed": 0.6666666666666666
+            }
+          ],
+          "bttsBrier": 0.16393067259249597,
+          "over25Brier": 0.11778015139490462,
+          "scoreLogLoss": 2.1254821715556997,
+          "exactScoreAccuracy": 0.2532894736842105
+        },
+        "elo": {
+          "coverage": 0.9411764705882353,
+          "count": 304,
+          "brier": 0.6667510848537738,
+          "logLoss": 1.0978640351822762,
+          "ece": 0.0867527717282145,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 62,
+              "confidence": 0.37719341503129206,
+              "observed": 0.3064516129032258
+            },
+            {
+              "lower": 0.4,
+              "count": 202,
+              "confidence": 0.4419177383698796,
+              "observed": 0.37623762376237624
+            },
+            {
+              "lower": 0.5,
+              "count": 34,
+              "confidence": 0.5361533841017916,
+              "observed": 0.29411764705882354
+            },
+            {
+              "lower": 0.6,
+              "count": 5,
+              "confidence": 0.6434180073678659,
+              "observed": 0.6
+            },
+            {
+              "lower": 0.7,
+              "count": 1,
+              "confidence": 0.7268373735788165,
+              "observed": 1
+            }
+          ],
+          "bttsBrier": 0.16353281292483537,
+          "over25Brier": 0.11802942252829851,
+          "scoreLogLoss": 2.1243536686515667,
+          "exactScoreAccuracy": 0.24342105263157895
+        },
+        "dynamic_home": {
+          "coverage": 0.9411764705882353,
+          "count": 304,
+          "brier": 0.6735694565612834,
+          "logLoss": 1.1083255051413456,
+          "ece": 0.08429071618490808,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 72,
+              "confidence": 0.37932560224750095,
+              "observed": 0.4027777777777778
+            },
+            {
+              "lower": 0.4,
+              "count": 197,
+              "confidence": 0.4407306421786958,
+              "observed": 0.3604060913705584
+            },
+            {
+              "lower": 0.5,
+              "count": 32,
+              "confidence": 0.534511786289364,
+              "observed": 0.28125
+            },
+            {
+              "lower": 0.6,
+              "count": 3,
+              "confidence": 0.6691691371898031,
+              "observed": 0.6666666666666666
+            }
+          ],
+          "bttsBrier": 0.16360506984519826,
+          "over25Brier": 0.11785283703917916,
+          "scoreLogLoss": 2.1328587925672626,
+          "exactScoreAccuracy": 0.25
+        },
+        "league_mix": {
+          "coverage": 0.9411764705882353,
+          "count": 304,
+          "brier": 0.6591270483298114,
+          "logLoss": 1.0863878849975217,
+          "ece": 0.026074968393589654,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 208,
+              "confidence": 0.37774275489810505,
+              "observed": 0.3557692307692308
+            },
+            {
+              "lower": 0.4,
+              "count": 94,
+              "confidence": 0.4184316650188615,
+              "observed": 0.3829787234042553
+            },
+            {
+              "lower": 0.5,
+              "count": 2,
+              "confidence": 0.5118604305362147,
+              "observed": 0.5
+            }
+          ],
+          "bttsBrier": 0.16145905706604996,
+          "over25Brier": 0.11642058115030336,
+          "scoreLogLoss": 2.0996820360630593,
+          "exactScoreAccuracy": 0.2598684210526316
+        },
+        "calibrated": {
+          "coverage": 0.9411764705882353,
+          "count": 304,
+          "brier": 0.6606541109111489,
+          "logLoss": 1.0883567931326366,
+          "ece": 0.05403024076723245,
+          "reliability": [
+            {
+              "lower": 0.3,
+              "count": 142,
+              "confidence": 0.37193811924043957,
+              "observed": 0.3591549295774648
+            },
+            {
+              "lower": 0.4,
+              "count": 137,
+              "confidence": 0.4380013675602709,
+              "observed": 0.3357664233576642
+            },
+            {
+              "lower": 0.5,
+              "count": 22,
+              "confidence": 0.522375982055748,
+              "observed": 0.5
+            },
+            {
+              "lower": 0.6,
+              "count": 3,
+              "confidence": 0.629492899962442,
+              "observed": 0.6666666666666666
+            }
+          ],
+          "bttsBrier": 0.17359279248268095,
+          "over25Brier": 0.13867111245209848,
+          "scoreLogLoss": 2.1889342112511825,
+          "exactScoreAccuracy": 0.2532894736842105
+        }
+      }
+    }
+  ]
+}

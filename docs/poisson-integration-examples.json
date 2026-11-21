@@ -1,0 +1,788 @@
+{
+  "sources": {
+    "normal": "Archived ESPN schedule fixture",
+    "firstHalf": "https://github.com/openfootball/football.json/blob/e6744429ee395bc86f247348c6184bb08d4eb361/2024-25/en.1.json"
+  },
+  "normal": {
+    "available": true,
+    "model": "venue_attack_defence_poisson",
+    "model_version": "venue-poisson-v1.2",
+    "calibration_status": "uncalibrated",
+    "period": "full_time",
+    "as_of": "2026-11-21T00:00:00.000Z",
+    "latest_fixture_kickoff": "2026-05-19T18:30:00.000Z",
+    "home_samples": 10,
+    "away_samples": 10,
+    "lambda_home": 1.2448275862068965,
+    "lambda_away": 0.8008602150537634,
+    "league_averages": {
+      "home": 1.5263157894736843,
+      "away": 1.2236842105263157
+    },
+    "team_rates": {
+      "home_attack_goals": 1.9,
+      "home_conceded_goals": 0.7,
+      "away_attack_goals": 1.4,
+      "away_conceded_goals": 1
+    },
+    "probabilities": {
+      "home_win": 0.4670467754531946,
+      "draw": 0.2941000712094437,
+      "away_win": 0.23885315333736143,
+      "btts_yes": 0.39235805001560947,
+      "btts_no": 0.6076419499843905,
+      "over_2_5": 0.3356877402167834,
+      "under_2_5": 0.6643122597832166
+    },
+    "most_likely_scores": [
+      {
+        "home": 1,
+        "away": 0,
+        "probability": 0.16094530770327947
+      },
+      {
+        "home": 0,
+        "away": 0,
+        "probability": 0.1292912444153769
+      },
+      {
+        "home": 1,
+        "away": 1,
+        "probability": 0.12889469373914253
+      },
+      {
+        "home": 0,
+        "away": 1,
+        "probability": 0.10354421380706741
+      },
+      {
+        "home": 2,
+        "away": 0,
+        "probability": 0.10017457944979981
+      }
+    ],
+    "other_score_probability": 0.3771499608853338,
+    "totals": {
+      "0.5": {
+        "under": 0.1292912444153769,
+        "over": 0.8707087555846231
+      },
+      "1.5": {
+        "under": 0.39378076592572375,
+        "over": 0.6062192340742762
+      },
+      "2.5": {
+        "under": 0.6643122597832166,
+        "over": 0.3356877402167834
+      },
+      "3.5": {
+        "under": 0.8487865853969152,
+        "over": 0.1512134146030848
+      },
+      "4.5": {
+        "under": 0.9431308047853478,
+        "over": 0.05686919521465217
+      }
+    },
+    "goal_distribution": {
+      "home": [
+        0.28799058315417897,
+        0.3584986224781331,
+        0.22313448743897593,
+        0.09258798846605781,
+        0.028814020548488684,
+        0.007173697529658217,
+        0.0014883360966704692,
+        0.0002646745472404134,
+        0.00004118427222146088,
+        0.0000056963686865698765,
+        7.090996882247328e-7
+      ],
+      "away": [
+        0.44894261124558843,
+        0.35954027618894,
+        0.143970751454582,
+        0.038433482323789486,
+        0.007694961729773765,
+        0.0012325177411474193,
+        0.00016451240387215015,
+        0.000018821634163437395,
+        0.0000018841872479742165,
+        1.6766340051268774e-7,
+        1.3427494699123636e-8
+      ],
+      "total": [
+        0.1292912444153769,
+        0.2644895215103469,
+        0.27053149385749276,
+        0.18447432561369867,
+        0.09434421938843257,
+        0.03859976374447519,
+        0.013160510970602734,
+        0.0038460423929884426,
+        0.0009834752508084768,
+        0.00022354259149118543,
+        0.0000457298352475713,
+        0.000008468144043625087,
+        0.0000014168295976674825,
+        2.1299288987642425e-7,
+        2.862827207950132e-8,
+        3.4308172403883837e-9,
+        3.6583040197833777e-10,
+        3.4538451364522e-11,
+        2.8441507316007637e-12,
+        1.9537802537341628e-13,
+        9.521432304787823e-15
+      ],
+      "retained_mass": 0.9999999095080925
+    },
+    "used_fixtures": [
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740956",
+        "kickoff": "2026-05-18T19:00:00.000Z",
+        "home_team": "Arsenal",
+        "away_team": "Burnley",
+        "home_goals": 1,
+        "away_goals": 0,
+        "gf": 1,
+        "ga": 0
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740936",
+        "kickoff": "2026-05-02T16:30:00.000Z",
+        "home_team": "Arsenal",
+        "away_team": "Fulham",
+        "home_goals": 3,
+        "away_goals": 0,
+        "gf": 3,
+        "ga": 0
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740931",
+        "kickoff": "2026-04-25T16:30:00.000Z",
+        "home_team": "Arsenal",
+        "away_team": "Newcastle United",
+        "home_goals": 1,
+        "away_goals": 0,
+        "gf": 1,
+        "ga": 0
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740908",
+        "kickoff": "2026-04-11T11:30:00.000Z",
+        "home_team": "Arsenal",
+        "away_team": "AFC Bournemouth",
+        "home_goals": 1,
+        "away_goals": 2,
+        "gf": 1,
+        "ga": 2
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740886",
+        "kickoff": "2026-03-14T17:30:00.000Z",
+        "home_team": "Arsenal",
+        "away_team": "Everton",
+        "home_goals": 2,
+        "away_goals": 0,
+        "gf": 2,
+        "ga": 0
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740871",
+        "kickoff": "2026-03-01T16:30:00.000Z",
+        "home_team": "Arsenal",
+        "away_team": "Chelsea",
+        "home_goals": 2,
+        "away_goals": 1,
+        "gf": 2,
+        "ga": 1
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740836",
+        "kickoff": "2026-02-07T15:00:00.000Z",
+        "home_team": "Arsenal",
+        "away_team": "Sunderland",
+        "home_goals": 3,
+        "away_goals": 0,
+        "gf": 3,
+        "ga": 0
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740816",
+        "kickoff": "2026-01-25T16:30:00.000Z",
+        "home_team": "Arsenal",
+        "away_team": "Manchester United",
+        "home_goals": 2,
+        "away_goals": 3,
+        "gf": 2,
+        "ga": 3
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740796",
+        "kickoff": "2026-01-08T20:00:00.000Z",
+        "home_team": "Arsenal",
+        "away_team": "Liverpool",
+        "home_goals": 0,
+        "away_goals": 0,
+        "gf": 0,
+        "ga": 0
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740776",
+        "kickoff": "2025-12-30T20:15:00.000Z",
+        "home_team": "Arsenal",
+        "away_team": "Aston Villa",
+        "home_goals": 4,
+        "away_goals": 1,
+        "gf": 4,
+        "ga": 1
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740958",
+        "kickoff": "2026-05-19T18:30:00.000Z",
+        "home_team": "AFC Bournemouth",
+        "away_team": "Manchester City",
+        "home_goals": 1,
+        "away_goals": 1,
+        "gf": 1,
+        "ga": 1
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740941",
+        "kickoff": "2026-05-04T19:00:00.000Z",
+        "home_team": "Everton",
+        "away_team": "Manchester City",
+        "home_goals": 3,
+        "away_goals": 3,
+        "gf": 3,
+        "ga": 3
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740929",
+        "kickoff": "2026-04-22T19:00:00.000Z",
+        "home_team": "Burnley",
+        "away_team": "Manchester City",
+        "home_goals": 0,
+        "away_goals": 1,
+        "gf": 1,
+        "ga": 0
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740909",
+        "kickoff": "2026-04-12T15:30:00.000Z",
+        "home_team": "Chelsea",
+        "away_team": "Manchester City",
+        "home_goals": 0,
+        "away_goals": 3,
+        "gf": 3,
+        "ga": 0
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740895",
+        "kickoff": "2026-03-14T20:00:00.000Z",
+        "home_team": "West Ham United",
+        "away_team": "Manchester City",
+        "home_goals": 1,
+        "away_goals": 1,
+        "gf": 1,
+        "ga": 1
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740869",
+        "kickoff": "2026-02-28T17:30:00.000Z",
+        "home_team": "Leeds United",
+        "away_team": "Manchester City",
+        "home_goals": 0,
+        "away_goals": 1,
+        "gf": 1,
+        "ga": 0
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740845",
+        "kickoff": "2026-02-08T16:30:00.000Z",
+        "home_team": "Liverpool",
+        "away_team": "Manchester City",
+        "home_goals": 1,
+        "away_goals": 2,
+        "gf": 2,
+        "ga": 1
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740828",
+        "kickoff": "2026-02-01T16:30:00.000Z",
+        "home_team": "Tottenham Hotspur",
+        "away_team": "Manchester City",
+        "home_goals": 2,
+        "away_goals": 2,
+        "gf": 2,
+        "ga": 2
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740811",
+        "kickoff": "2026-01-17T12:30:00.000Z",
+        "home_team": "Manchester United",
+        "away_team": "Manchester City",
+        "home_goals": 2,
+        "away_goals": 0,
+        "gf": 0,
+        "ga": 2
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-eng.1-740784",
+        "kickoff": "2026-01-01T20:00:00.000Z",
+        "home_team": "Sunderland",
+        "away_team": "Manchester City",
+        "home_goals": 0,
+        "away_goals": 0,
+        "gf": 0,
+        "ga": 0
+      }
+    ],
+    "data_quality": {
+      "identity_and_score_verified": true,
+      "completed_only": true,
+      "venue_split": true,
+      "league_averages_supplied": true,
+      "reliability": "good"
+    },
+    "total": 74,
+    "used": 20,
+    "excluded": 54,
+    "reasons": {
+      "not_relevant_home_or_away_venue": 38,
+      "outside_last_n": 16
+    }
+  },
+  "firstHalf": {
+    "available": true,
+    "model": "venue_attack_defence_poisson",
+    "model_version": "venue-poisson-v1.2",
+    "calibration_status": "uncalibrated",
+    "period": "first_half",
+    "as_of": "2025-07-01T00:00:00.000Z",
+    "latest_fixture_kickoff": "2025-05-25T00:00:00.000Z",
+    "home_samples": 10,
+    "away_samples": 10,
+    "lambda_home": 0.3436363636363637,
+    "lambda_away": 0.3294827586206896,
+    "league_averages": {
+      "home": 0.7857142857142857,
+      "away": 0.6373626373626373
+    },
+    "team_rates": {
+      "home_attack_goals": 0.9,
+      "home_conceded_goals": 0.3,
+      "away_attack_goals": 0.7,
+      "away_conceded_goals": 0.3
+    },
+    "probabilities": {
+      "home_win": 0.22055219755397945,
+      "draw": 0.5695268918410894,
+      "away_win": 0.20992091060493107,
+      "btts_yes": 0.08163252878728111,
+      "btts_no": 0.9183674712127189,
+      "over_2_5": 0.030953034086045328,
+      "under_2_5": 0.9690469659139547
+    },
+    "most_likely_scores": [
+      {
+        "home": 0,
+        "away": 0,
+        "probability": 0.5101149827733982
+      },
+      {
+        "home": 1,
+        "away": 0,
+        "probability": 0.1752940577166768
+      },
+      {
+        "home": 0,
+        "away": 1,
+        "probability": 0.16807409173792476
+      },
+      {
+        "home": 1,
+        "away": 1,
+        "probability": 0.05775636970630505
+      },
+      {
+        "home": 2,
+        "away": 0,
+        "probability": 0.03011870628041084
+      }
+    ],
+    "other_score_probability": 0.05864179178528439,
+    "totals": {
+      "0.5": {
+        "under": 0.5101149827733982,
+        "over": 0.4898850172266018
+      },
+      "1.5": {
+        "under": 0.8534831322279997,
+        "over": 0.14651686777200035
+      },
+      "2.5": {
+        "under": 0.9690469659139547,
+        "over": 0.030953034086045328
+      },
+      "3.5": {
+        "under": 0.9949763746790714,
+        "over": 0.005023625320928593
+      },
+      "4.5": {
+        "under": 0.9993397698962264,
+        "over": 0.0006602301037735847
+      }
+    },
+    "goal_distribution": {
+      "home": [
+        0.7091867672641016,
+        0.24370236184166402,
+        0.041872496716431375,
+        0.004796304169336685,
+        0.0004120461309111971,
+        0.000028318806815351368,
+        0.0000016218952994246694,
+        7.962031469902922e-8,
+        3.4200544268446655e-9,
+        1.305838962977054e-10,
+        4.48733752732115e-12
+      ],
+      "away": [
+        0.7192956867220154,
+        0.23699552712513294,
+        0.03904297002897664,
+        0.004287995156630709,
+        0.0003532051182897105,
+        0.00002327499934660816,
+        0.000001278118498602534,
+        6.015971553767099e-8,
+        2.4776986291484744e-9,
+        9.070655326250448e-11,
+        2.9886245393904486e-12
+      ],
+      "total": [
+        0.5101149827733982,
+        0.34336814945460153,
+        0.11556383368595503,
+        0.025929408765116718,
+        0.004363395217154927,
+        0.0005874169517263899,
+        0.00006590026382416355,
+        0.000006336961105975602,
+        5.331912121789229e-7,
+        3.987791119300564e-8,
+        2.6842584579680674e-9,
+        1.6409256344669083e-10,
+        9.15403487232014e-12,
+        4.661784090831972e-13,
+        2.160418129257726e-14,
+        9.061199308566706e-16,
+        3.413442373142686e-17,
+        1.1416810653836065e-18,
+        3.318434377084221e-20,
+        7.972971573533312e-22,
+        1.3410967050679648e-23
+      ],
+      "retained_mass": 0.9999999999997637
+    },
+    "used_fixtures": [
+      {
+        "source": "openfootball",
+        "fixture_id": "2025-05-18|Arsenal FC|Newcastle United FC",
+        "kickoff": "2025-05-18T00:00:00.000Z",
+        "home_team": "Arsenal FC",
+        "away_team": "Newcastle United FC",
+        "home_goals": 0,
+        "away_goals": 0,
+        "gf": 0,
+        "ga": 0
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2025-05-03|Arsenal FC|AFC Bournemouth",
+        "kickoff": "2025-05-03T00:00:00.000Z",
+        "home_team": "Arsenal FC",
+        "away_team": "AFC Bournemouth",
+        "home_goals": 1,
+        "away_goals": 0,
+        "gf": 1,
+        "ga": 0
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2025-04-23|Arsenal FC|Crystal Palace FC",
+        "kickoff": "2025-04-23T00:00:00.000Z",
+        "home_team": "Arsenal FC",
+        "away_team": "Crystal Palace FC",
+        "home_goals": 2,
+        "away_goals": 1,
+        "gf": 2,
+        "ga": 1
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2025-04-12|Arsenal FC|Brentford FC",
+        "kickoff": "2025-04-12T00:00:00.000Z",
+        "home_team": "Arsenal FC",
+        "away_team": "Brentford FC",
+        "home_goals": 0,
+        "away_goals": 0,
+        "gf": 0,
+        "ga": 0
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2025-04-01|Arsenal FC|Fulham FC",
+        "kickoff": "2025-04-01T00:00:00.000Z",
+        "home_team": "Arsenal FC",
+        "away_team": "Fulham FC",
+        "home_goals": 1,
+        "away_goals": 0,
+        "gf": 1,
+        "ga": 0
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2025-03-16|Arsenal FC|Chelsea FC",
+        "kickoff": "2025-03-16T00:00:00.000Z",
+        "home_team": "Arsenal FC",
+        "away_team": "Chelsea FC",
+        "home_goals": 1,
+        "away_goals": 0,
+        "gf": 1,
+        "ga": 0
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2025-02-22|Arsenal FC|West Ham United FC",
+        "kickoff": "2025-02-22T00:00:00.000Z",
+        "home_team": "Arsenal FC",
+        "away_team": "West Ham United FC",
+        "home_goals": 0,
+        "away_goals": 1,
+        "gf": 0,
+        "ga": 1
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2025-01-18|Arsenal FC|Aston Villa FC",
+        "kickoff": "2025-01-18T00:00:00.000Z",
+        "home_team": "Arsenal FC",
+        "away_team": "Aston Villa FC",
+        "home_goals": 1,
+        "away_goals": 0,
+        "gf": 1,
+        "ga": 0
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2025-01-15|Arsenal FC|Tottenham Hotspur FC",
+        "kickoff": "2025-01-15T00:00:00.000Z",
+        "home_team": "Arsenal FC",
+        "away_team": "Tottenham Hotspur FC",
+        "home_goals": 2,
+        "away_goals": 1,
+        "gf": 2,
+        "ga": 1
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2024-12-27|Arsenal FC|Ipswich Town FC",
+        "kickoff": "2024-12-27T00:00:00.000Z",
+        "home_team": "Arsenal FC",
+        "away_team": "Ipswich Town FC",
+        "home_goals": 1,
+        "away_goals": 0,
+        "gf": 1,
+        "ga": 0
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2025-05-25|Fulham FC|Manchester City FC",
+        "kickoff": "2025-05-25T00:00:00.000Z",
+        "home_team": "Fulham FC",
+        "away_team": "Manchester City FC",
+        "home_goals": 0,
+        "away_goals": 1,
+        "gf": 1,
+        "ga": 0
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2025-04-19|Everton FC|Manchester City FC",
+        "kickoff": "2025-04-19T00:00:00.000Z",
+        "home_team": "Everton FC",
+        "away_team": "Manchester City FC",
+        "home_goals": 0,
+        "away_goals": 0,
+        "gf": 0,
+        "ga": 0
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2025-03-08|Nottingham Forest FC|Manchester City FC",
+        "kickoff": "2025-03-08T00:00:00.000Z",
+        "home_team": "Nottingham Forest FC",
+        "away_team": "Manchester City FC",
+        "home_goals": 0,
+        "away_goals": 0,
+        "gf": 0,
+        "ga": 0
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2025-02-26|Tottenham Hotspur FC|Manchester City FC",
+        "kickoff": "2025-02-26T00:00:00.000Z",
+        "home_team": "Tottenham Hotspur FC",
+        "away_team": "Manchester City FC",
+        "home_goals": 0,
+        "away_goals": 1,
+        "gf": 1,
+        "ga": 0
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2025-01-19|Ipswich Town FC|Manchester City FC",
+        "kickoff": "2025-01-19T00:00:00.000Z",
+        "home_team": "Ipswich Town FC",
+        "away_team": "Manchester City FC",
+        "home_goals": 0,
+        "away_goals": 3,
+        "gf": 3,
+        "ga": 0
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2025-01-14|Brentford FC|Manchester City FC",
+        "kickoff": "2025-01-14T00:00:00.000Z",
+        "home_team": "Brentford FC",
+        "away_team": "Manchester City FC",
+        "home_goals": 0,
+        "away_goals": 0,
+        "gf": 0,
+        "ga": 0
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2024-12-29|Leicester City FC|Manchester City FC",
+        "kickoff": "2024-12-29T00:00:00.000Z",
+        "home_team": "Leicester City FC",
+        "away_team": "Manchester City FC",
+        "home_goals": 0,
+        "away_goals": 1,
+        "gf": 1,
+        "ga": 0
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2024-12-21|Aston Villa FC|Manchester City FC",
+        "kickoff": "2024-12-21T00:00:00.000Z",
+        "home_team": "Aston Villa FC",
+        "away_team": "Manchester City FC",
+        "home_goals": 1,
+        "away_goals": 0,
+        "gf": 0,
+        "ga": 1
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2024-12-07|Crystal Palace FC|Manchester City FC",
+        "kickoff": "2024-12-07T00:00:00.000Z",
+        "home_team": "Crystal Palace FC",
+        "away_team": "Manchester City FC",
+        "home_goals": 1,
+        "away_goals": 1,
+        "gf": 1,
+        "ga": 1
+      },
+      {
+        "source": "openfootball",
+        "fixture_id": "2024-12-01|Liverpool FC|Manchester City FC",
+        "kickoff": "2024-12-01T00:00:00.000Z",
+        "home_team": "Liverpool FC",
+        "away_team": "Manchester City FC",
+        "home_goals": 1,
+        "away_goals": 0,
+        "gf": 0,
+        "ga": 1
+      }
+    ],
+    "data_quality": {
+      "identity_and_score_verified": true,
+      "completed_only": true,
+      "venue_split": true,
+      "league_averages_supplied": true,
+      "reliability": "good"
+    },
+    "total": 364,
+    "used": 20,
+    "excluded": 344,
+    "reasons": {
+      "not_relevant_home_or_away_venue": 331,
+      "outside_last_n": 13
+    }
+  },
+  "missingData": {
+    "available": false,
+    "reason": "missing_league_averages",
+    "model_version": "venue-poisson-v1.2",
+    "calibration_status": "uncalibrated",
+    "period": "full_time",
+    "as_of": "2026-11-21T00:00:00.000Z",
+    "total": 74,
+    "used": 0,
+    "excluded": 0,
+    "reasons": {},
+    "required": [
+      "league_average_home_goals",
+      "league_average_away_goals"
+    ],
+    "home_samples": null,
+    "away_samples": null
+  },
+  "insufficient": {
+    "available": false,
+    "reason": "insufficient_verified_venue_sample",
+    "model_version": "venue-poisson-v1.2",
+    "calibration_status": "uncalibrated",
+    "period": "full_time",
+    "as_of": "2026-11-21T00:00:00.000Z",
+    "total": 4,
+    "used": 2,
+    "excluded": 2,
+    "reasons": {
+      "not_relevant_home_or_away_venue": 2
+    },
+    "home_samples": 2,
+    "away_samples": 0,
+    "required_per_team": 5,
+    "max_matches_per_team": 10
+  },
+  "apiError": {
+    "status": 503,
+    "body": {
+      "error": "D1 binding DB is missing"
+    }
+  }
+}

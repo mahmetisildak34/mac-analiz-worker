@@ -1,0 +1,11 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "mam-statistics-readonly-staging",
+  "main": "read-only-worker.js",
+  "compatibility_date": "2026-11-12",
+  "workers_dev": false,
+  "d1_databases": [
+    {"binding":"TEST_WRITE_DB","database_name":"mam-statistics-isolated-test","database_id":"fb9b42cc-8d96-4911-b193-0983527ee593"}
+  ],
+  "vars": {"STATISTICS_REPAIR_ENABLED":"false","STATISTICS_API_BACKFILL_ENABLED":"false"}
+}

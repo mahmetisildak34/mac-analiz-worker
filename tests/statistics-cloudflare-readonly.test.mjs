@@ -1,0 +1,18 @@
+import assert from "node:assert/strict";
+import worker from "../staging/read-only-worker.js";
+const queries=[];
+const isolated={prepare(sql){queries.push(sql);assert.match(sql,/^SELECT .*mam_archive_test_matches/);return {async first(){return {total:1}}}}};
+const flags={STATISTICS_REPAIR_ENABLED:"false",STATISTICS_API_BACKFILL_ENABLED:"false"};
+const result=await worker.fetch(new Request("https://staging.invalid/health"),{...flags,TEST_WRITE_DB:isolated});
+assert.equal(result.status,200);
+const body=await result.json();
+assert.equal(body.ok,true);
+assert.equal(body.isolated,true);
+assert.equal(body.matchesTablePresent,true);
+assert.equal(queries.length,1);
+assert.equal((await worker.fetch(new Request("https://staging.invalid/health"),{...flags,TEST_WRITE_DB:isolated,PRODUCTION_READ_DB:isolated})).status,503);
+assert.equal((await worker.fetch(new Request("https://staging.invalid/health"),{...flags,TEST_WRITE_DB:isolated,PREVIEW_READ_DB:isolated})).status,503);
+assert.equal((await worker.fetch(new Request("https://staging.invalid/health"),{...flags,TEST_WRITE_DB:isolated,DB:isolated})).status,503);
+assert.equal((await worker.fetch(new Request("https://staging.invalid/health"),{...flags,TEST_WRITE_DB:isolated,STATISTICS_REPAIR_ENABLED:"true"})).status,503);
+assert.equal((await worker.fetch(new Request("https://staging.invalid/nope"),{})).status,404);
+console.log("Isolated staging D1 binding safety tests passed");
