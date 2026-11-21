@@ -61,6 +61,9 @@ jobs:
       - name: Run statistics repair safety test
         run: node tests/statistics-repair-safety.test.mjs
 
+      - name: Run full 722-candidate bulk repair safety suite
+        run: node tests/statistics-repair-bulk.test.mjs
+
       - name: Run archive upsert regression test
         run: node tests/archive-upsert-guard.test.mjs
 
