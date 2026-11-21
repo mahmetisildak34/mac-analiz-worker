@@ -883,6 +883,11 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
       let retryAfterHeader = null;
       let fetchedStatsJson = null;
       try {
+        const source = String(item.source || "ESPN");
+        const target = await env.DB.prepare(
+          "SELECT home_team, away_team, home_team_id, away_team_id FROM matches WHERE source = ? AND fixture_id = ? AND status IN ('FT','FINISHED','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR TRIM(statistics_json) IN ('','{}','[]','null')) LIMIT 1"
+        ).bind(source, item.fixtureId).first();
+        if (!target) throw new Error("ESPN target row missing, non-empty or no longer eligible");
         const response = await fetch(ESPN_BASE + "/" + item.slug + "/summary?event=" + encodeURIComponent(item.eventId), {
           headers: { "Accept": "application/json" }
         });
@@ -891,15 +896,36 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
           throw new Error("ESPN summary HTTP " + response.status);
         }
         const payload = await response.json();
-        const teams = Array.isArray(payload?.boxscore?.teams) ? payload.boxscore.teams : [];
-        let statistics = teams.map(team => ({
-          homeAway: team.homeAway || null,
-          team: team.team?.displayName || team.team?.name || null,
-          statistics: Array.isArray(team.statistics) ? team.statistics : []
+        const summaryCompetitors = payload?.header?.competitions?.[0]?.competitors
+          || payload?.competitions?.[0]?.competitors
+          || payload?.boxscore?.teams
+          || [];
+        const homeCompetitor = summaryCompetitors.find(c => String(c?.homeAway || "").toLowerCase() === "home");
+        const awayCompetitor = summaryCompetitors.find(c => String(c?.homeAway || "").toLowerCase() === "away");
+        const competitorName = c => String(c?.team?.displayName || c?.team?.name || c?.displayName || c?.name || "").trim();
+        const knownTeamId = value => value != null && String(value).trim() !== "" && !["-1","0"].includes(String(value).trim());
+        const sameProviderTeam = (expectedId, actualId, expectedName, actualName) => {
+          if (knownTeamId(expectedId) && knownTeamId(actualId)) return String(expectedId) === String(actualId);
+          return normalizeTeamName(expectedName) !== "" && normalizeTeamName(expectedName) === normalizeTeamName(actualName);
+        };
+        if (!homeCompetitor || !awayCompetitor ||
+            !sameProviderTeam(target.home_team_id, homeCompetitor.id || homeCompetitor.team?.id, target.home_team, competitorName(homeCompetitor)) ||
+            !sameProviderTeam(target.away_team_id, awayCompetitor.id || awayCompetitor.team?.id, target.away_team, competitorName(awayCompetitor))) {
+          throw new Error("ESPN event team identity or home/away order mismatch");
+        }
+        const rawBoxscoreTeams = Array.isArray(payload?.boxscore?.teams) ? payload.boxscore.teams : [];
+        const findBoxscoreSide = side => rawBoxscoreTeams.find(team =>
+          String(team?.homeAway || "").toLowerCase() === side ||
+          (!team?.homeAway && normalizeTeamName(team?.team?.displayName || team?.team?.name || "") ===
+            normalizeTeamName(side === "home" ? target.home_team : target.away_team)));
+        const orderedBoxscore = [findBoxscoreSide("home"), findBoxscoreSide("away")];
+        let statistics = orderedBoxscore.map((team, index) => ({
+          homeAway: index === 0 ? "home" : "away",
+          team: team?.team?.displayName || team?.team?.name || (index === 0 ? target.home_team : target.away_team),
+          statistics: Array.isArray(team?.statistics) ? team.statistics : []
         }));
-        let hasActualStatistics = statistics.length >= 2 &&
-          statistics.filter(team => team.statistics.length > 0).length >= 2;
-
+        let hasActualStatistics = statistics.length === 2 &&
+          statistics.every(team => team.statistics.length > 0);
         // Fallback: ESPN soccer summaries sometimes omit boxscore team stats,
         // while Core API exposes each competitor's statistics separately.
         if (!hasActualStatistics) {
