@@ -3,7 +3,7 @@
 const finished=new Set(["FT","FINISHED","AET","PEN"]);
 const directSources=new Set(["api-football","API-Football","api_sports"]);
 export function hasApiFootballIdentity(match) {
-  if (!match || !/^[1-9]\\d{0,11}$/.test(String(match.fixture_id||""))) return false;
+  if (!match || !/^[1-9]\d{0,11}$/.test(String(match.fixture_id||""))) return false;
   if (directSources.has(String(match.source||""))) return true;
   if (String(match.source||"") !== "app") return false;
   let raw;
@@ -14,10 +14,11 @@ export function hasApiFootballIdentity(match) {
   const awayId = String(raw?.teams?.away?.id ?? "");
   const leagueLogo = String(raw?.league?.logo ?? "");
   return fixtureId === String(match.fixture_id) &&
-    /^[1-9]\\d*$/.test(homeId) && /^[1-9]\\d*$/.test(awayId) && homeId !== awayId &&
+    /^[1-9]\d*$/.test(homeId) && /^[1-9]\d*$/.test(awayId) && homeId !== awayId &&
     String(match.home_team_id ?? "") === homeId &&
     String(match.away_team_id ?? "") === awayId &&
-    /^https:\\/\\/media\\.api-sports\\.io\\/football\\/leagues\\/\\d+\\.png(?:$|\\?)/i.test(leagueLogo);
+    leagueLogo.startsWith("https://media.api-sports.io/football/leagues/") &&
+    /[0-9]+\.png(?:\?|$)/i.test(leagueLogo);
 }
 export function classifyApiCandidate(match) {
   if(!match||!finished.has(String(match.status||"").toUpperCase())) return "not-finished";
