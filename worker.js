@@ -2351,6 +2351,7 @@ export default {
         });
         return new Response(JSON.stringify({
           ok: true, leagueId, count: matches.length,
+          data_quality_counts: matches.reduce((counts,match)=>{ const status=match.data_quality?.status||"missing"; counts[status]=(counts[status]||0)+1; return counts; }, {verified_full:0,partial:0,provenance_review:0,missing:0,conflicting:0}),
           rawCount: archivedRows.length,
           teamFilterApplied: requestedTeamNames.size > 0,
           response: matches
