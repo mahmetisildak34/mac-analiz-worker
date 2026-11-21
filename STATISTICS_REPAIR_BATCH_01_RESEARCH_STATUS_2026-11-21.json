@@ -28,8 +28,8 @@
     {
       "fixture_id": "1559703",
       "match": "Aurora — Mixco",
-      "status": "awaiting_individual_source_verification",
-      "reason": null,
+      "status": "blocked",
+      "reason": "provider-statistics-conflict: Aurora–Mixco 2026-11-12 FT 0-1. Sportradar StatsHub match 72475084 lists shots on target 2/2 and shots off target 16/14, while FootyStats lists shots on target 2/1 and total shots 12/10, possession 60/40; StatsHub possession and fouls are unavailable. Sources: https://statshub.sportradar.com/sportradar/en/match/72475084/report ; https://footystats.org/guatemala/aurora-fc-vs-csyd-mixco-h2h-stats . Do not blend providers or treat missing fouls as zero.",
       "statistics_sha256": null
     },
     {
@@ -182,8 +182,8 @@
   ],
   "counts": {
     "full_verified": 6,
-    "blocked": 7,
-    "pending": 12
+    "blocked": 8,
+    "pending": 11
   },
   "transfer_ready": 0,
   "next_batch": {
