@@ -27,6 +27,8 @@ jobs:
         run: node --test tests/statistics-repair-transfer-acceptance.test.mjs
       - name: Verify archive revision evidence fails closed
         run: node --test tests/statistics-repair-revision-proof.test.mjs
+      - name: Verify unconfirmed evidence remains excluded
+        run: node --test tests/statistics-repair-safari-followup.test.mjs
       - name: Exercise isolated archive repair transactions
         run: python3 tests/archive-repair-local-acceptance.py
       - name: Print summary without publishing protected payloads
