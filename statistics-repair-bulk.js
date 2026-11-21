@@ -1,3 +1,4 @@
+import {assessStatistics} from "./statistics-data-quality.js";
 // Fail-closed bulk historical statistics repair.
 // Read-only planning by default. Applying requires three explicit environment gates.
 // Preview D1 is SELECT-only. Production writes are per-match, conditional and backed up.
@@ -56,21 +57,8 @@ export function sameCompetition(a, b) {
   return countryCompatible && aLeague === bLeague;
 }
 export function classifyStatisticsPayload(raw) {
-  let parsed;
-  try { parsed = typeof raw === "string" ? JSON.parse(raw) : raw; } catch { return "invalid"; }
-  const teams = Array.isArray(parsed?.teams) ? parsed.teams :
-    Array.isArray(parsed?.response) ? parsed.response : null;
-  if (!teams || teams.length !== 2 || !teams.every(t => Array.isArray(t?.statistics) && t.statistics.length)) return "invalid";
-  const aliases = [
-    ["totalshots","total shots","shots"], ["shotsontarget","shots on target","shots on goal"],
-    ["possessionpct","ball possession","possession"], ["woncorners","corner kicks","corners"],
-    ["foulscommitted","fouls committed","fouls"], ["yellowcards","yellow cards"], ["redcards","red cards"]
-  ].map(group => group.map(n=>n.replace(/[^a-z0-9]+/g,"")));
-  const complete = teams.every(team => {
-    const names = new Set(team.statistics.map(s => String(s.name || s.type || s.displayName || "").toLowerCase().replace(/[^a-z0-9]+/g,"")));
-    return aliases.every(group => group.some(name => names.has(name)));
-  });
-  return complete ? "full" : "partial";
+  const result=assessStatistics(raw);
+  return result.structural_complete ? "full" : result.status==="missing" ? "invalid" : "partial";
 }
 
 const PROVIDER_PRIORITY = ["API-Football","ESPN","UEFA","SportScore","Football-Data"];
