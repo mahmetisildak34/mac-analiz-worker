@@ -66,7 +66,7 @@ All 44 current candidates have at least one Production team ID marked `-1`; howe
 
 `tests/statistics-repair-bulk.test.mjs` exercises a synthetic **722-row** candidate pool over batches capped at 25, with 44 Preview matches, 678 unmatched rows, a duplicate identical-payload ambiguity, existing populated statistics, unfinished rows, idempotent re-runs, backup/rollback, SHA validation, Preview read-only enforcement, invalid JSON, team-ID conflict, and injected write failure. The workflow now includes this test.
 
-GitHub Actions run **#1** on this branch completed successfully (run ID `44891662595`, commit `0b04cc9955fac2b817c3efd020c0ce83004b0c24`). Syntax checks, both focused integration tests, and the full 722-row SQLite suite passed. The synthetic stress suite applied 43 rows, rejected one ambiguous duplicate, left 678 unmatched, and verified rollback, idempotence, Preview read-only enforcement and fail-stop behavior.
+GitHub Actions runs **#1 and #2** on this branch completed successfully (run IDs `44891662595` and `44891814251`; latest tested commit `f953787bf9850fe700a85eda5396b8839e87fa2e`). Syntax checks, both focused integration tests, and the full 722-row SQLite suite passed. The synthetic stress suite applied 43 rows, rejected one ambiguous duplicate, left 678 unmatched, and verified rollback, SHA-tamper rejection, stale-snapshot rejection, idempotence, Preview read-only enforcement and fail-stop behavior.
 
 ## PR #69 review
 
