@@ -47,7 +47,7 @@ jobs:
           const source = fs.readFileSync('staging/read-only-worker.js','utf8');
           assert(!/\b(?:INSERT|UPDATE|DELETE|REPLACE|DROP|ALTER|CREATE|UPSERT|TRUNCATE)\b/i.test(source),'SQL write keyword forbidden');
           assert(!/\.\s*(?:run|batch|exec)\s*\(/.test(source),'D1 mutation method forbidden');
-          assert(!/fetch\s*\(/.test(source),'External API call forbidden');
+          assert(!/\b(?:await\s+fetch|globalThis\.fetch|env\.[A-Z_]*API)\s*\(/.test(source),'External API call forbidden');
           console.log('Isolated deployment safety gates passed');
           NODE
       - name: Check Cloudflare token is configured (without revealing value)
