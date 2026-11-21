@@ -1,0 +1,25 @@
+name: TheSportsDB one-request read-only pilot
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/bulk-statistics-repair-hardening]
+    paths: [.github/workflows/thesportsdb-one-request-pilot.yml]
+permissions:
+  contents: read
+concurrency:
+  group: thesportsdb-one-request-pilot
+  cancel-in-progress: false
+jobs:
+  one-http-request:
+    if: github.ref == 'refs/heads/feature/bulk-statistics-repair-hardening'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify script syntax
+        run: node --check scripts/thesportsdb-single-request-pilot.mjs
+      - name: Perform exactly one external GET and inspect response
+        run: node scripts/thesportsdb-single-request-pilot.mjs
