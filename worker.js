@@ -353,8 +353,8 @@ async function enrichExactCrossSourceMatches(env) {
       ambiguousMatches++; continue;
     }
     updates.push(env.DB.prepare(
-      "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))"
-    ).bind(safeCandidates[0].statistics, row.fixture_id));
+      "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = ? AND fixture_id = ? AND (statistics_json IS NULL OR TRIM(statistics_json) IN ('','{}','[]','null'))"
+    ).bind(safeCandidates[0].statistics, row.source, row.fixture_id));
   }
   let updated = 0;
   for (let i = 0; i < updates.length; i += 25) {
