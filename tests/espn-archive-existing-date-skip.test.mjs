@@ -14,4 +14,12 @@ assert.match(worker, /state\.cursor \+= batch\.length/,
 assert.match(worker, /mam:espn-archive-skip-last:v1/,
   "skip counts are recorded for live verification");
 
+
+const dateGuard = worker.match(/if \(!((?:\/\^.*?\$\/))\.test\(date\) \|\| !leagueId\) continue;/);
+assert.ok(dateGuard, "archive date guard must exist before existing-day lookup");
+const matchesDate = new Function("date", "return " + dateGuard[1] + ".test(date)");
+assert.equal(matchesDate("20261121"), true, "valid YYYYMMDD archive dates must enter D1 existing-day lookup");
+assert.equal(matchesDate("2026-11-21"), false, "invalid date strings must not be queried");
+assert.equal(matchesDate("abcdefgh"), false, "nondigit date strings must not be queried");
+
 console.log("ESPN archive existing-date skip regression test passed");
