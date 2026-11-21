@@ -1,0 +1,24 @@
+name: TheSportsDB real fixture discovery pilot
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/bulk-statistics-repair-hardening]
+    paths: [.github/workflows/thesportsdb-real-discovery-pilot.yml]
+permissions:
+  contents: read
+concurrency:
+  group: thesportsdb-real-discovery-pilot
+  cancel-in-progress: false
+jobs:
+  controlled-discovery:
+    if: github.ref == 'refs/heads/feature/bulk-statistics-repair-hardening'
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check scripts/thesportsdb-real-discovery-pilot.mjs
+      - name: Search at most three fixtures, query stats only after exact match
+        run: node scripts/thesportsdb-real-discovery-pilot.mjs
