@@ -687,7 +687,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     for (const job of batch) {
       const leagueId = String(job?.league?.[0] || "");
       const date = String(job?.date || "");
-      if (!/^\\d{8}$/.test(date) || !leagueId) continue;
+      if (!/^\d{8}$/.test(date) || !leagueId) continue;
       const isoDate = date.slice(0, 4) + "-" + date.slice(4, 6) + "-" + date.slice(6, 8);
       const nextDate = new Date(isoDate + "T00:00:00.000Z");
       nextDate.setUTCDate(nextDate.getUTCDate() + 1);
