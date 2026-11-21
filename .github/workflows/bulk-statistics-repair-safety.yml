@@ -5,10 +5,21 @@ on:
     branches:
       - feature/bulk-statistics-repair-hardening
     paths:
+      - "worker.js"
       - "statistics-repair.js"
       - "statistics-repair-bulk.js"
+      - "statistics-api-backfill.js"
+      - "statistics-api-cron.js"
+      - "statistics-api-persistence.js"
       - "tests/statistics-repair-*.test.mjs"
       - "tests/statistics-preview-integration.test.mjs"
+      - "tests/statistics-api-*.test.mjs"
+      - "tests/statistics-source-classification.test.mjs"
+      - "tests/espn-summary-source-alias.test.mjs"
+      - "tests/cross-source-*.test.mjs"
+      - "tests/espn-core-statistics-fallback.test.mjs"
+      - "tests/summary-statistics-overwrite-guard.test.mjs"
+      - "tests/team-name-aliases.test.mjs"
       - ".github/workflows/bulk-statistics-repair-safety.yml"
   pull_request:
     branches:
@@ -31,13 +42,34 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Check repair module syntax
+      - name: Check repair and provider module syntax
         run: |
+          node --check worker.js
           node --check statistics-repair-bulk.js
           node --check statistics-repair.js
+          node --check statistics-api-backfill.js
+          node --check statistics-api-cron.js
+          node --check statistics-api-persistence.js
       - name: Run repair safety tests
         run: node tests/statistics-repair-safety.test.mjs
       - name: Run Preview matching tests
         run: node tests/statistics-preview-integration.test.mjs
       - name: Run full 722-candidate SQLite pool and failure scenarios
         run: node tests/statistics-repair-bulk.test.mjs
+      - name: Run API-Football source identity and quota gates
+        run: |
+          node tests/statistics-api-backfill.test.mjs
+          node tests/statistics-api-cron.test.mjs
+          node tests/statistics-api-persistence.test.mjs
+      - name: Run provider aliases and statistics completeness tests
+        run: node tests/statistics-source-classification.test.mjs
+      - name: Run ESPN source alias and persistence tests
+        run: |
+          node tests/espn-summary-source-alias.test.mjs
+          node tests/espn-core-statistics-fallback.test.mjs
+          node tests/summary-statistics-overwrite-guard.test.mjs
+      - name: Run cross-source matching tests
+        run: |
+          node tests/cross-source-enrichment.test.mjs
+          node tests/cross-source-side-matching.test.mjs
+          node tests/team-name-aliases.test.mjs
