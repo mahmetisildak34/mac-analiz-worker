@@ -7,6 +7,7 @@ on:
     paths:
       - "worker.js"
       - "statistics-repair.js"
+      - "statistics-api-backfill.js"
       - "wrangler.jsonc"
       - "package.json"
       - "tests/**/*.mjs"
@@ -38,6 +39,9 @@ jobs:
 
       - name: Validate Worker JavaScript syntax
         run: node --check worker.js
+
+      - name: Run gated API backfill policy test
+        run: node tests/statistics-api-backfill.test.mjs
 
       - name: Run statistics repair safety test
         run: node tests/statistics-repair-safety.test.mjs
