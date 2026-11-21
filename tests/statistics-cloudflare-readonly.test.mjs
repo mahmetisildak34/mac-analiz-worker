@@ -1,0 +1,14 @@
+import assert from "node:assert/strict";
+import worker from "../staging/read-only-worker.js";
+const queries=[];
+const fake=(n)=>({prepare(sql){queries.push(sql);assert.match(sql,/^SELECT /);return {async first(){return {total:n}}}}});
+const result=await worker.fetch(new Request("https://staging.invalid/health"),{PRODUCTION_READ_DB:fake(715),PREVIEW_READ_DB:fake(2518)});
+assert.equal(result.status,200);
+const body=await result.json();
+assert.equal(body.readOnly,true);
+assert.equal(body.productionCount,715);
+assert.equal(body.previewCount,2518);
+assert.equal(queries.length,2);
+assert.equal((await worker.fetch(new Request("https://staging.invalid/nope"),{})).status,404);
+assert.equal((await worker.fetch(new Request("https://staging.invalid/health"),{})).status,503);
+console.log("Isolated Cloudflare staging Worker: two read-only D1 binding smoke tests passed");
