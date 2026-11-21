@@ -6,17 +6,18 @@
   "protected_existing_manifest": "STATISTICS_REPAIR_INVENTORY_2026-11-21.json",
   "candidate_inventory": "STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json",
   "counts": {
-    "full": 1,
+    "full": 3,
     "partial": 0,
     "ambiguous": 0,
-    "unavailable_or_not_yet_checked": 677
+    "unavailable_or_not_yet_checked": 675
   },
   "policy": {
     "production_preview_writes": 0,
     "api_football_requests": 0,
     "statistics_sha256": "SHA-256 over exact serialized statistics_json included below",
     "source_payload_sha256": "SHA-256 over exact raw_json string read from Production",
-    "cards": "yellow/red card counts are counted from ESPN match event details"
+    "cards": "yellow/red card counts are counted from ESPN match event details",
+    "external_statistics_source": "Each newly appended record contains single-provider stats and exact source URLs; local inventory fixture IDs are preserved."
   },
   "fullMatches": [
     {
@@ -50,6 +51,83 @@
         "score_matches_competitors": true,
         "both_sides_have_all_seven_required_metrics": true
       }
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2024-14",
+      "kickoff": "2024-09-19T12:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "2",
+        "name": "champions-league 2024",
+        "country": ""
+      },
+      "home": {
+        "name": "Feyenoord",
+        "id": "-1",
+        "goals": 0
+      },
+      "away": {
+        "name": "Leverkusen",
+        "id": "-1",
+        "goals": 4
+      },
+      "provider": "UEFA",
+      "provider_event_id": "2042028",
+      "provider_url": "https://www.uefa.com/uefachampionsleague/match/2042028--feyenoord-vs-leverkusen/statistics/",
+      "statistics_url": "https://www.uefa.com/newsfiles/UCL/2025/2042028_TS.pdf",
+      "statistics_class": "full",
+      "statistics_sha256": "ec5165b992c96c877c5e1ee7b0e5c43f66536d90fd9db56302cad822c0c5c28d",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":\"Feyenoord\",\"teamId\":\"-1\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"13\"},{\"name\":\"shotsOnTarget\",\"value\":\"4\"},{\"name\":\"possessionPct\",\"value\":\"52\"},{\"name\":\"wonCorners\",\"value\":\"6\"},{\"name\":\"foulsCommitted\",\"value\":\"4\"},{\"name\":\"yellowCards\",\"value\":\"1\"},{\"name\":\"redCards\",\"value\":\"0\"}]},{\"homeAway\":\"away\",\"team\":\"Leverkusen\",\"teamId\":\"-1\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"11\"},{\"name\":\"shotsOnTarget\",\"value\":\"4\"},{\"name\":\"possessionPct\",\"value\":\"48\"},{\"name\":\"wonCorners\",\"value\":\"2\"},{\"name\":\"foulsCommitted\",\"value\":\"8\"},{\"name\":\"yellowCards\",\"value\":\"0\"},{\"name\":\"redCards\",\"value\":\"0\"}]}],\"statisticsSource\":\"UEFA Team Statistics Full Time, match 2042028\"}",
+      "verification": {
+        "match_date_verified": true,
+        "ordered_teams_verified": true,
+        "score_verified": true,
+        "competition_verified": true,
+        "provider_event_id_verified": true,
+        "inventory_fixture_id_is_local_alias": true,
+        "both_sides_have_all_seven_required_metrics": true,
+        "source_single_provider": true
+      },
+      "notes": "UEFA official match 2042028; fd-uefa-champions-league-2024-14 is a local inventory ID, not the UEFA match ID. Inventory kickoff 12:00Z conflicts with UEFA match timing; date verified, exact kickoff requires correction/reconciliation before transfer."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2024-09-06T16:30:00+00:00-Romania U21-Montenegro U21",
+      "kickoff": "2024-09-06T16:30:00+00:00",
+      "status": "FT",
+      "league": {
+        "id": "",
+        "name": "UEFA European U21 Championship qualification",
+        "country": "Europe"
+      },
+      "home": {
+        "name": "Romania U21",
+        "id": "-1",
+        "goals": 1
+      },
+      "away": {
+        "name": "Montenegro U21",
+        "id": "20931",
+        "goals": 0
+      },
+      "provider": "Kadario",
+      "provider_event_id": "92857",
+      "provider_url": "https://kadario.com/football/matches/92857/romania-u21-vs-montenegro-u21",
+      "statistics_class": "full",
+      "statistics_sha256": "2c9d4243bdadea96040064f684d89753ff7045504679d9cc522a3192ce9fe835",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":\"Romania U21\",\"teamId\":\"-1\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"17\"},{\"name\":\"shotsOnTarget\",\"value\":\"6\"},{\"name\":\"possessionPct\",\"value\":\"49\"},{\"name\":\"wonCorners\",\"value\":\"4\"},{\"name\":\"foulsCommitted\",\"value\":\"12\"},{\"name\":\"yellowCards\",\"value\":\"3\"},{\"name\":\"redCards\",\"value\":\"0\"}]},{\"homeAway\":\"away\",\"team\":\"Montenegro U21\",\"teamId\":\"20931\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"4\"},{\"name\":\"shotsOnTarget\",\"value\":\"1\"},{\"name\":\"possessionPct\",\"value\":\"51\"},{\"name\":\"wonCorners\",\"value\":\"4\"},{\"name\":\"foulsCommitted\",\"value\":\"8\"},{\"name\":\"yellowCards\",\"value\":\"1\"},{\"name\":\"redCards\",\"value\":\"0\"}]}],\"statisticsSource\":\"Kadario match 92857\"}",
+      "verification": {
+        "match_date_verified": true,
+        "ordered_teams_verified": true,
+        "score_verified": true,
+        "competition_verified": true,
+        "provider_event_id_verified": true,
+        "inventory_fixture_id_is_local_alias": true,
+        "both_sides_have_all_seven_required_metrics": true,
+        "source_single_provider": true
+      },
+      "notes": "Kadario page header says 7 Sep 2024 but its match history says 09/06/24; Sky Sports, Sportschau and other match reports independently confirm Friday 6 Sep 2024 16:30 UTC. Date discrepancy is provider metadata error, not a 24-hour timezone conversion. Stats solely from Kadario, not mixed with other providers."
     }
   ],
   "partialMatches": []
