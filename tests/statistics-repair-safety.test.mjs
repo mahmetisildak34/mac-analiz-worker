@@ -24,3 +24,18 @@ assert.equal(db.prepare("SELECT COUNT(*) n FROM mam_statistics_repair_queue WHER
 assert.equal(db.prepare("SELECT COUNT(*) n FROM mam_statistics_repair_runs").get().n,2);
 assert.equal(db.prepare("SELECT lease_until FROM mam_statistics_repair_control").get().lease_until,0);
 console.log("D1 SQLite integration: non-overwrite, completion, dedupe, cursor, logs, disabled API passed");
+
+const bulk=new DatabaseSync(":memory:");
+bulk.exec("CREATE TABLE matches(source TEXT,fixture_id TEXT,league_id TEXT,kickoff TEXT,status TEXT,home_team TEXT,away_team TEXT,home_goals INTEGER,away_goals INTEGER,statistics_json TEXT,updated_at TEXT,PRIMARY KEY(source,fixture_id))");
+const insert=bulk.prepare("INSERT INTO matches(source,fixture_id,league_id,kickoff,status,home_team,away_team,home_goals,away_goals,statistics_json,updated_at) VALUES ('espn',?,'1','2025-01-01T10:00:00Z','FT',?,? ,1,0,NULL,CURRENT_TIMESTAMP)");
+for(let i=0;i<715;i++) insert.run(String(i), "Home"+i, "Away"+i);
+const bulkEnv={DB:wrap(bulk),STATISTICS_REPAIR_ENABLED:"true"};
+for(let i=0;i<36;i++) await runStatisticsRepair(bulkEnv);
+assert.equal(bulk.prepare("SELECT COUNT(*) n FROM mam_statistics_repair_queue").get().n,715,"all 715 unique fixtures must be scanned");
+assert.equal(bulk.prepare("SELECT COUNT(*) n FROM mam_statistics_repair_queue WHERE state='unmatched'").get().n,715);
+const before=bulk.prepare("SELECT cursor_fixture_id FROM mam_statistics_repair_control").get();
+await runStatisticsRepair(bulkEnv);
+assert.notEqual(bulk.prepare("SELECT cursor_fixture_id FROM mam_statistics_repair_control").get().cursor_fixture_id,before.cursor_fixture_id,"cursor wraps");
+bulk.prepare("UPDATE mam_statistics_repair_control SET lease_until=?").run(Date.now()+60000);
+assert.equal((await runStatisticsRepair(bulkEnv)).skipped,"locked");
+console.log("715 fixture cursor traversal and lock regression passed");
