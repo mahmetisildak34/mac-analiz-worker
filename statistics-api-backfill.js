@@ -1,11 +1,29 @@
 // API-Football statistics backfill: fail-closed, never invoked unless explicitly enabled.
-// Only fixture IDs from the API-Football source namespace may be used.
+// app rows are accepted only when raw_json proves the exact API-Sports fixture/team identity.
 const finished=new Set(["FT","FINISHED","AET","PEN"]);
+const directSources=new Set(["api-football","API-Football","api_sports"]);
+export function hasApiFootballIdentity(match) {
+  if (!match || !/^[1-9]\\d{0,11}$/.test(String(match.fixture_id||""))) return false;
+  if (directSources.has(String(match.source||""))) return true;
+  if (String(match.source||"") !== "app") return false;
+  let raw;
+  try { raw = typeof match.raw_json === "string" ? JSON.parse(match.raw_json) : match.raw_json; }
+  catch { return false; }
+  const fixtureId = String(raw?.fixture?.id ?? "");
+  const homeId = String(raw?.teams?.home?.id ?? "");
+  const awayId = String(raw?.teams?.away?.id ?? "");
+  const leagueLogo = String(raw?.league?.logo ?? "");
+  return fixtureId === String(match.fixture_id) &&
+    /^[1-9]\\d*$/.test(homeId) && /^[1-9]\\d*$/.test(awayId) && homeId !== awayId &&
+    String(match.home_team_id ?? "") === homeId &&
+    String(match.away_team_id ?? "") === awayId &&
+    /^https:\\/\\/media\\.api-sports\\.io\\/football\\/leagues\\/\\d+\\.png(?:$|\\?)/i.test(leagueLogo);
+}
 export function classifyApiCandidate(match) {
-  if(!match||!finished.has(match.status)) return "not-finished";
-  if(match.statistics_json && String(match.statistics_json).trim().length>5) return "already-populated";
-  if(!["api-football","API-Football","api_sports"].includes(String(match.source||""))) return "unverified-provider-source";
-  if(!/^[1-9]\d{0,11}$/.test(String(match.fixture_id||""))) return "no-provider-fixture-id";
+  if(!match||!finished.has(String(match.status||"").toUpperCase())) return "not-finished";
+  const stats = String(match.statistics_json ?? "").trim();
+  if(stats.length>5 && !["{}","[]","null"].includes(stats)) return "already-populated";
+  if(!hasApiFootballIdentity(match)) return "unverified-provider-source";
   return "eligible-for-verified-provider-check";
 }
 export function apiBackfillDecision(env,quota) {
