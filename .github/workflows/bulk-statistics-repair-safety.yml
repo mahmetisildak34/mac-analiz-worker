@@ -22,6 +22,8 @@ on:
       - "tests/team-name-aliases.test.mjs"
       - "tests/statistics-manifest-batch-integrity.test.mjs"
       - "STATISTICS_REPAIR_*_2026-11-21.json"
+      - "STATISTICS_PROVIDER_COVERAGE_MATRIX_2026-11-21.json"
+      - "STATISTICS_PROVIDER_COVERAGE_DECISION_2026-11-21.md"
       - ".github/workflows/bulk-statistics-repair-safety.yml"
   pull_request:
     branches:
