@@ -929,11 +929,9 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
         // Fallback: ESPN soccer summaries sometimes omit boxscore team stats,
         // while Core API exposes each competitor's statistics separately.
         if (!hasActualStatistics) {
-          const competitors = payload?.header?.competitions?.[0]?.competitors
-            || payload?.competitions?.[0]?.competitors
-            || [];
-          const teamIds = competitors.map(c => String(c?.id || c?.team?.id || ""))
-            .filter(Boolean).slice(0, 2);
+          const orderedCompetitors = [homeCompetitor, awayCompetitor];
+          const teamIds = orderedCompetitors.map(c => String(c?.id || c?.team?.id || ""))
+            .filter(Boolean);
           if (teamIds.length === 2) {
             const coreBase = "https://sports.core.api.espn.com/v2/sports/soccer/leagues/" +
               encodeURIComponent(item.slug) + "/events/" + encodeURIComponent(item.eventId) +
@@ -967,8 +965,8 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
             }));
             if (coreResults.filter(Boolean).length === 2) {
               statistics = coreResults.map((result, index) => ({
-                homeAway: competitors[index]?.homeAway || null,
-                team: competitors[index]?.team?.displayName || competitors[index]?.team?.name || result.teamId,
+                homeAway: index === 0 ? "home" : "away",
+                team: orderedCompetitors[index]?.team?.displayName || orderedCompetitors[index]?.team?.name || result.teamId,
                 statistics: result.statistics
               }));
               hasActualStatistics = statistics.every(team => team.statistics.length > 0);
