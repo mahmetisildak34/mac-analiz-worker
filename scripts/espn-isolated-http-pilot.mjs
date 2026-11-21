@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import {verifyEspnScoreboard,makeIsolatedInsert} from "../espn-isolated-acceptance.mjs";
-const league="eng.1", day="20261120";
+const league="eng.1", day="20261121";
 const url=`https://site.api.espn.com/apis/site/v2/sports/soccer/${league}/scoreboard?dates=${day}`;
 const output="espn-pilot-output";
 fs.mkdirSync(output,{recursive:true});
