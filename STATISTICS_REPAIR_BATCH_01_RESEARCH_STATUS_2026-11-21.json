@@ -77,9 +77,9 @@
     {
       "fixture_id": "1649030",
       "match": "Antigua and Barbuda — Trinidad and Tobago",
-      "status": "awaiting_individual_source_verification",
-      "reason": null,
-      "statistics_sha256": null
+      "status": "full_verified",
+      "reason": "Verified full seven metrics for both teams from https://www.theeditorial.org/match/concacaf.nations.league/401929796/trin-and-tob-vs-antigua-barbuda ; 2026-11-12 18:00 ET = 2026-11-13 02:00 UTC+03, Antigua home 2-3 Trinidad away. SHA-256 over exact serialized JSON appended to verified manifest.",
+      "statistics_sha256": "79232ea6e032c99ff9b57a8310f272ab391b604eb31b056d2dad32c86531f3fb"
     },
     {
       "fixture_id": "1649056",
@@ -181,9 +181,9 @@
     }
   ],
   "counts": {
-    "full_verified": 6,
+    "full_verified": 7,
     "blocked": 8,
-    "pending": 11
+    "pending": 10
   },
   "transfer_ready": 0,
   "next_batch": {
