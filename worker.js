@@ -146,7 +146,7 @@ async function enrichExactCrossSourceMatches(env) {
 
   // v4 uses durable keyset cursors and a completed flag. It never restarts
   // a finished historical scan, and every invocation reads at most 240+120 rows.
-  const cursorKey = "mam:cross-source-scan-cursors:v4";
+  const cursorKey = "mam:cross-source-scan-cursors:v5";
   const cursors = (await env.MAM_KV.get(cursorKey, "json")) || {};
   const sourceState = cursors.source || { cursor: null, complete: false };
   const missingState = cursors.missing || { cursor: null, complete: false };
@@ -613,7 +613,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   let recoveredSummaryItems = 0;
   const discoveryThrottleKey = "mam:espn-summary-discovery-last:v1";
   const lastDiscoveryAt = Number(await env.MAM_KV.get(discoveryThrottleKey) || 0);
-  const discoveryDue = !lastDiscoveryAt || Date.now() - lastDiscoveryAt >= 24 * 60 * 60 * 1000;
+  const discoveryDue = !lastDiscoveryAt || Date.now() - lastDiscoveryAt >= 60 * 60 * 1000;
   if (!archiveBackfillActive && summaryQueue.length < 480 && discoveryDue) {
     // D1 has a bounded bind-parameter budget. Do not generate one SQL placeholder
     // per queued fixture (a 458-item queue can make the query fail before summaries run).
@@ -621,7 +621,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     const queuedFixtureIds = new Set(summaryQueue.map(item => String(item.source || "ESPN") + "|" + String(item.fixtureId || "")).filter(Boolean));
     const discoveryCursorKey = "mam:espn-summary-discovery-cursor:v2";
     const discoveryCursor = await env.MAM_KV.get(discoveryCursorKey, "json");
-    const discoverySql = "SELECT source, fixture_id AS fixtureId, kickoff FROM matches WHERE (source IN ('ESPN','espn') OR (source = 'app' AND fixture_id LIKE 'espn-%')) AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR TRIM(statistics_json) IN ('','{}','[]','null'))" +
+    const discoverySql = "SELECT source, fixture_id AS fixtureId, kickoff FROM matches WHERE (source IN ('ESPN','espn') OR (source = 'app' AND fixture_id LIKE 'espn-%')) AND status IN ('FT','FINISHED','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR TRIM(statistics_json) IN ('','{}','[]','null'))" +
       (discoveryCursor ? " AND (kickoff > ? OR (kickoff = ? AND (fixture_id > ? OR (fixture_id = ? AND source > ?))))" : "") +
       " ORDER BY kickoff ASC, fixture_id ASC, source ASC LIMIT 100";
     const missingRows = discoveryCursor
@@ -629,7 +629,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
       : await env.DB.prepare(discoverySql).all();
     const discoveredRows = Array.isArray(missingRows?.results) ? missingRows.results : [];
     let lastDiscoveryProcessed = null;
-    await env.MAM_KV.put(discoveryThrottleKey, String(Date.now()), { expirationTtl: 60 * 60 * 24 });
+    await env.MAM_KV.put(discoveryThrottleKey, String(Date.now()), { expirationTtl: 60 * 60 });
     for (const row of discoveredRows) {
       if (summaryQueue.length >= 480) break;
       lastDiscoveryProcessed = row;
