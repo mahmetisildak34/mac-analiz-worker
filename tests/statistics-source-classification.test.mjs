@@ -50,16 +50,17 @@ assert.equal(classifyStatisticsPayload('{"teams":[{"statistics":[]},{"statistics
 console.log("Source matching: aliases, competition context, and full/partial/invalid payload classification passed");
 
 const verified = JSON.parse(readFileSync(new URL("../STATISTICS_REPAIR_VERIFIED_2026-11-21.json", import.meta.url), "utf8"));
-assert.equal(verified.counts.full, 1);
+assert.equal(verified.counts.full, verified.fullMatches.length);
 assert.equal(verified.counts.partial, 0);
-assert.equal(verified.fullMatches.length, 1);
-const evidence = verified.fullMatches[0];
-assert.equal(evidence.fixture_id, "espn-fra.1-401876395");
-assert.equal(createHash("sha256").update(evidence.statistics_json, "utf8").digest("hex"), evidence.statistics_sha256);
-const payload = JSON.parse(evidence.statistics_json);
-assert.equal(payload.teams[0].homeAway, "home");
-assert.equal(payload.teams[1].homeAway, "away");
-assert.ok(payload.teams.every(team => ["totalShots","shotsOnTarget","possessionPct","wonCorners","foulsCommitted","yellowCards","redCards"].every(name => team.statistics.some(s => s.name === name))));
+assert.ok(verified.fullMatches.length >= 1);
+assert.ok(verified.fullMatches.some(evidence => evidence.fixture_id === "espn-fra.1-401876395"), "protected ESPN fixture is retained");
+for (const evidence of verified.fullMatches) {
+  assert.equal(createHash("sha256").update(evidence.statistics_json, "utf8").digest("hex"), evidence.statistics_sha256);
+  const payload = JSON.parse(evidence.statistics_json);
+  assert.equal(payload.teams[0].homeAway, "home");
+  assert.equal(payload.teams[1].homeAway, "away");
+  assert.ok(payload.teams.every(team => ["totalShots","shotsOnTarget","possessionPct","wonCorners","foulsCommitted","yellowCards","redCards"].every(name => team.statistics.some(s => s.name === name))));
+}
 console.log("Separate verified manifest and SHA-256 evidence check passed");
 
 const inventory = JSON.parse(readFileSync(new URL("../STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json", import.meta.url), "utf8"));
