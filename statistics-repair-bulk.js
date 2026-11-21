@@ -74,8 +74,8 @@ export async function planStatisticsRepairTarget(previewDb, target) {
   if (!previewDb || typeof previewDb.prepare !== "function") return { state: "missing-preview-binding" };
   const date = utcDay(target.kickoff);
   if (!date) return { state: "invalid-target-date" };
-  const sql = "SELECT source,fixture_id,kickoff,home_team,away_team,home_team_id,away_team_id,home_goals,away_goals,statistics_json FROM mam_history_backfill_matches WHERE kickoff>=? AND kickoff<? AND statistics_json IS NOT NULL AND length(trim(statistics_json))>5 AND trim(statistics_json) NOT IN ('{}','[]','null') ORDER BY kickoff,source,fixture_id LIMIT 501";
-  const result = await previewDb.prepare(sql).bind(date, nextDay(date)).all();
+  const sql = "SELECT source,fixture_id,kickoff,home_team,away_team,home_team_id,away_team_id,home_goals,away_goals,statistics_json FROM mam_history_backfill_matches WHERE date(kickoff)=? AND statistics_json IS NOT NULL AND length(trim(statistics_json))>5 AND trim(statistics_json) NOT IN ('{}','[]','null') ORDER BY kickoff,source,fixture_id LIMIT 501";
+  const result = await previewDb.prepare(sql).bind(date).all();
   const rows = result.results || [];
   if (rows.length > 500) return { state: "ambiguous", reason: "same-day-preview-window-over-500" };
   const tupleMatches = rows.filter(row => sameTuple(target, row));
@@ -137,7 +137,7 @@ async function applyCandidate(db, target, plan) {
     target.home_goals,target.away_goals,target.home_team_id,target.away_team_id,target.updated_at,
     target.source,target.fixture_id,plan.statistics_sha256);
   const finalize = db.prepare(
-    "UPDATE mam_statistics_repair_backup SET state=CASE WHEN EXISTS (SELECT 1 FROM matches m WHERE m.source=? AND m.fixture_id=? AND m.statistics_json=?) THEN 'applied' ELSE 'stale' END " +
+    "UPDATE mam_statistics_repair_backup SET state=CASE WHEN changes()=1 AND EXISTS (SELECT 1 FROM matches m WHERE m.source=? AND m.fixture_id=? AND m.statistics_json=?) THEN 'applied' ELSE 'stale' END " +
     "WHERE source=? AND fixture_id=? AND candidate_sha256=? AND state='prepared'"
   ).bind(target.source,target.fixture_id,plan.statistics_json,target.source,target.fixture_id,plan.statistics_sha256);
   const results = await db.batch([insertBackup,update,finalize]);
@@ -156,7 +156,7 @@ export async function rollbackStatisticsRepair(db, source, fixtureId, candidateS
   const results = await db.batch([
     db.prepare("UPDATE matches SET statistics_json=?,updated_at=? WHERE source=? AND fixture_id=? AND statistics_json=?")
       .bind(backup.previous_statistics_json,backup.previous_updated_at,source,fixtureId,backup.candidate_statistics_json),
-    db.prepare("UPDATE mam_statistics_repair_backup SET state='rolled_back' WHERE source=? AND fixture_id=? AND candidate_sha256=? AND state='applied' AND EXISTS (SELECT 1 FROM matches WHERE source=? AND fixture_id=? AND statistics_json IS ?)")
+    db.prepare("UPDATE mam_statistics_repair_backup SET state='rolled_back' WHERE source=? AND fixture_id=? AND candidate_sha256=? AND state='applied' AND changes()=1 AND EXISTS (SELECT 1 FROM matches WHERE source=? AND fixture_id=? AND statistics_json IS ?)")
       .bind(source,fixtureId,candidateSha256,source,fixtureId,backup.previous_statistics_json)
   ]);
   if (Number(results?.[0]?.meta?.changes || 0) !== 1) return { rolledBack: false, reason: "current-row-changed-or-not-matching-applied-payload" };
