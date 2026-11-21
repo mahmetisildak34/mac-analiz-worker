@@ -1,0 +1,13 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+const manifest = JSON.parse(await readFile(new URL("../ARCHIVE_PROVIDER_SEASON_MANIFEST_2026-11-21.json", import.meta.url), "utf8"));
+assert.equal(manifest.productionSnapshot.total, 13372, "manifest preserves the read-only Production baseline");
+assert.equal(manifest.productionSnapshot.league_ids, 266, "all observed league IDs are represented in the snapshot");
+assert.equal(manifest.productionSnapshot.league_years, 304, "all observed league-year pairs are represented in the snapshot");
+assert.equal(manifest.providerCatalogs.ESPN.configuredLeagues, 38, "ESPN catalog count is explicit");
+assert.equal(manifest.providerCatalogs.ESPN.leagues.length, 38, "all configured ESPN competitions are recorded");
+assert.equal(manifest.observedArchiveGroups.length, 393, "all source/league/name/country/year groups are captured");
+assert.ok(manifest.observedArchiveGroups.every(row => row.providerAccess === "historical_record_observed_only"), "observed archive rows must not be promoted to provider availability");
+assert.ok(manifest.observedArchiveGroups.every(row => row.identityVerification === "not inferred from raw_json presence"), "raw JSON presence is not identity verification");
+assert.equal(manifest.providerCatalogs.API_Football.coverageStatus.startsWith("not independently verified"), true, "API-Football coverage remains explicitly unverified");
+console.log("archive provider and season manifest integrity tests passed");
