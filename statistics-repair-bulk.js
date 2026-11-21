@@ -43,10 +43,11 @@ export function sameCompetition(a, b) {
   const aId = String(a.league_id ?? "").trim(), bId = String(b.league_id ?? "").trim();
   if (aId && bId && aId === bId) return true;
   const aLeague = normalizeLeague(a.league_name), bLeague = normalizeLeague(b.league_name);
-  if (aLeague && bLeague && aLeague === bLeague) return true;
+  if (!aLeague || !bLeague) return true;
   const aCountry = String(a.country || "").trim().toLowerCase();
   const bCountry = String(b.country || "").trim().toLowerCase();
-  return Boolean(aLeague && bLeague && aLeague === bLeague && aCountry === bCountry);
+  const countryCompatible = !aCountry || !bCountry || aCountry === bCountry;
+  return countryCompatible && aLeague === bLeague;
 }
 export function classifyStatisticsPayload(raw) {
   let parsed;
