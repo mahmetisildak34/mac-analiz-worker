@@ -1,3 +1,4 @@
+import {assessStatistics} from "./statistics-data-quality.js";
 import { runStatisticsRepair } from "./statistics-repair.js";
 import { runStatisticsApiCron } from "./statistics-api-cron.js";
 // Deployment refresh: publish the reviewed Worker configuration and cache policy.
@@ -2344,7 +2345,8 @@ export default {
             },
             goals: { home: row.home_goals, away: row.away_goals },
             score: halftime ? { halftime } : null,
-            statistics
+            statistics,
+            data_quality: assessStatistics(statistics, {home_team:row.home_team,away_team:row.away_team})
           };
         });
         return new Response(JSON.stringify({
