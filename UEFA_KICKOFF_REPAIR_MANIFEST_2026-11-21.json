@@ -40,7 +40,9 @@
       },
       "current_updated_at": "2026-11-19 08:16:15",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2024-09-19T19:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -75,7 +77,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:14:10",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2024-09-26T19:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -113,7 +117,9 @@
       },
       "current_updated_at": "2026-11-19 08:16:15",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2024-10-02T19:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -158,7 +164,9 @@
         "id": "2041950",
         "url": "https://www.uefa.com/newsfiles/UCL/2025/2041950_TS.pdf",
         "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2024-10-02T22:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -192,7 +200,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:14:10",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2024-10-03T22:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -237,7 +247,9 @@
         "id": "2041967",
         "url": "https://www.uefa.com/newsfiles/UCL/2025/2041967_FR.pdf",
         "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2024-10-23T22:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -271,7 +283,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:14:10",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2024-10-24T19:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -305,7 +319,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:16:15",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2024-11-06T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -339,7 +355,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:14:10",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2024-11-07T20:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -384,7 +402,9 @@
         "id": "2041989",
         "url": "https://www.uefa.com/newsfiles/UCL/2025/2041989_TS.pdf",
         "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2024-11-26T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -418,7 +438,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:14:10",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2024-11-28T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -452,7 +474,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:15:47",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2024-12-10T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -486,7 +510,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:16:15",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2024-12-11T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -520,7 +546,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:14:10",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2024-12-12T20:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -565,7 +593,9 @@
         "id": "2042064",
         "url": "https://www.uefa.com/newsfiles/UCL/2025/2042064_TS.pdf",
         "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2025-01-22T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -599,7 +629,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:14:10",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2025-01-23T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -644,7 +676,9 @@
         "id": "2042075",
         "url": "https://www.uefa.com/newsfiles/UCL/2025/2042075_TS.pdf",
         "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2025-01-29T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -678,7 +712,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:14:10",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2025-01-30T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -712,7 +748,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:16:15",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2025-02-12T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -746,7 +784,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:14:10",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2025-02-13T20:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -780,7 +820,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:16:15",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2025-02-18T20:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -814,7 +856,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:14:10",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2025-02-20T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -859,7 +903,9 @@
         "id": "2044820",
         "url": "https://www.uefa.com/newsfiles/UCL/2025/2044820_TS.pdf",
         "role": "Official identity and result corroboration. Original statistics payload attribution remains unchanged."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2025-03-05T20:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -904,7 +950,9 @@
         "id": "2044780",
         "url": "https://www.uefa.com/newsfiles/UCL/2025/2044780_FR.pdf",
         "role": "Official identity and result corroboration. Original statistics payload attribution remains unchanged."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2025-03-11T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -949,7 +997,9 @@
         "id": "2044848",
         "url": "https://www.uefa.com/newsfiles/UCL/2025/2044848_TS.pdf",
         "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2025-04-09T22:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -994,7 +1044,9 @@
         "id": "2044854",
         "url": "https://www.uefa.com/newsfiles/UCL/2025/2044854_FR.pdf",
         "role": "Official identity and result corroboration. Original statistics payload attribution remains unchanged."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2025-04-15T22:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1039,7 +1091,9 @@
         "id": "2046042",
         "url": "https://www.uefa.com/newsfiles/UCL/2026/2046042_TS.pdf",
         "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-01-28T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1084,7 +1138,9 @@
         "id": "2048055",
         "url": "https://www.uefa.com/uefachampionsleague/match/2048055/",
         "role": "Official identity and result corroboration. Original statistics payload attribution remains unchanged."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-03-17T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1129,7 +1185,9 @@
         "id": "2048057",
         "url": "https://www.uefa.com/uefachampionsleague/match/2048057/",
         "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-03-17T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1174,7 +1232,9 @@
         "id": "2048063",
         "url": "https://www.uefa.com/newsfiles/UCL/2026/2048063_FR.pdf",
         "role": "Official identity and result corroboration. Original statistics payload attribution remains unchanged."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-04-08T22:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1208,7 +1268,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:15:58",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-09-08T19:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1253,7 +1315,9 @@
         "id": "2049555",
         "url": "https://www.uefa.com/uefachampionsleague/match/2049555--porto-vs-man-city/",
         "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-09-08T22:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1298,7 +1362,9 @@
         "id": "2049561",
         "url": "https://www.uefa.com/uefachampionsleague/match/2049561--barcelona-vs-feyenoord/",
         "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-09-09T19:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1338,7 +1404,14 @@
       },
       "current_updated_at": "2026-11-14 04:38:29",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2049563",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2049563--napoli-vs-arsenal/",
+        "role": "Official linked competition result. Original statistics payload attribution remains unchanged."
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-09-09T22:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1383,7 +1456,9 @@
         "id": "2049568",
         "url": "https://www.uefa.com/uefachampionsleague/match/2049568--fenerbahce-vs-roma/",
         "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-09-10T19:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1417,7 +1492,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:15:18",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-09-16T19:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1451,7 +1528,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:15:31",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-09-16T22:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1485,7 +1564,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:14:10",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-09-17T22:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1525,7 +1606,14 @@
       },
       "current_updated_at": "2026-11-14 04:38:29",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2049575",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2049575--villarreal-vs-napoli/",
+        "role": "Official linked competition result. Original statistics payload attribution remains unchanged."
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-10-13T22:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1570,7 +1658,9 @@
         "id": "2049584",
         "url": "https://www.uefa.com/uefachampionsleague/match/2049584/",
         "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-10-14T19:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1615,7 +1705,9 @@
         "id": "2049581",
         "url": "https://www.uefa.com/uefachampionsleague/match/2049581--roma-vs-real-madrid/",
         "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-10-14T22:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1649,7 +1741,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:15:58",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-10-14T22:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1683,7 +1777,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:14:10",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-10-15T19:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1723,7 +1819,14 @@
       },
       "current_updated_at": "2026-11-19 08:15:31",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2050085",
+        "url": "https://www.uefa.com/uefaeuropaleague/match/2050085--lech-poznan-vs-leverkusen/",
+        "role": "Official linked competition result. Original statistics payload attribution remains unchanged."
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-10-15T19:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1757,7 +1860,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:15:18",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-10-15T19:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1791,7 +1896,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-14 04:38:29",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-10-20T22:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1825,7 +1932,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:15:47",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-10-21T22:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1865,7 +1974,14 @@
       },
       "current_updated_at": "2026-11-19 08:16:15",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2049604",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2049604--real-betis-vs-feyenoord/",
+        "role": "Official linked competition result. Original statistics payload attribution remains unchanged."
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-10-21T22:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1905,7 +2021,14 @@
       },
       "current_updated_at": "2026-11-19 08:15:31",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2050108",
+        "url": "https://www.uefa.com/uefaeuropaleague/match/2050108--ofi-crete-vs-leverkusen/",
+        "role": "Official linked competition result. Original statistics payload attribution remains unchanged."
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-10-22T19:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1950,7 +2073,9 @@
         "id": "2049610",
         "url": "https://www.uefa.com/uefachampionsleague/match/2049610--feyenoord-vs-inter/",
         "role": "Official identity and result corroboration. Original statistics payload attribution remains unchanged."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-11-03T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -1995,7 +2120,9 @@
         "id": "2049617",
         "url": "https://www.uefa.com/newsfiles/ucl/2027/2049617_fr.pdf",
         "role": "Official identity and result corroboration. Original statistics payload attribution remains unchanged."
-      }
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-11-04T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -2029,7 +2156,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-14 04:38:28",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-11-04T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -2063,7 +2192,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:15:18",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-11-05T20:45:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -2103,7 +2234,14 @@
       },
       "current_updated_at": "2026-11-19 08:15:31",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2050111",
+        "url": "https://www.uefa.com/uefaeuropaleague/match/2050111--leverkusen-vs-marseille/",
+        "role": "Official linked competition result. Original statistics payload attribution remains unchanged."
+      },
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-11-05T23:00:00"
     },
     {
       "source": "fixture-download-uefa",
@@ -2137,7 +2275,9 @@
       "verified_statistics_evidence": null,
       "current_updated_at": "2026-11-19 08:14:10",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "provider_timezone": "UTC",
+      "istanbul_kickoff": "2026-11-05T23:00:00"
     }
   ]
 }

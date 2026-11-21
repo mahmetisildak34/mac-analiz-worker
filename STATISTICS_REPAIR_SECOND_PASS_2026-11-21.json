@@ -1812,8 +1812,9 @@
       "eligible_duplicate_records": 0
     },
     "official_uefa_followup": {
-      "added": 7,
-      "full_stat_cases_with_official_id": 22
+      "added": 13,
+      "full_stat_cases_with_official_id": 28,
+      "utc_istanbul_rows": 55
     },
     "u21_core_followup": {
       "events": 19,
