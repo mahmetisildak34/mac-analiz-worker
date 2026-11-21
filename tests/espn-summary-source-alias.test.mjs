@@ -17,7 +17,7 @@ assert.ok(summaryStart >= 0 && summaryEnd > summaryStart, "summary event identit
 const identity = worker.slice(summaryStart, summaryEnd);
 assert.ok(identity.includes("homeCompetitor") && identity.includes("awayCompetitor"), "home and away sides are explicit");
 assert.ok(identity.includes("sameProviderTeam"), "provider team IDs/names are verified against the target row");
-assert.ok(identity.includes("homeAway order mismatch"), "reversed or mismatched fixtures fail closed");
+assert.ok(identity.includes("home/away order mismatch"), "reversed or mismatched fixtures fail closed");
 
 const writes = worker.slice(worker.indexOf("const pendingWriteResult"), worker.indexOf("for (let i = 0; i < summaryBatch.length", worker.indexOf("const pendingWriteResult")));
 assert.ok(writes.includes("WHERE source = ? AND fixture_id = ?"), "pending write is source-scoped");
