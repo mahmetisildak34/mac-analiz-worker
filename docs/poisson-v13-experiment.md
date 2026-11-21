@@ -29,3 +29,26 @@ Ev avantajı deneyinde son 80 maçtaki lig ev/deplasman gol oranı kullanılır.
 Tabloda adı verilen yöntemler test sonrası betimleyici karşılaştırmadır. v1.2 uygulama varsayılanı olarak kalır. Özellikle Türkiye ilk yarı ve maç sonu örneklemlerinin boyutu ile ECE değerleri model değişikliğini desteklemiyor. Maç sonu ve ilk yarı test kapsamları, 0,60–0,70, 0,70–0,80 ve 0,80–0,90 dahil dolu kalibrasyon aralıkları ile maç sayıları [maç sonu](poisson-v13-full-time.json) ve [ilk yarı](poisson-v13-first-half.json) JSON’larında yer alır. Belirli bir aralığın olmaması gözlem bulunmadığını gösterir.
 
 [Çifte şans, BTTS, 0,5–4,5, kesin skor ve gol dağılımı](poisson-market-baselines.json) için Brier, log loss, ECE ve kapsama ayrı raporlanır. Bu rapor, 2024/25 ve 2025/26 sezonlarıyla oluşturulan önceki pazar veri kümesini kullanır.
+
+## Lig ve pazar bazında ölçümler
+
+[Maç sonu tüm ligler](poisson-v13-markets-full.json) ve [ilk yarı tüm ligler](poisson-v13-markets-half.json) her model için 1X2, üç çifte şans, karşılıklı gol, beş gol eşiği, iki takımın gol adedi ve kesin skor sonuçlarını içerir. Olasılıklar tek skor dağılımından türetilir. `coverage` modelin tüm test fikstürlerindeki uygunluk oranıdır. `markets.*.n` ortak değerlendirme örneklemi sayısıdır. ECE, ikili pazarlarda olay olasılığına, çok sınıflı pazarlarda en yüksek olasılığa göre on aralık üzerinden hesaplanır. `expected_goal_mean` dağılımdan elde edilen ortalama model gol beklentisidir. Şut tabanlı sağlayıcı xG'si kullanılmaz.
+
+Yeni adaylar son beş ve on maçın üstel ağırlıklı sürümleri, ayrı iç/dış saha hücum ve savunma oranlarıyla rakip düzeltmesi ve doğrulama döneminde sıcaklığı seçilen Elo'dur. Ağırlıklı yöntemlerde küçük örneklem için lig ortalaması kullanılır. Tahmin edilebilirlik için saha yöntemleri taraf başına en az beş uygun geçmiş maç ister. İlk yarı verisi yalnızca devre skoru sütunlarından oluşturulur.
+
+[Ek Süper Lig maç sonu deneyi](poisson-turkey-expanded-full.json) ve [ilk yarı deneyi](poisson-turkey-expanded-half.json), Football-Data.co.uk 2024/25 ve 2025/26 sezonlarından oluşturuldu. Kaynak CSV bağlantıları ve SHA-256 değerleri sonuç dosyalarındadır. Aynı ayrım ve parametre adayları kullanıldı. OpenFootball ve Football-Data örneklemleri kısmen aynı maçları içerdiğinden iki sonuç bağımsız doğrulama sayılmaz.
+
+| Süper Lig | Ortak / toplam | v1.2 log loss / ECE | Elo log loss / ECE | Kalibre Elo log loss / ECE | Karma log loss / ECE |
+| --- | ---: | --- | --- | --- | --- |
+| Maç sonu | 273 / 306 | 1,0902 / 0,1027 | 1,0240 / 0,0643 | 1,0240 / 0,0643 | 1,0276 / 0,0257 |
+| İlk yarı | 276 / 306 | 1,1480 / 0,1681 | 1,0627 / 0,0664 | 1,0614 / 0,0521 | 1,0577 / 0,0184 |
+
+Maç sonunda doğrulama döneminin seçtiği Elo sıcaklığı 1, ilk yarıda 1,3'tür. Karma model Süper Lig ilk yarısında tabloda gösterilen yöntemler arasında hem daha düşük log loss hem daha düşük ECE verdi. Kararlı v1.2 uygulama varsayılanı olarak kalır.
+
+```sh
+node scripts/benchmark-poisson-models.mjs /path/to/openfootball --extended --markets
+node scripts/benchmark-poisson-models.mjs /path/to/openfootball --extended --markets --half
+python3 scripts/prepare-turkey-benchmark.py /path/to/turkey-csv /tmp/turkey-benchmark
+node scripts/benchmark-poisson-models.mjs /tmp/turkey-benchmark --turkey-only --markets
+node scripts/benchmark-poisson-models.mjs /tmp/turkey-benchmark --turkey-only --markets --half
+```

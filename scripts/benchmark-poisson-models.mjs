@@ -1,19 +1,22 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import { createHash } from "node:crypto";
+import { evaluateMarkets } from "./poisson-market-metrics.mjs";
 import { predictTrustedGoals } from "../trusted-goal-poisson.js";
 
 const directory=process.argv[2];
 const period=process.argv.includes("--half")?"ht":"ft";
+const allMarkets=process.argv.includes("--markets");
 const extended=process.argv.includes("--extended");
 const turkeyEarly=process.argv.includes("--turkey-early");
-const leagues=turkeyEarly?["tr.1"]:["tr.1","en.1","es.1","de.1","it.1","fr.1"];
+const leagues=turkeyEarly||process.argv.includes("--turkey-only")?["tr.1"]:["tr.1","en.1","es.1","de.1","it.1","fr.1"];
 const trainingEnd=turkeyEarly?"2024-11-01":"2025-01-01";
 const testStart=turkeyEarly?"2025-01-01":"2025-07-01";
 const testEnd=turkeyEarly?"2025-07-01":"9999-01-01";
 const seasons=extended?["2023-24","2024-25","2025-26","2026-27"]:["2024-25","2025-26"];
 const cap=15;
 const models=["frequency","current","window5","window10","window15","window20","recency","shrinkage","opponent","dixon_coles","elo","dynamic_home","league_mix","calibrated"];
+if(allMarkets)models.push("weighted5","weighted10","venue_strength","elo_calibrated");
 const probabilities=(lambda)=>{
   const values=[Math.exp(-lambda)];
   for(let i=1;i<=cap;i++)values.push(values.at(-1)*lambda/i);
@@ -114,6 +117,23 @@ function simulate(rows,start){
         const add=(name,rates,rho=0)=>{const values=rates&&distribution(...rates,rho);if(values)map[name]=summary(values);};
         for(const n of [5,10,15,20])add("window"+n,venue(n));
         add("recency",venue(20,i=>2**(-i/6)));
+        if(allMarkets){
+          for(const n of [5,10])add("weighted"+n,venue(n,i=>2**(-i/(n/2)),3));
+          const nonVenueRates=(team,asHome,omit)=>prior
+            .filter(r=>r[asHome?"home_team":"away_team"]===team&&r[asHome?"away_team":"home_team"]!==omit).slice(-20);
+          const adjustedRate=(sample,field,mean)=>(sample.reduce((sum,row)=>sum+row[field],0)+6*mean)/(sample.length+6);
+          const normalized=(sample,field,mean)=>Math.max(0.33,adjustedRate(sample,field,mean)/mean);
+          const hAdjusted=h.slice(0,10).map(r=>({...r,
+            home_goals:r.home_goals/normalized(nonVenueRates(r.away_team,false,home_team),"home_goals",leagueHome),
+            away_goals:r.away_goals/normalized(nonVenueRates(r.away_team,false,home_team),"away_goals",leagueAway)}));
+          const aAdjusted=a.slice(0,10).map(r=>({...r,
+            home_goals:r.home_goals/normalized(nonVenueRates(r.home_team,true,away_team),"home_goals",leagueHome),
+            away_goals:r.away_goals/normalized(nonVenueRates(r.home_team,true,away_team),"away_goals",leagueAway)}));
+          if(h.length>=5&&a.length>=5)add("venue_strength",[
+            adjustedRate(hAdjusted,"home_goals",leagueHome)*adjustedRate(aAdjusted,"home_goals",leagueHome)/leagueHome,
+            adjustedRate(hAdjusted,"away_goals",leagueAway)*adjustedRate(aAdjusted,"away_goals",leagueAway)/leagueAway
+          ]);
+        }
         const shrink=venue(20,()=>1,6);
         add("shrinkage",shrink);
         add("opponent",venue(20,()=>1,6,true));
@@ -167,6 +187,12 @@ const reports=leagues.map(league=>{
   choices.sort((a,b)=>a[1]-b[1]);
   assert(validation.length>0,"Validation data missing for "+league);
   const [t]=choices[0];
+  const eloValidation=validation.filter(r=>r.map.elo);
+  const eloTemperature=allMarkets?[1,1.15,1.3,1.5,1.8,2.1].map(candidate=>[
+    candidate,measures(eloValidation.map(r=>({
+      target:r.target,prediction:summary(temperature(r.map.elo.values,candidate))
+    }))).logLoss
+  ]).sort((a,b)=>a[1]-b[1])[0][0]:null;
   const mix=(r,weight)=>summary(r.map.shrinkage.values.map((p,i)=>p*weight+r.map.frequency.values[i]*(1-weight)));
   const mixChoices=[0,0.25,0.5,0.75,1].map(weight=>[weight,measures(validation.map(r=>({
     target:r.target,prediction:mix(r,weight)
@@ -176,13 +202,20 @@ const reports=leagues.map(league=>{
   for(const r of test)if(r.map.shrinkage){
     r.map.calibrated=summary(temperature(r.map.shrinkage.values,t));
     r.map.league_mix=mix(r,mixWeight);
+    if(allMarkets&&r.map.elo)r.map.elo_calibrated=summary(temperature(r.map.elo.values,eloTemperature));
   }
   const comparison=test.filter(r=>models.every(model=>r.map[model]));
+  const results=Object.fromEntries(models.map(model=>{
+    const rows=comparison.map(r=>({target:r.target,prediction:r.map[model]}));
+    return [model,{coverage:test.filter(r=>r.map[model]).length/test.length,
+      ...measures(rows),...(allMarkets?{markets:evaluateMarkets(rows,cap)}:{})}];
+  }));
   return {league,hashes,training,validation:validation.length,temperature:t,mixWeight,testFixtures:test.length,comparisonFixtures:comparison.length,
     belowVenueMinimum:test.filter(r=>r.homeVenueMatches<5||r.awayVenueMatches<5).length,
-    results:Object.fromEntries(models.map(model=>[model,{coverage:test.filter(r=>r.map[model]).length/test.length,
-      ...measures(comparison.map(r=>({target:r.target,prediction:r.map[model]})))}]))};
+    ...(allMarkets?{eloTemperature}:{}),results};
 });
-console.log(JSON.stringify({source:"https://github.com/openfootball/football.json",period,split:{
+const sourceFile=directory+"/turkey-sources.json";
+const source=fs.existsSync(sourceFile)?JSON.parse(fs.readFileSync(sourceFile)):"https://github.com/openfootball/football.json";
+console.log(JSON.stringify({source,period,split:{
   training_before:trainingEnd,validation_from:trainingEnd,test_from:testStart,test_before:testEnd
 },reports},null,2));

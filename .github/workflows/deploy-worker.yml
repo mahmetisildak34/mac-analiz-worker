@@ -46,6 +46,9 @@ jobs:
       - name: Run trusted goal Poisson tests
         run: node tests/trusted-goal-poisson.test.mjs
 
+      - name: Verify experimental market metrics
+        run: node --test tests/poisson-market-metrics.test.mjs
+
       - name: Verify archive evidence and Poisson integration
         run: node tests/archive-evidence-integration.test.mjs
 
