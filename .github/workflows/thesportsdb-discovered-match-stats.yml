@@ -1,0 +1,20 @@
+name: TheSportsDB discovered match final stats request
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/bulk-statistics-repair-hardening]
+    paths: [.github/workflows/thesportsdb-discovered-match-stats.yml]
+permissions:
+  contents: read
+jobs:
+  one-final-request:
+    if: github.ref == 'refs/heads/feature/bulk-statistics-repair-hardening'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check scripts/thesportsdb-discovered-match-stats.mjs
+      - run: node scripts/thesportsdb-discovered-match-stats.mjs
