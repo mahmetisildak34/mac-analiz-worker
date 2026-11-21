@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import {
-  normalizeTeam, normalizeLeague, sameCompetition, classifyStatisticsPayload
+  normalizeTeam, normalizeLeague, sameCompetition, classifyStatisticsPayload, buildStatisticsProviderBatches
 } from "../statistics-repair-bulk.js";
 
 assert.equal(normalizeTeam("Man Utd"), "manchester united");
@@ -61,3 +61,18 @@ assert.equal(payload.teams[0].homeAway, "home");
 assert.equal(payload.teams[1].homeAway, "away");
 assert.ok(payload.teams.every(team => ["totalShots","shotsOnTarget","possessionPct","wonCorners","foulsCommitted","yellowCards","redCards"].every(name => team.statistics.some(s => s.name === name))));
 console.log("Separate verified manifest and SHA-256 evidence check passed");
+
+const inventory = JSON.parse(readFileSync(new URL("../STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json", import.meta.url), "utf8"));
+const batchPlan = buildStatisticsProviderBatches(inventory.candidates, 25);
+assert.equal(batchPlan.batch_size, 25);
+assert.equal(batchPlan.candidate_count, 677, "one already-verified ESPN fixture is excluded from research batches");
+assert.equal(batchPlan.batch_count, 29);
+assert.deepEqual(
+  batchPlan.batches.reduce((acc,b) => (acc[b.provider_group]=(acc[b.provider_group]||0)+b.count,acc), {}),
+  {"API-Football":300,"ESPN":226,"UEFA":61,"SportScore":67,"Football-Data":23}
+);
+assert.ok(batchPlan.batches.every(batch => batch.count > 0 && batch.count <= 25));
+assert.deepEqual(batchPlan.batches.slice(0,12).map(b=>b.provider_group),Array(12).fill("API-Football"));
+assert.equal(buildStatisticsProviderBatches(inventory.candidates,100).batch_size,25,"batch size is hard capped at 25");
+assert.throws(()=>buildStatisticsProviderBatches([...inventory.candidates,inventory.candidates[0]],25),/duplicated/);
+console.log("Provider-priority 25-fixture batch plan validation passed");
