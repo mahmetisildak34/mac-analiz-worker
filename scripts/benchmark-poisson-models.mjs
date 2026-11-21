@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import { createHash } from "node:crypto";
+import { selectOnValidation } from "./poisson-validation-selection.mjs";
 import { evaluateMarkets } from "./poisson-market-metrics.mjs";
 import { predictTrustedGoals } from "../trusted-goal-poisson.js";
 
@@ -11,7 +12,9 @@ const extended=process.argv.includes("--extended");
 const turkeyEarly=process.argv.includes("--turkey-early");
 const leagues=turkeyEarly||process.argv.includes("--turkey-only")?["tr.1"]:["tr.1","en.1","es.1","de.1","it.1","fr.1"];
 const trainingEnd=turkeyEarly?"2024-11-01":"2025-01-01";
-const testStart=turkeyEarly?"2025-01-01":"2025-07-01";
+const validationEnd=turkeyEarly?"2025-01-01":"2025-07-01";
+const nextSeason=process.argv.includes("--next-season");
+const testStart=nextSeason?"2026-07-01":validationEnd;
 const testEnd=turkeyEarly?"2025-07-01":"9999-01-01";
 const seasons=extended?["2023-24","2024-25","2025-26","2026-27"]:["2024-25","2025-26"];
 const cap=15;
@@ -180,7 +183,7 @@ const reports=leagues.map(league=>{
   assert.equal(new Set(matches.map(r=>r.fixture_id)).size,matches.length);
   const training=matches.filter(r=>r.kickoff<trainingEnd).length;
   assert(training>75,"Training data missing for "+league);
-  const validation=simulate(matches.filter(r=>r.kickoff<testStart),trainingEnd).filter(r=>r.map.shrinkage);
+  const validation=simulate(matches.filter(r=>r.kickoff<validationEnd),trainingEnd).filter(r=>r.map.shrinkage);
   const choices=[0.8,1,1.15,1.3,1.5,1.8,2.1].map(t=>[t,measures(validation.map(r=>({
     target:r.target,prediction:summary(temperature(r.map.shrinkage.values,t))
   }))).logLoss]);
@@ -198,24 +201,29 @@ const reports=leagues.map(league=>{
     target:r.target,prediction:mix(r,weight)
   }))).logLoss]).sort((a,b)=>a[1]-b[1]);
   const [mixWeight]=mixChoices[0];
-  const test=simulate(matches.filter(r=>r.kickoff<testEnd),testStart);
-  for(const r of test)if(r.map.shrinkage){
-    r.map.calibrated=summary(temperature(r.map.shrinkage.values,t));
-    r.map.league_mix=mix(r,mixWeight);
-    if(allMarkets&&r.map.elo)r.map.elo_calibrated=summary(temperature(r.map.elo.values,eloTemperature));
+  function applyCalibration(rows){
+    for(const r of rows)if(r.map.shrinkage){
+      r.map.calibrated=summary(temperature(r.map.shrinkage.values,t));
+      r.map.league_mix=mix(r,mixWeight);
+      if(allMarkets&&r.map.elo)r.map.elo_calibrated=summary(temperature(r.map.elo.values,eloTemperature));
+    }
   }
+  applyCalibration(validation);
+  const selection=selectOnValidation(validation,models,"current",validationEnd,rows=>measures(rows).logLoss);
+  const test=simulate(matches.filter(r=>r.kickoff<testEnd),testStart);
+  applyCalibration(test);
   const comparison=test.filter(r=>models.every(model=>r.map[model]));
   const results=Object.fromEntries(models.map(model=>{
     const rows=comparison.map(r=>({target:r.target,prediction:r.map[model]}));
     return [model,{coverage:test.filter(r=>r.map[model]).length/test.length,
       ...measures(rows),...(allMarkets?{markets:evaluateMarkets(rows,cap)}:{})}];
   }));
-  return {league,hashes,training,validation:validation.length,temperature:t,mixWeight,testFixtures:test.length,comparisonFixtures:comparison.length,
+  return {league,hashes,training,validation:validation.length,temperature:t,mixWeight,testFixtures:test.length,comparisonFixtures:comparison.length,selection,
     belowVenueMinimum:test.filter(r=>r.homeVenueMatches<5||r.awayVenueMatches<5).length,
     ...(allMarkets?{eloTemperature}:{}),results};
 });
 const sourceFile=directory+"/turkey-sources.json";
 const source=fs.existsSync(sourceFile)?JSON.parse(fs.readFileSync(sourceFile)):"https://github.com/openfootball/football.json";
 console.log(JSON.stringify({source,period,split:{
-  training_before:trainingEnd,validation_from:trainingEnd,test_from:testStart,test_before:testEnd
+  training_before:trainingEnd,validation_from:trainingEnd,validation_before:validationEnd,test_from:testStart,test_before:testEnd
 },reports},null,2));

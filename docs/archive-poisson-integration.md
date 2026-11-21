@@ -126,3 +126,9 @@ const half = predictTrustedHalfTime(verifiedHistory, {
 HTTP 503 halinde arşiv bağlantı hatasını gösterin ve varsa `retryable` alanını kullanın. Kullanılabilir son tahmin yoksa olasılıkları gizleyin. Test istemcisi bu durumu `api_error` senaryosunda HTTP durum koduyla sağlar.
 
 Deponun kökünde `node --test tests/offline-analysis-fixture-client.test.mjs tests/trusted-goal-poisson.test.mjs` çalıştırın. Test, kontrollü yanıtlar için ağ erişimini kapatır.
+
+## Kabul bağlantıları
+
+- [Arşiv API ve model sözleşmesi](archive-api-contract.md)
+- [Dağıtılan entegrasyon dosyaları için SHA-256 listesi](poisson-integration.sha256)
+- [Kabul testleri ve doğrulama döneminde seçilen deneysel model sonuçları](poisson-v13-acceptance.md)

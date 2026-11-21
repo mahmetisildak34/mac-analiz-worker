@@ -49,6 +49,12 @@ jobs:
       - name: Verify experimental market metrics
         run: node --test tests/poisson-market-metrics.test.mjs
 
+      - name: Verify model selection and conflict acceptance
+        run: node --test tests/poisson-acceptance.test.mjs
+
+      - name: Check pinned offline integration checksums
+        run: sha256sum -c docs/poisson-integration.sha256
+
       - name: Verify archive evidence and Poisson integration
         run: node tests/archive-evidence-integration.test.mjs
 

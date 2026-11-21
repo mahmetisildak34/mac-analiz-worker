@@ -28,7 +28,9 @@ try {
     assert.equal(body.reason,reason);
     assert.equal(body.probabilities,undefined);
   }
-  assert.equal((await client.getAnalysis("api_error")).status,503);
+  const unavailable=await client.getAnalysis("api_error");
+  assert.equal(unavailable.status,503);
+  assert.equal(unavailable.body.probabilities,undefined);
   await assert.rejects(client.getAnalysis("typo"),RangeError);
 } finally {
   globalThis.fetch=previous;
