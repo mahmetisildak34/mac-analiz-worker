@@ -1,0 +1,11 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { verifyEspnEvent, verifyEspnScoreboard, makeIsolatedInsert } from "../espn-isolated-acceptance.mjs";
+const event = {id:"401234567",date:"2026-11-20T18:00:00Z",status:{type:{completed:true}},competitions:[{competitors:[{homeAway:"home",team:{displayName:"Home"},score:"2"},{homeAway:"away",team:{displayName:"Away"},score:"1"}]}]};
+test("finished ESPN event retains original proof and score",()=>{const x=verifyEspnEvent(event,"eng.1","20261120");assert.equal(x.fixture_id,"espn-eng.1-401234567");assert.equal(x.score_verified,1);assert.equal(x.home_goals,2);assert.equal(x.statistics_verified,0);assert.equal(JSON.parse(x.raw_json).id,event.id)});
+test("unfinished event does not claim verified score",()=>{const x=verifyEspnEvent({...event,status:{type:{completed:false}}},"eng.1","20261120");assert.equal(x.score_verified,0);assert.equal(x.home_goals,null)});
+test("wrong date and missing identity fail closed",()=>{assert.equal(verifyEspnEvent(event,"eng.1","20261119"),null);assert.equal(verifyEspnEvent({...event,id:null},"eng.1","20261120"),null)});
+test("home and away must be explicitly identified",()=>{assert.equal(verifyEspnEvent({...event,competitions:[{competitors:[{homeAway:"away",team:{displayName:"A"}},{homeAway:"away",team:{displayName:"B"}}]}]},"eng.1","20261120"),null)});
+test("pilot caps at ten and deduplicates provider identities",()=>{const x=verifyEspnScoreboard({events:[event,event,...Array.from({length:20},(_,i)=>({...event,id:String(5000+i)}))]},"eng.1","20261120");assert.equal(x.length,10);assert.equal(new Set(x.map(y=>y.fixture_id)).size,10)});
+test("isolated insert is idempotent and cannot target production",()=>{const x=makeIsolatedInsert(verifyEspnEvent(event,"eng.1","20261120"));assert.match(x.sql,/INSERT INTO mam_archive_test_matches/);assert.match(x.sql,/ON CONFLICT\(source,fixture_id\) DO NOTHING/);assert.doesNotMatch(x.sql,/\bmatches\b(?=\s*\()/);assert.throws(()=>makeIsolatedInsert({...verifyEspnEvent(event,"eng.1","20261120"),identity_verified:0}))});
+test("resume cursor can replay safely using same conflict key",()=>{const m=verifyEspnEvent(event,"eng.1","20261120");assert.deepEqual(makeIsolatedInsert(m),makeIsolatedInsert(m))});
