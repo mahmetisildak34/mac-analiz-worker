@@ -1,16 +1,78 @@
 import assert from "node:assert/strict";
-import {predictTrustedGoals} from "../trusted-goal-poisson.js";
-const row=(id,home,away,h,a,extra={})=>({source:"fixture",fixture_id:id,home_team:home,away_team:away,home_goals:h,away_goals:a,kickoff:"2026-10-01T12:00:00Z",identity_verified:true,score_verified:true,...extra});
-const data=[row("1","Home","A",2,1),row("2","Home","B",1,0),row("3","Home","C",3,1),row("4","D","Away",0,1),row("5","E","Away",1,2),row("6","F","Away",1,1)];
-const opts={home_team:"Home",away_team:"Away",as_of:"2026-11-21T00:00:00Z"};
-const test=(name,fn)=>{fn();console.log("PASS "+name)};
-test("trusted goal Poisson",()=>{const r=predictTrustedGoals(data,opts);assert.equal(r.available,true);assert.ok(Math.abs(Object.values(r.probabilities).reduce((a,b)=>a+b,0)-1)<1e-10)});
-test("missing seven statistics does not block goal-only model",()=>assert.equal(predictTrustedGoals(data.map(x=>({...x,statistics:null})),opts).available,true));
-test("missing score excluded",()=>{const r=predictTrustedGoals([...data,row("7","Home","G",null,1)],opts);assert.equal(r.excluded,1);assert.equal(r.reasons.invalid_score,1)});
-test("invalid score excluded",()=>{const r=predictTrustedGoals([...data,row("7","Home","G",-1,1)],opts);assert.equal(r.reasons.invalid_score,1)});
-test("home away mismatch excluded",()=>{const r=predictTrustedGoals([...data,row("7","G","Home",1,2)],opts);assert.equal(r.reasons.not_relevant_to_home_away,1)});
-test("conflicting statistics do not silently change goal model",()=>assert.equal(predictTrustedGoals(data.map(x=>({...x,statistics:{conflicting:true}})),opts).available,true));
-test("insufficient sample blocks prediction",()=>assert.equal(predictTrustedGoals(data.slice(0,2),opts).reason,"insufficient_verified_sample"));
-test("used excluded counts",()=>{const r=predictTrustedGoals([...data,row("7","Home","G",null,1)],opts);assert.equal(r.used,6);assert.equal(r.excluded,1)});
-test("unverified fixture excluded",()=>{const r=predictTrustedGoals([...data,row("7","Home","G",2,1,{identity_verified:false})],opts);assert.equal(r.reasons.unverified_identity_or_score,1)});
-test("duplicate source fixture excluded",()=>{const r=predictTrustedGoals([...data,data[0]],opts);assert.equal(r.reasons.duplicate_fixture,1)});
+import { predictTrustedGoals } from "../trusted-goal-poisson.js";
+const row = (id, home, away, hg, ag, day, extra = {}) => ({
+  source: "api-football", fixture_id: id, home_team: home, away_team: away,
+  home_goals: hg, away_goals: ag, kickoff: `2026-10-${String(day).padStart(2,"0")}T12:00:00Z`,
+  identity_verified: true, score_verified: true, completed: true, ...extra
+});
+const matches = [
+  row("h1","Espanyol","A",2,0,1), row("h2","Espanyol","B",1,0,2),
+  row("h3","Espanyol","C",3,1,3), row("h4","Espanyol","D",2,1,4),
+  row("h5","Espanyol","E",1,1,5), row("h6","Espanyol","F",4,0,6),
+  row("a1","G","Athletic Club",0,1,1), row("a2","H","Athletic Club",1,2,2),
+  row("a3","I","Athletic Club",2,1,3), row("a4","J","Athletic Club",0,2,4),
+  row("a5","K","Athletic Club",1,1,5), row("a6","L","Athletic Club",1,3,6)
+];
+const options = { home_team:"Espanyol", away_team:"Athletic Club", as_of:"2026-11-21T00:00:00Z",
+  league_average_home_goals:1.5, league_average_away_goals:1.2, min_matches:5, max_matches:5 };
+const test = (name, fn) => { fn(); console.log("PASS " + name); };
+test("produces venue-aware trusted Poisson and evidence", () => {
+  const result = predictTrustedGoals(matches, options);
+  assert.equal(result.available, true);
+  assert.equal(result.home_samples, 5); assert.equal(result.away_samples, 5);
+  assert.equal(result.used, 10); assert.equal(result.used_fixtures.length, 10);
+  assert.ok(result.used_fixtures.every(x => x.source && x.fixture_id && x.kickoff));
+});
+test("caps each team to newest five eligible fixtures", () => {
+  const result = predictTrustedGoals(matches, options);
+  assert.ok(!result.used_fixtures.some(x => ["h1","a1"].includes(x.fixture_id)));
+  assert.equal(result.reasons.outside_last_n, 2);
+});
+test("blocks fewer than five verified venue fixtures", () => {
+  assert.equal(predictTrustedGoals(matches.slice(0, 8), options).reason, "insufficient_verified_venue_sample");
+});
+test("excludes unverified scores and identities", () => {
+  const data = [...matches, row("bad-score","Espanyol","X",2,0,7,{score_verified:false}),
+    row("bad-id","X","Athletic Club",0,1,7,{identity_verified:false})];
+  const result = predictTrustedGoals(data, options);
+  assert.equal(result.available, true);
+  assert.equal(result.reasons.score_not_verified, 1);
+  assert.equal(result.reasons.identity_not_verified, 1);
+});
+test("excludes fixtures not confirmed finished", () => {
+  const result = predictTrustedGoals([...matches, row("pending","Espanyol","X",2,0,7,{completed:false})], options);
+  assert.equal(result.reasons.not_confirmed_finished, 1);
+});
+test("home and away venue samples remain separate", () => {
+  const result = predictTrustedGoals([...matches, row("neutral","Espanyol","Athletic Club",9,9,7)], options);
+  assert.equal(result.home_samples, 5); assert.equal(result.away_samples, 5);
+  assert.equal(result.reasons.not_relevant_home_or_away_venue, 1);
+});
+test("defensive weakness changes the opposing expected goals", () => {
+  const baseline = predictTrustedGoals(matches, options);
+  const strongerAwayDefence = matches.map(m => m.fixture_id.startsWith("a") ? {...m, home_goals:0} : m);
+  const changed = predictTrustedGoals(strongerAwayDefence, options);
+  assert.ok(changed.lambda_home < baseline.lambda_home);
+});
+test("BTTS and over/under probabilities are complementary", () => {
+  const p = predictTrustedGoals(matches, options).probabilities;
+  assert.ok(Math.abs(p.btts_yes + p.btts_no - 1) < 1e-10);
+  assert.ok(Math.abs(p.over_2_5 + p.under_2_5 - 1) < 1e-10);
+});
+test("match outcome probabilities sum to one", () => {
+  const p = predictTrustedGoals(matches, options).probabilities;
+  assert.ok(Math.abs(p.home_win + p.draw + p.away_win - 1) < 1e-10);
+});
+test("returns ranked scorelines", () => {
+  const result = predictTrustedGoals(matches, options);
+  assert.equal(result.most_likely_scores.length, 5);
+  assert.ok(result.most_likely_scores[0].probability >= result.most_likely_scores[1].probability);
+});
+test("requires explicit league averages; does not invent baselines", () => {
+  const {league_average_home_goals, league_average_away_goals, ...withoutAverages} = options;
+  assert.equal(predictTrustedGoals(matches, withoutAverages).reason, "missing_league_averages");
+});
+test("rejects malformed input", () => {
+  assert.equal(predictTrustedGoals(null, options).reason, "invalid_request");
+  assert.equal(predictTrustedGoals(matches, {...options, max_matches:11}).reason, "invalid_request");
+});
