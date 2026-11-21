@@ -26,6 +26,9 @@ on:
       - "tests/summary-statistics-overwrite-guard.test.mjs"
       - "tests/team-name-aliases.test.mjs"
       - "tests/statistics-manifest-batch-integrity.test.mjs"
+      - "ARCHIVE_PROVIDER_SEASON_MANIFEST_2026-11-21.json"
+      - "tests/archive-backfill-batch-size.test.mjs"
+      - "tests/archive-provider-manifest.test.mjs"
       - "STATISTICS_REPAIR_*_2026-11-21.json"
       - "STATISTICS_PROVIDER_COVERAGE_MATRIX_2026-11-21.json"
       - "STATISTICS_PROVIDER_COVERAGE_DECISION_2026-11-21.md"
@@ -80,6 +83,10 @@ jobs:
           node --check statistics-api-persistence.js
       - name: Run archive original-provider proof tests
         run: node tests/archive-provider-proof.test.mjs
+      - name: Run all-league archive queue and provider manifest tests
+        run: |
+          node tests/archive-backfill-batch-size.test.mjs
+          node tests/archive-provider-manifest.test.mjs
       - name: Run trusted goal Poisson tests
         run: node tests/trusted-goal-poisson.test.mjs
       - name: Run strict data quality tests
