@@ -1,0 +1,974 @@
+{
+  "schema_version": 1,
+  "batch_number": 13,
+  "generated_on": "2026-11-21",
+  "source_plan": "STATISTICS_REPAIR_BATCH_PLAN_2026-11-21.json",
+  "branch": "feature/bulk-statistics-repair-hardening",
+  "policy": "Original-match evidence only; zero transfers authorized.",
+  "counts": {
+    "full_verified": 13,
+    "blocked": 0,
+    "source_review": 12,
+    "pending": 0
+  },
+  "rows": [
+    {
+      "source": "espn",
+      "fixture_id": "698287",
+      "match": "Andorra — South Africa",
+      "planned_kickoff": "2024-03-21T21:00Z",
+      "home": "Andorra",
+      "away": "South Africa",
+      "league": "fifa.friendly",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "698287",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2024,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=698287"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "463992d2768f14f092c3485503a5aeead120e2c508b34f3757627c62afc8573e",
+      "score": "1-1",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "699128",
+      "match": "Azerbaijan — Mongolia",
+      "planned_kickoff": "2024-03-22T16:00Z",
+      "home": "Azerbaijan",
+      "away": "Mongolia",
+      "league": "fifa.friendly",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "699128",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2024,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=699128"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "e7b3097a9b6f9f6f6af89162ead293567b57c62d54fd025cd503ec9e25a56224",
+      "score": "1-0",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "697520",
+      "match": "Azerbaijan — Bulgaria",
+      "planned_kickoff": "2024-03-25T16:00Z",
+      "home": "Azerbaijan",
+      "away": "Bulgaria",
+      "league": "fifa.friendly",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "697520",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2024,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=697520"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "d0f47ca0ba7cf3cce1336fe19f36d63e4c54dbaa7ee1fb7412dcb7281e731d50",
+      "score": "1-1",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "698289",
+      "match": "Bolivia — Andorra",
+      "planned_kickoff": "2024-03-25T21:00Z",
+      "home": "Bolivia",
+      "away": "Andorra",
+      "league": "fifa.friendly",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "698289",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2024,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=698289"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "62f756a40d298a1a8e9398bb8fecd918253657952c1a626d29ab4d7de1a3a3f0",
+      "score": "1-0",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "699861",
+      "match": "Spain — Andorra",
+      "planned_kickoff": "2024-06-05T19:30Z",
+      "home": "Spain",
+      "away": "Andorra",
+      "league": "fifa.friendly",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "699861",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2024,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=699861"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "dba64788d806002133a1ce71c0a2ff90a1e7d96d81d14d235a0e64efe256704c",
+      "score": "5-0",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "699800",
+      "match": "Albania — Azerbaijan",
+      "planned_kickoff": "2024-06-07T17:00Z",
+      "home": "Albania",
+      "away": "Azerbaijan",
+      "league": "fifa.friendly",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "699800",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2024,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=699800"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "f78f8e278e7541e4c3b8043c64cbd7c7f78462cda7d3e629c0533abb6ccaf227",
+      "score": "3-1",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "702361",
+      "match": "Azerbaijan — Kazakhstan",
+      "planned_kickoff": "2024-06-11T14:00Z",
+      "home": "Azerbaijan",
+      "away": "Kazakhstan",
+      "league": "fifa.friendly",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "702361",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2024,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=702361"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "7d96f679d58a7e7e93dcb1b9fed4bb861ed2eb67c356d140fc09599e86a0429b",
+      "score": "3-2",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "702330",
+      "match": "Northern Ireland — Andorra",
+      "planned_kickoff": "2024-06-11T18:45Z",
+      "home": "Northern Ireland",
+      "away": "Andorra",
+      "league": "fifa.friendly",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "702330",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2024,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=702330"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "0938e8f943e157973a3fdacb9b6e77a99114ac8452ac0bbc359637c36c037ddd",
+      "score": "2-0",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "718532",
+      "match": "Gibraltar — Andorra",
+      "planned_kickoff": "2024-09-04T16:00Z",
+      "home": "Gibraltar",
+      "away": "Andorra",
+      "league": "fifa.friendly",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "718532",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2024,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=718532"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "77a0cd01c421a451c4cf0f6e336d5c804a5d08b832d8be0ad140cd3491225454",
+      "score": "1-0",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "720256",
+      "match": "Andorra — San Marino",
+      "planned_kickoff": "2024-10-13T16:00Z",
+      "home": "Andorra",
+      "away": "San Marino",
+      "league": "fifa.friendly",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "720256",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2024,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=720256"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "1cb9bb225d0850aa11af660fd38ef67d25b05356680cca97fdcba8bd7a7014fe",
+      "score": "2-0",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "733984",
+      "match": "Azerbaijan — Haiti",
+      "planned_kickoff": "2025-03-22T17:45Z",
+      "home": "Azerbaijan",
+      "away": "Haiti",
+      "league": "fifa.friendly",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "733984",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2025,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=733984"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "b2381b137369ff9b3ee754bbbe4a3c6e0f03298fd9ec660dabee7a392bfc1022",
+      "score": "0-3",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "756180",
+      "match": "Al Hazem — Al Hilal",
+      "planned_kickoff": "2026-05-02T18:00Z",
+      "home": "Al Hazem",
+      "away": "Al Hilal",
+      "league": "ksa.1",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "969a4c30df2b410fe368e8ac618f75db332649393ca2da32e9680b8c83768555",
+      "provider_event_id": "756180",
+      "provider_league": "ksa.1",
+      "provider_season": 2025,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/ksa.1/summary?event=756180"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "fd6c2ac39842de6f5d1a84ed1bdf62c4e548943b031a1fc841a747ebf25edd81",
+      "score": "0-3",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "756154",
+      "match": "Al Khaleej — Al Hilal",
+      "planned_kickoff": "2026-05-05T18:00Z",
+      "home": "Al Khaleej",
+      "away": "Al Hilal",
+      "league": "ksa.1",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "8fcd3bfaf5b927cd7010c50e10095547a191fb1064a5f4b16d7ab2be7d03c588",
+      "provider_event_id": "756154",
+      "provider_league": "ksa.1",
+      "provider_season": 2025,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/ksa.1/summary?event=756154"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "14c1051da43b3fa20859c464ac6004477b803e668862cc3498674a381841f9b2",
+      "score": "1-2",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "756183",
+      "match": "Al Nassr — Al Hilal",
+      "planned_kickoff": "2026-05-12T18:00Z",
+      "home": "Al Nassr",
+      "away": "Al Hilal",
+      "league": "ksa.1",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "dcdad32949c251fc3b5c1d4e50b93724c41cd7969ababd88b772840649f743e0",
+      "provider_event_id": "756183",
+      "provider_league": "ksa.1",
+      "provider_season": 2025,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/ksa.1/summary?event=756183"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "56b9a2bc00eb2d09606e2dfdfd0ed2bfc8f606e95f2c4e3267de7bff5d82c60d",
+      "score": "1-1",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "756193",
+      "match": "Al Hilal — Neom SC",
+      "planned_kickoff": "2026-05-16T16:05Z",
+      "home": "Al Hilal",
+      "away": "Neom SC",
+      "league": "ksa.1",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "50f7033e0d5bb562380a50383fda6e248468d8c680719f8e8ad4359c649a9a4f",
+      "provider_event_id": "756193",
+      "provider_league": "ksa.1",
+      "provider_season": 2025,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/ksa.1/summary?event=756193"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "60aadfa2c6df5632b3e5d39ab4f248ab76217b027672be3f37571d001923c627",
+      "score": "2-0",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "756204",
+      "match": "Al Fayha — Al Hilal",
+      "planned_kickoff": "2026-05-21T18:00Z",
+      "home": "Al Fayha",
+      "away": "Al Hilal",
+      "league": "ksa.1",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "45baa3be87018084cba06d1cf51cecad940dc140e890ffe2cfd1679182fc3781",
+      "provider_event_id": "756204",
+      "provider_league": "ksa.1",
+      "provider_season": 2025,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/ksa.1/summary?event=756204"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "4893ac5da8734a3d3bc512c0b91da40e09602bc99ec0d9d737f18e6375899d0c",
+      "score": "0-1",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "748977",
+      "match": "Ceuta — Albacete",
+      "planned_kickoff": "2026-05-30T14:15Z",
+      "home": "Ceuta",
+      "away": "Albacete",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "07503729f4ce4cdd147e175888f01aeb8e3419fbe66d6cae8e568570b595e1f4",
+      "provider_event_id": "748977",
+      "provider_league": "esp.2",
+      "provider_season": 2025,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=748977"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "8d87ba919a8210c365ab382afd368eb543500a83142a64aaa1cf2a4564a9dfed",
+      "score": "1-0",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401900405",
+      "match": "Al Hilal — Al Faisaly",
+      "planned_kickoff": "2026-08-14T18:00Z",
+      "home": "Al Hilal",
+      "away": "Al Faisaly",
+      "league": "ksa.1",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "bb80f31048a88bb64229d22e6001b90abf0444a662a804cb77dc564e0cfb0039",
+      "provider_event_id": "401900405",
+      "provider_league": "ksa.1",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/ksa.1/summary?event=401900405"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "2eba452c636ccee15654a048a9664c5b829c1d395efe95357e25f23d80923028",
+      "score": "4-2",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883227",
+      "match": "Real Oviedo — Granada",
+      "planned_kickoff": "2026-08-15T17:00Z",
+      "home": "Real Oviedo",
+      "away": "Granada",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "394249b7d19003f21f8be44bb2b40b3f87eba48450aee8a8098a30b6a84f647a",
+      "provider_event_id": "401883227",
+      "provider_league": "esp.2",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883227"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "261f327d5ecbe763604a1b7cd994c5bb5964efae986c9ceb194730f123e1ea67",
+      "score": "0-0",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883318",
+      "match": "Cádiz — RC Celta Fortuna",
+      "planned_kickoff": "2026-08-15T17:00Z",
+      "home": "Cádiz",
+      "away": "RC Celta Fortuna",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "68bcf65c7a52ffc17f8299cb6ad89f36523cacc33005fe1bd4a0343e795cb3cb",
+      "provider_event_id": "401883318",
+      "provider_league": "esp.2",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883318"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "b4219a4687c2b7414bb7328fbb9a032d3b5a116231515118a3b36ac6501511a2",
+      "score": "0-0",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401888392",
+      "match": "Amed SFK — Erzurum BB",
+      "planned_kickoff": "2026-08-16T18:30Z",
+      "home": "Amed SFK",
+      "away": "Erzurum BB",
+      "league": "tur.1",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "290a962ff95e8f6f7b6459c356ab11238e71dd51c587a994df65c4c85e6cd567",
+      "provider_event_id": "401888392",
+      "provider_league": "tur.1",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/summary?event=401888392"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "f8cbdea4844a6f3eefc17476259f70d69f0165589b4cb9d78802d2bee3e29775",
+      "score": "3-0",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883228",
+      "match": "Las Palmas — Albacete",
+      "planned_kickoff": "2026-08-16T19:30Z",
+      "home": "Las Palmas",
+      "away": "Albacete",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "e8764bcd4237e44a62eaef7e3df500ef13b37642ec032716cea706c499eacf98",
+      "provider_event_id": "401883228",
+      "provider_league": "esp.2",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883228"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "6cd7851db34df1fe93bb50081269a686a3631116880040cc677d50a17cf2c611",
+      "score": "2-1",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401900401",
+      "match": "Al Fayha — Al Hilal",
+      "planned_kickoff": "2026-08-20T18:00Z",
+      "home": "Al Fayha",
+      "away": "Al Hilal",
+      "league": "ksa.1",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "5c94ae309a49c62efae5d5f7f659fcf21f7654f7b0f50c672420af6d2b73e9a2",
+      "provider_event_id": "401900401",
+      "provider_league": "ksa.1",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/ksa.1/summary?event=401900401"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "edc65bd199cce2b1ee8184c52d809b359de4f2501a7e62465d177fb47799866a",
+      "score": "0-3",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401879322",
+      "match": "Hull City AFC — Manchester United",
+      "planned_kickoff": "2026-08-22T11:30Z",
+      "home": "Hull City AFC",
+      "away": "Manchester United",
+      "league": "eng.1",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401879322",
+      "provider_league": "eng.1",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879322"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "source_payload_sha256": "aed335744a091754d466ca217c6bddeef14c17320f6432c64539242b5a9943c1",
+      "score": "2-0",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unconfirmed",
+      "transfer_ready": false,
+      "reason": "Provider identity, completion or stored score was not an exact match."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883256",
+      "match": "Albacete — Real Sociedad II",
+      "planned_kickoff": "2026-08-22T17:00Z",
+      "home": "Albacete",
+      "away": "Real Sociedad II",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "90811e49f0aaa49fc190b41c45d74ee0ede63e5461a047e7443f600d548cecbb",
+      "provider_event_id": "401883256",
+      "provider_league": "esp.2",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883256"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "e28d02f0f390b0746f203928f059d4306b054abfa4995627df1f694cfacd69a2",
+      "score": "1-2",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    }
+  ]
+}

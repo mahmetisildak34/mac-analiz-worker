@@ -6,10 +6,10 @@
   "protected_existing_manifest": "STATISTICS_REPAIR_INVENTORY_2026-11-21.json",
   "candidate_inventory": "STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json",
   "counts": {
-    "full": 11,
+    "full": 43,
     "partial": 0,
     "ambiguous": 0,
-    "unavailable_or_not_yet_checked": 667,
+    "unavailable_or_not_yet_checked": 635,
     "pending_source_provenance_review": 1
   },
   "policy": {
@@ -488,6 +488,1030 @@
         "source_independence_verified": false
       },
       "notes": "2-0 Nov 14 match, distinct from 9-0 Nov 16 Brazil U20–Peru U20 fixture. Do not conflate match identities. Not transfer authorized. SOURCE REVIEW 2026-11-21: Multicanais and mirrored streaming sites alone are insufficient independent provenance; this JSON is preserved for audit, but must not be transferred or counted as fully verified until primary provider identified. https://kadario.com/es/football/matches/2683724/brazil-u20-vs-peru-u20"
+    },
+    {
+      "source": "espn",
+      "fixture_id": "756180",
+      "kickoff": "2026-05-02T18:00Z",
+      "status": "FT",
+      "league": {
+        "id": "ksa.1",
+        "name": "ksa.1"
+      },
+      "home": {
+        "id": "21964",
+        "name": "Al Hazem",
+        "goals": 0
+      },
+      "away": {
+        "id": "929",
+        "name": "Al Hilal",
+        "goals": 3
+      },
+      "provider": "ESPN",
+      "provider_event_id": "756180",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ksa.1/summary?event=756180",
+      "statistics_class": "full",
+      "source_payload_sha256": "fd6c2ac39842de6f5d1a84ed1bdf62c4e548943b031a1fc841a747ebf25edd81",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"21964\",\"name\":\"Al Hazem\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"6\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"6\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"50.2\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"15\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"929\",\"name\":\"Al Hilal\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"11\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"7\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"49.8\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"12\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"8\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "969a4c30df2b410fe368e8ac618f75db332649393ca2da32e9680b8c83768555",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "756154",
+      "kickoff": "2026-05-05T18:00Z",
+      "status": "FT",
+      "league": {
+        "id": "ksa.1",
+        "name": "ksa.1"
+      },
+      "home": {
+        "id": "21829",
+        "name": "Al Khaleej",
+        "goals": 1
+      },
+      "away": {
+        "id": "929",
+        "name": "Al Hilal",
+        "goals": 2
+      },
+      "provider": "ESPN",
+      "provider_event_id": "756154",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ksa.1/summary?event=756154",
+      "statistics_class": "full",
+      "source_payload_sha256": "14c1051da43b3fa20859c464ac6004477b803e668862cc3498674a381841f9b2",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"21829\",\"name\":\"Al Khaleej\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"9\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"5\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"34.7\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"6\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"2\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"929\",\"name\":\"Al Hilal\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"13\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"8\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"65.3\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"22\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"10\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "8fcd3bfaf5b927cd7010c50e10095547a191fb1064a5f4b16d7ab2be7d03c588",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "756183",
+      "kickoff": "2026-05-12T18:00Z",
+      "status": "FT",
+      "league": {
+        "id": "ksa.1",
+        "name": "ksa.1"
+      },
+      "home": {
+        "id": "817",
+        "name": "Al Nassr",
+        "goals": 1
+      },
+      "away": {
+        "id": "929",
+        "name": "Al Hilal",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "provider_event_id": "756183",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ksa.1/summary?event=756183",
+      "statistics_class": "full",
+      "source_payload_sha256": "56b9a2bc00eb2d09606e2dfdfd0ed2bfc8f606e95f2c4e3267de7bff5d82c60d",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"817\",\"name\":\"Al Nassr\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"16\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"4\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"5\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"36.6\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"9\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"929\",\"name\":\"Al Hilal\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"11\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"63.4\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"7\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "dcdad32949c251fc3b5c1d4e50b93724c41cd7969ababd88b772840649f743e0",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "756193",
+      "kickoff": "2026-05-16T16:05Z",
+      "status": "FT",
+      "league": {
+        "id": "ksa.1",
+        "name": "ksa.1"
+      },
+      "home": {
+        "id": "929",
+        "name": "Al Hilal",
+        "goals": 2
+      },
+      "away": {
+        "id": "130899",
+        "name": "Neom SC",
+        "goals": 0
+      },
+      "provider": "ESPN",
+      "provider_event_id": "756193",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ksa.1/summary?event=756193",
+      "statistics_class": "full",
+      "source_payload_sha256": "60aadfa2c6df5632b3e5d39ab4f248ab76217b027672be3f37571d001923c627",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"929\",\"name\":\"Al Hilal\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"19\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"6\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"57.3\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"11\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"7\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"130899\",\"name\":\"Neom SC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"7\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"2\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"42.7\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"9\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"2\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "50f7033e0d5bb562380a50383fda6e248468d8c680719f8e8ad4359c649a9a4f",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "756204",
+      "kickoff": "2026-05-21T18:00Z",
+      "status": "FT",
+      "league": {
+        "id": "ksa.1",
+        "name": "ksa.1"
+      },
+      "home": {
+        "id": "21827",
+        "name": "Al Fayha",
+        "goals": 0
+      },
+      "away": {
+        "id": "929",
+        "name": "Al Hilal",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "provider_event_id": "756204",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ksa.1/summary?event=756204",
+      "statistics_class": "full",
+      "source_payload_sha256": "4893ac5da8734a3d3bc512c0b91da40e09602bc99ec0d9d737f18e6375899d0c",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"21827\",\"name\":\"Al Fayha\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"12\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"46.4\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"5\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"0\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"929\",\"name\":\"Al Hilal\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"11\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"5\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"53.6\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"10\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "45baa3be87018084cba06d1cf51cecad940dc140e890ffe2cfd1679182fc3781",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "748977",
+      "kickoff": "2026-05-30T14:15Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "5404",
+        "name": "Ceuta",
+        "goals": 1
+      },
+      "away": {
+        "id": "2737",
+        "name": "Albacete",
+        "goals": 0
+      },
+      "provider": "ESPN",
+      "provider_event_id": "748977",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=748977",
+      "statistics_class": "full",
+      "source_payload_sha256": "8d87ba919a8210c365ab382afd368eb543500a83142a64aaa1cf2a4564a9dfed",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"5404\",\"name\":\"Ceuta\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"14\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"6\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"60.8\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"8\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"2737\",\"name\":\"Albacete\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"12\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"4\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"39.2\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"11\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "07503729f4ce4cdd147e175888f01aeb8e3419fbe66d6cae8e568570b595e1f4",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401900405",
+      "kickoff": "2026-08-14T18:00Z",
+      "status": "FT",
+      "league": {
+        "id": "ksa.1",
+        "name": "ksa.1"
+      },
+      "home": {
+        "id": "929",
+        "name": "Al Hilal",
+        "goals": 4
+      },
+      "away": {
+        "id": "21446",
+        "name": "Al Faisaly",
+        "goals": 2
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401900405",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ksa.1/summary?event=401900405",
+      "statistics_class": "full",
+      "source_payload_sha256": "2eba452c636ccee15654a048a9664c5b829c1d395efe95357e25f23d80923028",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"929\",\"name\":\"Al Hilal\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"18\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"7\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"50.1\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"16\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"21446\",\"name\":\"Al Faisaly\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"15\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"1\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"49.9\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"8\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "bb80f31048a88bb64229d22e6001b90abf0444a662a804cb77dc564e0cfb0039",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883227",
+      "kickoff": "2026-08-15T17:00Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "92",
+        "name": "Real Oviedo",
+        "goals": 0
+      },
+      "away": {
+        "id": "3747",
+        "name": "Granada",
+        "goals": 0
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401883227",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883227",
+      "statistics_class": "full",
+      "source_payload_sha256": "261f327d5ecbe763604a1b7cd994c5bb5964efae986c9ceb194730f123e1ea67",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"92\",\"name\":\"Real Oviedo\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"17\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"61.4\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"9\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"3\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"3747\",\"name\":\"Granada\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"13\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"2\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"38.6\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"10\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"3\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "394249b7d19003f21f8be44bb2b40b3f87eba48450aee8a8098a30b6a84f647a",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883318",
+      "kickoff": "2026-08-15T17:00Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "3842",
+        "name": "Cádiz",
+        "goals": 0
+      },
+      "away": {
+        "id": "131858",
+        "name": "RC Celta Fortuna",
+        "goals": 0
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401883318",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883318",
+      "statistics_class": "full",
+      "source_payload_sha256": "b4219a4687c2b7414bb7328fbb9a032d3b5a116231515118a3b36ac6501511a2",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"3842\",\"name\":\"Cádiz\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"14\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"4\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"6\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"56.7\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"16\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"3\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"131858\",\"name\":\"RC Celta Fortuna\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"21\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"2\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"43.3\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"5\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "68bcf65c7a52ffc17f8299cb6ad89f36523cacc33005fe1bd4a0343e795cb3cb",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401888392",
+      "kickoff": "2026-08-16T18:30Z",
+      "status": "FT",
+      "league": {
+        "id": "tur.1",
+        "name": "tur.1"
+      },
+      "home": {
+        "id": "132335",
+        "name": "Amed SFK",
+        "goals": 3
+      },
+      "away": {
+        "id": "19267",
+        "name": "Erzurum BB",
+        "goals": 0
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401888392",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/summary?event=401888392",
+      "statistics_class": "full",
+      "source_payload_sha256": "f8cbdea4844a6f3eefc17476259f70d69f0165589b4cb9d78802d2bee3e29775",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"132335\",\"name\":\"Amed SFK\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"10\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"4\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"46.5\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"13\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"19267\",\"name\":\"Erzurum BB\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"12\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"4\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"53.5\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"5\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"1\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "290a962ff95e8f6f7b6459c356ab11238e71dd51c587a994df65c4c85e6cd567",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883228",
+      "kickoff": "2026-08-16T19:30Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "98",
+        "name": "Las Palmas",
+        "goals": 2
+      },
+      "away": {
+        "id": "2737",
+        "name": "Albacete",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401883228",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883228",
+      "statistics_class": "full",
+      "source_payload_sha256": "6cd7851db34df1fe93bb50081269a686a3631116880040cc677d50a17cf2c611",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"98\",\"name\":\"Las Palmas\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"6\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"66.1\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"12\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"2737\",\"name\":\"Albacete\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"16\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"6\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"33.9\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"12\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "e8764bcd4237e44a62eaef7e3df500ef13b37642ec032716cea706c499eacf98",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401900401",
+      "kickoff": "2026-08-20T18:00Z",
+      "status": "FT",
+      "league": {
+        "id": "ksa.1",
+        "name": "ksa.1"
+      },
+      "home": {
+        "id": "21827",
+        "name": "Al Fayha",
+        "goals": 0
+      },
+      "away": {
+        "id": "929",
+        "name": "Al Hilal",
+        "goals": 3
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401900401",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ksa.1/summary?event=401900401",
+      "statistics_class": "full",
+      "source_payload_sha256": "edc65bd199cce2b1ee8184c52d809b359de4f2501a7e62465d177fb47799866a",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"21827\",\"name\":\"Al Fayha\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"8\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"1\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"39.4\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"8\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"3\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"929\",\"name\":\"Al Hilal\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"9\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"5\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"60.6\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"25\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"11\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "5c94ae309a49c62efae5d5f7f659fcf21f7654f7b0f50c672420af6d2b73e9a2",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883256",
+      "kickoff": "2026-08-22T17:00Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "2737",
+        "name": "Albacete",
+        "goals": 1
+      },
+      "away": {
+        "id": "20983",
+        "name": "Real Sociedad II",
+        "goals": 2
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401883256",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883256",
+      "statistics_class": "full",
+      "source_payload_sha256": "e28d02f0f390b0746f203928f059d4306b054abfa4995627df1f694cfacd69a2",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"2737\",\"name\":\"Albacete\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"7\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"5\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"64.1\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"17\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"7\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"20983\",\"name\":\"Real Sociedad II\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"11\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"6\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"35.9\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"12\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"6\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "90811e49f0aaa49fc190b41c45d74ee0ede63e5461a047e7443f600d548cecbb",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883255",
+      "kickoff": "2026-08-23T17:00Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "4438",
+        "name": "Castellón",
+        "goals": 0
+      },
+      "away": {
+        "id": "11487",
+        "name": "CD Sabadell",
+        "goals": 0
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401883255",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883255",
+      "statistics_class": "full",
+      "source_payload_sha256": "cc5faf990624ec616c6da53f41a494769d46b1b8e3f9b05d978c5c1d55a05a03",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"4438\",\"name\":\"Castellón\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"9\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"5\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"70.1\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"8\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"1\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"11487\",\"name\":\"CD Sabadell\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"13\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"5\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"29.9\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"11\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"1\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "243525c3eaa4d8df6946c8073d0d84a2c67ffa321239d8d614269135d9fcae98",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883317",
+      "kickoff": "2026-08-24T17:00Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "131858",
+        "name": "RC Celta Fortuna",
+        "goals": 4
+      },
+      "away": {
+        "id": "20179",
+        "name": "FC Andorra",
+        "goals": 2
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401883317",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883317",
+      "statistics_class": "full",
+      "source_payload_sha256": "e07727515365c11c9af23ccd3b7e621b5be13e00165a014b5b6c030e71af3817",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"131858\",\"name\":\"RC Celta Fortuna\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"13\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"4\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"4\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"35.9\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"10\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"7\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"20179\",\"name\":\"FC Andorra\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"18\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"4\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"64.1\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"17\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "be52f32a2aab3382e0ce6eab9d2eb24f943edef452fd301ca71545d56c181e59",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401888389",
+      "kickoff": "2026-08-24T18:30Z",
+      "status": "FT",
+      "league": {
+        "id": "tur.1",
+        "name": "tur.1"
+      },
+      "home": {
+        "id": "995",
+        "name": "Kocaelispor",
+        "goals": 2
+      },
+      "away": {
+        "id": "132335",
+        "name": "Amed SFK",
+        "goals": 0
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401888389",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/summary?event=401888389",
+      "statistics_class": "full",
+      "source_payload_sha256": "1eac600644902be1c15dfb99553a89f906201d39c6ff2e59d04bf41e96378b7a",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"995\",\"name\":\"Kocaelispor\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"9\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"44.2\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"11\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"3\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"132335\",\"name\":\"Amed SFK\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"16\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"7\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"55.8\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"12\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"1\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "fbe77909077698638c2320afe5c5faa6de30a2c995bf73bdebf7217044605572",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883252",
+      "kickoff": "2026-08-24T19:30Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "3747",
+        "name": "Granada",
+        "goals": 2
+      },
+      "away": {
+        "id": "84",
+        "name": "Mallorca",
+        "goals": 0
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401883252",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883252",
+      "statistics_class": "full",
+      "source_payload_sha256": "3ac817def75d7cb9670ebcc4e7c2d08722236dfb714cc8289647d9ea0989a150",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"3747\",\"name\":\"Granada\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"8\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"7\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"39.1\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"14\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"6\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"84\",\"name\":\"Mallorca\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"14\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"1\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"60.9\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"18\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "8e4dda9ff405f493969749ae9a1e3ef355c9afd16bfb7ec235fe50321fdb53d5",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401900382",
+      "kickoff": "2026-08-28T18:00Z",
+      "status": "FT",
+      "league": {
+        "id": "ksa.1",
+        "name": "ksa.1"
+      },
+      "home": {
+        "id": "21829",
+        "name": "Al Khaleej",
+        "goals": 1
+      },
+      "away": {
+        "id": "929",
+        "name": "Al Hilal",
+        "goals": 5
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401900382",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ksa.1/summary?event=401900382",
+      "statistics_class": "full",
+      "source_payload_sha256": "1850af2af0f6ac99ca1ce191e24fff784cc7799d41e66903c2e0e62a252fc517",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"21829\",\"name\":\"Al Khaleej\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"5\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"46.8\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"12\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"929\",\"name\":\"Al Hilal\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"7\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"2\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"53.2\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"23\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"7\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "149d167ad26088518aaf064319ae62f0cb51d0fa26be4a258d05dc45d05da9b7",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883243",
+      "kickoff": "2026-08-29T15:00Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "11487",
+        "name": "CD Sabadell",
+        "goals": 1
+      },
+      "away": {
+        "id": "6832",
+        "name": "Almería",
+        "goals": 0
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401883243",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883243",
+      "statistics_class": "full",
+      "source_payload_sha256": "a85b7d59759d022eb449beec68bd53aaa8eba96517159a725a44595b41a70dbe",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"11487\",\"name\":\"CD Sabadell\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"17\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"5\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"4\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"44.3\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"14\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"6832\",\"name\":\"Almería\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"8\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"55.7\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"11\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"2\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "caf2b522411cbafc6b5cdc2c6173fc1430a001b68cfe1f883ef7754ea61a1146",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883248",
+      "kickoff": "2026-08-29T17:00Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "2737",
+        "name": "Albacete",
+        "goals": 0
+      },
+      "away": {
+        "id": "92",
+        "name": "Real Oviedo",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401883248",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883248",
+      "statistics_class": "full",
+      "source_payload_sha256": "bfd3754000b0bdf5ca23bb568e1ff12df96a838f9d4bc334bdb3a75a629cee88",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"2737\",\"name\":\"Albacete\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"10\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"8\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"62.8\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"9\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"2\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"92\",\"name\":\"Real Oviedo\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"14\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"5\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"37.2\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"9\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "4d1b566e0572bd8d84758a4fce194b927e198f1562ca65783423a11f84b54992",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883221",
+      "kickoff": "2026-08-30T19:30Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "8447",
+        "name": "Córdoba",
+        "goals": 1
+      },
+      "away": {
+        "id": "3747",
+        "name": "Granada",
+        "goals": 3
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401883221",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883221",
+      "statistics_class": "full",
+      "source_payload_sha256": "14a390c9ad5bdd2c180c4cc60bf2efdefb07720aed5e124f81234315637cf9fd",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"8447\",\"name\":\"Córdoba\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"21\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"6\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"57.9\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"15\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"3\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"3747\",\"name\":\"Granada\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"18\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"42.1\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"17\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "86405f9fa2fde73a26626a3a83693c0f28968b3098242e5cdbcb9411ab0aa8c6",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401888388",
+      "kickoff": "2026-08-31T18:30Z",
+      "status": "FT",
+      "league": {
+        "id": "tur.1",
+        "name": "tur.1"
+      },
+      "home": {
+        "id": "132335",
+        "name": "Amed SFK",
+        "goals": 2
+      },
+      "away": {
+        "id": "997",
+        "name": "Trabzonspor",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401888388",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/summary?event=401888388",
+      "statistics_class": "full",
+      "source_payload_sha256": "2dde3c21e528366d51a291769ae6da7e7884092c940ee5978f38140ce57c420d",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"132335\",\"name\":\"Amed SFK\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"18\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"5\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"2\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"40.1\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"17\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"7\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"997\",\"name\":\"Trabzonspor\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"10\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"5\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"59.9\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"8\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "df353d45520c54615dddce68c31c6c5d5c44849b04573b01314e230981f4c480",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883316",
+      "kickoff": "2026-08-31T19:30Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "131858",
+        "name": "RC Celta Fortuna",
+        "goals": 1
+      },
+      "away": {
+        "id": "4438",
+        "name": "Castellón",
+        "goals": 2
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401883316",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883316",
+      "statistics_class": "full",
+      "source_payload_sha256": "bea799d55292f79011ba9366832f027b8ff7d5eb907333903cf272f9d0cbe2d9",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"131858\",\"name\":\"RC Celta Fortuna\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"11\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"45.8\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"12\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"4438\",\"name\":\"Castellón\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"10\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"54.2\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"13\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "502b306a37f8249a6b74b4046f08c195fc116d4c7ee96ef617a15091e78b6e21",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883315",
+      "kickoff": "2026-09-05T16:30Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "5404",
+        "name": "Ceuta",
+        "goals": 0
+      },
+      "away": {
+        "id": "131858",
+        "name": "RC Celta Fortuna",
+        "goals": 2
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401883315",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883315",
+      "statistics_class": "full",
+      "source_payload_sha256": "7a7d47f8ed88993718ad6d1958e1457910efe99367385614c75d8ad316d0790c",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"5404\",\"name\":\"Ceuta\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"22\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"1\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"8\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"47.8\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"18\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"6\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"131858\",\"name\":\"RC Celta Fortuna\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"19\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"5\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"4\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"52.2\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"15\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "bb2bb1e97bcd89a250d6388311f150aa54355586c93b89dfe341d959dd989e8f",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883220",
+      "kickoff": "2026-09-06T12:00Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "3752",
+        "name": "Eibar",
+        "goals": 3
+      },
+      "away": {
+        "id": "3747",
+        "name": "Granada",
+        "goals": 0
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401883220",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883220",
+      "statistics_class": "full",
+      "source_payload_sha256": "1a9ce01c851c832344608d1434d9d1b545ea2e8397d9668e56a55ea7fc80ead9",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"3752\",\"name\":\"Eibar\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"13\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"1\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"1\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"35.4\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"11\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"8\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"3747\",\"name\":\"Granada\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"10\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"6\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"64.6\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"18\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"3\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "14dc9b4f4bb8f2686676086b7b0e2941b6f54732e6a7def8567989ccb8e45a30",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401888386",
+      "kickoff": "2026-09-06T14:00Z",
+      "status": "FT",
+      "league": {
+        "id": "tur.1",
+        "name": "tur.1"
+      },
+      "home": {
+        "id": "6870",
+        "name": "Kasimpasa",
+        "goals": 2
+      },
+      "away": {
+        "id": "132335",
+        "name": "Amed SFK",
+        "goals": 2
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401888386",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/summary?event=401888386",
+      "statistics_class": "full",
+      "source_payload_sha256": "c89a6a5c7b58b825b4225d8d93a52bf218950345bd647ec00de149d5a7efb7ac",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"6870\",\"name\":\"Kasimpasa\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"15\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"5\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"2\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"43.6\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"14\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"7\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"132335\",\"name\":\"Amed SFK\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"10\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"9\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"56.4\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"14\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "fe9930aa1cf27950878b3aec359884c8ccb7316bc6fc54a7fc6d13eecb17953b",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883240",
+      "kickoff": "2026-09-06T16:30Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "4438",
+        "name": "Castellón",
+        "goals": 2
+      },
+      "away": {
+        "id": "2737",
+        "name": "Albacete",
+        "goals": 0
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401883240",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883240",
+      "statistics_class": "full",
+      "source_payload_sha256": "1ca48db83dadec4cc12b32af18dd97dcd9af72d158e77d4894377b4ed23e6e23",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"4438\",\"name\":\"Castellón\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"5\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"7\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"65.6\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"26\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"7\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"2737\",\"name\":\"Albacete\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"13\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"34.4\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"6\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"3\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "0fc3fa4b7b2d72186b7f525454b7ad0c0b6678b0f8841a43e64c4243bad40542",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883216",
+      "kickoff": "2026-09-07T18:30Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "11487",
+        "name": "CD Sabadell",
+        "goals": 3
+      },
+      "away": {
+        "id": "8447",
+        "name": "Córdoba",
+        "goals": 2
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401883216",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883216",
+      "statistics_class": "full",
+      "source_payload_sha256": "5fdc0dd2b6265d01bb60142f0e24c17dd3e7bd46f881cb084b836853d2e94e6a",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"11487\",\"name\":\"CD Sabadell\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"20\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"35.1\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"20\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"10\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"8447\",\"name\":\"Córdoba\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"8\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"5\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"64.9\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"13\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "679b6f2af53f4c824247f090e239324e6b2112fc1fb4b7f179b29205126ba7a9",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883211",
+      "kickoff": "2026-09-12T16:30Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "3747",
+        "name": "Granada",
+        "goals": 1
+      },
+      "away": {
+        "id": "2737",
+        "name": "Albacete",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401883211",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883211",
+      "statistics_class": "full",
+      "source_payload_sha256": "78d8c9303a8c5314bec89df98cbf5e86301065420706427b0926193e2ffb0475",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"3747\",\"name\":\"Granada\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"17\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"4\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"53.4\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"11\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"3\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"2737\",\"name\":\"Albacete\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"14\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"5\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"46.6\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"6\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "39a31602fbffd9cec8f1e320fa4fe36be7ed9487020e5757c491c70bfcbc9ee3",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401888384",
+      "kickoff": "2026-09-13T17:00Z",
+      "status": "FT",
+      "league": {
+        "id": "tur.1",
+        "name": "tur.1"
+      },
+      "home": {
+        "id": "132335",
+        "name": "Amed SFK",
+        "goals": 5
+      },
+      "away": {
+        "id": "7914",
+        "name": "Istanbul Basaksehir",
+        "goals": 0
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401888384",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/summary?event=401888384",
+      "statistics_class": "full",
+      "source_payload_sha256": "43f11db99092e6e669a183a0592a3177ee54959e6c3f3f44e6507ec550467423",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"132335\",\"name\":\"Amed SFK\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"9\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"43.3\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"22\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"6\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"7914\",\"name\":\"Istanbul Basaksehir\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"9\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"56.7\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"7\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"1\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "385b7fef8bb77c338bb22defcee8d1e1db312c6da0f0111730ae7246a7a52c44",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883314",
+      "kickoff": "2026-09-14T18:30Z",
+      "status": "FT",
+      "league": {
+        "id": "esp.2",
+        "name": "esp.2"
+      },
+      "home": {
+        "id": "131858",
+        "name": "RC Celta Fortuna",
+        "goals": 0
+      },
+      "away": {
+        "id": "3752",
+        "name": "Eibar",
+        "goals": 4
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401883314",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883314",
+      "statistics_class": "full",
+      "source_payload_sha256": "387ae118f567229b01b466108bd58173d87d360c8334638e267ebe06d1ccbb5a",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"131858\",\"name\":\"RC Celta Fortuna\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"8\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"5\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"67.2\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"24\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"9\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"3752\",\"name\":\"Eibar\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"13\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"4\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"1\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"32.8\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"12\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"7\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "f91ef061a03b5f79f07eb471909dd3464a72cc93a930a96b406cc73881441c3b",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401888382",
+      "kickoff": "2026-09-20T17:00Z",
+      "status": "FT",
+      "league": {
+        "id": "tur.1",
+        "name": "tur.1"
+      },
+      "home": {
+        "id": "132335",
+        "name": "Amed SFK",
+        "goals": 3
+      },
+      "away": {
+        "id": "1895",
+        "name": "Besiktas",
+        "goals": 2
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401888382",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/summary?event=401888382",
+      "statistics_class": "full",
+      "source_payload_sha256": "61645d4a65e26b34ec86c712fb8e99e42f8df170109b1a1ac91641715fe76666",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"132335\",\"name\":\"Amed SFK\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"25\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"7\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"1\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"1\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"30.5\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"10\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"8\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"1895\",\"name\":\"Besiktas\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"7\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"5\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"10\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"69.5\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"21\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"8\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "79c83b937ecfa6e258a7984a501a2744a0e15e1be39e7bece3b96292b5d02441",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
     }
   ],
   "partialMatches": []

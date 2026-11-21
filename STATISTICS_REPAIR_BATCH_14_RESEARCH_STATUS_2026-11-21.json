@@ -1,0 +1,1070 @@
+{
+  "schema_version": 1,
+  "batch_number": 14,
+  "generated_on": "2026-11-21",
+  "source_plan": "STATISTICS_REPAIR_BATCH_PLAN_2026-11-21.json",
+  "branch": "feature/bulk-statistics-repair-hardening",
+  "policy": "Original-match evidence only; zero transfers authorized.",
+  "counts": {
+    "full_verified": 19,
+    "blocked": 0,
+    "source_review": 6,
+    "pending": 0
+  },
+  "rows": [
+    {
+      "source": "espn",
+      "fixture_id": "401883255",
+      "match": "Castellón — CD Sabadell",
+      "planned_kickoff": "2026-08-23T17:00Z",
+      "home": "Castellón",
+      "away": "CD Sabadell",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "243525c3eaa4d8df6946c8073d0d84a2c67ffa321239d8d614269135d9fcae98",
+      "provider_event_id": "401883255",
+      "provider_league": "esp.2",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883255"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "cc5faf990624ec616c6da53f41a494769d46b1b8e3f9b05d978c5c1d55a05a03",
+      "score": "0-0",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883317",
+      "match": "RC Celta Fortuna — FC Andorra",
+      "planned_kickoff": "2026-08-24T17:00Z",
+      "home": "RC Celta Fortuna",
+      "away": "FC Andorra",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "be52f32a2aab3382e0ce6eab9d2eb24f943edef452fd301ca71545d56c181e59",
+      "provider_event_id": "401883317",
+      "provider_league": "esp.2",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883317"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "e07727515365c11c9af23ccd3b7e621b5be13e00165a014b5b6c030e71af3817",
+      "score": "4-2",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401888389",
+      "match": "Kocaelispor — Amed SFK",
+      "planned_kickoff": "2026-08-24T18:30Z",
+      "home": "Kocaelispor",
+      "away": "Amed SFK",
+      "league": "tur.1",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "fbe77909077698638c2320afe5c5faa6de30a2c995bf73bdebf7217044605572",
+      "provider_event_id": "401888389",
+      "provider_league": "tur.1",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/summary?event=401888389"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "1eac600644902be1c15dfb99553a89f906201d39c6ff2e59d04bf41e96378b7a",
+      "score": "2-0",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883252",
+      "match": "Granada — Mallorca",
+      "planned_kickoff": "2026-08-24T19:30Z",
+      "home": "Granada",
+      "away": "Mallorca",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "8e4dda9ff405f493969749ae9a1e3ef355c9afd16bfb7ec235fe50321fdb53d5",
+      "provider_event_id": "401883252",
+      "provider_league": "esp.2",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883252"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "3ac817def75d7cb9670ebcc4e7c2d08722236dfb714cc8289647d9ea0989a150",
+      "score": "2-0",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401900382",
+      "match": "Al Khaleej — Al Hilal",
+      "planned_kickoff": "2026-08-28T18:00Z",
+      "home": "Al Khaleej",
+      "away": "Al Hilal",
+      "league": "ksa.1",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "149d167ad26088518aaf064319ae62f0cb51d0fa26be4a258d05dc45d05da9b7",
+      "provider_event_id": "401900382",
+      "provider_league": "ksa.1",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/ksa.1/summary?event=401900382"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "1850af2af0f6ac99ca1ce191e24fff784cc7799d41e66903c2e0e62a252fc517",
+      "score": "1-5",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401879316",
+      "match": "Coventry City — Hull City AFC",
+      "planned_kickoff": "2026-08-29T14:00Z",
+      "home": "Coventry City",
+      "away": "Hull City AFC",
+      "league": "eng.1",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401879316",
+      "provider_league": "eng.1",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/summary?event=401879316"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "source_payload_sha256": "3f8ef38d7c85d7aa6545de7dc11cc51c87602ce6e09ff5b4f2f3d854981270e3",
+      "score": "0-1",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unconfirmed",
+      "transfer_ready": false,
+      "reason": "Provider identity, completion or stored score was not an exact match."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883243",
+      "match": "CD Sabadell — Almería",
+      "planned_kickoff": "2026-08-29T15:00Z",
+      "home": "CD Sabadell",
+      "away": "Almería",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "caf2b522411cbafc6b5cdc2c6173fc1430a001b68cfe1f883ef7754ea61a1146",
+      "provider_event_id": "401883243",
+      "provider_league": "esp.2",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883243"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "a85b7d59759d022eb449beec68bd53aaa8eba96517159a725a44595b41a70dbe",
+      "score": "1-0",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883248",
+      "match": "Albacete — Real Oviedo",
+      "planned_kickoff": "2026-08-29T17:00Z",
+      "home": "Albacete",
+      "away": "Real Oviedo",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "4d1b566e0572bd8d84758a4fce194b927e198f1562ca65783423a11f84b54992",
+      "provider_event_id": "401883248",
+      "provider_league": "esp.2",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883248"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "bfd3754000b0bdf5ca23bb568e1ff12df96a838f9d4bc334bdb3a75a629cee88",
+      "score": "0-1",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883221",
+      "match": "Córdoba — Granada",
+      "planned_kickoff": "2026-08-30T19:30Z",
+      "home": "Córdoba",
+      "away": "Granada",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "86405f9fa2fde73a26626a3a83693c0f28968b3098242e5cdbcb9411ab0aa8c6",
+      "provider_event_id": "401883221",
+      "provider_league": "esp.2",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883221"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "14a390c9ad5bdd2c180c4cc60bf2efdefb07720aed5e124f81234315637cf9fd",
+      "score": "1-3",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401888388",
+      "match": "Amed SFK — Trabzonspor",
+      "planned_kickoff": "2026-08-31T18:30Z",
+      "home": "Amed SFK",
+      "away": "Trabzonspor",
+      "league": "tur.1",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "df353d45520c54615dddce68c31c6c5d5c44849b04573b01314e230981f4c480",
+      "provider_event_id": "401888388",
+      "provider_league": "tur.1",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/summary?event=401888388"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "2dde3c21e528366d51a291769ae6da7e7884092c940ee5978f38140ce57c420d",
+      "score": "2-1",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883316",
+      "match": "RC Celta Fortuna — Castellón",
+      "planned_kickoff": "2026-08-31T19:30Z",
+      "home": "RC Celta Fortuna",
+      "away": "Castellón",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "502b306a37f8249a6b74b4046f08c195fc116d4c7ee96ef617a15091e78b6e21",
+      "provider_event_id": "401883316",
+      "provider_league": "esp.2",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883316"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "bea799d55292f79011ba9366832f027b8ff7d5eb907333903cf272f9d0cbe2d9",
+      "score": "1-2",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883315",
+      "match": "Ceuta — RC Celta Fortuna",
+      "planned_kickoff": "2026-09-05T16:30Z",
+      "home": "Ceuta",
+      "away": "RC Celta Fortuna",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "bb2bb1e97bcd89a250d6388311f150aa54355586c93b89dfe341d959dd989e8f",
+      "provider_event_id": "401883315",
+      "provider_league": "esp.2",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883315"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "7a7d47f8ed88993718ad6d1958e1457910efe99367385614c75d8ad316d0790c",
+      "score": "0-2",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883220",
+      "match": "Eibar — Granada",
+      "planned_kickoff": "2026-09-06T12:00Z",
+      "home": "Eibar",
+      "away": "Granada",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "14dc9b4f4bb8f2686676086b7b0e2941b6f54732e6a7def8567989ccb8e45a30",
+      "provider_event_id": "401883220",
+      "provider_league": "esp.2",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883220"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "1a9ce01c851c832344608d1434d9d1b545ea2e8397d9668e56a55ea7fc80ead9",
+      "score": "3-0",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401888386",
+      "match": "Kasimpasa — Amed SFK",
+      "planned_kickoff": "2026-09-06T14:00Z",
+      "home": "Kasimpasa",
+      "away": "Amed SFK",
+      "league": "tur.1",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "fe9930aa1cf27950878b3aec359884c8ccb7316bc6fc54a7fc6d13eecb17953b",
+      "provider_event_id": "401888386",
+      "provider_league": "tur.1",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/summary?event=401888386"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "c89a6a5c7b58b825b4225d8d93a52bf218950345bd647ec00de149d5a7efb7ac",
+      "score": "2-2",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883240",
+      "match": "Castellón — Albacete",
+      "planned_kickoff": "2026-09-06T16:30Z",
+      "home": "Castellón",
+      "away": "Albacete",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "0fc3fa4b7b2d72186b7f525454b7ad0c0b6678b0f8841a43e64c4243bad40542",
+      "provider_event_id": "401883240",
+      "provider_league": "esp.2",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883240"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "1ca48db83dadec4cc12b32af18dd97dcd9af72d158e77d4894377b4ed23e6e23",
+      "score": "2-0",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883216",
+      "match": "CD Sabadell — Córdoba",
+      "planned_kickoff": "2026-09-07T18:30Z",
+      "home": "CD Sabadell",
+      "away": "Córdoba",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "679b6f2af53f4c824247f090e239324e6b2112fc1fb4b7f179b29205126ba7a9",
+      "provider_event_id": "401883216",
+      "provider_league": "esp.2",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883216"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "5fdc0dd2b6265d01bb60142f0e24c17dd3e7bd46f881cb084b836853d2e94e6a",
+      "score": "3-2",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883211",
+      "match": "Granada — Albacete",
+      "planned_kickoff": "2026-09-12T16:30Z",
+      "home": "Granada",
+      "away": "Albacete",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "39a31602fbffd9cec8f1e320fa4fe36be7ed9487020e5757c491c70bfcbc9ee3",
+      "provider_event_id": "401883211",
+      "provider_league": "esp.2",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883211"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "78d8c9303a8c5314bec89df98cbf5e86301065420706427b0926193e2ffb0475",
+      "score": "1-1",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401888384",
+      "match": "Amed SFK — Istanbul Basaksehir",
+      "planned_kickoff": "2026-09-13T17:00Z",
+      "home": "Amed SFK",
+      "away": "Istanbul Basaksehir",
+      "league": "tur.1",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "385b7fef8bb77c338bb22defcee8d1e1db312c6da0f0111730ae7246a7a52c44",
+      "provider_event_id": "401888384",
+      "provider_league": "tur.1",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/summary?event=401888384"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "43f11db99092e6e669a183a0592a3177ee54959e6c3f3f44e6507ec550467423",
+      "score": "5-0",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401883314",
+      "match": "RC Celta Fortuna — Eibar",
+      "planned_kickoff": "2026-09-14T18:30Z",
+      "home": "RC Celta Fortuna",
+      "away": "Eibar",
+      "league": "esp.2",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "f91ef061a03b5f79f07eb471909dd3464a72cc93a930a96b406cc73881441c3b",
+      "provider_event_id": "401883314",
+      "provider_league": "esp.2",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.2/summary?event=401883314"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "387ae118f567229b01b466108bd58173d87d360c8334638e267ebe06d1ccbb5a",
+      "score": "0-4",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "espn",
+      "fixture_id": "401888382",
+      "match": "Amed SFK — Besiktas",
+      "planned_kickoff": "2026-09-20T17:00Z",
+      "home": "Amed SFK",
+      "away": "Besiktas",
+      "league": "tur.1",
+      "provider_group": "ESPN",
+      "status": "full_verified",
+      "statistics_sha256": "79c83b937ecfa6e258a7984a501a2744a0e15e1be39e7bece3b96292b5d02441",
+      "provider_event_id": "401888382",
+      "provider_league": "tur.1",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/tur.1/summary?event=401888382"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "61645d4a65e26b34ec86c712fb8e99e42f8df170109b1a1ac91641715fe76666",
+      "score": "3-2",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "full",
+      "transfer_ready": false,
+      "reason": "Both teams have seven validated ESPN metrics."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-esp.copa_del_rey-401918751",
+      "match": "CD Baztán — Atlético Calatayud",
+      "planned_kickoff": "2026-10-03T15:30Z",
+      "home": "CD Baztán",
+      "away": "Atlético Calatayud",
+      "league": "Copa del Rey",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401918751",
+      "provider_league": "esp.copa_del_rey",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.copa_del_rey/summary?event=401918751"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "08bdba999931dd520589ee744bf93c6e659800e5aa1daf682c6a63ac53630658",
+      "score": "1-2",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-esp.copa_del_rey-401918748",
+      "match": "CD Tedeón — Anaitasuna",
+      "planned_kickoff": "2026-10-03T16:00Z",
+      "home": "CD Tedeón",
+      "away": "Anaitasuna",
+      "league": "Copa del Rey",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401918748",
+      "provider_league": "esp.copa_del_rey",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.copa_del_rey/summary?event=401918748"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "f140d3e8e0ec3dd9c3458f5557cb2e023a21fd03355ed61185bdfb5c07a8cd8a",
+      "score": "2-5",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-esp.copa_del_rey-401918760",
+      "match": "Ceuta 6 de Junio — UB Lebrijana",
+      "planned_kickoff": "2026-10-03T16:00Z",
+      "home": "Ceuta 6 de Junio",
+      "away": "UB Lebrijana",
+      "league": "Copa del Rey",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401918760",
+      "provider_league": "esp.copa_del_rey",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.copa_del_rey/summary?event=401918760"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "43e42e0787882bb7ffdc8b0e341413e8f8da70c1194087542a2348f74d4653b8",
+      "score": "1-2",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-esp.copa_del_rey-401918510",
+      "match": "CD San José — Auriense Cented Academy",
+      "planned_kickoff": "2026-10-04T14:00Z",
+      "home": "CD San José",
+      "away": "Auriense Cented Academy",
+      "league": "Copa del Rey",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401918510",
+      "provider_league": "esp.copa_del_rey",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.copa_del_rey/summary?event=401918510"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "968f64a1ec0c21b3c13a153a2236131d53f4e5ce039ef3188720be00c5eed654",
+      "score": "1-0",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-esp.copa_del_rey-401918753",
+      "match": "SD Noja — Ribadesella",
+      "planned_kickoff": "2026-10-04T14:00Z",
+      "home": "SD Noja",
+      "away": "Ribadesella",
+      "league": "Copa del Rey",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401918753",
+      "provider_league": "esp.copa_del_rey",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.copa_del_rey/summary?event=401918753"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "d2864fb4b3f21bbf1376625859f504157554f44ee8927e153a3b8ecb3cdbb002",
+      "score": "1-1",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    }
+  ]
+}

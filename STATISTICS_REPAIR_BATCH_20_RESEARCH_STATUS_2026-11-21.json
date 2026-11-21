@@ -1,0 +1,994 @@
+{
+  "schema_version": 1,
+  "batch_number": 20,
+  "generated_on": "2026-11-21",
+  "source_plan": "STATISTICS_REPAIR_BATCH_PLAN_2026-11-21.json",
+  "branch": "feature/bulk-statistics-repair-hardening",
+  "policy": "Original-match evidence only; zero transfers authorized.",
+  "counts": {
+    "full_verified": 0,
+    "blocked": 0,
+    "source_review": 25,
+    "pending": 0
+  },
+  "rows": [
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932735",
+      "match": "Rumilly Vallières — Saint-Étienne",
+      "planned_kickoff": "2026-11-15T14:00Z",
+      "home": "Rumilly Vallières",
+      "away": "Saint-Étienne",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932735",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932735",
+        "https://vjstats.com/matches/4258514/gfa-rumilly-vallieres-vs-as-saint-etienne"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "86340383a86501ea9b01816616cdcaf7c6cd072f252da2dffad0e02d6eee2552",
+      "score": "1-2",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "partial_unverified_alternate",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932736",
+      "match": "Atlas Paillade — AS Cannes",
+      "planned_kickoff": "2026-11-15T14:00Z",
+      "home": "Atlas Paillade",
+      "away": "AS Cannes",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932736",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932736",
+        "https://offsidescores.com/fr/football/match/montpellier-atlas-paillade-cannes-20261115/4120b62d-d870-49d1-b9e2-29434c46d91c/detail"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "dab29c48af5a1145bd7b9c7ec75aa9a8affb5c18c6cc77e411c8e12a6b074c50",
+      "score": "0-2",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "partial_unverified_alternate",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-fra.coupe_de_france-401932735",
+      "match": "Rumilly Vallières — Saint-Étienne",
+      "planned_kickoff": "2026-11-15T14:00Z",
+      "home": "Rumilly Vallières",
+      "away": "Saint-Étienne",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932735",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932735",
+        "https://vjstats.com/matches/4258514/gfa-rumilly-vallieres-vs-as-saint-etienne"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "86340383a86501ea9b01816616cdcaf7c6cd072f252da2dffad0e02d6eee2552",
+      "score": "1-2",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "partial_unverified_alternate",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-fra.coupe_de_france-401932736",
+      "match": "Atlas Paillade — AS Cannes",
+      "planned_kickoff": "2026-11-15T14:00Z",
+      "home": "Atlas Paillade",
+      "away": "AS Cannes",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932736",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932736",
+        "https://offsidescores.com/fr/football/match/montpellier-atlas-paillade-cannes-20261115/4120b62d-d870-49d1-b9e2-29434c46d91c/detail"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "dab29c48af5a1145bd7b9c7ec75aa9a8affb5c18c6cc77e411c8e12a6b074c50",
+      "score": "0-2",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "partial_unverified_alternate",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401933096",
+      "match": "Saint-Pauloise FC — La Tamponnaise",
+      "planned_kickoff": "2026-11-15T14:45Z",
+      "home": "Saint-Pauloise FC",
+      "away": "La Tamponnaise",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401933096",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401933096"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "fcb9204c3e0fd967cfbd30dd0b72f14eab0cb2284291fb53577d4dab4796800d",
+      "score": "1-2",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-fra.coupe_de_france-401933096",
+      "match": "Saint-Pauloise FC — La Tamponnaise",
+      "planned_kickoff": "2026-11-15T14:45Z",
+      "home": "Saint-Pauloise FC",
+      "away": "La Tamponnaise",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401933096",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401933096"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "fcb9204c3e0fd967cfbd30dd0b72f14eab0cb2284291fb53577d4dab4796800d",
+      "score": "1-2",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-uefa.nations-401861173",
+      "match": "Belarus — Albania",
+      "planned_kickoff": "2026-11-15T17:00Z",
+      "home": "Belarus",
+      "away": "Albania",
+      "league": "UEFA Nations League",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401861173",
+      "provider_league": "uefa.nations",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861173"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "300f1a8a17f4c000977bd900527f4c38a5591637b4e17d2b9d43cb7d59c62a7b",
+      "score": "0-2",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "unconfirmed",
+      "transfer_ready": false,
+      "reason": "All metrics present; source alias or match phase requires review."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-uefa.nations-401861174",
+      "match": "Finland — San Marino",
+      "planned_kickoff": "2026-11-15T17:00Z",
+      "home": "Finland",
+      "away": "San Marino",
+      "league": "UEFA Nations League",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401861174",
+      "provider_league": "uefa.nations",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861174"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "2ec134b8ba3b983721d139077138f05d9c4a1e325495b33897b3b8e91a9065a1",
+      "score": "7-2",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "unconfirmed",
+      "transfer_ready": false,
+      "reason": "All metrics present; source alias or match phase requires review."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-fifa.friendly_u21-401934216",
+      "match": "Bosnia-Herzegovina U21 — Montenegro U21",
+      "planned_kickoff": "2026-11-16T11:00Z",
+      "home": "Bosnia-Herzegovina U21",
+      "away": "Montenegro U21",
+      "league": "International U21 Friendlies",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401934216",
+      "provider_league": "fifa.friendly_u21",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly_u21/summary?event=401934216"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": false,
+      "source_payload_sha256": "c76b220c081f355ca8c6542a63530b172d7d693739a706f0c1f3a95e8aeceea4",
+      "score": "0-0",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unconfirmed",
+      "transfer_ready": false,
+      "reason": "Provider identity, completion or stored score was not an exact match."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-caf.nations_qual-401927135",
+      "match": "Sudan — Senegal",
+      "planned_kickoff": "2026-11-16T13:00Z",
+      "home": "Sudan",
+      "away": "Senegal",
+      "league": "Africa Cup of Nations Qualifying",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401927135",
+      "provider_league": "caf.nations_qual",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations_qual/summary?event=401927135"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "940ce2bbbdaf724c53a72f2579c625957cb1026287fedf5ca357cbcb874a423d",
+      "score": "2-4",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "unconfirmed",
+      "transfer_ready": false,
+      "reason": "All metrics present; source alias or match phase requires review."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-caf.nations_qual-401927170",
+      "match": "Namibia — Cameroon",
+      "planned_kickoff": "2026-11-16T13:00Z",
+      "home": "Namibia",
+      "away": "Cameroon",
+      "league": "Africa Cup of Nations Qualifying",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401927170",
+      "provider_league": "caf.nations_qual",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations_qual/summary?event=401927170"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "f4b97d1e1151ad0513269ffc298442fb11b69f0d8e8e50abf1486794299a2875",
+      "score": "0-3",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "unconfirmed",
+      "transfer_ready": false,
+      "reason": "All metrics present; source alias or match phase requires review."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-fifa.friendly-401933879",
+      "match": "Tahiti — Cook Islands",
+      "planned_kickoff": "2026-11-17T05:30Z",
+      "home": "Tahiti",
+      "away": "Cook Islands",
+      "league": "International Friendlies",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401933879",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=401933879"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "2ba9531214ccc05df199d82cc0226ea043bad508edf1d29b77461e1ecad433d8",
+      "score": "3-3",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-fifa.friendly-401930237",
+      "match": "Malaysia — Yemen",
+      "planned_kickoff": "2026-11-17T06:00Z",
+      "home": "Malaysia",
+      "away": "Yemen",
+      "league": "International Friendlies",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401930237",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=401930237"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "1ea6be5ab9d54af1e8149547d662d17162fcf12382f0015d05a5763356d46ea8",
+      "score": "2-1",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-fifa.friendly-401916335",
+      "match": "Singapore — Brazil",
+      "planned_kickoff": "2026-11-17T10:00Z",
+      "home": "Singapore",
+      "away": "Brazil",
+      "league": "International Friendlies",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401916335",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=401916335"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "d455ecf0c09f52a34f47ed2e5dd96a4fc3d136b84b3b8e6f71a33ec56d6f1473",
+      "score": "0-7",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "unconfirmed",
+      "transfer_ready": false,
+      "reason": "All metrics present; source alias or match phase requires review."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-fifa.friendly-401930242",
+      "match": "Kyrgyz Republic — Vietnam",
+      "planned_kickoff": "2026-11-17T12:00Z",
+      "home": "Kyrgyz Republic",
+      "away": "Vietnam",
+      "league": "International Friendlies",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401930242",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=401930242"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "a01fa756b63e5cea1462422c09fb2164ef7e873c7d63d51b80eb94f6c06a9f2d",
+      "score": "2-1",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-fifa.friendly-401930880",
+      "match": "China — Bahrain",
+      "planned_kickoff": "2026-11-17T12:00Z",
+      "home": "China",
+      "away": "Bahrain",
+      "league": "International Friendlies",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401930880",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=401930880"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "9cb80938fa5944965a8334cb635a7a932921a003cacbbf6c40e4fdf1bae8692a",
+      "score": "2-2",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "unconfirmed",
+      "transfer_ready": false,
+      "reason": "All metrics present; source alias or match phase requires review."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-caf.nations_qual-401927165",
+      "match": "Tanzania — Nigeria",
+      "planned_kickoff": "2026-11-17T13:00Z",
+      "home": "Tanzania",
+      "away": "Nigeria",
+      "league": "Africa Cup of Nations Qualifying",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401927165",
+      "provider_league": "caf.nations_qual",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations_qual/summary?event=401927165"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "6f8d6b32b0de632f45136f3f4cf0b0c3dfbba4f72118f667eb5461f3307edfce",
+      "score": "0-0",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "unconfirmed",
+      "transfer_ready": false,
+      "reason": "All metrics present; source alias or match phase requires review."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-caf.nations_qual-401927168",
+      "match": "Ethiopia — Mozambique",
+      "planned_kickoff": "2026-11-17T13:00Z",
+      "home": "Ethiopia",
+      "away": "Mozambique",
+      "league": "Africa Cup of Nations Qualifying",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401927168",
+      "provider_league": "caf.nations_qual",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations_qual/summary?event=401927168"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "cc8381b61bba3ee87cd6429b068fcf2fc925f70241be3713035c588560cbfcb0",
+      "score": "0-1",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "unconfirmed",
+      "transfer_ready": false,
+      "reason": "All metrics present; source alias or match phase requires review."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-caf.nations_qual-401927169",
+      "match": "Burundi — Zambia",
+      "planned_kickoff": "2026-11-17T13:00Z",
+      "home": "Burundi",
+      "away": "Zambia",
+      "league": "Africa Cup of Nations Qualifying",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401927169",
+      "provider_league": "caf.nations_qual",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations_qual/summary?event=401927169"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "b424873c688be82b665fa4efaf50226f80bec80652b4c7f30192819cff2aa0be",
+      "score": "1-1",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "unconfirmed",
+      "transfer_ready": false,
+      "reason": "All metrics present; source alias or match phase requires review."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-caf.nations_qual-401927178",
+      "match": "South Sudan — Angola",
+      "planned_kickoff": "2026-11-17T13:00Z",
+      "home": "South Sudan",
+      "away": "Angola",
+      "league": "Africa Cup of Nations Qualifying",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401927178",
+      "provider_league": "caf.nations_qual",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations_qual/summary?event=401927178"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "08879211f43b6629610e80284449a984897e554801507c6f88e72f6f1b673310",
+      "score": "0-1",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "unconfirmed",
+      "transfer_ready": false,
+      "reason": "All metrics present; source alias or match phase requires review."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-caf.nations_qual-401927179",
+      "match": "Malawi — Egypt",
+      "planned_kickoff": "2026-11-17T13:00Z",
+      "home": "Malawi",
+      "away": "Egypt",
+      "league": "Africa Cup of Nations Qualifying",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401927179",
+      "provider_league": "caf.nations_qual",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations_qual/summary?event=401927179"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "c058f206c19991f435f4c61521355541bdbd4f4e7379ecfcc904598a05b2abba",
+      "score": "0-0",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "unconfirmed",
+      "transfer_ready": false,
+      "reason": "All metrics present; source alias or match phase requires review."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-caf.nations_qual-401927181",
+      "match": "Lesotho — Gabon",
+      "planned_kickoff": "2026-11-17T13:00Z",
+      "home": "Lesotho",
+      "away": "Gabon",
+      "league": "Africa Cup of Nations Qualifying",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401927181",
+      "provider_league": "caf.nations_qual",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations_qual/summary?event=401927181"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "61860fd73abb989bde3c754fd1e3a3d1cdc3bb0371466fc628fae2a9e4202529",
+      "score": "2-1",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "unconfirmed",
+      "transfer_ready": false,
+      "reason": "All metrics present; source alias or match phase requires review."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-fifa.friendly-401933635",
+      "match": "Lebanon — Palestine",
+      "planned_kickoff": "2026-11-17T13:00Z",
+      "home": "Lebanon",
+      "away": "Palestine",
+      "league": "International Friendlies",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401933635",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=401933635"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "a5a4efd3cff3c3181300a28cd9f74487c144d0d7d162d2d910fe6c34171ceabd",
+      "score": "0-0",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-fifa.friendly-401916336",
+      "match": "Japan — Paraguay",
+      "planned_kickoff": "2026-11-17T13:10Z",
+      "home": "Japan",
+      "away": "Paraguay",
+      "league": "International Friendlies",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401916336",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=401916336"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "49e63dc4e474003c81c967e37305edacf7376832493143374a2ac24f38404e6c",
+      "score": "1-2",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "unconfirmed",
+      "transfer_ready": false,
+      "reason": "All metrics present; source alias or match phase requires review."
+    },
+    {
+      "source": "app",
+      "fixture_id": "espn-fifa.friendly-401931477",
+      "match": "Qatar — South Korea",
+      "planned_kickoff": "2026-11-17T14:00Z",
+      "home": "Qatar",
+      "away": "South Korea",
+      "league": "International Friendlies",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401931477",
+      "provider_league": "fifa.friendly",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=401931477"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "831f93fb7a6b6e2eb98847427ae1e3d5b07ac5d4f9b3bd548e3643882757fa8f",
+      "score": "0-1",
+      "metric_coverage": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "statistics_availability": "unconfirmed",
+      "transfer_ready": false,
+      "reason": "All metrics present; source alias or match phase requires review."
+    }
+  ]
+}

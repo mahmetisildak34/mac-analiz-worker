@@ -1,0 +1,766 @@
+{
+  "schema_version": 1,
+  "batch_number": 16,
+  "generated_on": "2026-11-21",
+  "source_plan": "STATISTICS_REPAIR_BATCH_PLAN_2026-11-21.json",
+  "branch": "feature/bulk-statistics-repair-hardening",
+  "policy": "Original-match evidence only; zero transfers authorized.",
+  "counts": {
+    "full_verified": 0,
+    "blocked": 0,
+    "source_review": 25,
+    "pending": 0
+  },
+  "rows": [
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932832",
+      "match": "IC Croix — ES Thaon",
+      "planned_kickoff": "2026-11-14T16:00Z",
+      "home": "IC Croix",
+      "away": "ES Thaon",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932832",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932832"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "c268c3f8fd5e59e428a9fd8a98a779a55b132722ae920f028bb3b2a7657f5b6c",
+      "score": "1-2",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932834",
+      "match": "Pont-de-Cheruy — Bourg-Peronnas",
+      "planned_kickoff": "2026-11-14T16:00Z",
+      "home": "Pont-de-Cheruy",
+      "away": "Bourg-Peronnas",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932834",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932834"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "ab7644bec4cf4d7b076b65f4730eef6e7068f5853918431c1b96b2ee4d00dd69",
+      "score": "1-5",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932844",
+      "match": "Tinteniac St Domineuc — Concarneau",
+      "planned_kickoff": "2026-11-14T16:00Z",
+      "home": "Tinteniac St Domineuc",
+      "away": "Concarneau",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932844",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932844"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "a7a241e18de60d5a191d8e3f8710d3afa13bf4ac029605547a3c1ea5b4d107b3",
+      "score": "1-4",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932757",
+      "match": "Koetzingue — Biesheim",
+      "planned_kickoff": "2026-11-14T16:30Z",
+      "home": "Koetzingue",
+      "away": "Biesheim",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932757",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932757"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "b95c155ada8a3ceb8967e3acf41240f3aa5225241529343446b45765a26de042",
+      "score": "1-3",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932737",
+      "match": "Grau-Du-Roi — Riviera",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Grau-Du-Roi",
+      "away": "Riviera",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932737",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932737"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "3a06165434447c34881f22d536123acc008838f7d7d2ebf352321d0d9116fb1e",
+      "score": "2-4",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932738",
+      "match": "Cournon — Chassieu Declines FC",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Cournon",
+      "away": "Chassieu Declines FC",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932738",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932738"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "a734886aac2d65c2414916728d2300faefa49d198fa40a0ce1ad0180fe51a3b0",
+      "score": "2-2",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932740",
+      "match": "Lyon-la-Duchere — US Feurs",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Lyon-la-Duchere",
+      "away": "US Feurs",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932740",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932740"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "48d256af16f75429caeba79f6b3ed27096c153ee23dafc6b52d1ea49b79f216d",
+      "score": "1-4",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932765",
+      "match": "Vitre — Saint-Pierre Milizac",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Vitre",
+      "away": "Saint-Pierre Milizac",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932765",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932765"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "8bba91f693d4bede5a8c24c79cee427da2397378779c3cf672fef2ca89b5e3f8",
+      "score": "1-2",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932768",
+      "match": "Caen — FC Chambly",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Caen",
+      "away": "FC Chambly",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932768",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932768"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "a1bd9d25a9ca9beb231b4d6f0b4349b8c9f3cb4afe7fe0a7334d1608fe8f041d",
+      "score": "2-3",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932801",
+      "match": "Strasbourg Koenigshoffen — Oberlauterbach",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Strasbourg Koenigshoffen",
+      "away": "Oberlauterbach",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932801",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932801"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "63b4cefd961d943c931cbd56e049bbf02fa54ccafd8b719d76b0c31f11edd75a",
+      "score": "1-2",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932802",
+      "match": "Amneville — Sundhoffen",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Amneville",
+      "away": "Sundhoffen",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932802",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932802"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "882231bedf9b9176577d25ee8e7f729c96003516c04ccef1e513a37d12c96e92",
+      "score": "0-1",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932808",
+      "match": "Contres — ESA Linas-Montlhery",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Contres",
+      "away": "ESA Linas-Montlhery",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932808",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932808"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "c177f1169a1c6deae6989557731d6e741c91fb33df162ef1159cdf24e750d901",
+      "score": "0-4",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932811",
+      "match": "US Cheminots Paray-Foot — Villefranche",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "US Cheminots Paray-Foot",
+      "away": "Villefranche",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932811",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932811"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "31b3b58aecf64612c02a951ca9b9e6734d1520f8b7028cc6748de12b5468a969",
+      "score": "0-3",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932812",
+      "match": "Pays de Saint-Omer — AF Virois",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Pays de Saint-Omer",
+      "away": "AF Virois",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932812",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932812"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "6a9309271693ee94a40b6d5ec476f7da9e1afeedc3a6027c1b41bcf0f139649e",
+      "score": "2-2",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932813",
+      "match": "Stade Béthunois — AS Nancy Lorraine",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Stade Béthunois",
+      "away": "AS Nancy Lorraine",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932813",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932813"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "3e4aa9b973cd83b04a7d2144da567a9ab2993269ea77475ab073c9fdcdd03906",
+      "score": "3-3",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932814",
+      "match": "Racing Besancon — Am. du Personnel Municipal Metz",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Racing Besancon",
+      "away": "Am. du Personnel Municipal Metz",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932814",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932814"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "002f2e84c225fda13b6bc753bc985a5d9d35910f3bf5edd26bfa76413dcd784a",
+      "score": "4-1",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932818",
+      "match": "Sag Cestas — Bayonne",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Sag Cestas",
+      "away": "Bayonne",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932818",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932818"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "66fa86f59932789170eb1f0ac4e20e5a839405c1b6c4fd93361cab61965e1753",
+      "score": "0-1",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932822",
+      "match": "Asptt Dijon — Selongey",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Asptt Dijon",
+      "away": "Selongey",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932822",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932822"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "7e4d1da34def55b43e3d57781653b22c2ad0eb0b46487675fa000a3b07be7ad6",
+      "score": "0-2",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932829",
+      "match": "Le Touquet — Avranches",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Le Touquet",
+      "away": "Avranches",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932829",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932829"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "d7131381f862da572c6b0c937c681aaa4c19416fdc67ed8b03fb1398c794a30e",
+      "score": "2-3",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932830",
+      "match": "St-Ouen L'Aumone — Boulogne",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "St-Ouen L'Aumone",
+      "away": "Boulogne",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932830",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932830"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "62b73cf75d0601c24284b2dd06d3473998c7c5c9443f25ef3b779f8ce36afe96",
+      "score": "1-0",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932831",
+      "match": "Saint-Brieuc — Rouen",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Saint-Brieuc",
+      "away": "Rouen",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932831",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932831"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "02b1347324be65145e5944e27de230189ab1e9141a0349fea8b21ca6c4248ff0",
+      "score": "0-0",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932835",
+      "match": "GSI Pontivy — Rennes TA",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "GSI Pontivy",
+      "away": "Rennes TA",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932835",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932835"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "c608c2a71b531a6422bd186875395055a7a9f1e5d8e602669b8f110776fb650e",
+      "score": "2-2",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932839",
+      "match": "Dunkerque — US Quevilly",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Dunkerque",
+      "away": "US Quevilly",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932839",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932839"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "0b85cc0aa45fa4f1c05581bf290eeafbe289d3a67acee9f03e5ee3f878a0d3db",
+      "score": "0-3",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401932842",
+      "match": "Vesoul — FC Fleury 91",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Vesoul",
+      "away": "FC Fleury 91",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401932842",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401932842"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "54e15dbbda6b74c0c3041b709be1d7959f80d3f2612328ddf90c5b51d9060fb4",
+      "score": "2-2",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    },
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.coupe_de_france-401933060",
+      "match": "Chateaubriant — Horizon Patho",
+      "planned_kickoff": "2026-11-14T17:00Z",
+      "home": "Chateaubriant",
+      "away": "Horizon Patho",
+      "league": "Coupe de France",
+      "provider_group": "ESPN",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "provider_event_id": "401933060",
+      "provider_league": "fra.coupe_de_france",
+      "provider_season": 2026,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fra.coupe_de_france/summary?event=401933060"
+      ],
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "source_payload_sha256": "72fd33eac188be4437e5d98fb11a0e028d508013efad8b6ac61afc08eef8a1c5",
+      "score": "5-0",
+      "metric_coverage": {
+        "home": [],
+        "away": []
+      },
+      "statistics_availability": "unavailable_in_checked_source",
+      "transfer_ready": false,
+      "reason": "Matched original ESPN event; no complete verified statistics payload."
+    }
+  ]
+}
