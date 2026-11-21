@@ -12,6 +12,8 @@ on:
       - "statistics-repair-bulk.js"
       - "statistics-data-quality.js"
       - "trusted-goal-poisson.js"
+      - "archive-poisson-client.js"
+      - "tests/archive-poisson-client.test.mjs"
       - "tests/trusted-goal-poisson.test.mjs"
       - "tests/archive-provider-proof.test.mjs"
       - "tests/statistics-data-quality.test.mjs"
@@ -82,6 +84,7 @@ jobs:
           node --check statistics-repair-bulk.js
           node --check statistics-data-quality.js
           node --check trusted-goal-poisson.js
+          node --check archive-poisson-client.js
           node --check statistics-repair.js
           node --check statistics-api-backfill.js
           node --check statistics-api-cron.js
@@ -97,6 +100,8 @@ jobs:
           node tests/espn-archive-existing-date-skip.test.mjs
       - name: Run trusted goal Poisson tests
         run: node tests/trusted-goal-poisson.test.mjs
+      - name: Run verified archive full-time and half-time Poisson acceptance tests
+        run: node --test tests/archive-poisson-client.test.mjs
       - name: Run strict data quality tests
         run: node tests/statistics-data-quality.test.mjs
       - name: Run repair safety tests
