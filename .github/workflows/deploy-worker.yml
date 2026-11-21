@@ -52,6 +52,9 @@ jobs:
       - name: Verify model selection and conflict acceptance
         run: node --test tests/poisson-acceptance.test.mjs
 
+      - name: Verify mobile archive Poisson integration
+        run: node --test tests/archive-poisson-mobile.test.mjs
+
       - name: Check pinned offline integration checksums
         run: sha256sum -c docs/poisson-integration.sha256
 

@@ -132,3 +132,5 @@ Deponun kökünde `node --test tests/offline-analysis-fixture-client.test.mjs te
 - [Arşiv API ve model sözleşmesi](archive-api-contract.md)
 - [Dağıtılan entegrasyon dosyaları için SHA-256 listesi](poisson-integration.sha256)
 - [Kabul testleri ve doğrulama döneminde seçilen deneysel model sonuçları](poisson-v13-acceptance.md)
+
+Mobil arşiv JSON'unu iki dönem kartına bağlamak için [arşiv yardımcısını](archive-poisson-client.js) ve [mobil sözleşmeyi](archive-api-contract.md#mobil-entegrasyon-yardımcısı) kullan. v1.2 fonksiyonları ve Worker arşiv yanıtı korunur. [Son v1.3 deneyi](poisson-v13-safari.md) ayrı yayımlanır.

@@ -17,3 +17,11 @@ Başarılı yanıt HTTP 200, `response` maç dizisi, `count` filtre sonrası sat
 `available: true` başarılı tahmindir. `probabilities`, `totals`, `goal_distribution`, örneklem, dönem ve model metadatası içerir. `available: false` durumunda `reason` ve kalite metadatası okunur. `probabilities` bulunmaz. Çelişkili maçlar örneklemden çıkarılır ve güvenilir örneklem yetersizse tahmin üretilmez.
 
 Aynı ESPN fikstürünün çelişkili kopyalarını v1.2 otomatik eler. Diğer kaynakların çelişkili kayıtlarını arşiv eşleme katmanında çıkar veya `conflicting: true` ile işaretle. Kimliği belirlenmemiş sağlayıcılar arasında yalnızca takım adına dayanarak birleştirme yapma.
+
+## Mobil entegrasyon yardımcısı
+
+`docs/archive-poisson-client.js` içindeki `analyzeArchiveResponse({ status, body }, options)` arşiv yanıtını v1.2 girdisine çevirir. Başarılı arşiv yanıtında `fullTime` ve `firstHalf` ayrı döner. Her sekme kendi `available`, `reason`, `model_version`, `calibration_status`, `home_samples` ve `away_samples` alanlarını okur. Saha bazındaki hücum ve savunma değerleri başarılı model sonucundaki `team_rates` alanında yer alır.
+
+Lig baz çizgilerini aynı lig ve dönem için tahmin tarihinden önceki doğrulanmış maçlardan üret. Maç sonu ve ilk yarı için lig gol ortalamaları ayrıdır. Modelin varsayılan alt sınırı her takım için beş uygun saha maçıdır ve en yeni on maç değerlendirilir. Ev sahibi için iç saha, deplasman takımı için deplasman maçları kullanılır. `league_id` ile lig kapsamını daralt. Kimlikleri biliniyorsa `home_team_id` ve `away_team_id` de sağla.
+
+Arşiv yüklenemezse yardımcı `{ available: false, reason: "archive_unavailable", http_status: 503 }` biçiminde döner. Başarılı arşiv yüklemesi ve ilk yarı verisi eksikliği bir arada olabilir. Bu durumda maç sonu kartı kendi sonucunu gösterir ve ilk yarı kartı yetersiz örneklem mesajını okur. [Çevrimdışı mobil testler](../tests/archive-poisson-mobile.test.mjs) gerçek ESPN arşiv örneğini ve kontrollü test verilerini ayrı kullanır.

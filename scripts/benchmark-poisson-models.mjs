@@ -14,7 +14,8 @@ const leagues=turkeyEarly||process.argv.includes("--turkey-only")?["tr.1"]:["tr.
 const trainingEnd=turkeyEarly?"2024-11-01":"2025-01-01";
 const validationEnd=turkeyEarly?"2025-01-01":"2025-07-01";
 const nextSeason=process.argv.includes("--next-season");
-const testStart=nextSeason?"2026-07-01":validationEnd;
+const lateHoldout=process.argv.includes("--late-holdout");
+const testStart=lateHoldout?"2026-09-21":nextSeason?"2026-07-01":validationEnd;
 const testEnd=turkeyEarly?"2025-07-01":"9999-01-01";
 const seasons=extended?["2023-24","2024-25","2025-26","2026-27"]:["2024-25","2025-26"];
 const cap=15;
@@ -219,11 +220,12 @@ const reports=leagues.map(league=>{
       ...measures(rows),...(allMarkets?{markets:evaluateMarkets(rows,cap)}:{})}];
   }));
   return {league,hashes,training,validation:validation.length,temperature:t,mixWeight,testFixtures:test.length,comparisonFixtures:comparison.length,selection,
+    test_date_range:test.length?[test[0].target.kickoff,test.at(-1).target.kickoff]:null,
     belowVenueMinimum:test.filter(r=>r.homeVenueMatches<5||r.awayVenueMatches<5).length,
     ...(allMarkets?{eloTemperature}:{}),results};
 });
-const sourceFile=directory+"/turkey-sources.json";
-const source=fs.existsSync(sourceFile)?JSON.parse(fs.readFileSync(sourceFile)):"https://github.com/openfootball/football.json";
+const sourceFile=["benchmark-sources.json","turkey-sources.json"].map(name=>directory+"/"+name).find(file=>fs.existsSync(file));
+const source=sourceFile?JSON.parse(fs.readFileSync(sourceFile)):"https://github.com/openfootball/football.json";
 console.log(JSON.stringify({source,period,split:{
   training_before:trainingEnd,validation_from:trainingEnd,validation_before:validationEnd,test_from:testStart,test_before:testEnd
 },reports},null,2));
