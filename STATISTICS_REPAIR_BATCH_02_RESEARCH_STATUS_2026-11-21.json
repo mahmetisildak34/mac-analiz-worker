@@ -398,12 +398,15 @@
       "league": "J3 League",
       "home": "Fukushima United",
       "away": "Sagamihara",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://www.jleague.jp/en/match/j3/2026/111406/"
+      ],
+      "status": "source_review",
+      "reason": "J.LEAGUE official match 14 Nov 2026 14:00 JST confirms Fukushima United home 1-0 Sagamihara away, J3 round 17. Official report does not independently establish all seven required metrics including fouls and possession as defined. Source review; no JSON.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "1-0"
     },
     {
       "fixture_id": "1555802",
@@ -412,12 +415,15 @@
       "league": "J3 League",
       "home": "FC Gifu",
       "away": "Matsumoto Yamaga",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://www.jleague.jp/en/match/j3/2026/111407/"
+      ],
+      "status": "source_review",
+      "reason": "J.LEAGUE official 14 Nov 2026 14:00 JST confirms FC Gifu home 0-0 Matsumoto Yamaga away, J3 round 17. Some match data provided but not seven standardized metrics both teams; source review.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "0-0"
     },
     {
       "fixture_id": "1555803",
@@ -426,12 +432,15 @@
       "league": "J3 League",
       "home": "Kitakyushu",
       "away": "Thespakusatsu Gunma",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://www.jleague.jp/en/match/j3/2026/111408/"
+      ],
+      "status": "source_review",
+      "reason": "J.LEAGUE official 14 Nov 2026 14:00 JST confirms Giravanz Kitakyushu home 4-3 Thespa Gunma away, J3 round 17. Official page shows shots, possession, corners, yellow/red and free kicks but free kicks are not equivalent to fouls committed; on-target shots not independently confirmed. Source review.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "4-3"
     },
     {
       "fixture_id": "1560976",
@@ -440,12 +449,15 @@
       "league": "WE League",
       "home": "Parceiro Nagano W",
       "away": "Nojima Stella W",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://data.weleague.jp/SFMS04/?opponentTeamId=379&teamId=381"
+      ],
+      "status": "source_review",
+      "reason": "WE League official results show 14 Nov 2026 AC Nagano Parceiro Ladies home 1-0 Nojima Stella away. Seven match-level metrics not verified from an event-specific primary page. Source review.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "1-0"
     },
     {
       "fixture_id": "1560977",
@@ -454,12 +466,15 @@
       "league": "WE League",
       "home": "Sanfrecce Hiroshima W",
       "away": "JEF United W",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://weleague.jp/files/2026/match_pdf_jp/2026111410.pdf"
+      ],
+      "status": "source_review",
+      "reason": "Official WE League match report: 14 Nov 2026 14:04 JST, Sanfrecce Hiroshima Regina home 3-0 JEF United Chiba Ladies away, matchweek 9. Report verifies score and cards but seven comparable metrics not fully verified. Source review.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "3-0"
     },
     {
       "fixture_id": "1606756",
@@ -468,12 +483,15 @@
       "league": "J2 League",
       "home": "Oita Trinita",
       "away": "Tochigi City",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://oddsbook.com/football/japan/j2-j3-league/oita-trinita-vs-tochigi-city/1606756/"
+      ],
+      "status": "source_review",
+      "reason": "14 Nov 2026 14:00 JST Oita Trinita home 1-6 Tochigi City away, J2 round 17, corroborated in J.LEAGUE official results list. Seven metrics from single verified source incomplete. Source review.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "1-6"
     },
     {
       "fixture_id": "1606757",
@@ -482,12 +500,15 @@
       "league": "J2 League",
       "home": "Shonan Bellmare",
       "away": "Yokohama FC",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://www.jleague.jp/en/match/j2/2026/111402/preview/"
+      ],
+      "status": "source_review",
+      "reason": "J.LEAGUE official 14 Nov 2026 14:00 JST Shonan Bellmare home 2-0 Yokohama FC away, J2 round 17. Seven full standardized statistics not verified; source review.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "2-0"
     },
     {
       "fixture_id": "1606758",
@@ -496,12 +517,15 @@
       "league": "J2 League",
       "home": "Albirex Niigata",
       "away": "Tegevajaro Miyazaki",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://www.jleague.jp/en/match/j2/2026/111403/"
+      ],
+      "status": "blocked",
+      "reason": "J.LEAGUE official 14 Nov 2026 14:00 JST Albirex Niigata home 1-3 Tegevajaro Miyazaki away, J2 round 17. ScoreMondo has stale/inconsistent 1-2 score despite 3 goals in official report. Provider mismatch; official source establishes correct result but seven stats not verified; blocked for conflict pending source resolution.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "1-3"
     },
     {
       "fixture_id": "1606759",
@@ -510,12 +534,15 @@
       "league": "J2 League",
       "home": "Omiya Ardija",
       "away": "Montedio Yamagata",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://www.jleague.jp/en/match/j2/2026/111401/preview/"
+      ],
+      "status": "source_review",
+      "reason": "J.LEAGUE official 14 Nov 2026 14:03 JST RB Omiya Ardija home 2-1 Montedio Yamagata away, J2 round 17. Team official profiles confirm shots 12/11, corners 3/8, yellows 2/4 and reds 0/0, but fouls/on-target/possession incomplete. Source review.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "2-1"
     },
     {
       "fixture_id": "1606760",
@@ -524,19 +551,22 @@
       "league": "J2 League",
       "home": "Fujieda MYFC",
       "away": "Ventforet Kofu",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://www.jleague.jp/en/match/j2/2026/111404/"
+      ],
+      "status": "source_review",
+      "reason": "J.LEAGUE official 14 Nov 2026 14:00 JST Fujieda MYFC home 1-0 Ventforet Kofu away, J2 round 17. Seven metrics from a single authoritative source not completely established; source review.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "1-0"
     }
   ],
   "counts": {
     "full_verified": 0,
-    "blocked": 4,
-    "source_review": 11,
-    "pending": 10
+    "blocked": 5,
+    "source_review": 20,
+    "pending": 0
   },
   "transfer_ready": 0,
   "research_date": "2026-11-21"
