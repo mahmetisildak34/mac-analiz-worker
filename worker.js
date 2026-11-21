@@ -2352,7 +2352,8 @@ export default {
               sameName(raw.teams.away.name,row.away_team);
             if (identityVerified) {
               proofType = "archived_api_football_provider_payload";
-              scoreVerified = validGoal(raw?.goals?.home) && validGoal(raw?.goals?.away) &&
+              scoreVerified = ["FT","AET","PEN","AWD","WO","FINISHED"].includes(String(raw?.fixture?.status?.short || "").toUpperCase()) &&
+                validGoal(raw?.goals?.home) && validGoal(raw?.goals?.away) &&
                 validGoal(row.home_goals) && validGoal(row.away_goals) &&
                 Number(raw.goals.home) === Number(row.home_goals) &&
                 Number(raw.goals.away) === Number(row.away_goals);
@@ -2369,7 +2370,8 @@ export default {
               sameName(away?.team?.displayName,row.away_team);
             if (identityVerified) {
               proofType = "archived_espn_provider_payload";
-              scoreVerified = validGoal(home?.score) && validGoal(away?.score) &&
+              scoreVerified = raw?.competitions?.[0]?.status?.type?.completed === true &&
+                validGoal(home?.score) && validGoal(away?.score) &&
                 validGoal(row.home_goals) && validGoal(row.away_goals) &&
                 Number(home.score) === Number(row.home_goals) &&
                 Number(away.score) === Number(row.away_goals);
