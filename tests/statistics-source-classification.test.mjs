@@ -78,10 +78,10 @@ assert.throws(()=>buildStatisticsProviderBatches([...inventory.candidates,invent
 console.log("Provider-priority 25-fixture batch plan validation passed");
 
 const persistedPlan = JSON.parse(readFileSync(new URL("../STATISTICS_REPAIR_BATCH_PLAN_2026-11-21.json", import.meta.url), "utf8"));
-assert.equal(persistedPlan.remaining_candidate_count, batchPlan.candidate_count);
-assert.equal(persistedPlan.batch_count, batchPlan.batch_count);
+assert.equal(persistedPlan.candidate_count, inventory.production_candidate_count);
+assert.equal(persistedPlan.batch_count, 28, 'all 678 candidates are batched together, including verified ones');
 assert.ok(persistedPlan.batches.every(batch => batch.count <= 25));
-assert.equal(persistedPlan.execution_policy.api_football_requests_started, 0);
+assert.equal(persistedPlan.execution_policy.api_football_requests, 0);
 
 assert.equal(inventory.production_candidate_count, 678);
 assert.equal(inventory.provider_counts["API-Football"], 300);
