@@ -6,10 +6,10 @@
   "protected_existing_manifest": "STATISTICS_REPAIR_INVENTORY_2026-11-21.json",
   "candidate_inventory": "STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json",
   "counts": {
-    "full": 8,
+    "full": 9,
     "partial": 0,
     "ambiguous": 0,
-    "unavailable_or_not_yet_checked": 670
+    "unavailable_or_not_yet_checked": 669
   },
   "policy": {
     "production_preview_writes": 0,
@@ -327,6 +327,47 @@
         "source_single_provider": true
       },
       "notes": "Statistics from one named external provider only; no production transfer authorized."
+    },
+    {
+      "source": "app",
+      "fixture_id": "1640518",
+      "kickoff": "2026-11-14T03:00:00+03:00",
+      "status": "FT",
+      "league": {
+        "id": "10",
+        "name": "Friendlies",
+        "country": "World"
+      },
+      "home": {
+        "name": "Colombia",
+        "id": "8",
+        "goals": 1
+      },
+      "away": {
+        "name": "Chile",
+        "id": "2383",
+        "goals": 0
+      },
+      "provider_group": "API-Football",
+      "provider_identity_verified": true,
+      "identity_evidence": "fixture, ordered team IDs and API-Sports league logo agree",
+      "statistics_status": "awaiting-source-research",
+      "statistics_sha256": "d06d615d8531a201f4ce07ed0159f458a6f80f2a65f5ea4bc6ed1d07fd706729",
+      "provider": "The Editorial",
+      "provider_event_id": "401921325",
+      "provider_url": "https://www.theeditorial.org/match/friendlies/401921325/chile-vs-colombia",
+      "statistics_class": "full",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":\"Colombia\",\"teamId\":\"8\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"10\"},{\"name\":\"shotsOnTarget\",\"value\":\"2\"},{\"name\":\"possessionPct\",\"value\":\"56\"},{\"name\":\"wonCorners\",\"value\":\"2\"},{\"name\":\"foulsCommitted\",\"value\":\"19\"},{\"name\":\"yellowCards\",\"value\":\"3\"},{\"name\":\"redCards\",\"value\":\"0\"}]},{\"homeAway\":\"away\",\"team\":\"Chile\",\"teamId\":\"2383\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"5\"},{\"name\":\"shotsOnTarget\",\"value\":\"0\"},{\"name\":\"possessionPct\",\"value\":\"44\"},{\"name\":\"wonCorners\",\"value\":\"3\"},{\"name\":\"foulsCommitted\",\"value\":\"14\"},{\"name\":\"yellowCards\",\"value\":\"2\"},{\"name\":\"redCards\",\"value\":\"0\"}]}],\"statisticsSource\":\"The Editorial ESPN-derived match 401921325\"}",
+      "verification": {
+        "match_date_verified": true,
+        "ordered_teams_verified": true,
+        "score_verified": true,
+        "competition_verified": true,
+        "provider_event_id_verified": true,
+        "both_sides_have_all_seven_required_metrics": true,
+        "source_single_provider": true
+      },
+      "notes": "Provider page heading 'Chile vs Colombia' but body and score confirm Colombia home and Chile away; statistics displayed in Colombia–Chile order. No transfer authorized."
     }
   ],
   "partialMatches": []
