@@ -82,3 +82,13 @@ assert.equal(persistedPlan.remaining_candidate_count, batchPlan.candidate_count)
 assert.equal(persistedPlan.batch_count, batchPlan.batch_count);
 assert.ok(persistedPlan.batches.every(batch => batch.count <= 25));
 assert.equal(persistedPlan.execution_policy.api_football_requests_started, 0);
+
+assert.equal(inventory.production_candidate_count, 678);
+assert.equal(inventory.provider_counts["API-Football"], 300);
+assert.equal(inventory.provider_counts.ESPN, 227);
+assert.equal(inventory.provider_counts.SportScore, 67);
+assert.equal(inventory.provider_counts.UEFA, 61);
+assert.equal(inventory.provider_counts["Football-Data"], 23);
+assert.ok(inventory.candidates.filter(x=>x.provider_group==="API-Football").every(x=>x.provider_identity_verified===true));
+assert.equal(inventory.candidates.filter(x=>x.provider_group==="ESPN"&&x.source==="espn").length,45);
+assert.equal(inventory.candidates.filter(x=>x.provider_group==="ESPN"&&x.source==="app").length,81);
