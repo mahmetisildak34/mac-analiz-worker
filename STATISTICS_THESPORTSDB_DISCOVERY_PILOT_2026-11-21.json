@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-21",
+  "requests": {
+    "discovery": 3,
+    "statistics": 1,
+    "total": 4
+  },
+  "runs": [
+    {
+      "kind": "discovery",
+      "url": "https://github.com/mahmetisildak34/mac-analiz-worker/actions/runs/44900204749",
+      "conclusion": "success"
+    },
+    {
+      "kind": "statistics",
+      "url": "https://github.com/mahmetisildak34/mac-analiz-worker/actions/runs/44900247711",
+      "conclusion": "success"
+    }
+  ],
+  "matches": [
+    {
+      "source": "app",
+      "fixture_id": "1649529",
+      "expected": "Charlotte Independence vs Athletic Club Boise",
+      "http_status": 200,
+      "search_results": 0,
+      "match_status": "not_found"
+    },
+    {
+      "source": "app",
+      "fixture_id": "1644691",
+      "expected": "Jamaica vs Mexico",
+      "http_status": 200,
+      "search_results": 1,
+      "idEvent": "2628123",
+      "match_status": "date_conflict_needs_timezone_review",
+      "expected_date": "2026-11-14",
+      "provider_date": "2026-11-15",
+      "statistics_queried": false
+    },
+    {
+      "source": "app",
+      "fixture_id": "1649527",
+      "expected": "Charleston Battery vs Louisville City",
+      "http_status": 200,
+      "search_results": 1,
+      "idEvent": "2627357",
+      "match_status": "candidate_supported_with_league_alias",
+      "provider_league": "American USL Championship",
+      "plan_league": "USL Championship",
+      "provider_date": "2026-11-14",
+      "score": "0-2",
+      "home": "Charleston Battery",
+      "away": "Louisville City",
+      "statistics_queried": true,
+      "statistics_http_status": 200,
+      "statistics_types": [],
+      "statistics_coverage_count": 0,
+      "statistics_complete": false,
+      "source_provenance": "no statistic records returned; cannot establish upstream provenance",
+      "transfer_ready": false
+    }
+  ],
+  "verified_statistics_json_created": 0,
+  "decision": "TheSportsDB supports discovery of some plan fixtures but free V1 statistics endpoint returned no statistics for the matched USL example. No production-ready data, no automated bulk collection.",
+  "caveat": "TheSportsDB search dates may differ by timezone; do not automatically merge Jamaica event. No numeric-ID inference."
+}
