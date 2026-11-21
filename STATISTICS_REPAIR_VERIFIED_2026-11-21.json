@@ -6,10 +6,10 @@
   "protected_existing_manifest": "STATISTICS_REPAIR_INVENTORY_2026-11-21.json",
   "candidate_inventory": "STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json",
   "counts": {
-    "full": 9,
+    "full": 10,
     "partial": 0,
     "ambiguous": 0,
-    "unavailable_or_not_yet_checked": 669
+    "unavailable_or_not_yet_checked": 668
   },
   "policy": {
     "production_preview_writes": 0,
@@ -368,6 +368,47 @@
         "source_single_provider": true
       },
       "notes": "Provider page heading 'Chile vs Colombia' but body and score confirm Colombia home and Chile away; statistics displayed in Colombia–Chile order. No transfer authorized."
+    },
+    {
+      "source": "app",
+      "fixture_id": "1647363",
+      "kickoff": "2026-11-14T03:00:00+03:00",
+      "status": "FT",
+      "league": {
+        "id": "10",
+        "name": "Friendlies",
+        "country": "World"
+      },
+      "home": {
+        "name": "Ecuador",
+        "id": "2382",
+        "goals": 2
+      },
+      "away": {
+        "name": "Costa Rica",
+        "id": "29",
+        "goals": 0
+      },
+      "provider_group": "API-Football",
+      "provider_identity_verified": true,
+      "identity_evidence": "fixture, ordered team IDs and API-Sports league logo agree",
+      "statistics_status": "awaiting-source-research",
+      "statistics_sha256": "7b12e23828c2392cc81b3f2738e83668e2b904e5dfc7b857264db6b47d7cb401",
+      "provider": "Flashscore",
+      "provider_event_id": "costa-rica-C4ePE2kq/ecuador-8tbm8Tri",
+      "provider_url": "https://www.flashscore.com/match/football/costa-rica-C4ePE2kq/ecuador-8tbm8Tri/summary/stats/",
+      "statistics_class": "full",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":\"Ecuador\",\"teamId\":\"2382\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"19\"},{\"name\":\"shotsOnTarget\",\"value\":\"7\"},{\"name\":\"possessionPct\",\"value\":\"63\"},{\"name\":\"wonCorners\",\"value\":\"11\"},{\"name\":\"foulsCommitted\",\"value\":\"6\"},{\"name\":\"yellowCards\",\"value\":\"1\"},{\"name\":\"redCards\",\"value\":\"0\"}]},{\"homeAway\":\"away\",\"team\":\"Costa Rica\",\"teamId\":\"29\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"4\"},{\"name\":\"shotsOnTarget\",\"value\":\"2\"},{\"name\":\"possessionPct\",\"value\":\"37\"},{\"name\":\"wonCorners\",\"value\":\"1\"},{\"name\":\"foulsCommitted\",\"value\":\"13\"},{\"name\":\"yellowCards\",\"value\":\"2\"},{\"name\":\"redCards\",\"value\":\"1\"}]}],\"statisticsSource\":\"Flashscore match Ecuador vs Costa Rica 14 Nov 2026\"}",
+      "verification": {
+        "match_date_verified": true,
+        "ordered_teams_verified": true,
+        "score_verified": true,
+        "competition_verified": true,
+        "provider_event_id_verified": true,
+        "both_sides_have_all_seven_required_metrics": true,
+        "source_single_provider": true
+      },
+      "notes": "Flashscore match page 14 Nov 00:00 UTC corresponds to 14 Nov 03:00 UTC+03. Flashscore fouls 6–13 differ from Stats360's 19–4; all metrics from Flashscore only. No transfer authorized."
     }
   ],
   "partialMatches": []
