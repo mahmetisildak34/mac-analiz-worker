@@ -6,10 +6,10 @@
   "protected_existing_manifest": "STATISTICS_REPAIR_INVENTORY_2026-11-21.json",
   "candidate_inventory": "STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json",
   "counts": {
-    "full": 5,
+    "full": 8,
     "partial": 0,
     "ambiguous": 0,
-    "unavailable_or_not_yet_checked": 673
+    "unavailable_or_not_yet_checked": 670
   },
   "policy": {
     "production_preview_writes": 0,
@@ -204,6 +204,129 @@
         "source_single_provider": true
       },
       "notes": "Scorely full-time (Total tab) stats; API-Football inventory fixture ID 1646937 is a distinct provider ID. Some other sources disagree on shots or yellow cards; never combine their numbers. Not transfer authorized."
+    },
+    {
+      "source": "app",
+      "fixture_id": "1649029",
+      "kickoff": "2026-11-13T01:00:00+03:00",
+      "status": "FT",
+      "league": {
+        "id": "536",
+        "name": "CONCACAF Nations League",
+        "country": "World"
+      },
+      "home": {
+        "name": "Aruba",
+        "id": "8167",
+        "goals": 0
+      },
+      "away": {
+        "name": "Martinique",
+        "id": "8117",
+        "goals": 0
+      },
+      "provider_group": "API-Football",
+      "provider_identity_verified": true,
+      "identity_evidence": "fixture, ordered team IDs and API-Sports league logo agree",
+      "statistics_status": "awaiting-source-research",
+      "statistics_sha256": "632a2b512fa230394cac32e1315f369132035ae5401fd4d8d1ea0d39b2fced7d",
+      "provider": "Scoretable",
+      "provider_event_id": "1649029",
+      "provider_url": "https://www.scoretable.live/football/match/1649029-aruba-vs-martinique",
+      "statistics_class": "full",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":\"Aruba\",\"teamId\":\"8167\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"6\"},{\"name\":\"shotsOnTarget\",\"value\":\"1\"},{\"name\":\"possessionPct\",\"value\":\"31\"},{\"name\":\"wonCorners\",\"value\":\"1\"},{\"name\":\"foulsCommitted\",\"value\":\"12\"},{\"name\":\"yellowCards\",\"value\":\"1\"},{\"name\":\"redCards\",\"value\":\"0\"}]},{\"homeAway\":\"away\",\"team\":\"Martinique\",\"teamId\":\"8117\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"14\"},{\"name\":\"shotsOnTarget\",\"value\":\"3\"},{\"name\":\"possessionPct\",\"value\":\"69\"},{\"name\":\"wonCorners\",\"value\":\"2\"},{\"name\":\"foulsCommitted\",\"value\":\"17\"},{\"name\":\"yellowCards\",\"value\":\"2\"},{\"name\":\"redCards\",\"value\":\"0\"}]}],\"statisticsSource\":\"Scoretable\"}",
+      "verification": {
+        "match_date_verified": true,
+        "ordered_teams_verified": true,
+        "score_verified": true,
+        "competition_verified": true,
+        "provider_event_id_verified": true,
+        "both_sides_have_all_seven_required_metrics": true,
+        "source_single_provider": true
+      },
+      "notes": "Statistics from one named external provider only; no production transfer authorized."
+    },
+    {
+      "source": "app",
+      "fixture_id": "1520978",
+      "kickoff": "2026-11-13T02:00:00+03:00",
+      "status": "FT",
+      "league": {
+        "id": "72",
+        "name": "Serie B",
+        "country": "Brazil"
+      },
+      "home": {
+        "name": "São Bernardo",
+        "id": "7865",
+        "goals": 2
+      },
+      "away": {
+        "name": "Athletic Club",
+        "id": "13975",
+        "goals": 2
+      },
+      "provider_group": "API-Football",
+      "provider_identity_verified": true,
+      "identity_evidence": "fixture, ordered team IDs and API-Sports league logo agree",
+      "statistics_status": "awaiting-source-research",
+      "statistics_sha256": "3f98a0fa6dbecf753ffe8db9016045873365663db54704f4abdc1f3c37f8de8d",
+      "provider": "FUT Análises",
+      "provider_event_id": "19667066",
+      "provider_url": "https://www.futanalises.com.br/en/partidas/sao-bernardo-x-athletic-club-2026-11-12-19667066",
+      "statistics_class": "full",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":\"São Bernardo\",\"teamId\":\"7865\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"14\"},{\"name\":\"shotsOnTarget\",\"value\":\"5\"},{\"name\":\"possessionPct\",\"value\":\"46\"},{\"name\":\"wonCorners\",\"value\":\"2\"},{\"name\":\"foulsCommitted\",\"value\":\"17\"},{\"name\":\"yellowCards\",\"value\":\"3\"},{\"name\":\"redCards\",\"value\":\"1\"}]},{\"homeAway\":\"away\",\"team\":\"Athletic Club\",\"teamId\":\"13975\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"13\"},{\"name\":\"shotsOnTarget\",\"value\":\"5\"},{\"name\":\"possessionPct\",\"value\":\"54\"},{\"name\":\"wonCorners\",\"value\":\"2\"},{\"name\":\"foulsCommitted\",\"value\":\"18\"},{\"name\":\"yellowCards\",\"value\":\"3\"},{\"name\":\"redCards\",\"value\":\"0\"}]}],\"statisticsSource\":\"FUT Análises\"}",
+      "verification": {
+        "match_date_verified": true,
+        "ordered_teams_verified": true,
+        "score_verified": true,
+        "competition_verified": true,
+        "provider_event_id_verified": true,
+        "both_sides_have_all_seven_required_metrics": true,
+        "source_single_provider": true
+      },
+      "notes": "Statistics from one named external provider only; no production transfer authorized."
+    },
+    {
+      "source": "app",
+      "fixture_id": "1549868",
+      "kickoff": "2026-11-13T02:00:00+03:00",
+      "status": "FT",
+      "league": {
+        "id": "239",
+        "name": "Primera A",
+        "country": "Colombia"
+      },
+      "home": {
+        "name": "Deportivo Pasto",
+        "id": "1126",
+        "goals": 0
+      },
+      "away": {
+        "name": "Junior",
+        "id": "1135",
+        "goals": 1
+      },
+      "provider_group": "API-Football",
+      "provider_identity_verified": true,
+      "identity_evidence": "fixture, ordered team IDs and API-Sports league logo agree",
+      "statistics_status": "awaiting-source-research",
+      "statistics_sha256": "6417a027957e6b2dfde14b113c1ed666f7f0f6b3f14e0e8eefb90314d9adba78",
+      "provider": "Halascore",
+      "provider_event_id": "1549868",
+      "provider_url": "https://halascore.com/en/games/v/deportivo-pasto-vs-junior-1549868/",
+      "statistics_class": "full",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":\"Deportivo Pasto\",\"teamId\":\"1126\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"16\"},{\"name\":\"shotsOnTarget\",\"value\":\"5\"},{\"name\":\"possessionPct\",\"value\":\"39\"},{\"name\":\"wonCorners\",\"value\":\"6\"},{\"name\":\"foulsCommitted\",\"value\":\"12\"},{\"name\":\"yellowCards\",\"value\":\"1\"},{\"name\":\"redCards\",\"value\":\"0\"}]},{\"homeAway\":\"away\",\"team\":\"Junior\",\"teamId\":\"1135\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"13\"},{\"name\":\"shotsOnTarget\",\"value\":\"4\"},{\"name\":\"possessionPct\",\"value\":\"61\"},{\"name\":\"wonCorners\",\"value\":\"6\"},{\"name\":\"foulsCommitted\",\"value\":\"10\"},{\"name\":\"yellowCards\",\"value\":\"4\"},{\"name\":\"redCards\",\"value\":\"1\"}]}],\"statisticsSource\":\"Halascore\"}",
+      "verification": {
+        "match_date_verified": true,
+        "ordered_teams_verified": true,
+        "score_verified": true,
+        "competition_verified": true,
+        "provider_event_id_verified": true,
+        "both_sides_have_all_seven_required_metrics": true,
+        "source_single_provider": true
+      },
+      "notes": "Statistics from one named external provider only; no production transfer authorized."
     }
   ],
   "partialMatches": []
