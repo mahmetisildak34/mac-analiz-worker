@@ -1,0 +1,1287 @@
+{
+  "review_date": "2026-11-22",
+  "partial_rows": [
+    {
+      "fixture_id": "1636038",
+      "match": "Los Cabos United — Chapulineros",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "1639055",
+      "match": "Birkenhead United — Eastern Suburbs",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "1586133",
+      "match": "New Zealand — India",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "1555804",
+      "match": "Kagoshima United — Gainare Tottori",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "1606763",
+      "match": "Vanraure Hachinohe — Iwaki",
+      "missing": {
+        "undefined": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "1640367",
+      "match": "Sutherland Sharks — Canberra FC",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "1606762",
+      "match": "Vegalta Sendai — Blaublitz Akita",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "1555805",
+      "match": "Kamatamare Sanuki — Renofa Yamaguchi",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "1555810",
+      "match": "Tochigi SC — Nara Club",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "1606764",
+      "match": "Imabari — Jubilo Iwata",
+      "missing": {
+        "undefined": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "1606765",
+      "match": "Kataller Toyama — Tokushima Vortis",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "1648034",
+      "match": "Machida Zelvia — Vissel Kobe",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "1641935",
+      "match": "Namtha United — Salavan United",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "1648037",
+      "match": "Kashiwa Reysol — Kawasaki Frontale",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "1562701",
+      "match": "Bohemians 1905 II — Králův Dvůr",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "1562826",
+      "match": "Teplice II — Hradec Králové II",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "1561203",
+      "match": "Slovan Bratislava II — Malženice",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "1649549",
+      "match": "Brazil U20 — Peru U20",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "prior_direct_audit_no_full_upgrade"
+    },
+    {
+      "fixture_id": "sportscore-2024-09-10T17:30:00+00:00-Montenegro U21-Switzerland U21",
+      "match": "Montenegro U21 — Switzerland U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2024-10-11T14:00:00+00:00-Montenegro U21-Romania U21",
+      "match": "Montenegro U21 — Romania U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2024-10-15T16:00:00+00:00-Finland U21-Montenegro U21",
+      "match": "Finland U21 — Montenegro U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2025-03-25T13:00:00+00:00-Moldova U21-Kosovo U21",
+      "match": "Moldova U21 — Kosovo U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2025-03-25T14:00:00+00:00-Bosnia and Herzegovina U21-Montenegro U21",
+      "match": "Bosnia and Herzegovina U21 — Montenegro U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2025-05-28T17:00:00+00:00-Kosovo U21-North Macedonia U21",
+      "match": "Kosovo U21 — North Macedonia U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2025-06-10T13:00:00+00:00-Mozambique-Zimbabwe",
+      "match": "Mozambique — Zimbabwe",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2025-06-10T16:00:00+00:00-Niger-Zimbabwe",
+      "match": "Niger — Zimbabwe",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "new_source_checked_no_metric_promotion",
+      "previous_outcome": "targeted_search_no_new_verified_match_page",
+      "fresh_sources": [
+        {
+          "url": "https://zifa.co.zw/zimbabwe-1-1-niger/",
+          "sha256": "23ecf7c2eb1358667dced1b1d25fc9ad4692485bc8c457aa908efaf25a652e33",
+          "status": "federation confirms 1–1; no match metric pairs"
+        }
+      ]
+    },
+    {
+      "fixture_id": "sportscore-2025-09-05T15:30:00+00:00-Romania U21-Kosovo U21",
+      "match": "Romania U21 — Kosovo U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2025-09-05T16:00:00+00:00-Benin-Zimbabwe",
+      "match": "Benin — Zimbabwe",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2025-09-09T13:00:00+00:00-Zimbabwe-Rwanda",
+      "match": "Zimbabwe — Rwanda",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2025-09-09T17:00:00+00:00-Kosovo U21-Spain U21",
+      "match": "Kosovo U21 — Spain U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "new_source_checked_no_metric_promotion",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion",
+      "fresh_sources": [
+        {
+          "url": "https://www.uefa.com/under21/match/2044521/",
+          "sha256": "2c292a50323e7562bab2112aef84a53fd2f32f570353dc12fddc72a72f38d98a",
+          "status": "official fixture; no new complete match-metric table in source response"
+        }
+      ]
+    },
+    {
+      "fixture_id": "sportscore-2025-09-09T18:00:00+00:00-Montenegro U21-Sweden U21",
+      "match": "Montenegro U21 — Sweden U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ]
+      },
+      "outcome": "new_source_checked_no_metric_promotion",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion",
+      "fresh_sources": [
+        {
+          "url": "https://www.svenskfotboll.se/nyheter/landslag/2025/09/u21-matchguide-Montenegro/",
+          "sha256": "80fd5ec02b73cea7d831a06ec1cfa6fa95e4ebcb9f0d57def84817bc80461faf",
+          "status": "official kickoff preview without final match statistics"
+        }
+      ]
+    },
+    {
+      "fixture_id": "sportscore-2025-10-10T16:00:00+00:00-Poland U21-Montenegro U21",
+      "match": "Poland U21 — Montenegro U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ]
+      },
+      "outcome": "new_source_checked_no_metric_promotion",
+      "previous_outcome": "targeted_search_no_new_verified_match_page",
+      "fresh_sources": [
+        {
+          "url": "https://www.laczynaspilka.pl/biblioteka/mecze/polska-czarnogora-20-10102025",
+          "sha256": "2e733fbfea87093cbcf34a712f76d99a1bdd35b2a668a839c42745735d2e9f4f",
+          "status": "federation confirms 2–0; no verified additional metric pairs"
+        }
+      ]
+    },
+    {
+      "fixture_id": "sportscore-2025-10-13T16:00:00+00:00-Lesotho-Zimbabwe",
+      "match": "Lesotho — Zimbabwe",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2025-10-14T16:00:00+00:00-Kosovo U21-San Marino U21",
+      "match": "Kosovo U21 — San Marino U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2025-10-14T16:00:00+00:00-Montenegro U21-North Macedonia U21",
+      "match": "Montenegro U21 — North Macedonia U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2025-11-13T16:30:00+00:00-Algeria-Zimbabwe",
+      "match": "Algeria — Zimbabwe",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2025-11-14T11:00:00+00:00-Armenia U21-Montenegro U21",
+      "match": "Armenia U21 — Montenegro U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2025-11-14T17:00:00+00:00-Cyprus U21-Kosovo U21",
+      "match": "Cyprus U21 — Kosovo U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2025-11-18T16:30:00+00:00-Finland U21-Kosovo U21",
+      "match": "Finland U21 — Kosovo U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "new_source_checked_no_metric_promotion",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion",
+      "fresh_sources": [
+        {
+          "url": "https://tab3-kora.com/en/match/4376638/Finland-U21-vs-Kosovo-U21/",
+          "status": "indexed page contains candidate values; direct capture returned HTTP 429 and immutable source proof is unavailable",
+          "candidate_only": {
+            "totalShots": [
+              9,
+              5
+            ],
+            "shotsOnTarget": [
+              3,
+              3
+            ],
+            "possessionPct": [
+              59,
+              41
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "fixture_id": "sportscore-2026-03-31T12:00:00+00:00-Montenegro U21-Poland U21",
+      "match": "Montenegro U21 — Poland U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2026-03-31T16:00:00+00:00-Zimbabwe-Zambia U23",
+      "match": "Zimbabwe — Zambia U23",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2026-05-26T18:30:00+00:00-Nigeria-Zimbabwe",
+      "match": "Nigeria — Zimbabwe",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2026-06-03T17:00:00+00:00-Turkiye U21-Kosovo U21",
+      "match": "Turkiye U21 — Kosovo U21",
+      "missing": {
+        "home": [
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2026-06-05T15:00:00+00:00-Montenegro U21-Cyprus U21",
+      "match": "Montenegro U21 — Cyprus U21",
+      "missing": {
+        "home": [
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2026-09-24T18:30:00+00:00-San Marino U21-Kosovo U21",
+      "match": "San Marino U21 — Kosovo U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_placeholder_stats"
+    },
+    {
+      "fixture_id": "sportscore-2026-09-28T16:00:00+00:00-Zimbabwe-Democratic Republic of the Congo",
+      "match": "Zimbabwe — Democratic Republic of the Congo",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_conflicting_corner_count"
+    },
+    {
+      "fixture_id": "sportscore-2026-09-30T17:00:00+00:00-Kosovo U21-Cyprus U21",
+      "match": "Kosovo U21 — Cyprus U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2026-10-01T16:00:00+00:00-North Macedonia U21-Montenegro U21",
+      "match": "North Macedonia U21 — Montenegro U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2026-10-05T14:30:00+00:00-Montenegro U21-Armenia U21",
+      "match": "Montenegro U21 — Armenia U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2026-10-06T17:00:00+00:00-Kosovo U21-Finland U21",
+      "match": "Kosovo U21 — Finland U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "sportscore-2026-11-13T13:00:00+00:00-Montenegro U21-Bosnia and Herzegovina U21",
+      "match": "Montenegro U21 — Bosnia and Herzegovina U21",
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "direct_page_fetched_no_conflict_free_completion"
+    },
+    {
+      "fixture_id": "1576530",
+      "match": "Amarante — Felgueiras 1932",
+      "missing": {
+        "home": [
+          "foulsCommitted"
+        ],
+        "away": [
+          "foulsCommitted"
+        ]
+      },
+      "outcome": "new_source_checked_no_metric_promotion",
+      "previous_outcome": "new_foul_evidence_inconclusive",
+      "fresh_sources": [
+        {
+          "url": "https://vsports.pt/liga/competicao/ii-liga/31/",
+          "status": "league summary search confirms fixture; no reconciled fouls totals"
+        }
+      ]
+    },
+    {
+      "fixture_id": "1576537",
+      "match": "Tondela — Farense",
+      "missing": {
+        "home": [
+          "foulsCommitted"
+        ],
+        "away": [
+          "foulsCommitted"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "new_foul_evidence_inconclusive"
+    },
+    {
+      "fixture_id": "1577600",
+      "match": "FC UFA — Spartak Kostroma",
+      "missing": {
+        "home": [
+          "foulsCommitted"
+        ],
+        "away": [
+          "foulsCommitted"
+        ]
+      },
+      "outcome": "new_source_checked_no_metric_promotion",
+      "previous_outcome": "new_foul_evidence_inconclusive",
+      "fresh_sources": [
+        {
+          "url": "https://football.sportsfuss.com/match/fc-ufa-spartak-kostroma/2026-11-15/stats",
+          "sha256": "011426d2371dbb2a346d5d10d17e70603de76a18a4d1d8dbda0a274271f633d6",
+          "status": "match statistics supplied without a verified fouls pair"
+        }
+      ]
+    },
+    {
+      "fixture_id": "1649063",
+      "match": "Wanderers — Juventud",
+      "missing": {
+        "home": [
+          "foulsCommitted"
+        ],
+        "away": [
+          "foulsCommitted"
+        ]
+      },
+      "outcome": "prior_evidence_carried_forward",
+      "previous_outcome": "new_foul_evidence_inconclusive"
+    }
+  ],
+  "transfers": [
+    {
+      "fixture_id": "1644694",
+      "snapshot": {
+        "fixture_id": "1644694",
+        "live_apply_approved": false,
+        "status": "archive_statistics_state_missing"
+      },
+      "updated_at_present_in_saved_snapshot": false,
+      "isolated_database_row_found": false,
+      "live_apply_approved": false
+    },
+    {
+      "fixture_id": "1649033",
+      "snapshot": {
+        "fixture_id": "1649033",
+        "live_apply_approved": false,
+        "status": "archive_statistics_state_missing"
+      },
+      "updated_at_present_in_saved_snapshot": false,
+      "isolated_database_row_found": false,
+      "live_apply_approved": false
+    },
+    {
+      "fixture_id": "1649034",
+      "snapshot": {
+        "fixture_id": "1649034",
+        "live_apply_approved": false,
+        "status": "archive_statistics_state_missing"
+      },
+      "updated_at_present_in_saved_snapshot": false,
+      "isolated_database_row_found": false,
+      "live_apply_approved": false
+    },
+    {
+      "fixture_id": "1649519",
+      "snapshot": {
+        "fixture_id": "1649519",
+        "live_apply_approved": false,
+        "status": "archive_statistics_state_missing"
+      },
+      "updated_at_present_in_saved_snapshot": false,
+      "isolated_database_row_found": false,
+      "live_apply_approved": false
+    }
+  ],
+  "score_conflict": {
+    "fixture_id": "1613107",
+    "date": "2026-11-22",
+    "archive": "3-1",
+    "public_results": "3-2",
+    "federation_index": "2-2",
+    "decision": "Quarantined pending unambiguous federation result; original archive score preserved.",
+    "source_urls": [
+      "https://www.asturfutbol.es/pnfg/NPcd/NFG_CmpPartido?CodActa=25744510&cod_acta=25744510&cod_primaria=1000120",
+      "https://www.bdfutbol.com/es/c/partido.html?d=15%2F11%2F2026&id=6169&l=Praviano&v=Condal+Club"
+    ],
+    "official_recheck": {
+      "url": "https://www.asturfutbol.es/pnfg/NPcd/NFG_CmpPartido?CodActa=25744510&cod_acta=25744510&cod_primaria=1000120",
+      "sha256": "f9aeaa71c2ab709f26a7c5e81e604248b1d16790d92b1dc3e2ec922a871d779a",
+      "status": "session/cookie notice; no original final score available in response"
+    }
+  },
+  "local_candidates": 42,
+  "live_writes": 0
+}
