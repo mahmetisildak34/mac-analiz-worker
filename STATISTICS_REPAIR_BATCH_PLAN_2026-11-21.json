@@ -1,0 +1,2949 @@
+{
+  "schema_version": 1,
+  "title": "Provider-priority 25-fixture read/research batch plan",
+  "generated_on": "2026-11-21",
+  "branch": "feature/bulk-statistics-repair-hardening",
+  "source_inventory": "STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json",
+  "verified_manifest": "STATISTICS_REPAIR_VERIFIED_2026-11-21.json",
+  "remaining_candidate_count": 677,
+  "already_verified_excluded": 1,
+  "batch_size": 25,
+  "batch_count": 29,
+  "provider_counts": {
+    "ESPN": 226,
+    "SportScore": 67,
+    "UEFA": 61,
+    "Football-Data": 23,
+    "API-Football": 300
+  },
+  "priority_order": [
+    "API-Football",
+    "ESPN",
+    "UEFA",
+    "SportScore",
+    "Football-Data"
+  ],
+  "execution_policy": {
+    "api_football_requests_started": 0,
+    "quota_gate_required": true,
+    "all_provider_downloads_disabled_until_explicit_authorization": true,
+    "production_preview_writes": 0,
+    "worker_deployments": 0,
+    "each_batch_must_revalidate_source_fixture_date_ordered_teams_score_and_competition": true,
+    "ambiguous_matches_rejected": true,
+    "only_empty_statistics_fields_eligible_for_future_apply": true
+  },
+  "batches": [
+    {
+      "provider_group": "API-Football",
+      "batch_number": 1,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "1600658"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1600659"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1520977"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1559703"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1612167"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1646937"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649029"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1520978"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1549868"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1589960"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649030"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649056"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649147"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1549870"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1646999"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1650036"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1650037"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1631810"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1646959"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1631640"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649948"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1647362"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649031"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649545"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1640518"
+        }
+      ]
+    },
+    {
+      "provider_group": "API-Football",
+      "batch_number": 2,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "1647363"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649032"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1557233"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1631805"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1639051"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1647364"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1549869"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1583807"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1583808"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1583809"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1636033"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1636034"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1644692"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1640363"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1640364"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1555801"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1555802"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1555803"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1560976"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1560977"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1606756"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1606757"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1606758"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1606759"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1606760"
+        }
+      ]
+    },
+    {
+      "provider_group": "API-Football",
+      "batch_number": 3,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "1560973"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1560978"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1647638"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1643467"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1644247"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1559708"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1583810"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1583811"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1583812"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1600696"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1600726"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1600727"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1610592"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1648401"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1648798"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649582"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649699"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1586139"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1631807"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1631813"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1636035"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1636036"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1644693"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1600725"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1631641"
+        }
+      ]
+    },
+    {
+      "provider_group": "API-Football",
+      "batch_number": 4,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "1631642"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1631808"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1631809"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1636032"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1642329"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1648800"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1647124"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649145"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1550951"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1559704"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1645270"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1648405"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649060"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649467"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649527"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649700"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1492312"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1639053"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1600661"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1631643"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1631811"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1631812"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1639052"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1640018"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1647125"
+        }
+      ]
+    },
+    {
+      "provider_group": "API-Football",
+      "batch_number": 5,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "1649529"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649958"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1559706"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1636037"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1644691"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1648348"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1600660"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1600662"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1639054"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1636038"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1639055"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649519"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649468"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1586133"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1555804"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1560975"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1606761"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1606763"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1640366"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1640367"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1647997"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1606762"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1555805"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1555806"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1555807"
+        }
+      ]
+    },
+    {
+      "provider_group": "API-Football",
+      "batch_number": 6,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "1555810"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1606764"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1606765"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1648034"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1650045"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1648035"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1648036"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1555809"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1644248"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649562"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1560974"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1640881"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1641933"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1641934"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1641935"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1641936"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1641937"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1648037"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1555808"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1581974"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1623522"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1562699"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1562701"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1562826"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1578007"
+        }
+      ]
+    },
+    {
+      "provider_group": "API-Football",
+      "batch_number": 7,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "1561203"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1561204"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1566419"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1568239"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1574650"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1577594"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1583903"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1583904"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1583905"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1583906"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1583907"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1590468"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1590470"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1590471"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1590473"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1590474"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1590774"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1590775"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1590779"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1590781"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1591080"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1591081"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1591082"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1591083"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1591084"
+        }
+      ]
+    },
+    {
+      "provider_group": "API-Football",
+      "batch_number": 8,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "1591086"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1593959"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1594196"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1594681"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1604305"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1620422"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1644249"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1572734"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1572735"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1572736"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1572738"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1582160"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1614325"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1614629"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1614632"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1614636"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1617388"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1636984"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1646626"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1614025"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1614630"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1629120"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1534506"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1534508"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1534510"
+        }
+      ]
+    },
+    {
+      "provider_group": "API-Football",
+      "batch_number": 9,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "1534511"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1534513"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1566422"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1568240"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1568559"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1569176"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1570828"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1571207"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1571215"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1572426"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1572429"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1572434"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1573038"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1573045"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1573349"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1573351"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1573352"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1573643"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1573645"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1576530"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1576537"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1599287"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1612795"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1612797"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1613099"
+        }
+      ]
+    },
+    {
+      "provider_group": "API-Football",
+      "batch_number": 10,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "1613101"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1613102"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1613104"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1613106"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1613107"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1613713"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1614018"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1614019"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1614021"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1614022"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1614024"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1614631"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1614637"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1614936"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1615241"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1615244"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1615247"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1615249"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1615547"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1615549"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1615551"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1615552"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1615554"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1615555"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1615860"
+        }
+      ]
+    },
+    {
+      "provider_group": "API-Football",
+      "batch_number": 11,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "1616778"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1616779"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1617385"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1617691"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1617694"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1617697"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1617995"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1623523"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1640882"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1572122"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1615245"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1571620"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1573040"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1577600"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1601289"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1608367"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1609127"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1612800"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1614020"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1615242"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1615246"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1616771"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1616772"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1616775"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1616777"
+        }
+      ]
+    },
+    {
+      "provider_group": "API-Football",
+      "batch_number": 12,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "1618001"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1554224"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1559002"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1568560"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1573044"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1575847"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1581972"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1582161"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1590469"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1590472"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1646438"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1646440"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1646441"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649063"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649549"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1646421"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649033"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649034"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1647127"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1644694"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1648349"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1649528"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1636040"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1647367"
+        },
+        {
+          "source": "app",
+          "fixture_id": "1638034"
+        }
+      ]
+    },
+    {
+      "provider_group": "ESPN",
+      "batch_number": 1,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "espn",
+          "fixture_id": "698287"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "699128"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "697520"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "698289"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "699861"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "699800"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "702361"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "702330"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "718532"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "720256"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "733984"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "756180"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "756154"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "756183"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "756193"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "756204"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "748977"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401900405"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401883227"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401883318"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401888392"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401883228"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401900401"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401879322"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401883256"
+        }
+      ]
+    },
+    {
+      "provider_group": "ESPN",
+      "batch_number": 2,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "espn",
+          "fixture_id": "401883255"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401883317"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401888389"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401883252"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401900382"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401879316"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401883243"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401883248"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401883221"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401888388"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401883316"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401883315"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401883220"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401888386"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401883240"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401883216"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401883211"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401888384"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401883314"
+        },
+        {
+          "source": "espn",
+          "fixture_id": "401888382"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-esp.copa_del_rey-401918751"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-esp.copa_del_rey-401918748"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-esp.copa_del_rey-401918760"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-esp.copa_del_rey-401918510"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-esp.copa_del_rey-401918753"
+        }
+      ]
+    },
+    {
+      "provider_group": "ESPN",
+      "batch_number": 3,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-esp.copa_del_rey-401918757"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-esp.copa_del_rey-401918759"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-esp.copa_del_rey-401918761"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-esp.copa_del_rey-401918758"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-esp.copa_del_rey-401918752"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401933098"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401933097"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932838"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932841"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932845"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932840"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932856"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932857"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932858"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932840"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932856"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932858"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932843"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932776"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932777"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932833"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932836"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932758"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932778"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932803"
+        }
+      ]
+    },
+    {
+      "provider_group": "ESPN",
+      "batch_number": 4,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932832"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932834"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932844"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932757"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932737"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932738"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932740"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932765"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932768"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932801"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932802"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932808"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932811"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932812"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932813"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932814"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932818"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932822"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932829"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932830"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932831"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932835"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932839"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932842"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401933060"
+        }
+      ]
+    },
+    {
+      "provider_group": "ESPN",
+      "batch_number": 5,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932806"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932760"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932804"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932809"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932810"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932815"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932816"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932817"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932825"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932826"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932827"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932828"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932837"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932824"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401933039"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932739"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932741"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932755"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932756"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932759"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932766"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932767"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932769"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932770"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932771"
+        }
+      ]
+    },
+    {
+      "provider_group": "ESPN",
+      "batch_number": 6,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932772"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932773"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932775"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932795"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932796"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932797"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932798"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932800"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932805"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932807"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932819"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932820"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932821"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932823"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932855"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932859"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932860"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401933040"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932739"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932741"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932755"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932756"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932759"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932766"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932767"
+        }
+      ]
+    },
+    {
+      "provider_group": "ESPN",
+      "batch_number": 7,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932769"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932770"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932771"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932772"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932773"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932775"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932795"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932796"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932797"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932798"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932800"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932805"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932807"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932819"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932820"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932821"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932823"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932855"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932859"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932860"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401933040"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932774"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932799"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932774"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932799"
+        }
+      ]
+    },
+    {
+      "provider_group": "ESPN",
+      "batch_number": 8,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932735"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401932736"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932735"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401932736"
+        },
+        {
+          "source": "ESPN",
+          "fixture_id": "espn-fra.coupe_de_france-401933096"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fra.coupe_de_france-401933096"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-uefa.nations-401861173"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-uefa.nations-401861174"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly_u21-401934216"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-caf.nations_qual-401927135"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-caf.nations_qual-401927170"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly-401933879"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly-401930237"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly-401916335"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly-401930242"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly-401930880"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-caf.nations_qual-401927165"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-caf.nations_qual-401927168"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-caf.nations_qual-401927169"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-caf.nations_qual-401927178"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-caf.nations_qual-401927179"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-caf.nations_qual-401927181"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly-401933635"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly-401916336"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly-401931477"
+        }
+      ]
+    },
+    {
+      "provider_group": "ESPN",
+      "batch_number": 9,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly-401932718"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly-401931495"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-caf.nations_qual-401927136"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-caf.nations_qual-401927137"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-caf.nations_qual-401927166"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-caf.nations_qual-401927174"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-caf.nations_qual-401927175"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-caf.nations_qual-401927182"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly-401919974"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly-401930978"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly_u21-401934336"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly-401933615"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly-401931956"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly_u21-401931797"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-fifa.friendly_u21-401933436"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-aus.1-401892138"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-jpn.1-401877534"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-jpn.1-401877548"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-jpn.1-401877553"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-jpn.1-401877531"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-jpn.1-401877533"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-jpn.1-401877550"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-jpn.1-401877552"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-aus.1-401892136"
+        },
+        {
+          "source": "app",
+          "fixture_id": "espn-jpn.1-401877549"
+        }
+      ]
+    },
+    {
+      "provider_group": "ESPN",
+      "batch_number": 10,
+      "count": 1,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "espn-jpn.1-401877551"
+        }
+      ]
+    },
+    {
+      "provider_group": "UEFA",
+      "batch_number": 1,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2024-14"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2024-10"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2024-29"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2024-35"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2024-32"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2024-52"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2024-45"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2024-69"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2024-60"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2024-75"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2024-89"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2024-93"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2024-107"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2024-96"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2024-125"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2024-123"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2024-141"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2024-129"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2024-150"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2024-146"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2024-153"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2024-158"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2024-165"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2024-171"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2024-179"
+        }
+      ]
+    },
+    {
+      "provider_group": "UEFA",
+      "batch_number": 2,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2024-182"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2025-140"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2025-170"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2025-171"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2025-179"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2026-74"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2026-77"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2026-79"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2026-84"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2026-86"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2026-73"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2026-75"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2026-86"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2026-97"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2026-100"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2026-103"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2026-107"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-conference-league-2026-60"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-conference-league-2026-63"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2026-93"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2026-96"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2026-97"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2026-116"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2026-124"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2026-126"
+        }
+      ]
+    },
+    {
+      "provider_group": "UEFA",
+      "batch_number": 3,
+      "count": 11,
+      "candidates": [
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-conference-league-2026-73"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-conference-league-2026-82"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2026-115"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2026-132"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2026-139"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-champions-league-2026-141"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-conference-league-2026-91"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-conference-league-2026-99"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2026-133"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2026-136"
+        },
+        {
+          "source": "fixture-download-uefa",
+          "fixture_id": "fd-uefa-europa-league-2026-142"
+        }
+      ]
+    },
+    {
+      "provider_group": "SportScore",
+      "batch_number": 1,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2024-09-06T16:30:00+00:00-Romania U21-Montenegro U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2024-09-10T17:30:00+00:00-Montenegro U21-Switzerland U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2024-10-11T14:00:00+00:00-Montenegro U21-Romania U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2024-10-15T16:00:00+00:00-Finland U21-Montenegro U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2024-11-17T11:00:00+00:00-North Macedonia U21-Kosovo U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-03-21T17:30:00+00:00-Turkiye U21-Kosovo U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-03-25T13:00:00+00:00-Moldova U21-Kosovo U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-03-25T14:00:00+00:00-Bosnia and Herzegovina U21-Montenegro U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-05-28T17:00:00+00:00-Kosovo U21-North Macedonia U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-05-31T13:00:00+00:00-North Macedonia U21-Kosovo U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-06-05T17:00:00+00:00-Turkiye U21-Montenegro U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-06-07T13:00:00+00:00-South Africa-Zimbabwe"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-06-08T16:00:00+00:00-Azerbaijan U21-Montenegro U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-06-10T13:00:00+00:00-Mozambique-Zimbabwe"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-06-10T16:00:00+00:00-Niger-Zimbabwe"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-09-05T15:30:00+00:00-Romania U21-Kosovo U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-09-05T16:00:00+00:00-Benin-Zimbabwe"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-09-05T16:15:00+00:00-Italy U21-Montenegro U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-09-09T13:00:00+00:00-Zimbabwe-Rwanda"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-09-09T17:00:00+00:00-Kosovo U21-Spain U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-09-09T18:00:00+00:00-Montenegro U21-Sweden U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-10-10T16:00:00+00:00-Poland U21-Montenegro U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-10-10T16:00:00+00:00-Zimbabwe-South Africa"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-10-13T16:00:00+00:00-Lesotho-Zimbabwe"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-10-14T16:00:00+00:00-Kosovo U21-San Marino U21"
+        }
+      ]
+    },
+    {
+      "provider_group": "SportScore",
+      "batch_number": 2,
+      "count": 25,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-10-14T16:00:00+00:00-Montenegro U21-North Macedonia U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-11-13T16:30:00+00:00-Algeria-Zimbabwe"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-11-14T11:00:00+00:00-Armenia U21-Montenegro U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-11-14T17:00:00+00:00-Cyprus U21-Kosovo U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-11-17T16:30:00+00:00-Qatar-Zimbabwe"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-11-18T16:30:00+00:00-Finland U21-Kosovo U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-11-18T17:30:00+00:00-Montenegro U21-Italy U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-12-22T20:00:00+00:00-Egypt-Zimbabwe"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-12-26T12:30:00+00:00-Angola-Zimbabwe"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2025-12-29T16:00:00+00:00-Zimbabwe-South Africa"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-03-27T17:30:00+00:00-Sweden U21-Montenegro U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-03-27T18:00:00+00:00-Kosovo U21-Romania U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-03-28T16:00:00+00:00-Botswana-Zimbabwe"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-03-31T12:00:00+00:00-Montenegro U21-Poland U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-03-31T16:00:00+00:00-Zimbabwe-Zambia U23"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-03-31T17:00:00+00:00-Spain U21-Kosovo U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-05-26T18:30:00+00:00-Nigeria-Zimbabwe"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-05-30T13:30:00+00:00-Zimbabwe-India"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-06-03T17:00:00+00:00-Turkiye U21-Kosovo U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-06-05T15:00:00+00:00-Montenegro U21-Cyprus U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-06-06T15:00:00+00:00-Kosovo U21-Luxembourg U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-08-22T08:30:00+00:00-Algeria U21-Kosovo U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-08-24T19:00:00+00:00-Albania U21-Kosovo U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-08-26T19:00:00+00:00-Italy U21-Kosovo U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-09-24T18:30:00+00:00-San Marino U21-Kosovo U21"
+        }
+      ]
+    },
+    {
+      "provider_group": "SportScore",
+      "batch_number": 3,
+      "count": 17,
+      "candidates": [
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-09-28T16:00:00+00:00-Zimbabwe-Democratic Republic of the Congo"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-09-30T17:00:00+00:00-Kosovo U21-Cyprus U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-10-01T16:00:00+00:00-North Macedonia U21-Montenegro U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-10-05T14:30:00+00:00-Montenegro U21-Armenia U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-10-06T17:00:00+00:00-Kosovo U21-Finland U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-10-10T16:00:00+00:00-SD Amorebieta-Portugalete"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-10-17T15:00:00+00:00-Portugalete-Eibar B"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-10-24T17:00:00+00:00-AEK Athens-Panetolikos Agrinio"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-10-25T16:30:00+00:00-CD Basconia-Portugalete"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-10-28T18:30:00+00:00-PAOK Saloniki-AEK Athens"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-11-01T10:30:00+00:00-Portugalete-Arosa SC"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-11-01T17:30:00+00:00-Panathinaikos-AEK Athens"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-11-08T15:00:00+00:00-AEK Athens-Levadiakos"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-11-08T16:00:00+00:00-Ourense CF-Portugalete"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-11-13T13:00:00+00:00-Montenegro U21-Bosnia and Herzegovina U21"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-11-14T17:00:00+00:00-Portugalete-Marino luanco"
+        },
+        {
+          "source": "app",
+          "fixture_id": "sportscore-2026-11-16T10:00:00+00:00-AEK Athens-AEL Limassol"
+        }
+      ]
+    },
+    {
+      "provider_group": "Football-Data",
+      "batch_number": 1,
+      "count": 23,
+      "candidates": [
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-552038"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-551920"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-552070"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-552076"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-552078"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-556718"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-556722"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-552092"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-552094"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-552096"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-575326"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-575332"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-575333"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-575349"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-575352"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-575353"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-575361"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-575366"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-575367"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-575382"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-575383"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-575388"
+        },
+        {
+          "source": "football-data-uefa",
+          "fixture_id": "fd-uefa-CL-575392"
+        }
+      ]
+    }
+  ]
+}
