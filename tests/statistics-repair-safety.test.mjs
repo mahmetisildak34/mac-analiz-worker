@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import {DatabaseSync} from "node:sqlite";
 import {runStatisticsRepair,sameFixture} from "../statistics-repair.js";
 const db=new DatabaseSync(":memory:");
-db.exec("CREATE TABLE matches(source TEXT,fixture_id TEXT,league_id TEXT,kickoff TEXT,status TEXT,home_team TEXT,away_team TEXT,home_goals INTEGER,away_goals INTEGER,statistics_json TEXT,updated_at TEXT,PRIMARY KEY(source,fixture_id))");
+db.exec("CREATE TABLE matches(source TEXT,fixture_id TEXT,league_id TEXT,kickoff TEXT,status TEXT,home_team TEXT,away_team TEXT,home_team_id TEXT,away_team_id TEXT,home_goals INTEGER,away_goals INTEGER,statistics_json TEXT,updated_at TEXT,PRIMARY KEY(source,fixture_id))");
 const add=(source,id,home,away,stats,status="FT")=>db.prepare("INSERT INTO matches(source,fixture_id,league_id,kickoff,status,home_team,away_team,home_goals,away_goals,statistics_json,updated_at) VALUES (?,?,?, ?,?,?,?,?,?,?,CURRENT_TIMESTAMP)").run(source,id,"1","2026-10-01T15:00:00Z",status,home,away,2,1,stats);
 add("ESPN","a","Alpha","Beta",null);
 add("app","b","Alpha","Beta",'{"shots":12}');
@@ -12,6 +12,7 @@ add("ESPN","e","No","Game",null,"NS");
 const wrap=database=>({prepare(sql){let statement=database.prepare(sql),args=[];return {bind(...x){args=x;return this},async first(){return statement.get(...args)||null},async all(){return {results:statement.all(...args)}},async run(){const r=statement.run(...args);return {meta:{changes:r.changes}}}}}});
 const env={DB:wrap(db),STATISTICS_REPAIR_ENABLED:"true"};
 assert.deepEqual(await runStatisticsRepair({DB:wrap(db)}),{skipped:"disabled"});
+assert.equal(sameFixture({kickoff:"2026-10-01",home_team:"A",away_team:"B",home_team_id:"10",away_team_id:"20",home_goals:1,away_goals:0},{kickoff:"2026-10-01",home_team:"A",away_team:"B",home_team_id:"10",away_team_id:"21",home_goals:1,away_goals:0}),false);
 assert.equal(sameFixture({kickoff:"2026-10-01",home_team:"A",away_team:"B",home_goals:1,away_goals:0},{kickoff:"2026-10-01",home_team:"A",away_team:"B",home_goals:1,away_goals:0}),true);
 const first=await runStatisticsRepair(env);
 assert.equal(first.apiRequests,0);
@@ -26,7 +27,7 @@ assert.equal(db.prepare("SELECT lease_until FROM mam_statistics_repair_control")
 console.log("D1 SQLite integration: non-overwrite, completion, dedupe, cursor, logs, disabled API passed");
 
 const bulk=new DatabaseSync(":memory:");
-bulk.exec("CREATE TABLE matches(source TEXT,fixture_id TEXT,league_id TEXT,kickoff TEXT,status TEXT,home_team TEXT,away_team TEXT,home_goals INTEGER,away_goals INTEGER,statistics_json TEXT,updated_at TEXT,PRIMARY KEY(source,fixture_id))");
+bulk.exec("CREATE TABLE matches(source TEXT,fixture_id TEXT,league_id TEXT,kickoff TEXT,status TEXT,home_team TEXT,away_team TEXT,home_team_id TEXT,away_team_id TEXT,home_goals INTEGER,away_goals INTEGER,statistics_json TEXT,updated_at TEXT,PRIMARY KEY(source,fixture_id))");
 const insert=bulk.prepare("INSERT INTO matches(source,fixture_id,league_id,kickoff,status,home_team,away_team,home_goals,away_goals,statistics_json,updated_at) VALUES ('espn',?,'1','2025-01-01T10:00:00Z','FT',?,? ,1,0,NULL,CURRENT_TIMESTAMP)");
 for(let i=0;i<715;i++) insert.run(String(i), "Home"+i, "Away"+i);
 const bulkEnv={DB:wrap(bulk),STATISTICS_REPAIR_ENABLED:"true"};
