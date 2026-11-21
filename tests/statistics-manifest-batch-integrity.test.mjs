@@ -55,5 +55,5 @@ assert.deepEqual(plan.verification_counts,{full:1,partial:0,unverified:677,trans
 assert.equal(verified.counts.full,verified.fullMatches.filter(x=>x.statistics_class==="full").length);
 assert.equal(verified.counts.pending_source_provenance_review,verified.fullMatches.filter(x=>x.statistics_class==="pending_source_provenance_review").length);
 assert.equal(verified.fullMatches.length,verified.counts.full+verified.counts.pending_source_provenance_review,"every manifest entry has an explicit evidence class");
-assert.equal(verified.counts.unavailable_or_not_yet_checked,678-verifiedEntries.length);
+assert.equal(verified.counts.unavailable_or_not_yet_checked,678-verified.counts.full,"provenance-review entries remain unavailable until fully verified");
 console.log("Manifest and batch integrity passed: 44 protected, 678 unique, verified SHA-256, 28 research batches, zero authorized transfers");
