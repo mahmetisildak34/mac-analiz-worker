@@ -70,8 +70,8 @@
     {
       "fixture_id": "1589960",
       "match": "Estudiantes L.P. — Independ. Rivadavia",
-      "status": "awaiting_individual_source_verification",
-      "reason": null,
+      "status": "blocked",
+      "reason": "provider-statistics-conflict: Estudiantes–Independiente Rivadavia (2026-11-12, 3-2 AET): FotMob and PlaymakerStats 49/51 possession, ScoreBat 50/50, AlphaPunter 55/45 and 14/7 shots vs FotMob 17/12. Sources: https://www.fotmob.com/matches/estudiantes-vs-independiente-rivadavia/6s4t0o9 ; https://www.scorebat.com/estudiantes-de-la-plata-vs-independiente-rivadavia-live-stream/ ; https://alphapunter.com/match/cmw2wf7ta0037pe0wtbf6hbxj . Full-time versus extra-time scope and canonical provider unresolved; do not combine.",
       "statistics_sha256": null
     },
     {
@@ -182,8 +182,8 @@
   ],
   "counts": {
     "full_verified": 6,
-    "blocked": 6,
-    "pending": 13
+    "blocked": 7,
+    "pending": 12
   },
   "transfer_ready": 0,
   "next_batch": {
