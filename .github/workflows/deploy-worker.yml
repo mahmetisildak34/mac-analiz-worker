@@ -10,6 +10,7 @@ on:
       - "statistics-api-backfill.js"
       - "statistics-api-persistence.js"
       - "statistics-api-cron.js"
+      - "staging/**"
       - "wrangler.jsonc"
       - "package.json"
       - "tests/**/*.mjs"
@@ -41,6 +42,9 @@ jobs:
 
       - name: Validate Worker JavaScript syntax
         run: node --check worker.js
+
+      - name: Verify isolated Cloudflare read-only bindings
+        run: node tests/statistics-cloudflare-readonly.test.mjs
 
       - name: Verify API cron is disabled without quota audit
         run: node tests/statistics-api-cron.test.mjs
