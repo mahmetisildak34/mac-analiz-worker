@@ -19,7 +19,7 @@ export function validateApiStatistics(fixture,result) {
 }
 export async function persistApiCandidate(db,fixture,result) {
   if(!validateApiStatistics(fixture,result)) return {state:"rejected"};
-  const current=await db.prepare("SELECT source,fixture_id,kickoff,status,home_team_id,away_team_id,home_goals,away_goals,statistics_json FROM matches WHERE source=? AND fixture_id=?").bind(fixture.source,fixture.fixture_id).first();
+  const current=await db.prepare("SELECT source,fixture_id,kickoff,status,home_team_id,away_team_id,home_goals,away_goals,statistics_json,raw_json FROM matches WHERE source=? AND fixture_id=?").bind(fixture.source,fixture.fixture_id).first();
   if(!current||classifyApiCandidate(current)!=="eligible-for-verified-provider-check"||
      String(current.kickoff)!==String(fixture.kickoff)||
      Number(current.home_goals)!==Number(fixture.home_goals)||
