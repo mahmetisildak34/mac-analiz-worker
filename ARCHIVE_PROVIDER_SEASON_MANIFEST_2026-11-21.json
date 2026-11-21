@@ -11,7 +11,15 @@
     "newest_kickoff": "2027-05-16T18:00Z",
     "missing_statistics": 4116,
     "missing_scores": 557,
-    "missing_team_ids": 54
+    "missing_team_ids": 54,
+    "identityVerifiedStrictLowerBound": 11618,
+    "identityUnverifiedStrictUpperBound": 1754,
+    "scoreVerifiedStrictLowerBound": 8569,
+    "scoreUnverifiedStrictUpperBound": 4803,
+    "duplicateSourceFixturePairs": 0,
+    "nonemptyStatistics": 9256,
+    "missingLeagueIds": 67,
+    "missingTeamIds": 54
   },
   "providerCatalogs": {
     "ESPN": {
@@ -7416,5 +7424,10 @@
     "configuredEspnLeagues": 38,
     "expectedDistinctLeagueIds": 266,
     "expectedDistinctLeagueYearPairs": 304
+  },
+  "verificationSemantics": {
+    "identity": "strict SQL lower bound: original ESPN or API-Football-shaped raw payload, matching fixture ID/date/home-away names; normalized-name matches may be additional but are not counted here",
+    "score": "strict SQL lower bound: identity proof plus provider status marked completed and exact source goals equal stored goals",
+    "statistics": "non-empty statistics_json is presence only; no independent statistics_verified flag is persisted in Production matches schema; do not treat all 9,256 populated records as verified statistics"
   }
 }
