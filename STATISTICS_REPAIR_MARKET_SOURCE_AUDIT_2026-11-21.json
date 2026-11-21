@@ -2244,7 +2244,7 @@
         ]
       },
       "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
-      "status": "variant_candidate",
+      "status": "partial_verified",
       "candidates": [
         {
           "source_url": "https://sportscore.com/football/match/vanraure-hachinohe-fc-vs-iwaki-fc/dj2ryohl3lnwq1z/",
@@ -2262,7 +2262,8 @@
             1
           ],
           "detail_http": "200",
-          "state": "requires_competition_and_team_alias_review"
+          "state": "confirmed_name_variant",
+          "source_sha256": "b4c4ac2677f7e8dd47afb9e5914000c893d669abe338c3f0f20560606bd2b76c"
         }
       ]
     },
@@ -2348,7 +2349,7 @@
         ]
       },
       "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
-      "status": "variant_candidate",
+      "status": "partial_verified",
       "candidates": [
         {
           "source_url": "https://sportscore.com/football/match/fc-imabari-vs-jubilo-iwata/x7lm7phjdjwgm2w/",
@@ -2366,7 +2367,8 @@
             1
           ],
           "detail_http": "200",
-          "state": "requires_competition_and_team_alias_review"
+          "state": "confirmed_name_variant",
+          "source_sha256": "1921bf4a30bea3a343ea042775fe5964cb18a67201b0ac4eb4779e27e354181d"
         }
       ]
     },
@@ -5400,5 +5402,47 @@
       ]
     }
   ],
-  "live_writes": 0
+  "live_writes": 0,
+  "variant_partial_verified": [
+    {
+      "fixture_id": "1606763",
+      "source_url": "https://sportscore.com/football/match/vanraure-hachinohe-fc-vs-iwaki-fc/dj2ryohl3lnwq1z/",
+      "provider_event_id": "dj2ryohl3lnwq1z",
+      "kickoff": "2026-11-15T04:00:00+00:00",
+      "competition": "Japanese J2 League",
+      "home": "Vanraure Hachinohe FC",
+      "away": "Iwaki FC",
+      "sha256": "b4c4ac2677f7e8dd47afb9e5914000c893d669abe338c3f0f20560606bd2b76c",
+      "metrics": {
+        "wonCorners": [
+          6,
+          9
+        ],
+        "yellowCards": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "fixture_id": "1606764",
+      "source_url": "https://sportscore.com/football/match/fc-imabari-vs-jubilo-iwata/x7lm7phjdjwgm2w/",
+      "provider_event_id": "x7lm7phjdjwgm2w",
+      "kickoff": "2026-11-15T05:00:00+00:00",
+      "competition": "Japanese J2 League",
+      "home": "FC Imabari",
+      "away": "Jubilo Iwata",
+      "sha256": "1921bf4a30bea3a343ea042775fe5964cb18a67201b0ac4eb4779e27e354181d",
+      "metrics": {
+        "wonCorners": [
+          4,
+          5
+        ],
+        "yellowCards": [
+          1,
+          1
+        ]
+      }
+    }
+  ]
 }

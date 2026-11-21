@@ -518,7 +518,9 @@
       "provider_group": "API-Football",
       "status": "source_review",
       "score": "2-2",
-      "source_urls": [],
+      "source_urls": [
+        "https://sportscore.com/football/match/vanraure-hachinohe-fc-vs-iwaki-fc/dj2ryohl3lnwq1z/"
+      ],
       "research_date": "2026-11-21",
       "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
       "statistics_sha256": null,
@@ -527,7 +529,50 @@
       "transfer_ready": false,
       "provider_event_id": "1606763",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota"
+      "statistics_availability": "partial",
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "dj2ryohl3lnwq1z",
+        "source_url": "https://sportscore.com/football/match/vanraure-hachinohe-fc-vs-iwaki-fc/dj2ryohl3lnwq1z/",
+        "source_sha256": "b4c4ac2677f7e8dd47afb9e5914000c893d669abe338c3f0f20560606bd2b76c",
+        "kickoff": "2026-11-15T04:00:00+00:00",
+        "source_competition": "Japanese J2 League",
+        "coverage": 2,
+        "statistics": {
+          "teams": [
+            {
+              "team": {
+                "name": "Vanraure Hachinohe"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 6
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "team": {
+                "name": "Iwaki"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 9
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "fixture_id": "1640366",

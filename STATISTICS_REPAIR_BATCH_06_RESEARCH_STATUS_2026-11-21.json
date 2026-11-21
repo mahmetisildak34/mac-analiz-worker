@@ -102,8 +102,54 @@
       "provider_event_id": "1606764",
       "score": "0-2",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "statistics_availability": "partial",
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "source_urls": [
+        "https://sportscore.com/football/match/fc-imabari-vs-jubilo-iwata/x7lm7phjdjwgm2w/"
+      ],
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "x7lm7phjdjwgm2w",
+        "source_url": "https://sportscore.com/football/match/fc-imabari-vs-jubilo-iwata/x7lm7phjdjwgm2w/",
+        "source_sha256": "1921bf4a30bea3a343ea042775fe5964cb18a67201b0ac4eb4779e27e354181d",
+        "kickoff": "2026-11-15T05:00:00+00:00",
+        "source_competition": "Japanese J2 League",
+        "coverage": 2,
+        "statistics": {
+          "teams": [
+            {
+              "team": {
+                "name": "Imabari"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 4
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "team": {
+                "name": "Jubilo Iwata"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 5
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "source": "app",
