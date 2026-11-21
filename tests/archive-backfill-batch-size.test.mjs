@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 const worker = await readFile(new URL("../worker.js", import.meta.url), "utf8");
-const catalog = worker.match(/const leagues = \\[([\\s\\S]*?)\\n  \\];/);
+const catalog = worker.match(/const leagues = \[([\s\S]*?)\n  \];/);
 assert.ok(catalog, "ESPN provider catalog must be present");
-const configured = [...catalog[1].matchAll(/^\\s*\\["[^"]+","[^"]+","[^"]+","[^"]+"\\]/gm)];
+const configured = [...catalog[1].matchAll(/^\s*\["[^"]+","[^"]+","[^"]+","[^"]+"\]/gm)];
 assert.equal(configured.length, 38, "all 38 currently configured ESPN competitions are included");
-assert.doesNotMatch(worker, /leagues\\.slice\\(0,\\s*10\\)/, "archive queue must not truncate to ten leagues");
-assert.match(worker, /new Set\\(leagues\\.map\\(league => String\\(league\\[0\\]\\)\\)\\)/, "resume reconciliation must recognize every configured league");
-assert.match(worker, /syncEspnFixturesToD1\\(env, 1100, 180, isHourlySync \\? 32 : 10\\)/, "archive scan covers at least the existing March 2024 archive boundary with bounded batches");
+assert.doesNotMatch(worker, /leagues\.slice\(0,\s*10\)/, "archive queue must not truncate to ten leagues");
+assert.match(worker, /new Set\(leagues\.map\(league => String\(league\[0\]\)\)\)/, "resume reconciliation must recognize every configured league");
+assert.match(worker, /syncEspnFixturesToD1\(env, 1100, 180, isHourlySync \? 32 : 10\)/, "archive scan covers at least the existing March 2024 archive boundary with bounded batches");
 console.log("all configured ESPN leagues and 1100-day resumable archive window verified");
