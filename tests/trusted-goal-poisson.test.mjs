@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
 import { predictTrustedGoals } from "../trusted-goal-poisson.js";
 const row = (id, home, away, hg, ag, day, extra = {}) => ({
   source: "api-football", fixture_id: id, home_team: home, away_team: away,
@@ -129,4 +130,31 @@ test("requires explicit league averages; does not invent baselines", () => {
 test("rejects malformed input", () => {
   assert.equal(predictTrustedGoals(null, options).reason, "invalid_request");
   assert.equal(predictTrustedGoals(matches, {...options, max_matches:11}).reason, "invalid_request");
+});
+test("predicts from 74 archived ESPN matches and rejects mirrored or conflicting evidence", () => {
+  const archive = JSON.parse(readFileSync(new URL("./fixtures/espn-premier-league-2025-26.json", import.meta.url), "utf8"));
+  assert.equal(archive.matches.length, 74);
+  const history = archive.matches.map(([id,kickoff,home_team,away_team,home_goals,away_goals]) =>
+    ({source:"ESPN", fixture_id:"espn-eng.1-" + id, kickoff, home_team, away_team, home_goals, away_goals,
+      identity_verified:true, score_verified:true, completed:true}));
+  const config = {
+    home_team:"Arsenal", away_team:"Manchester City", as_of:"2026-11-21T00:00:00Z",
+    league_average_home_goals:archive.league_home_goals / archive.league_matches,
+    league_average_away_goals:archive.league_away_goals / archive.league_matches
+  };
+  const result = predictTrustedGoals(history, config);
+  assert.equal(result.available, true);
+  assert.equal(result.home_samples, 10);
+  assert.equal(result.away_samples, 10);
+  assert.ok(result.used_fixtures.slice(0,10).every(match => match.home_team === "Arsenal"));
+  assert.ok(result.used_fixtures.slice(10).every(match => match.away_team === "Manchester City"));
+  assert.ok(Math.abs(result.probabilities.home_win + result.probabilities.draw + result.probabilities.away_win - 1) < 1e-10);
+  const sample = history.find(match => match.fixture_id === result.used_fixtures[0].fixture_id);
+  const mirror = {...sample,source:"app"};
+  const duplicate = predictTrustedGoals([mirror,...history], config);
+  assert.equal(duplicate.reasons.duplicate_fixture, 1);
+  assert.deepEqual(duplicate.probabilities, result.probabilities);
+  const conflict = predictTrustedGoals([{...mirror,home_goals:mirror.home_goals + 1},...history], config);
+  assert.equal(conflict.reasons.conflicting_fixture, 2);
+  assert.ok(!conflict.used_fixtures.some(match => match.fixture_id === sample.fixture_id));
 });
