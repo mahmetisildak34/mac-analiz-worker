@@ -90,3 +90,43 @@ PR #69 remains untouched and unmerged. This hardening work is on `feature/bulk-s
 No Production or Preview D1 write was performed for this task. No Worker was deployed, no Preview URL was opened, and PR #69 was not merged. Existing Cloudflare Preview deployment comments associated with PR #69 were not opened or used. DNS work remains separate.
 
 The current 44-row manifest is a read-only snapshot, not authorization to write. Any future apply run must re-read and revalidate each target immediately before the conditional update.
+
+
+## 678-candidate provider research and code preparation (2026-11-21)
+
+The existing 44-row manifest remains unchanged. A separate candidate inventory was created from a fresh Production SELECT and excludes those exact 44 (source, fixture_id) pairs:
+
+- STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json: 678 rows.
+- Provider groups: API-Football 300; ESPN 227; UEFA fixture-download 61; SportScore 67; Football-Data UEFA 23.
+- All 300 app/numeric API-Football rows pass the inventory's raw JSON identity proof: fixture ID, ordered home/away team IDs, and API-Sports league-logo namespace.
+- ESPN's 227 rows include 101 ESPN, 45 espn, and 81 ESPN event IDs stored under app.
+
+A separate evidence manifest is maintained at STATISTICS_REPAIR_VERIFIED_2026-11-21.json. It currently contains one newly verified full-statistics candidate: Troyes–Le Havre AC (ESPN, espn-fra.1-401876395, 2026-11-20). The event's two ordered competitor IDs, event ID, and score agree with Production. Both sides have total shots, shots on target, possession, corners, fouls, and yellow/red card counts; card counts are derived from the match's actual ESPN event details. The manifest stores the exact normalized statistics JSON, its SHA-256, and the source raw_json SHA-256. This is evidence only; no D1 write was performed.
+
+**Correction to the initial exploration note:** the earlier 8-full/3-partial ESPN examples were already-populated statistics_json rows and therefore were outside the 678 missing-statistics pool. They must not be counted as newly recovered candidates. The Troyes–Le Havre record is the one source-embedded statistics payload verified within the 678 candidates so far.
+
+The remaining research queue is 677 candidates. STATISTICS_REPAIR_BATCH_PLAN_2026-11-21.json splits them into 29 provider-priority batches, each containing at most 25 fixtures:
+
+- API-Football: 300 (12 batches)
+- ESPN: 226 (10 batches)
+- UEFA: 61 (3 batches)
+- SportScore: 67 (3 batches)
+- Football-Data: 23 (1 batch)
+
+### Code changes prepared
+
+- API-Football candidate classification accepts app rows only when raw_json proves numeric fixture ID, ordered team IDs, and API-Sports league logo. The gated cron SELECT now includes these candidates; the existing three independent quota gates remain mandatory.
+- API-Football statistics responses are normalized to home/away order by team ID. Persistence re-reads and revalidates the fixture and uses an explicit-empty-only conditional UPDATE.
+- ESPN discovery includes ESPN, espn, and app rows whose fixture ID is in the ESPN event namespace. Queue keys, cursors, and pending writes are source-aware.
+- ESPN summary payloads are checked against the target fixture's home/away team IDs or normalized names before acceptance.
+- ESPN summary and cross-source enrichment writes now target the exact source/fixture pair and only explicit empty placeholders. Existing partial or populated JSON is not overwritten.
+- Cross-source matching supports explicit team and competition aliases, preserves country/league context, rejects reversed sides and near-tied ambiguous candidates, and writes in batches of 25.
+- statistics-repair-bulk.js defaults to 25 and hard-caps at 25. Provider-priority batch planning is deterministic and rejects duplicate candidate identities.
+- New tests cover app-import API identity, API quota gates, ESPN source aliases, side validation, league/team aliases, full/partial classification, manifest SHA-256, and the 677-row batch plan.
+
+### Execution gates still closed
+
+- API-Football quota/account status has not been verified. No API-Football request was sent.
+- No ESPN, UEFA, SportScore, or Football-Data bulk downloads were started as part of this preparation.
+- No Production or Preview D1 write, Worker deployment, automatic transfer, GitHub Actions transfer, or PR #69 merge was performed.
+- The 44-row original manifest was not modified.
