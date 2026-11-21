@@ -14,7 +14,8 @@ export async function runStatisticsApiCron(env, request) {
   const decision=apiBackfillDecision(env,quota);
   if(!decision.allowed) return {skipped:decision.reason};
   // A bounded single candidate per cron tick. The durable retry table is checked by processApiCandidate.
-  const row=await env.DB.prepare("SELECT source,fixture_id,kickoff,status,home_team_id,away_team_id,home_goals,away_goals,statistics_json FROM matches WHERE source IN ('api-football','API-Football','api_sports') AND status IN ('FT','FINISHED','AET','PEN') AND (statistics_json IS NULL OR length(trim(statistics_json))<=5) ORDER BY kickoff,fixture_id LIMIT 1").first();
+  await env.DB.prepare("CREATE TABLE IF NOT EXISTS mam_statistics_api_retry (source TEXT NOT NULL, fixture_id TEXT NOT NULL, attempts INTEGER NOT NULL DEFAULT 0, state TEXT NOT NULL DEFAULT 'pending', next_attempt_ms INTEGER NOT NULL DEFAULT 0, last_error TEXT, updated_at TEXT DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(source,fixture_id))").run();
+  const row=await env.DB.prepare("SELECT m.source,m.fixture_id,m.kickoff,m.status,m.home_team_id,m.away_team_id,m.home_goals,m.away_goals,m.statistics_json FROM matches m LEFT JOIN mam_statistics_api_retry r ON r.source=m.source AND r.fixture_id=m.fixture_id WHERE m.source IN ('api-football','API-Football','api_sports') AND m.status IN ('FT','FINISHED','AET','PEN') AND (m.statistics_json IS NULL OR length(trim(m.statistics_json))<=5) AND (r.state IS NULL OR (r.state='waiting' AND r.next_attempt_ms<=?)) ORDER BY m.kickoff,m.fixture_id LIMIT 1").bind(Date.now()).first();
   if(!row) return {skipped:"no-eligible-candidate"};
   return processApiCandidate(env,row,request);
 }
