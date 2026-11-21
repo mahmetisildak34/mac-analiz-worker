@@ -8,10 +8,11 @@ const end = worker.indexOf("\n  };\n\n  const statsIndex", start);
 assert.ok(start >= 0 && end > start, "cross-source normalizer exists");
 const source = worker.slice(start, end + 5)
   .replace("const normalizeCrossSourceStatistics =", "globalThis.normalizeCrossSourceStatistics =");
-const sandbox = {
-  normalizeTeamName: value => String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
-  normalizeMatchTeam: value => String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
+const normalize = value => {
+  const raw = String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return ({ "inter":"inter-milan", "inter-milan":"inter-milan" })[raw] || raw;
 };
+const sandbox = { normalizeTeamName: normalize, normalizeMatchTeam: normalize };
 runInNewContext(source, sandbox);
 
 const stats = [
