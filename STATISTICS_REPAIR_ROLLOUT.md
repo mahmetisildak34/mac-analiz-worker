@@ -9,6 +9,11 @@
 - Completed matches with NULL/empty statistics: **722**
 - Completed matches with populated statistics: **9,175**
 - Preview matches with non-empty statistics JSON: **2,554** (confirmed in both Preview history tables; zero orphan rows in either direction)
+- Preview JSON parse-valid: **2,554 / 2,554**
+- Exactly two team objects: **2,554 / 2,554**
+- Both teams have non-empty statistics arrays: **2,540 / 2,554**
+- Statistics team names agree with match metadata: **2,532 / 2,554**
+- Duplicate `(source, fixture_id)` groups: **0**
 - Unique, reliable Preview candidates: **44**
 - Unmatched: **678**
 - Ambiguous: **0**
