@@ -91,8 +91,8 @@
     {
       "fixture_id": "1649147",
       "match": "Real Potosí — Nacional Potosí",
-      "status": "awaiting_individual_source_verification",
-      "reason": null,
+      "status": "blocked",
+      "reason": "provider-statistics-conflict: Real Potosí–Nacional Potosí, 12 Nov 2026 FT 5-5, home/away confirmed. Tribuna 20/13 total shots, 11/7 on target, 4/2 yellow cards; FutbolLibre 19/12 total, 10/7 on target, 3/2 yellow cards. Both 47/53 possession and 7/1 corners, 8/5 fouls. https://tribuna.com/es/match/102927145/ ; https://futbollibrehd.app/football/matches/2683643/real-potosi-vs-nacional-potosi . No source-of-truth resolution; block.",
       "statistics_sha256": null
     },
     {
@@ -161,15 +161,15 @@
     {
       "fixture_id": "1649031",
       "match": "Saint Martin — El Salvador",
-      "status": "awaiting_individual_source_verification",
-      "reason": null,
+      "status": "blocked",
+      "reason": "provider-statistics-conflict: Saint Martin–El Salvador, 13 Nov 2026 FT 0-2, home/away confirmed. Footballhours (ESPN attribution) possession 30.8/69.2; SoccerGhost and Football Fuss 39/61; BettingOdds 31/69. Shared shots 8/7, shots on target 1/4, corners 3/2, fouls 12/9, yellow 0/1, red 1/0. https://www.footballhours.com/match/401929712 ; https://soccerghost.com/match/358056/saint-martin-vs-el-salvador ; https://www.bettingodds.com/football/concacaf-nations-league/13-11-2026/saint-martin-vs-el-salvador . Possession conflict unresolved; block.",
       "statistics_sha256": null
     },
     {
       "fixture_id": "1649545",
       "match": "Brazil U20 — Peru U20",
-      "status": "full_verified",
-      "reason": "Brazil U20–Peru U20 Nov 14 2026 FT 2-0: seven metrics per side from https://multicanais-br.com/en/football/matches/2683722/brazil-u20-vs-peru-u20 . Distinct from Nov 16 9-0 match; source event identity and home/away match inventory.",
+      "status": "awaiting_individual_source_verification",
+      "reason": "REVIEW: existing manifest entry is NOT transfer-ready. Multicanais and multiple streaming/mirror sites repeat 74/26 possession, 24/3 shots, 15/0 shots on target, 9/5 corners, 11/11 fouls, 1/0 yellow, 0/0 red for 13 Nov 23:00 UTC (14 Nov UTC+03) Brazil U20–Peru U20 FT 2-0, but no clearly independent authoritative statistics provider established. Existing JSON preserved unchanged; verify primary data provenance before counting as full. https://multicanais-br.com/en/football/matches/2683722/brazil-u20-vs-peru-u20 ; https://kadario.com/es/football/matches/2683724/brazil-u20-vs-peru-u20 ; https://rojadirectas.app/en/football/matches/2683722/brazil-u20-vs-peru-u20/stats",
       "statistics_sha256": "f050ce650af2fff71061d99b3868bf712f0395d178edaca036d1b528c57b0d05"
     },
     {
@@ -181,9 +181,9 @@
     }
   ],
   "counts": {
-    "full_verified": 8,
-    "blocked": 8,
-    "pending": 9
+    "full_verified": 7,
+    "blocked": 10,
+    "pending": 8
   },
   "transfer_ready": 0,
   "next_batch": {
@@ -191,5 +191,5 @@
     "first_fixture_id": "1647363",
     "status": "research_started_full_verified"
   },
-  "research_notes": "2026-11-21: two further conflicts reviewed with public sources; 13 pending remain. No Production/Preview D1 writes or API-Football calls."
+  "research_notes": "2026-11-21: Real Potosí and Saint Martin blocked due to conflicting provider metrics; Brazil U20 prior verified claim downgraded to pending source provenance review without deleting its protected manifest JSON. Other pending remain pending pending trustworthy 7-metric sources. No transfer authorization."
 }
