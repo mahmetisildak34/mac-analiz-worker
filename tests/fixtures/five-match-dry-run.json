@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "source": "Read-only Production and Preview D1 SELECT snapshots; 2026-11-21",
+  "fixtures": [
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698889",
+        "kickoff": "2024-09-05T18:45Z",
+        "status": "FT",
+        "league_id": "5",
+        "home_team": "Northern Ireland",
+        "away_team": "Luxembourg",
+        "home_goals": 2,
+        "away_goals": 0,
+        "statistics_json": null,
+        "updated_at": "2026-11-17 20:04:15"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698889",
+        "kickoff": "2024-09-05T18:45Z",
+        "home_team": "Northern Ireland",
+        "away_team": "Luxembourg",
+        "home_goals": 2,
+        "away_goals": 0,
+        "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":\"Northern Ireland\",\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"8\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"offsides\",\"displayValue\":\"1\",\"label\":\"Offsides\"},{\"name\":\"wonCorners\",\"displayValue\":\"10\",\"label\":\"Corner Kicks\"},{\"name\":\"saves\",\"displayValue\":\"0\",\"label\":\"Saves\"},{\"name\":\"possessionPct\",\"displayValue\":\"36.5\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"14\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"},{\"name\":\"shotPct\",\"displayValue\":\"0.4\",\"label\":\"On Target %\"},{\"name\":\"penaltyKickGoals\",\"displayValue\":\"0\",\"label\":\"Penalty Goals\"},{\"name\":\"penaltyKickShots\",\"displayValue\":\"0\",\"label\":\"Penalty Kicks Taken\"},{\"name\":\"accuratePasses\",\"displayValue\":\"253\",\"label\":\"Accurate Passes\"},{\"name\":\"totalPasses\",\"displayValue\":\"316\",\"label\":\"Passes\"},{\"name\":\"passPct\",\"displayValue\":\"0.8\",\"label\":\"Pass Completion %\"},{\"name\":\"accurateCrosses\",\"displayValue\":\"6\",\"label\":\"Accurate Crosses\"},{\"name\":\"totalCrosses\",\"displayValue\":\"25\",\"label\":\"Crosses\"},{\"name\":\"crossPct\",\"displayValue\":\"0.2\",\"label\":\"Cross %\"},{\"name\":\"totalLongBalls\",\"displayValue\":\"50\",\"label\":\"Long Balls\"},{\"name\":\"accurateLongBalls\",\"displayValue\":\"22\",\"label\":\"Accurate Long Balls\"},{\"name\":\"longballPct\",\"displayValue\":\"0.4\",\"label\":\"Long Balls %\"},{\"name\":\"blockedShots\",\"displayValue\":\"2\",\"label\":\"Blocked Shots\"},{\"name\":\"effectiveTackles\",\"displayValue\":\"9\",\"label\":\"Effective Tackles\"},{\"name\":\"totalTackles\",\"displayValue\":\"15\",\"label\":\"Tackles\"},{\"name\":\"tacklePct\",\"displayValue\":\"0.6\",\"label\":\"Tackle %\"},{\"name\":\"interceptions\",\"displayValue\":\"6\",\"label\":\"Interceptions\"},{\"name\":\"effectiveClearance\",\"displayValue\":\"17\",\"label\":\"Effective Clearances\"},{\"name\":\"totalClearance\",\"displayValue\":\"17\",\"label\":\"Clearances\"}]},{\"homeAway\":\"away\",\"team\":\"Luxembourg\",\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"17\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"offsides\",\"displayValue\":\"2\",\"label\":\"Offsides\"},{\"name\":\"wonCorners\",\"displayValue\":\"2\",\"label\":\"Corner Kicks\"},{\"name\":\"saves\",\"displayValue\":\"3\",\"label\":\"Saves\"},{\"name\":\"possessionPct\",\"displayValue\":\"63.5\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"6\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"0\",\"label\":\"ON GOAL\"},{\"name\":\"shotPct\",\"displayValue\":\"0.0\",\"label\":\"On Target %\"},{\"name\":\"penaltyKickGoals\",\"displayValue\":\"0\",\"label\":\"Penalty Goals\"},{\"name\":\"penaltyKickShots\",\"displayValue\":\"0\",\"label\":\"Penalty Kicks Taken\"},{\"name\":\"accuratePasses\",\"displayValue\":\"517\",\"label\":\"Accurate Passes\"},{\"name\":\"totalPasses\",\"displayValue\":\"583\",\"label\":\"Passes\"},{\"name\":\"passPct\",\"displayValue\":\"0.9\",\"label\":\"Pass Completion %\"},{\"name\":\"accurateCrosses\",\"displayValue\":\"1\",\"label\":\"Accurate Crosses\"},{\"name\":\"totalCrosses\",\"displayValue\":\"12\",\"label\":\"Crosses\"},{\"name\":\"crossPct\",\"displayValue\":\"0.1\",\"label\":\"Cross %\"},{\"name\":\"totalLongBalls\",\"displayValue\":\"40\",\"label\":\"Long Balls\"},{\"name\":\"accurateLongBalls\",\"displayValue\":\"20\",\"label\":\"Accurate Long Balls\"},{\"name\":\"longballPct\",\"displayValue\":\"0.5\",\"label\":\"Long Balls %\"},{\"name\":\"blockedShots\",\"displayValue\":\"3\",\"label\":\"Blocked Shots\"},{\"name\":\"effectiveTackles\",\"displayValue\":\"6\",\"label\":\"Effective Tackles\"},{\"name\":\"totalTackles\",\"displayValue\":\"14\",\"label\":\"Tackles\"},{\"name\":\"tacklePct\",\"displayValue\":\"0.4\",\"label\":\"Tackle %\"},{\"name\":\"interceptions\",\"displayValue\":\"10\",\"label\":\"Interce --- TRUNCATED --- 3,847 chars"
+      },
+      "expected_sha256": "b7a4e1b5a075866330441846036764fa3fff272cc92f3ac1b06df22f6970764c"
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698888",
+        "kickoff": "2024-09-05T18:45Z",
+        "status": "FT",
+        "league_id": "5",
+        "home_team": "Portugal",
+        "away_team": "Croatia",
+        "home_goals": 2,
+        "away_goals": 1,
+        "statistics_json": null,
+        "updated_at": "2026-11-17 20:04:17"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698888",
+        "kickoff": "2024-09-05T18:45Z",
+        "home_team": "Portugal",
+        "away_team": "Croatia",
+        "home_goals": 2,
+        "away_goals": 1,
+        "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":\"Portugal\",\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"5\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"offsides\",\"displayValue\":\"2\",\"label\":\"Offsides\"},{\"name\":\"wonCorners\",\"displayValue\":\"6\",\"label\":\"Corner Kicks\"},{\"name\":\"saves\",\"displayValue\":\"4\",\"label\":\"Saves\"},{\"name\":\"possessionPct\",\"displayValue\":\"49.9\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"15\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"6\",\"label\":\"ON GOAL\"},{\"name\":\"shotPct\",\"displayValue\":\"0.4\",\"label\":\"On Target %\"},{\"name\":\"penaltyKickGoals\",\"displayValue\":\"0\",\"label\":\"Penalty Goals\"},{\"name\":\"penaltyKickShots\",\"displayValue\":\"0\",\"label\":\"Penalty Kicks Taken\"},{\"name\":\"accuratePasses\",\"displayValue\":\"540\",\"label\":\"Accurate Passes\"},{\"name\":\"totalPasses\",\"displayValue\":\"580\",\"label\":\"Passes\"},{\"name\":\"passPct\",\"displayValue\":\"0.9\",\"label\":\"Pass Completion %\"},{\"name\":\"accurateCrosses\",\"displayValue\":\"2\",\"label\":\"Accurate Crosses\"},{\"name\":\"totalCrosses\",\"displayValue\":\"13\",\"label\":\"Crosses\"},{\"name\":\"crossPct\",\"displayValue\":\"0.2\",\"label\":\"Cross %\"},{\"name\":\"totalLongBalls\",\"displayValue\":\"46\",\"label\":\"Long Balls\"},{\"name\":\"accurateLongBalls\",\"displayValue\":\"31\",\"label\":\"Accurate Long Balls\"},{\"name\":\"longballPct\",\"displayValue\":\"0.7\",\"label\":\"Long Balls %\"},{\"name\":\"blockedShots\",\"displayValue\":\"6\",\"label\":\"Blocked Shots\"},{\"name\":\"effectiveTackles\",\"displayValue\":\"6\",\"label\":\"Effective Tackles\"},{\"name\":\"totalTackles\",\"displayValue\":\"12\",\"label\":\"Tackles\"},{\"name\":\"tacklePct\",\"displayValue\":\"0.5\",\"label\":\"Tackle %\"},{\"name\":\"interceptions\",\"displayValue\":\"5\",\"label\":\"Interceptions\"},{\"name\":\"effectiveClearance\",\"displayValue\":\"13\",\"label\":\"Effective Clearances\"},{\"name\":\"totalClearance\",\"displayValue\":\"13\",\"label\":\"Clearances\"}]},{\"homeAway\":\"away\",\"team\":\"Croatia\",\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"6\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"offsides\",\"displayValue\":\"2\",\"label\":\"Offsides\"},{\"name\":\"wonCorners\",\"displayValue\":\"7\",\"label\":\"Corner Kicks\"},{\"name\":\"saves\",\"displayValue\":\"4\",\"label\":\"Saves\"},{\"name\":\"possessionPct\",\"displayValue\":\"50.1\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"13\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"},{\"name\":\"shotPct\",\"displayValue\":\"0.3\",\"label\":\"On Target %\"},{\"name\":\"penaltyKickGoals\",\"displayValue\":\"0\",\"label\":\"Penalty Goals\"},{\"name\":\"penaltyKickShots\",\"displayValue\":\"0\",\"label\":\"Penalty Kicks Taken\"},{\"name\":\"accuratePasses\",\"displayValue\":\"538\",\"label\":\"Accurate Passes\"},{\"name\":\"totalPasses\",\"displayValue\":\"576\",\"label\":\"Passes\"},{\"name\":\"passPct\",\"displayValue\":\"0.9\",\"label\":\"Pass Completion %\"},{\"name\":\"accurateCrosses\",\"displayValue\":\"8\",\"label\":\"Accurate Crosses\"},{\"name\":\"totalCrosses\",\"displayValue\":\"20\",\"label\":\"Crosses\"},{\"name\":\"crossPct\",\"displayValue\":\"0.4\",\"label\":\"Cross %\"},{\"name\":\"totalLongBalls\",\"displayValue\":\"35\",\"label\":\"Long Balls\"},{\"name\":\"accurateLongBalls\",\"displayValue\":\"26\",\"label\":\"Accurate Long Balls\"},{\"name\":\"longballPct\",\"displayValue\":\"0.7\",\"label\":\"Long Balls %\"},{\"name\":\"blockedShots\",\"displayValue\":\"2\",\"label\":\"Blocked Shots\"},{\"name\":\"effectiveTackles\",\"displayValue\":\"11\",\"label\":\"Effective Tackles\"},{\"name\":\"totalTackles\",\"displayValue\":\"15\",\"label\":\"Tackles\"},{\"name\":\"tacklePct\",\"displayValue\":\"0.7\",\"label\":\"Tackle %\"},{\"name\":\"interceptions\",\"displayValue\":\"5\",\"label\":\"Interceptio --- TRUNCATED --- 3,835 chars"
+      },
+      "expected_sha256": "cbde9540f36d7c771a0e98dfae9dc6484d6f6c1e3b793d409c10e40529b068b5"
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698884",
+        "kickoff": "2024-09-05T18:45Z",
+        "status": "FT",
+        "league_id": "5",
+        "home_team": "Denmark",
+        "away_team": "Switzerland",
+        "home_goals": 2,
+        "away_goals": 0,
+        "statistics_json": null,
+        "updated_at": "2026-11-17 20:04:14"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698884",
+        "kickoff": "2024-09-05T18:45Z",
+        "home_team": "Denmark",
+        "away_team": "Switzerland",
+        "home_goals": 2,
+        "away_goals": 0,
+        "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":\"Denmark\",\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"17\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"4\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"offsides\",\"displayValue\":\"2\",\"label\":\"Offsides\"},{\"name\":\"wonCorners\",\"displayValue\":\"6\",\"label\":\"Corner Kicks\"},{\"name\":\"saves\",\"displayValue\":\"1\",\"label\":\"Saves\"},{\"name\":\"possessionPct\",\"displayValue\":\"54.8\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"17\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"8\",\"label\":\"ON GOAL\"},{\"name\":\"shotPct\",\"displayValue\":\"0.5\",\"label\":\"On Target %\"},{\"name\":\"penaltyKickGoals\",\"displayValue\":\"0\",\"label\":\"Penalty Goals\"},{\"name\":\"penaltyKickShots\",\"displayValue\":\"0\",\"label\":\"Penalty Kicks Taken\"},{\"name\":\"accuratePasses\",\"displayValue\":\"502\",\"label\":\"Accurate Passes\"},{\"name\":\"totalPasses\",\"displayValue\":\"553\",\"label\":\"Passes\"},{\"name\":\"passPct\",\"displayValue\":\"0.9\",\"label\":\"Pass Completion %\"},{\"name\":\"accurateCrosses\",\"displayValue\":\"1\",\"label\":\"Accurate Crosses\"},{\"name\":\"totalCrosses\",\"displayValue\":\"14\",\"label\":\"Crosses\"},{\"name\":\"crossPct\",\"displayValue\":\"0.1\",\"label\":\"Cross %\"},{\"name\":\"totalLongBalls\",\"displayValue\":\"34\",\"label\":\"Long Balls\"},{\"name\":\"accurateLongBalls\",\"displayValue\":\"15\",\"label\":\"Accurate Long Balls\"},{\"name\":\"longballPct\",\"displayValue\":\"0.4\",\"label\":\"Long Balls %\"},{\"name\":\"blockedShots\",\"displayValue\":\"4\",\"label\":\"Blocked Shots\"},{\"name\":\"effectiveTackles\",\"displayValue\":\"9\",\"label\":\"Effective Tackles\"},{\"name\":\"totalTackles\",\"displayValue\":\"11\",\"label\":\"Tackles\"},{\"name\":\"tacklePct\",\"displayValue\":\"0.8\",\"label\":\"Tackle %\"},{\"name\":\"interceptions\",\"displayValue\":\"11\",\"label\":\"Interceptions\"},{\"name\":\"effectiveClearance\",\"displayValue\":\"3\",\"label\":\"Effective Clearances\"},{\"name\":\"totalClearance\",\"displayValue\":\"3\",\"label\":\"Clearances\"}]},{\"homeAway\":\"away\",\"team\":\"Switzerland\",\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"13\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"2\",\"label\":\"Red Cards\"},{\"name\":\"offsides\",\"displayValue\":\"2\",\"label\":\"Offsides\"},{\"name\":\"wonCorners\",\"displayValue\":\"1\",\"label\":\"Corner Kicks\"},{\"name\":\"saves\",\"displayValue\":\"5\",\"label\":\"Saves\"},{\"name\":\"possessionPct\",\"displayValue\":\"45.2\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"5\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"1\",\"label\":\"ON GOAL\"},{\"name\":\"shotPct\",\"displayValue\":\"0.2\",\"label\":\"On Target %\"},{\"name\":\"penaltyKickGoals\",\"displayValue\":\"0\",\"label\":\"Penalty Goals\"},{\"name\":\"penaltyKickShots\",\"displayValue\":\"0\",\"label\":\"Penalty Kicks Taken\"},{\"name\":\"accuratePasses\",\"displayValue\":\"401\",\"label\":\"Accurate Passes\"},{\"name\":\"totalPasses\",\"displayValue\":\"457\",\"label\":\"Passes\"},{\"name\":\"passPct\",\"displayValue\":\"0.9\",\"label\":\"Pass Completion %\"},{\"name\":\"accurateCrosses\",\"displayValue\":\"3\",\"label\":\"Accurate Crosses\"},{\"name\":\"totalCrosses\",\"displayValue\":\"7\",\"label\":\"Crosses\"},{\"name\":\"crossPct\",\"displayValue\":\"0.4\",\"label\":\"Cross %\"},{\"name\":\"totalLongBalls\",\"displayValue\":\"35\",\"label\":\"Long Balls\"},{\"name\":\"accurateLongBalls\",\"displayValue\":\"14\",\"label\":\"Accurate Long Balls\"},{\"name\":\"longballPct\",\"displayValue\":\"0.4\",\"label\":\"Long Balls %\"},{\"name\":\"blockedShots\",\"displayValue\":\"2\",\"label\":\"Blocked Shots\"},{\"name\":\"effectiveTackles\",\"displayValue\":\"7\",\"label\":\"Effective Tackles\"},{\"name\":\"totalTackles\",\"displayValue\":\"10\",\"label\":\"Tackles\"},{\"name\":\"tacklePct\",\"displayValue\":\"0.7\",\"label\":\"Tackle %\"},{\"name\":\"interceptions\",\"displayValue\":\"4\",\"label\":\"Interception --- TRUNCATED --- 3,836 chars"
+      },
+      "expected_sha256": "6fcbbc0fc911a5927961a4dadb6a75f28a3551cf61bf4dc561a2776726b05435"
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698886",
+        "kickoff": "2024-09-05T18:45Z",
+        "status": "FT",
+        "league_id": "5",
+        "home_team": "Scotland",
+        "away_team": "Poland",
+        "home_goals": 2,
+        "away_goals": 3,
+        "statistics_json": null,
+        "updated_at": "2026-11-17 20:04:15"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698886",
+        "kickoff": "2024-09-05T18:45Z",
+        "home_team": "Scotland",
+        "away_team": "Poland",
+        "home_goals": 2,
+        "away_goals": 3,
+        "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":\"Scotland\",\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"13\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"offsides\",\"displayValue\":\"1\",\"label\":\"Offsides\"},{\"name\":\"wonCorners\",\"displayValue\":\"2\",\"label\":\"Corner Kicks\"},{\"name\":\"saves\",\"displayValue\":\"0\",\"label\":\"Saves\"},{\"name\":\"possessionPct\",\"displayValue\":\"58.6\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"11\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"3\",\"label\":\"ON GOAL\"},{\"name\":\"shotPct\",\"displayValue\":\"0.3\",\"label\":\"On Target %\"},{\"name\":\"penaltyKickGoals\",\"displayValue\":\"0\",\"label\":\"Penalty Goals\"},{\"name\":\"penaltyKickShots\",\"displayValue\":\"0\",\"label\":\"Penalty Kicks Taken\"},{\"name\":\"accuratePasses\",\"displayValue\":\"499\",\"label\":\"Accurate Passes\"},{\"name\":\"totalPasses\",\"displayValue\":\"563\",\"label\":\"Passes\"},{\"name\":\"passPct\",\"displayValue\":\"0.9\",\"label\":\"Pass Completion %\"},{\"name\":\"accurateCrosses\",\"displayValue\":\"2\",\"label\":\"Accurate Crosses\"},{\"name\":\"totalCrosses\",\"displayValue\":\"21\",\"label\":\"Crosses\"},{\"name\":\"crossPct\",\"displayValue\":\"0.1\",\"label\":\"Cross %\"},{\"name\":\"totalLongBalls\",\"displayValue\":\"51\",\"label\":\"Long Balls\"},{\"name\":\"accurateLongBalls\",\"displayValue\":\"25\",\"label\":\"Accurate Long Balls\"},{\"name\":\"longballPct\",\"displayValue\":\"0.5\",\"label\":\"Long Balls %\"},{\"name\":\"blockedShots\",\"displayValue\":\"2\",\"label\":\"Blocked Shots\"},{\"name\":\"effectiveTackles\",\"displayValue\":\"5\",\"label\":\"Effective Tackles\"},{\"name\":\"totalTackles\",\"displayValue\":\"12\",\"label\":\"Tackles\"},{\"name\":\"tacklePct\",\"displayValue\":\"0.4\",\"label\":\"Tackle %\"},{\"name\":\"interceptions\",\"displayValue\":\"10\",\"label\":\"Interceptions\"},{\"name\":\"effectiveClearance\",\"displayValue\":\"8\",\"label\":\"Effective Clearances\"},{\"name\":\"totalClearance\",\"displayValue\":\"8\",\"label\":\"Clearances\"}]},{\"homeAway\":\"away\",\"team\":\"Poland\",\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"18\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"offsides\",\"displayValue\":\"2\",\"label\":\"Offsides\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"saves\",\"displayValue\":\"1\",\"label\":\"Saves\"},{\"name\":\"possessionPct\",\"displayValue\":\"41.4\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"10\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"3\",\"label\":\"ON GOAL\"},{\"name\":\"shotPct\",\"displayValue\":\"0.3\",\"label\":\"On Target %\"},{\"name\":\"penaltyKickGoals\",\"displayValue\":\"2\",\"label\":\"Penalty Goals\"},{\"name\":\"penaltyKickShots\",\"displayValue\":\"2\",\"label\":\"Penalty Kicks Taken\"},{\"name\":\"accuratePasses\",\"displayValue\":\"339\",\"label\":\"Accurate Passes\"},{\"name\":\"totalPasses\",\"displayValue\":\"402\",\"label\":\"Passes\"},{\"name\":\"passPct\",\"displayValue\":\"0.8\",\"label\":\"Pass Completion %\"},{\"name\":\"accurateCrosses\",\"displayValue\":\"1\",\"label\":\"Accurate Crosses\"},{\"name\":\"totalCrosses\",\"displayValue\":\"10\",\"label\":\"Crosses\"},{\"name\":\"crossPct\",\"displayValue\":\"0.1\",\"label\":\"Cross %\"},{\"name\":\"totalLongBalls\",\"displayValue\":\"33\",\"label\":\"Long Balls\"},{\"name\":\"accurateLongBalls\",\"displayValue\":\"16\",\"label\":\"Accurate Long Balls\"},{\"name\":\"longballPct\",\"displayValue\":\"0.5\",\"label\":\"Long Balls %\"},{\"name\":\"blockedShots\",\"displayValue\":\"1\",\"label\":\"Blocked Shots\"},{\"name\":\"effectiveTackles\",\"displayValue\":\"6\",\"label\":\"Effective Tackles\"},{\"name\":\"totalTackles\",\"displayValue\":\"13\",\"label\":\"Tackles\"},{\"name\":\"tacklePct\",\"displayValue\":\"0.5\",\"label\":\"Tackle %\"},{\"name\":\"interceptions\",\"displayValue\":\"5\",\"label\":\"Intercepti --- TRUNCATED --- 3,834 chars"
+      },
+      "expected_sha256": "1f7dc2f2587bb47416ebc7793200e8e6fdf49abf36af99d39850d3187643a695"
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698890",
+        "kickoff": "2024-09-05T18:45Z",
+        "status": "FT",
+        "league_id": "5",
+        "home_team": "Estonia",
+        "away_team": "Slovakia",
+        "home_goals": 0,
+        "away_goals": 1,
+        "statistics_json": null,
+        "updated_at": "2026-11-16 08:50:04"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698890",
+        "kickoff": "2024-09-05T18:45Z",
+        "home_team": "Estonia",
+        "away_team": "Slovakia",
+        "home_goals": 0,
+        "away_goals": 1,
+        "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":\"Estonia\",\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"13\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"offsides\",\"displayValue\":\"1\",\"label\":\"Offsides\"},{\"name\":\"wonCorners\",\"displayValue\":\"1\",\"label\":\"Corner Kicks\"},{\"name\":\"saves\",\"displayValue\":\"5\",\"label\":\"Saves\"},{\"name\":\"possessionPct\",\"displayValue\":\"38.6\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"6\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"3\",\"label\":\"ON GOAL\"},{\"name\":\"shotPct\",\"displayValue\":\"0.5\",\"label\":\"On Target %\"},{\"name\":\"penaltyKickGoals\",\"displayValue\":\"0\",\"label\":\"Penalty Goals\"},{\"name\":\"penaltyKickShots\",\"displayValue\":\"0\",\"label\":\"Penalty Kicks Taken\"},{\"name\":\"accuratePasses\",\"displayValue\":\"275\",\"label\":\"Accurate Passes\"},{\"name\":\"totalPasses\",\"displayValue\":\"361\",\"label\":\"Passes\"},{\"name\":\"passPct\",\"displayValue\":\"0.8\",\"label\":\"Pass Completion %\"},{\"name\":\"accurateCrosses\",\"displayValue\":\"4\",\"label\":\"Accurate Crosses\"},{\"name\":\"totalCrosses\",\"displayValue\":\"11\",\"label\":\"Crosses\"},{\"name\":\"crossPct\",\"displayValue\":\"0.4\",\"label\":\"Cross %\"},{\"name\":\"totalLongBalls\",\"displayValue\":\"78\",\"label\":\"Long Balls\"},{\"name\":\"accurateLongBalls\",\"displayValue\":\"34\",\"label\":\"Accurate Long Balls\"},{\"name\":\"longballPct\",\"displayValue\":\"0.4\",\"label\":\"Long Balls %\"},{\"name\":\"blockedShots\",\"displayValue\":\"0\",\"label\":\"Blocked Shots\"},{\"name\":\"effectiveTackles\",\"displayValue\":\"5\",\"label\":\"Effective Tackles\"},{\"name\":\"totalTackles\",\"displayValue\":\"13\",\"label\":\"Tackles\"},{\"name\":\"tacklePct\",\"displayValue\":\"0.4\",\"label\":\"Tackle %\"},{\"name\":\"interceptions\",\"displayValue\":\"15\",\"label\":\"Interceptions\"},{\"name\":\"effectiveClearance\",\"displayValue\":\"29\",\"label\":\"Effective Clearances\"},{\"name\":\"totalClearance\",\"displayValue\":\"29\",\"label\":\"Clearances\"}]},{\"homeAway\":\"away\",\"team\":\"Slovakia\",\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"9\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"5\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"offsides\",\"displayValue\":\"0\",\"label\":\"Offsides\"},{\"name\":\"wonCorners\",\"displayValue\":\"7\",\"label\":\"Corner Kicks\"},{\"name\":\"saves\",\"displayValue\":\"2\",\"label\":\"Saves\"},{\"name\":\"possessionPct\",\"displayValue\":\"61.4\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"26\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"6\",\"label\":\"ON GOAL\"},{\"name\":\"shotPct\",\"displayValue\":\"0.2\",\"label\":\"On Target %\"},{\"name\":\"penaltyKickGoals\",\"displayValue\":\"0\",\"label\":\"Penalty Goals\"},{\"name\":\"penaltyKickShots\",\"displayValue\":\"0\",\"label\":\"Penalty Kicks Taken\"},{\"name\":\"accuratePasses\",\"displayValue\":\"486\",\"label\":\"Accurate Passes\"},{\"name\":\"totalPasses\",\"displayValue\":\"575\",\"label\":\"Passes\"},{\"name\":\"passPct\",\"displayValue\":\"0.8\",\"label\":\"Pass Completion %\"},{\"name\":\"accurateCrosses\",\"displayValue\":\"3\",\"label\":\"Accurate Crosses\"},{\"name\":\"totalCrosses\",\"displayValue\":\"22\",\"label\":\"Crosses\"},{\"name\":\"crossPct\",\"displayValue\":\"0.1\",\"label\":\"Cross %\"},{\"name\":\"totalLongBalls\",\"displayValue\":\"54\",\"label\":\"Long Balls\"},{\"name\":\"accurateLongBalls\",\"displayValue\":\"33\",\"label\":\"Accurate Long Balls\"},{\"name\":\"longballPct\",\"displayValue\":\"0.6\",\"label\":\"Long Balls %\"},{\"name\":\"blockedShots\",\"displayValue\":\"9\",\"label\":\"Blocked Shots\"},{\"name\":\"effectiveTackles\",\"displayValue\":\"11\",\"label\":\"Effective Tackles\"},{\"name\":\"totalTackles\",\"displayValue\":\"14\",\"label\":\"Tackles\"},{\"name\":\"tacklePct\",\"displayValue\":\"0.8\",\"label\":\"Tackle %\"},{\"name\":\"interceptions\",\"displayValue\":\"5\",\"label\":\"Interception --- TRUNCATED --- 3,836 chars"
+      },
+      "expected_sha256": "9424f4e1898ebd3deaa088bb997bcf29bd2dc69117a00a7f127271bdea84b89e"
+    }
+  ]
+}
