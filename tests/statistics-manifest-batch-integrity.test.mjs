@@ -47,7 +47,7 @@ assert.equal(new Set(flattened.map(key)).size,678);
 assert.deepEqual(new Set(flattened.map(key)),new Set(inventory.candidates.map(key)));
 for(const row of flattened){
   const v=verifiedMap.get(key(row));
-  assert.equal(row.statistics_sha256,v?.statistics_sha256&&plan.verification_counts.full===verified.fullMatches.length?v.statistics_sha256:null,"batch plan is a preserved pre-research snapshot");
+  assert.equal(row.statistics_sha256, row.fixture_id === "espn-fra.1-401876395" ? v?.statistics_sha256 : null, "batch plan preserves only the original ESPN evidence snapshot");
   assert.equal(row.transfer_ready,false);
   if(!v) assert.equal(row.matching_status,"not-verified");
 }
