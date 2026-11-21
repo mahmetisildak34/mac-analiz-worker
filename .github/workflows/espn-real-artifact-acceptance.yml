@@ -1,0 +1,34 @@
+name: Verified ESPN artifact isolated SQL acceptance
+on:
+  push:
+    branches:
+      - feature/bulk-statistics-repair-hardening
+    paths:
+      - "tests/espn-real-artifact-acceptance.mjs"
+      - ".github/workflows/espn-real-artifact-acceptance.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  real-espn-sql:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Download original four-game ESPN artifact, not a new ESPN HTTP request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download 44912723019 --repo mahmetisildak34/mac-analiz-worker --name espn-isolated-http-pilot --dir .espn-source
+      - name: Prove four ESPN matches and exercise local SQLite duplicate, resume and failure queue
+        run: node tests/espn-real-artifact-acceptance.mjs .espn-source/verified-matches.json espn-acceptance-output
+      - name: Export SQL (never run against Cloudflare)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: espn-4-verified-matches-isolated-sql
+          path: espn-acceptance-output/espn_4_real_matches_isolated_only.sql
+          retention-days: 3
