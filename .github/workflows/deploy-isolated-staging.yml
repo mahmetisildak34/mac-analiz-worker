@@ -1,0 +1,28 @@
+name: Deploy isolated D1 read-only test Worker
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type STAGING_ONLY to upload the isolated test Worker"
+        required: true
+        type: string
+jobs:
+  staging:
+    if: github.ref != 'refs/heads/main' && inputs.confirm == 'STAGING_ONLY'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify no production deployment and no write SQL
+        run: |
+          node tests/statistics-cloudflare-readonly.test.mjs
+          node --check staging/read-only-worker.js
+      - name: Deploy isolated staging Worker only
+        run: npx --yes wrangler@latest deploy --config staging/wrangler.readonly.jsonc
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: "640bfb6a538ee57864281941b14dbc55"
