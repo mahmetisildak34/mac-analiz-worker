@@ -1,3 +1,4 @@
+import { runStatisticsRepair } from "./statistics-repair.js";
 // Deployment refresh: publish the reviewed Worker configuration and cache policy.
 // Audit trigger: deploy this verified revision so the post-deploy archive audit runs.
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
@@ -1280,6 +1281,14 @@ export default {
         } catch (qualityError) {
           console.log("Daily priority league archive quality check failed", String(qualityError?.message || qualityError));
         }
+      }
+
+      // Disabled unless explicitly enabled after production approval; never calls football APIs.
+      try {
+        const repairReport = await runStatisticsRepair(env);
+        if (!repairReport.skipped) console.log("Scheduled statistics repair", repairReport);
+      } catch (repairError) {
+        console.log("Scheduled statistics repair failed", String(repairError?.message || repairError));
       }
 
       try {
