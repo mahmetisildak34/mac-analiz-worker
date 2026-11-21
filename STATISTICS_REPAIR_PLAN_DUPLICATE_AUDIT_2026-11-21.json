@@ -1,0 +1,623 @@
+{
+  "generated_on": "2026-11-21",
+  "source_plan": "STATISTICS_REPAIR_BATCH_PLAN_2026-11-21.json",
+  "total_plan_rows": 678,
+  "unique_fixture_ids": 642,
+  "duplicated_fixture_ids": 36,
+  "extra_duplicate_rows": 36,
+  "duplicates": [
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932840",
+      "occurrences": [
+        {
+          "batch": 15,
+          "home": "Tourcoing",
+          "away": "Stade de Reims",
+          "kickoff": "2026-11-14T13:00Z"
+        },
+        {
+          "batch": 15,
+          "home": "Tourcoing",
+          "away": "Stade de Reims",
+          "kickoff": "2026-11-14T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932856",
+      "occurrences": [
+        {
+          "batch": 15,
+          "home": "Versailles 78",
+          "away": "Rodez Aveyron",
+          "kickoff": "2026-11-14T13:00Z"
+        },
+        {
+          "batch": 15,
+          "home": "Versailles 78",
+          "away": "Rodez Aveyron",
+          "kickoff": "2026-11-14T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932858",
+      "occurrences": [
+        {
+          "batch": 15,
+          "home": "Balagne",
+          "away": "Montpellier",
+          "kickoff": "2026-11-14T13:00Z"
+        },
+        {
+          "batch": 15,
+          "home": "Balagne",
+          "away": "Montpellier",
+          "kickoff": "2026-11-14T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932739",
+      "occurrences": [
+        {
+          "batch": 17,
+          "home": "Veauche",
+          "away": "St Paul en Jarez",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 18,
+          "home": "Veauche",
+          "away": "St Paul en Jarez",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932741",
+      "occurrences": [
+        {
+          "batch": 17,
+          "home": "Riom",
+          "away": "FC Limonest",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 18,
+          "home": "Riom",
+          "away": "FC Limonest",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932755",
+      "occurrences": [
+        {
+          "batch": 17,
+          "home": "Massay",
+          "away": "Montlouis",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 18,
+          "home": "Massay",
+          "away": "Montlouis",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932756",
+      "occurrences": [
+        {
+          "batch": 17,
+          "home": "Violaines",
+          "away": "Vermelles",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 18,
+          "home": "Violaines",
+          "away": "Vermelles",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932759",
+      "occurrences": [
+        {
+          "batch": 17,
+          "home": "Racing Chambery",
+          "away": "Chamois Niortais FC",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 18,
+          "home": "Racing Chambery",
+          "away": "Chamois Niortais FC",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932766",
+      "occurrences": [
+        {
+          "batch": 17,
+          "home": "Val Yerres Crosne",
+          "away": "Union Cosnoise",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 18,
+          "home": "Val Yerres Crosne",
+          "away": "Union Cosnoise",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932767",
+      "occurrences": [
+        {
+          "batch": 17,
+          "home": "Montreuil FC",
+          "away": "Loon Plage FC",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 18,
+          "home": "Montreuil FC",
+          "away": "Loon Plage FC",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932769",
+      "occurrences": [
+        {
+          "batch": 17,
+          "home": "Verson",
+          "away": "Calais",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Verson",
+          "away": "Calais",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932770",
+      "occurrences": [
+        {
+          "batch": 17,
+          "home": "Neslois",
+          "away": "Furiani-Agliani",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Neslois",
+          "away": "Furiani-Agliani",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932771",
+      "occurrences": [
+        {
+          "batch": 17,
+          "home": "Vandruvre",
+          "away": "Epinal",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Vandruvre",
+          "away": "Epinal",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932772",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "Montigny-Les-Metz",
+          "away": "Pontarlier",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Montigny-Les-Metz",
+          "away": "Pontarlier",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932773",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "ESAP Metz",
+          "away": "Reipertswiller",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "ESAP Metz",
+          "away": "Reipertswiller",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932775",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "Talange",
+          "away": "Baume-Les-Dames",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Talange",
+          "away": "Baume-Les-Dames",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932795",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "Stade Pontivy",
+          "away": "Plabennec",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Stade Pontivy",
+          "away": "Plabennec",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932796",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "Tremblay",
+          "away": "Maisons-Alfort",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Tremblay",
+          "away": "Maisons-Alfort",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932797",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "Paris 13 Atletico",
+          "away": "Red Star FC 93",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Paris 13 Atletico",
+          "away": "Red Star FC 93",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932798",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "Sedan",
+          "away": "Bourges Foot",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Sedan",
+          "away": "Bourges Foot",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932800",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "Olympique Charleville Prix AM",
+          "away": "Olympique Marcquois",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Olympique Charleville Prix AM",
+          "away": "Olympique Marcquois",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932805",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "Rochefort FC",
+          "away": "Juventus Papus",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Rochefort FC",
+          "away": "Juventus Papus",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932807",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "Senlis",
+          "away": "Saint-Pryvé Saint Hilaire",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Senlis",
+          "away": "Saint-Pryvé Saint Hilaire",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932819",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "Rives 82",
+          "away": "Trelissac FC",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Rives 82",
+          "away": "Trelissac FC",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932820",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "US Marseille Endoume",
+          "away": "SC Toulon",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "US Marseille Endoume",
+          "away": "SC Toulon",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932821",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "Seyssinet",
+          "away": "Nimes",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Seyssinet",
+          "away": "Nimes",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932823",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "Chatou",
+          "away": "Les Ulis",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Chatou",
+          "away": "Les Ulis",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932855",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "Stade Castelbourgeois",
+          "away": "Nantes",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Stade Castelbourgeois",
+          "away": "Nantes",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932859",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "Saint-Die Kellermann",
+          "away": "Metz",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Saint-Die Kellermann",
+          "away": "Metz",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932860",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "Saint-Renan",
+          "away": "Stade Laval",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "Saint-Renan",
+          "away": "Stade Laval",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401933040",
+      "occurrences": [
+        {
+          "batch": 18,
+          "home": "St Martin Tatinghem",
+          "away": "Racing Club de France",
+          "kickoff": "2026-11-15T13:00Z"
+        },
+        {
+          "batch": 19,
+          "home": "St Martin Tatinghem",
+          "away": "Racing Club de France",
+          "kickoff": "2026-11-15T13:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932774",
+      "occurrences": [
+        {
+          "batch": 19,
+          "home": "Perros-Louannec",
+          "away": "Vannes OC",
+          "kickoff": "2026-11-15T13:30Z"
+        },
+        {
+          "batch": 19,
+          "home": "Perros-Louannec",
+          "away": "Vannes OC",
+          "kickoff": "2026-11-15T13:30Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932799",
+      "occurrences": [
+        {
+          "batch": 19,
+          "home": "Stade Sotteville",
+          "away": "USF Fecamp",
+          "kickoff": "2026-11-15T13:30Z"
+        },
+        {
+          "batch": 19,
+          "home": "Stade Sotteville",
+          "away": "USF Fecamp",
+          "kickoff": "2026-11-15T13:30Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932735",
+      "occurrences": [
+        {
+          "batch": 20,
+          "home": "Rumilly Vallières",
+          "away": "Saint-Étienne",
+          "kickoff": "2026-11-15T14:00Z"
+        },
+        {
+          "batch": 20,
+          "home": "Rumilly Vallières",
+          "away": "Saint-Étienne",
+          "kickoff": "2026-11-15T14:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401932736",
+      "occurrences": [
+        {
+          "batch": 20,
+          "home": "Atlas Paillade",
+          "away": "AS Cannes",
+          "kickoff": "2026-11-15T14:00Z"
+        },
+        {
+          "batch": 20,
+          "home": "Atlas Paillade",
+          "away": "AS Cannes",
+          "kickoff": "2026-11-15T14:00Z"
+        }
+      ]
+    },
+    {
+      "fixture_id": "espn-fra.coupe_de_france-401933096",
+      "occurrences": [
+        {
+          "batch": 20,
+          "home": "Saint-Pauloise FC",
+          "away": "La Tamponnaise",
+          "kickoff": "2026-11-15T14:45Z"
+        },
+        {
+          "batch": 20,
+          "home": "Saint-Pauloise FC",
+          "away": "La Tamponnaise",
+          "kickoff": "2026-11-15T14:45Z"
+        }
+      ]
+    }
+  ],
+  "policy": "Plan left unchanged; duplicates must not generate duplicate manifest JSON; repeated plan rows require alias/cross-batch reference, not fabricated new research."
+}
