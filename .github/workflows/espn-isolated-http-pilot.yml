@@ -1,0 +1,29 @@
+name: ESPN isolated read-only HTTP pilot
+on:
+  push:
+    branches: [feature/bulk-statistics-repair-hardening]
+    paths:
+      - ".github/workflows/espn-isolated-http-pilot.yml"
+      - "scripts/espn-isolated-http-pilot.mjs"
+      - "espn-isolated-acceptance.mjs"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  espn-http-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: One ESPN scoreboard request, at most ten verified matches
+        run: node scripts/espn-isolated-http-pilot.mjs
+      - name: Upload sanitized pilot result (no credentials)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: espn-isolated-http-pilot
+          path: espn-pilot-output/
+          retention-days: 3
