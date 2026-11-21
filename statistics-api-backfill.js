@@ -24,6 +24,9 @@ export function classifyApiCandidate(match) {
   if(!match||!finished.has(String(match.status||"").toUpperCase())) return "not-finished";
   const stats = String(match.statistics_json ?? "").trim();
   if(stats !== "" && !["{}","[]","null"].includes(stats)) return "already-populated";
+  const source = String(match.source || "");
+  if (!directSources.has(source) && source !== "app") return "unverified-provider-source";
+  if (!/^[1-9]\d{0,11}$/.test(String(match.fixture_id || ""))) return "no-provider-fixture-id";
   if(!hasApiFootballIdentity(match)) return "unverified-provider-source";
   return "eligible-for-verified-provider-check";
 }
