@@ -6,10 +6,10 @@
   "protected_existing_manifest": "STATISTICS_REPAIR_INVENTORY_2026-11-21.json",
   "candidate_inventory": "STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json",
   "counts": {
-    "full": 68,
+    "full": 69,
     "partial": 0,
     "ambiguous": 0,
-    "unavailable_or_not_yet_checked": 610,
+    "unavailable_or_not_yet_checked": 609,
     "pending_source_provenance_review": 1
   },
   "policy": {
@@ -2342,6 +2342,47 @@
       "statistics_class": "full",
       "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"586\",\"name\":\"Northern Ireland\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayName\":\"Fouls Committed\",\"shortDisplayName\":\"FC\",\"description\":\"The number of fouls comitted by a player or team.\",\"abbreviation\":\"FC\",\"value\":12,\"displayValue\":\"12\"},{\"name\":\"redCards\",\"displayName\":\"Red Cards\",\"shortDisplayName\":\"RC\",\"description\":\"The number of red cards that have been issued.\",\"abbreviation\":\"RC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"wonCorners\",\"displayName\":\"Corners Won\",\"shortDisplayName\":\"CW\",\"description\":\"The number of corners won.\",\"abbreviation\":\"CW\",\"value\":8,\"displayValue\":\"8\"},{\"name\":\"yellowCards\",\"displayName\":\"Yellow Cards\",\"shortDisplayName\":\"YC\",\"description\":\"The number of yellow cards accumulated.\",\"abbreviation\":\"YC\",\"value\":2,\"displayValue\":\"2\"},{\"name\":\"possessionPct\",\"displayName\":\"Possession Percentage\",\"shortDisplayName\":\"PP\",\"description\":\"The percentage of the game this team had possession\",\"abbreviation\":\"PP\",\"value\":75.5,\"displayValue\":\"75.5\"},{\"name\":\"shotsOnTarget\",\"displayName\":\"Shots On Goal\",\"shortDisplayName\":\"SOG\",\"description\":\"The number of shots that are on goal.\",\"abbreviation\":\"SOG\",\"value\":6,\"displayValue\":\"6\"},{\"name\":\"totalShots\",\"displayName\":\"Shots\",\"shortDisplayName\":\"SHOT\",\"description\":\"The number of shots attempted.\",\"abbreviation\":\"SHOT\",\"value\":17,\"displayValue\":\"17\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"587\",\"name\":\"Andorra\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayName\":\"Fouls Committed\",\"shortDisplayName\":\"FC\",\"description\":\"The number of fouls comitted by a player or team.\",\"abbreviation\":\"FC\",\"value\":22,\"displayValue\":\"22\"},{\"name\":\"redCards\",\"displayName\":\"Red Cards\",\"shortDisplayName\":\"RC\",\"description\":\"The number of red cards that have been issued.\",\"abbreviation\":\"RC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"wonCorners\",\"displayName\":\"Corners Won\",\"shortDisplayName\":\"CW\",\"description\":\"The number of corners won.\",\"abbreviation\":\"CW\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"yellowCards\",\"displayName\":\"Yellow Cards\",\"shortDisplayName\":\"YC\",\"description\":\"The number of yellow cards accumulated.\",\"abbreviation\":\"YC\",\"value\":3,\"displayValue\":\"3\"},{\"name\":\"possessionPct\",\"displayName\":\"Possession Percentage\",\"shortDisplayName\":\"PP\",\"description\":\"The percentage of the game this team had possession\",\"abbreviation\":\"PP\",\"value\":24.5,\"displayValue\":\"24.5\"},{\"name\":\"shotsOnTarget\",\"displayName\":\"Shots On Goal\",\"shortDisplayName\":\"SOG\",\"description\":\"The number of shots that are on goal.\",\"abbreviation\":\"SOG\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"totalShots\",\"displayName\":\"Shots\",\"shortDisplayName\":\"SHOT\",\"description\":\"The number of shots attempted.\",\"abbreviation\":\"SHOT\",\"value\":2,\"displayValue\":\"2\"}]}]}",
       "statistics_sha256": "36bec3434e44eaf76f13caf93541dde3a6457ce8b0187b6ae87399d28948e948",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      },
+      "transfer_ready": false
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-18T17:30:00+00:00-Montenegro U21-Italy U21",
+      "kickoff": "2025-11-18T17:30:00+00:00",
+      "status": "FT",
+      "league": {
+        "id": "uefa.euro_u21_qual",
+        "name": "UEFA European U21 Championship qualification"
+      },
+      "home": {
+        "id": "20931",
+        "name": "Montenegro U21",
+        "goals": 1
+      },
+      "away": {
+        "id": "10343",
+        "name": "Italy U21",
+        "goals": 4
+      },
+      "provider": "ESPN",
+      "provider_event_id": "732514",
+      "provider_url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.euro_u21_qual/events/732514/competitions/732514/competitors/20931/statistics",
+      "source_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.euro_u21_qual/events/732514/competitions/732514/competitors/20931/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.euro_u21_qual/events/732514/competitions/732514/competitors/10343/statistics"
+      ],
+      "source_payload_hashes": [
+        "119f2f545e3cbeb2aa40d472c1336239beceaeb8cb0a459cebfe6c4884552f6c",
+        "4978702c7341ae5e4b56b3fa0e843c3308d7b5a770ab1ce6e311370298ea1ceb"
+      ],
+      "source_payload_sha256": "f6559626d17a5bc1bfaf70911c01494f26aa409f4bdb0476cdc7fa782edc91e5",
+      "statistics_class": "full",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"20931\",\"name\":\"Montenegro U21\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayName\":\"Fouls Committed\",\"shortDisplayName\":\"FC\",\"description\":\"The number of fouls comitted by a player or team.\",\"abbreviation\":\"FC\",\"value\":16,\"displayValue\":\"16\"},{\"name\":\"redCards\",\"displayName\":\"Red Cards\",\"shortDisplayName\":\"RC\",\"description\":\"The number of red cards that have been issued.\",\"abbreviation\":\"RC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"wonCorners\",\"displayName\":\"Corners Won\",\"shortDisplayName\":\"CW\",\"description\":\"The number of corners won.\",\"abbreviation\":\"CW\",\"value\":3,\"displayValue\":\"3\"},{\"name\":\"yellowCards\",\"displayName\":\"Yellow Cards\",\"shortDisplayName\":\"YC\",\"description\":\"The number of yellow cards accumulated.\",\"abbreviation\":\"YC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"possessionPct\",\"displayName\":\"Possession Percentage\",\"shortDisplayName\":\"PP\",\"description\":\"The percentage of the game this team had possession\",\"abbreviation\":\"PP\",\"value\":43.7,\"displayValue\":\"43.7\"},{\"name\":\"shotsOnTarget\",\"displayName\":\"Shots On Goal\",\"shortDisplayName\":\"SOG\",\"description\":\"The number of shots that are on goal.\",\"abbreviation\":\"SOG\",\"value\":3,\"displayValue\":\"3\"},{\"name\":\"totalShots\",\"displayName\":\"Shots\",\"shortDisplayName\":\"SHOT\",\"description\":\"The number of shots attempted.\",\"abbreviation\":\"SHOT\",\"value\":6,\"displayValue\":\"6\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"10343\",\"name\":\"Italy U21\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayName\":\"Fouls Committed\",\"shortDisplayName\":\"FC\",\"description\":\"The number of fouls comitted by a player or team.\",\"abbreviation\":\"FC\",\"value\":16,\"displayValue\":\"16\"},{\"name\":\"redCards\",\"displayName\":\"Red Cards\",\"shortDisplayName\":\"RC\",\"description\":\"The number of red cards that have been issued.\",\"abbreviation\":\"RC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"wonCorners\",\"displayName\":\"Corners Won\",\"shortDisplayName\":\"CW\",\"description\":\"The number of corners won.\",\"abbreviation\":\"CW\",\"value\":6,\"displayValue\":\"6\"},{\"name\":\"yellowCards\",\"displayName\":\"Yellow Cards\",\"shortDisplayName\":\"YC\",\"description\":\"The number of yellow cards accumulated.\",\"abbreviation\":\"YC\",\"value\":2,\"displayValue\":\"2\"},{\"name\":\"possessionPct\",\"displayName\":\"Possession Percentage\",\"shortDisplayName\":\"PP\",\"description\":\"The percentage of the game this team had possession\",\"abbreviation\":\"PP\",\"value\":56.3,\"displayValue\":\"56.3\"},{\"name\":\"shotsOnTarget\",\"displayName\":\"Shots On Goal\",\"shortDisplayName\":\"SOG\",\"description\":\"The number of shots that are on goal.\",\"abbreviation\":\"SOG\",\"value\":6,\"displayValue\":\"6\"},{\"name\":\"totalShots\",\"displayName\":\"Shots\",\"shortDisplayName\":\"SHOT\",\"description\":\"The number of shots attempted.\",\"abbreviation\":\"SHOT\",\"value\":22,\"displayValue\":\"22\"}]}]}",
+      "statistics_sha256": "99e77ea55034261c853e1c900c986636e5c69e863cfcd2b81ff6b48daa34633f",
       "verification": {
         "identity": true,
         "score": true,

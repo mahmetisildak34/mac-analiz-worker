@@ -1,8 +1,8 @@
 {
   "date": "2026-11-21",
-  "total": 68,
+  "total": 69,
   "live_apply_approved": false,
-  "data_eligible": 36,
+  "data_eligible": 37,
   "rows": [
     {
       "source": "ESPN",
@@ -1772,6 +1772,31 @@
       "statistics_sha256": "36bec3434e44eaf76f13caf93541dde3a6457ce8b0187b6ae87399d28948e948",
       "provider_url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/702330/competitions/702330/competitors/586/statistics",
       "current_archive_updated_at": "2026-11-16 08:44:11",
+      "revalidated_source_snapshot": true,
+      "strict_metrics": "verified_full",
+      "reasons": [],
+      "candidate_data_eligible": true,
+      "live_apply_approved": false
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-18T17:30:00+00:00-Montenegro U21-Italy U21",
+      "provider": "ESPN",
+      "provider_event_id": "732514",
+      "kickoff": "2025-11-18T17:30:00+00:00",
+      "home": {
+        "id": "20931",
+        "name": "Montenegro U21",
+        "goals": 1
+      },
+      "away": {
+        "id": "10343",
+        "name": "Italy U21",
+        "goals": 4
+      },
+      "statistics_sha256": "99e77ea55034261c853e1c900c986636e5c69e863cfcd2b81ff6b48daa34633f",
+      "provider_url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.euro_u21_qual/events/732514/competitions/732514/competitors/20931/statistics",
+      "current_archive_updated_at": "2026-11-16 08:43:38",
       "revalidated_source_snapshot": true,
       "strict_metrics": "verified_full",
       "reasons": [],

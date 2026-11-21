@@ -854,7 +854,12 @@
       },
       "current_updated_at": "2026-11-19 08:16:15",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2044820",
+        "url": "https://www.uefa.com/newsfiles/UCL/2025/2044820_TS.pdf",
+        "role": "Official identity and result corroboration. Original statistics payload attribution remains unchanged."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -894,7 +899,12 @@
       },
       "current_updated_at": "2026-11-19 08:16:15",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2044780",
+        "url": "https://www.uefa.com/newsfiles/UCL/2025/2044780_FR.pdf",
+        "role": "Official identity and result corroboration. Original statistics payload attribution remains unchanged."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -979,7 +989,12 @@
       },
       "current_updated_at": "2026-11-19 08:15:47",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2044854",
+        "url": "https://www.uefa.com/newsfiles/UCL/2025/2044854_FR.pdf",
+        "role": "Official identity and result corroboration. Original statistics payload attribution remains unchanged."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -1064,7 +1079,12 @@
       },
       "current_updated_at": "2026-11-19 10:06:26",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2048055",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2048055/",
+        "role": "Official identity and result corroboration. Original statistics payload attribution remains unchanged."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -1149,7 +1169,12 @@
       },
       "current_updated_at": "2026-11-19 10:06:26",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2048063",
+        "url": "https://www.uefa.com/newsfiles/UCL/2026/2048063_FR.pdf",
+        "role": "Official identity and result corroboration. Original statistics payload attribution remains unchanged."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -1920,7 +1945,12 @@
       },
       "current_updated_at": "2026-11-19 08:16:15",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2049610",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2049610--feyenoord-vs-inter/",
+        "role": "Official identity and result corroboration. Original statistics payload attribution remains unchanged."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -1960,7 +1990,12 @@
       },
       "current_updated_at": "2026-11-14 04:38:29",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2049617",
+        "url": "https://www.uefa.com/newsfiles/ucl/2027/2049617_fr.pdf",
+        "role": "Official identity and result corroboration. Original statistics payload attribution remains unchanged."
+      }
     },
     {
       "source": "fixture-download-uefa",

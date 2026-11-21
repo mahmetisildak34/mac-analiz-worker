@@ -6,9 +6,9 @@
   "branch": "feature/bulk-statistics-repair-hardening",
   "policy": "Read-only research. No transfer authorized.",
   "counts": {
-    "full_verified": 0,
+    "full_verified": 1,
     "blocked": 0,
-    "source_review": 25,
+    "source_review": 24,
     "pending": 0
   },
   "rows": [
@@ -1169,8 +1169,8 @@
       "away": "Italy U21",
       "league": "UEFA European U21 Championship qualification",
       "provider_group": "SportScore",
-      "status": "source_review",
-      "statistics_sha256": null,
+      "status": "full_verified",
+      "statistics_sha256": "99e77ea55034261c853e1c900c986636e5c69e863cfcd2b81ff6b48daa34633f",
       "research_date": "2026-11-21",
       "identity_verified": true,
       "score_verified": true,
@@ -1180,9 +1180,11 @@
       "source_urls": [
         "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-11-18&status=finished&limit=1000",
         "https://sportscore.com/football/match/montenegro-u21-vs-italy-u21/dn1m1ghl4gdxmoe/",
-        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732514"
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732514",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.euro_u21_qual/events/732514/competitions/732514/competitors/20931/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.euro_u21_qual/events/732514/competitions/732514/competitors/10343/statistics"
       ],
-      "statistics_availability": "partial",
+      "statistics_availability": "full",
       "partial_statistics": {
         "teams": [
           {
@@ -1218,7 +1220,7 @@
         ]
       },
       "source_payload_sha256": "2c13e4992136946a1dd0a929fcfd33a6dd66de41bdb5f7134ea10eb5e82e08eb",
-      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded.",
+      "reason": "ESPN Core original competition and two competitor payloads corroborate kickoff, final score and all seven metrics.",
       "second_pass_espn": {
         "event_id": "732514",
         "ordered_team_ids": [
@@ -1228,6 +1230,14 @@
         "utc": "2025-11-18T17:30Z",
         "score": "1-4",
         "statistics": "unavailable_in_checked_source"
+      },
+      "cross_provider_source": {
+        "provider": "ESPN",
+        "event_id": "732514",
+        "source_urls": [
+          "https://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.euro_u21_qual/events/732514/competitions/732514/competitors/20931/statistics",
+          "https://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.euro_u21_qual/events/732514/competitions/732514/competitors/10343/statistics"
+        ]
       }
     },
     {

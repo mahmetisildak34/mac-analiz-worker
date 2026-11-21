@@ -324,8 +324,59 @@
       "provider_event_id": "1649549",
       "score": "9-0",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "statistics_availability": "partial",
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "source_urls": [
+        "https://sportscore.com/football/match/brazil-u20-vs-peru-u20/2y8m4zhv3vd9ql0/"
+      ],
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "2y8m4zhv3vd9ql0",
+        "source_url": "https://sportscore.com/football/match/brazil-u20-vs-peru-u20/2y8m4zhv3vd9ql0/",
+        "source_sha256": "20eef313d0e5ea11b63960cc7b9f426fe59b2480752cff14ffd828126d7268a7",
+        "score": [
+          9,
+          0
+        ],
+        "kickoff": "2026-11-16T23:00:00+00:00",
+        "source_competition": "International Friendly",
+        "statistics": {
+          "teams": [
+            {
+              "team": {
+                "name": "Brazil U20"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 5
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "team": {
+                "name": "Peru U20"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 1
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 4
+                }
+              ]
+            }
+          ]
+        },
+        "coverage": 2,
+        "api_football_queried": false
+      }
     },
     {
       "source": "app",
@@ -366,8 +417,67 @@
       "provider_event_id": "1649033",
       "score": "1-1",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "statistics_availability": "partial",
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "source_urls": [
+        "https://sportscore.com/football/match/martinique-vs-aruba/23xmvkhy3zgxqg8/"
+      ],
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "23xmvkhy3zgxqg8",
+        "source_url": "https://sportscore.com/football/match/martinique-vs-aruba/23xmvkhy3zgxqg8/",
+        "source_sha256": "5cae1e839281c71b6c7318cec5cded7afd32d1123f5d1618901d58eaebb276b5",
+        "score": [
+          1,
+          1
+        ],
+        "kickoff": "2026-11-17T00:00:00+00:00",
+        "source_competition": "CONCACAF Nations League",
+        "statistics": {
+          "teams": [
+            {
+              "team": {
+                "name": "Martinique"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 8
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 2
+                },
+                {
+                  "name": "redCards",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "team": {
+                "name": "Aruba"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 1
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 3
+                },
+                {
+                  "name": "redCards",
+                  "value": 0
+                }
+              ]
+            }
+          ]
+        },
+        "coverage": 3,
+        "api_football_queried": false
+      }
     },
     {
       "source": "app",
@@ -387,8 +497,59 @@
       "provider_event_id": "1649034",
       "score": "1-1",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "statistics_availability": "partial",
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "source_urls": [
+        "https://sportscore.com/football/match/trinidad-and-tobago-vs-antigua-and-barbuda/zp5rzgh3je22q82/"
+      ],
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "zp5rzgh3je22q82",
+        "source_url": "https://sportscore.com/football/match/trinidad-and-tobago-vs-antigua-and-barbuda/zp5rzgh3je22q82/",
+        "source_sha256": "3fb3a0bdea93d353146792db4b3530cea0753b8745f6aeecdf152abfe9926406",
+        "score": [
+          1,
+          1
+        ],
+        "kickoff": "2026-11-17T00:00:00+00:00",
+        "source_competition": "CONCACAF Nations League",
+        "statistics": {
+          "teams": [
+            {
+              "team": {
+                "name": "Trinidad and Tobago"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 11
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "team": {
+                "name": "Antigua and Barbuda"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 4
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        },
+        "coverage": 2,
+        "api_football_queried": false
+      }
     },
     {
       "source": "app",
@@ -429,8 +590,59 @@
       "provider_event_id": "1644694",
       "score": "4-1",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "statistics_availability": "partial",
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "source_urls": [
+        "https://sportscore.com/football/match/canada-vs-guatemala/jw2r09h5l6eprz8/"
+      ],
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "jw2r09h5l6eprz8",
+        "source_url": "https://sportscore.com/football/match/canada-vs-guatemala/jw2r09h5l6eprz8/",
+        "source_sha256": "6bbfab5a5af220ed494a34193a76140f863ae6c5eb6b5fb2cfb55562f65fd80e",
+        "score": [
+          4,
+          1
+        ],
+        "kickoff": "2026-11-17T01:00:00+00:00",
+        "source_competition": "CONCACAF Nations League",
+        "statistics": {
+          "teams": [
+            {
+              "team": {
+                "name": "Canada"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 10
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "team": {
+                "name": "Guatemala"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 0
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 4
+                }
+              ]
+            }
+          ]
+        },
+        "coverage": 2,
+        "api_football_queried": false
+      }
     },
     {
       "source": "app",

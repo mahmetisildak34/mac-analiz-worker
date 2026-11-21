@@ -200,7 +200,9 @@
       "provider_group": "API-Football",
       "status": "source_review",
       "score": "2-0",
-      "source_urls": [],
+      "source_urls": [
+        "https://sportscore.com/football/match/chapulineros-vs-los-cabos-united/dn1m1ghl5jvkmoe/"
+      ],
       "research_date": "2026-11-21",
       "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
       "statistics_sha256": null,
@@ -209,7 +211,55 @@
       "transfer_ready": false,
       "provider_event_id": "1636038",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota"
+      "statistics_availability": "partial",
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "dn1m1ghl5jvkmoe",
+        "source_url": "https://sportscore.com/football/match/chapulineros-vs-los-cabos-united/dn1m1ghl5jvkmoe/",
+        "source_sha256": "1041a6745c8cb7778955d7bb0eeb5188d19bd50fc47204d14b825808d1a4e7ed",
+        "score": [
+          2,
+          0
+        ],
+        "kickoff": "2026-11-15T03:00:00+00:00",
+        "source_competition": "MEX Liga Premier",
+        "statistics": {
+          "teams": [
+            {
+              "team": {
+                "name": "Los Cabos United"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 5
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 2
+                }
+              ]
+            },
+            {
+              "team": {
+                "name": "Chapulineros"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 1
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 3
+                }
+              ]
+            }
+          ]
+        },
+        "coverage": 2,
+        "api_football_queried": false
+      }
     },
     {
       "fixture_id": "1639055",
@@ -284,7 +334,9 @@
       "provider_group": "API-Football",
       "status": "source_review",
       "score": "3-0",
-      "source_urls": [],
+      "source_urls": [
+        "https://sportscore.com/football/match/new-zealand-vs-india/8yomo4hyex2yq0j/"
+      ],
       "research_date": "2026-11-21",
       "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
       "statistics_sha256": null,
@@ -293,7 +345,55 @@
       "transfer_ready": false,
       "provider_event_id": "1586133",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota"
+      "statistics_availability": "partial",
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "8yomo4hyex2yq0j",
+        "source_url": "https://sportscore.com/football/match/new-zealand-vs-india/8yomo4hyex2yq0j/",
+        "source_sha256": "f364d7e0c034df8cdf1fb7452c14c9bfbfc16f907e2a0d266a70e7b517ad8c16",
+        "score": [
+          3,
+          0
+        ],
+        "kickoff": "2026-11-15T03:10:00+00:00",
+        "source_competition": "International Friendly",
+        "statistics": {
+          "teams": [
+            {
+              "team": {
+                "name": "New Zealand"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 10
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "team": {
+                "name": "India"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 1
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        },
+        "coverage": 2,
+        "api_football_queried": false
+      }
     },
     {
       "fixture_id": "1555804",
@@ -305,7 +405,9 @@
       "provider_group": "API-Football",
       "status": "source_review",
       "score": "0-3",
-      "source_urls": [],
+      "source_urls": [
+        "https://sportscore.com/football/match/gainare-tottori-vs-kagoshima-united/zp5rzghgeglyq82/"
+      ],
       "research_date": "2026-11-21",
       "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
       "statistics_sha256": null,
@@ -314,7 +416,55 @@
       "transfer_ready": false,
       "provider_event_id": "1555804",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota"
+      "statistics_availability": "partial",
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "zp5rzghgeglyq82",
+        "source_url": "https://sportscore.com/football/match/gainare-tottori-vs-kagoshima-united/zp5rzghgeglyq82/",
+        "source_sha256": "eabc45cb8a7e556f2e6eb5b6bc3d976cfd9ef7d3e3db2112d9cbbcc2907bcbd5",
+        "score": [
+          0,
+          3
+        ],
+        "kickoff": "2026-11-15T04:00:00+00:00",
+        "source_competition": "Japanese J3 League",
+        "statistics": {
+          "teams": [
+            {
+              "team": {
+                "name": "Kagoshima United"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 7
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 3
+                }
+              ]
+            },
+            {
+              "team": {
+                "name": "Gainare Tottori"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 7
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 0
+                }
+              ]
+            }
+          ]
+        },
+        "coverage": 2,
+        "api_football_queried": false
+      }
     },
     {
       "fixture_id": "1560975",
@@ -410,7 +560,9 @@
       "provider_group": "API-Football",
       "status": "source_review",
       "score": "3-0",
-      "source_urls": [],
+      "source_urls": [
+        "https://sportscore.com/football/match/canberra-fc-vs-sutherland-sharks/318q66h8z9j5qo9/"
+      ],
       "research_date": "2026-11-21",
       "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
       "statistics_sha256": null,
@@ -419,7 +571,55 @@
       "transfer_ready": false,
       "provider_event_id": "1640367",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota"
+      "statistics_availability": "partial",
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "318q66h8z9j5qo9",
+        "source_url": "https://sportscore.com/football/match/canberra-fc-vs-sutherland-sharks/318q66h8z9j5qo9/",
+        "source_sha256": "ebdbaf4e0a0db7d56a833e347ad981af0274d8c52ed9c5280c3ce8f0e8d8aff0",
+        "score": [
+          3,
+          0
+        ],
+        "kickoff": "2026-11-15T04:00:00+00:00",
+        "source_competition": "Aus Champ",
+        "statistics": {
+          "teams": [
+            {
+              "team": {
+                "name": "Sutherland Sharks"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 2
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "team": {
+                "name": "Canberra FC"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 5
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 3
+                }
+              ]
+            }
+          ]
+        },
+        "coverage": 2,
+        "api_football_queried": false
+      }
     },
     {
       "fixture_id": "1647997",
@@ -452,7 +652,9 @@
       "provider_group": "API-Football",
       "status": "source_review",
       "score": "4-0",
-      "source_urls": [],
+      "source_urls": [
+        "https://sportscore.com/football/match/blaublitz-akita-vs-vegalta-sendai/y0or5jh8d8glqwz/"
+      ],
       "research_date": "2026-11-21",
       "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
       "statistics_sha256": null,
@@ -461,7 +663,55 @@
       "transfer_ready": false,
       "provider_event_id": "1606762",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota"
+      "statistics_availability": "partial",
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "y0or5jh8d8glqwz",
+        "source_url": "https://sportscore.com/football/match/blaublitz-akita-vs-vegalta-sendai/y0or5jh8d8glqwz/",
+        "source_sha256": "692431f360780a3819d8e7586ecec7145ffb4dac7a515ba3a46ae932de18e73c",
+        "score": [
+          4,
+          0
+        ],
+        "kickoff": "2026-11-15T04:05:00+00:00",
+        "source_competition": "Japanese J2 League",
+        "statistics": {
+          "teams": [
+            {
+              "team": {
+                "name": "Vegalta Sendai"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 7
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "team": {
+                "name": "Blaublitz Akita"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 1
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        },
+        "coverage": 2,
+        "api_football_queried": false
+      }
     },
     {
       "fixture_id": "1555805",
@@ -473,7 +723,9 @@
       "provider_group": "API-Football",
       "status": "source_review",
       "score": "1-1",
-      "source_urls": [],
+      "source_urls": [
+        "https://sportscore.com/football/match/kamatamare-sanuki-vs-renofa-yamaguchi/4wyrn4h61632q86/"
+      ],
       "research_date": "2026-11-21",
       "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
       "statistics_sha256": null,
@@ -482,7 +734,55 @@
       "transfer_ready": false,
       "provider_event_id": "1555805",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota"
+      "statistics_availability": "partial",
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "4wyrn4h61632q86",
+        "source_url": "https://sportscore.com/football/match/kamatamare-sanuki-vs-renofa-yamaguchi/4wyrn4h61632q86/",
+        "source_sha256": "a44c1b0b488e0636ced7fcb1bef2fee78a05c014897cd195c30690f00e583ac4",
+        "score": [
+          1,
+          1
+        ],
+        "kickoff": "2026-11-15T05:00:00+00:00",
+        "source_competition": "Japanese J3 League",
+        "statistics": {
+          "teams": [
+            {
+              "team": {
+                "name": "Kamatamare Sanuki"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 6
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "team": {
+                "name": "Renofa Yamaguchi"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 4
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 3
+                }
+              ]
+            }
+          ]
+        },
+        "coverage": 2,
+        "api_football_queried": false
+      }
     },
     {
       "fixture_id": "1555806",

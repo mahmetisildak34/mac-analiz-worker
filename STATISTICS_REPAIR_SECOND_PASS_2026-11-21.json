@@ -1443,6 +1443,385 @@
       ],
       "not_found_in_bounded_day_list": 174,
       "note": "Daily lists may be capped and provider competition aliases are not automatically accepted. These are candidate leads only."
+    },
+    "sportscore_detail_followup": {
+      "attempted": 20,
+      "partial_new": 15,
+      "rows": [
+        {
+          "fixture_id": "1636038",
+          "provider_event_id": "dn1m1ghl5jvkmoe",
+          "source_url": "https://sportscore.com/football/match/chapulineros-vs-los-cabos-united/dn1m1ghl5jvkmoe/",
+          "archived_competition": "Primera Premier",
+          "kickoff": "2026-11-15T03:00:00+00:00",
+          "source_sha256": "1041a6745c8cb7778955d7bb0eeb5188d19bd50fc47204d14b825808d1a4e7ed",
+          "source_competition": "MEX Liga Premier",
+          "metrics": 2,
+          "reasons": [],
+          "status": "partial_verified"
+        },
+        {
+          "fixture_id": "1586133",
+          "provider_event_id": "8yomo4hyex2yq0j",
+          "source_url": "https://sportscore.com/football/match/new-zealand-vs-india/8yomo4hyex2yq0j/",
+          "archived_competition": "Friendlies",
+          "kickoff": "2026-11-15T03:10:00+00:00",
+          "source_sha256": "f364d7e0c034df8cdf1fb7452c14c9bfbfc16f907e2a0d266a70e7b517ad8c16",
+          "source_competition": "International Friendly",
+          "metrics": 2,
+          "reasons": [],
+          "status": "partial_verified"
+        },
+        {
+          "fixture_id": "1555804",
+          "provider_event_id": "zp5rzghgeglyq82",
+          "source_url": "https://sportscore.com/football/match/gainare-tottori-vs-kagoshima-united/zp5rzghgeglyq82/",
+          "archived_competition": "J3 League",
+          "kickoff": "2026-11-15T04:00:00+00:00",
+          "source_sha256": "eabc45cb8a7e556f2e6eb5b6bc3d976cfd9ef7d3e3db2112d9cbbcc2907bcbd5",
+          "source_competition": "Japanese J3 League",
+          "metrics": 2,
+          "reasons": [],
+          "status": "partial_verified"
+        },
+        {
+          "fixture_id": "1640367",
+          "provider_event_id": "318q66h8z9j5qo9",
+          "source_url": "https://sportscore.com/football/match/canberra-fc-vs-sutherland-sharks/318q66h8z9j5qo9/",
+          "archived_competition": "Australian Championship",
+          "kickoff": "2026-11-15T04:00:00+00:00",
+          "source_sha256": "ebdbaf4e0a0db7d56a833e347ad981af0274d8c52ed9c5280c3ce8f0e8d8aff0",
+          "source_competition": "Aus Champ",
+          "metrics": 2,
+          "reasons": [],
+          "status": "partial_verified"
+        },
+        {
+          "fixture_id": "1606762",
+          "provider_event_id": "y0or5jh8d8glqwz",
+          "source_url": "https://sportscore.com/football/match/blaublitz-akita-vs-vegalta-sendai/y0or5jh8d8glqwz/",
+          "archived_competition": "J2 League",
+          "kickoff": "2026-11-15T04:05:00+00:00",
+          "source_sha256": "692431f360780a3819d8e7586ecec7145ffb4dac7a515ba3a46ae932de18e73c",
+          "source_competition": "Japanese J2 League",
+          "metrics": 2,
+          "reasons": [],
+          "status": "partial_verified"
+        },
+        {
+          "fixture_id": "1555805",
+          "provider_event_id": "4wyrn4h61632q86",
+          "source_url": "https://sportscore.com/football/match/kamatamare-sanuki-vs-renofa-yamaguchi/4wyrn4h61632q86/",
+          "archived_competition": "J3 League",
+          "kickoff": "2026-11-15T05:00:00+00:00",
+          "source_sha256": "a44c1b0b488e0636ced7fcb1bef2fee78a05c014897cd195c30690f00e583ac4",
+          "source_competition": "Japanese J3 League",
+          "metrics": 2,
+          "reasons": [],
+          "status": "partial_verified"
+        },
+        {
+          "fixture_id": "1555810",
+          "provider_event_id": "6ypq3nhvdvjpmd7",
+          "source_url": "https://sportscore.com/football/match/tochigi-sc-vs-nara-club/6ypq3nhvdvjpmd7/",
+          "archived_competition": "J3 League",
+          "kickoff": "2026-11-15T05:00:00+00:00",
+          "source_sha256": "d4bdfba473f2cb3694c630a352193b213aeeeaa8fffe635805a4ed3f0fe065ef",
+          "source_competition": "Japanese J3 League",
+          "metrics": 2,
+          "reasons": [],
+          "status": "partial_verified"
+        },
+        {
+          "fixture_id": "1606765",
+          "provider_event_id": "vjxm8gheoep8r6o",
+          "source_url": "https://sportscore.com/football/match/kataller-toyama-vs-tokushima-vortis/vjxm8gheoep8r6o/",
+          "archived_competition": "J2 League",
+          "kickoff": "2026-11-15T05:00:00+00:00",
+          "source_sha256": "9090c504405509df3a1f7842b56b4285b001d0cb89bbcd526c43953b6f1a1277",
+          "source_competition": "Japanese J2 League",
+          "metrics": 2,
+          "reasons": [],
+          "status": "partial_verified"
+        },
+        {
+          "fixture_id": "1648034",
+          "provider_event_id": "pxwrxlhlg5vdryk",
+          "source_url": "https://sportscore.com/football/match/machida-zelvia-vs-vissel-kobe/pxwrxlhlg5vdryk/",
+          "archived_competition": "J-League Cup",
+          "kickoff": "2026-11-15T05:00:00+00:00",
+          "source_sha256": "9595eac4b2851ddee8782c14baf194364550b3c6b21548c508a0550506c04271",
+          "source_competition": "J.League Yamazaki Biscuit Levain Cup",
+          "metrics": 2,
+          "reasons": [],
+          "status": "partial_verified"
+        },
+        {
+          "fixture_id": "1641935",
+          "provider_event_id": "318q66h8op8oqo9",
+          "source_url": "https://sportscore.com/football/match/salavan-united-vs-namtha-united/318q66h8op8oqo9/",
+          "archived_competition": "Lao League",
+          "kickoff": "2026-11-15T08:00:00+00:00",
+          "source_sha256": "ccefdd5c4983d75165c7c1f951cc58e4218b4f26849cc809a9e3681002223688",
+          "source_competition": "Laos Premier League",
+          "metrics": 2,
+          "reasons": [],
+          "status": "partial_verified"
+        },
+        {
+          "fixture_id": "1648037",
+          "provider_event_id": "8yomo4hy73zdq0j",
+          "source_url": "https://sportscore.com/football/match/kashiwa-reysol-vs-kawasaki-frontale/8yomo4hy73zdq0j/",
+          "archived_competition": "J-League Cup",
+          "kickoff": "2026-11-15T08:00:00+00:00",
+          "source_sha256": "189d9ecbde09dde835ccdcf4085c7d8797fbb62ca4c25e623b5efd9c8eeea25c",
+          "source_competition": "J.League Yamazaki Biscuit Levain Cup",
+          "metrics": 2,
+          "reasons": [],
+          "status": "partial_verified"
+        },
+        {
+          "fixture_id": "1568239",
+          "provider_event_id": "2y8m4zhv3v1gql0",
+          "source_url": "https://sportscore.com/football/match/moravia-morawica-vs-korona-kielce-ii/2y8m4zhv3v1gql0/",
+          "archived_competition": "III Liga - Group 4",
+          "kickoff": "2026-11-15T10:00:00+00:00",
+          "source_sha256": "5b3b9872d2b0ebf04b3ae4e916b5574f87cf3bc0a1793e1859492f8ae6b13aa1",
+          "source_competition": "Poland Liga 3",
+          "metrics": 3,
+          "reasons": [
+            "competition_crosswalk_unconfirmed"
+          ],
+          "status": "not_confirmed"
+        },
+        {
+          "fixture_id": "1590471",
+          "provider_event_id": "l7oqdehgwwyxr51",
+          "source_url": "https://sportscore.com/football/match/duzcespor-vs-fatsa-belediyespor/l7oqdehgwwyxr51/",
+          "archived_competition": "3. Lig - Group 1",
+          "kickoff": "2026-11-15T10:00:00+00:00",
+          "source_sha256": "e1a0162723c1d5c31aba981bd4fc93a9c6dfcebfe0efcb7891c0694387d1754f",
+          "source_competition": "Turkish Third League",
+          "metrics": 0,
+          "reasons": [
+            "competition_crosswalk_unconfirmed"
+          ],
+          "status": "not_confirmed"
+        },
+        {
+          "fixture_id": "1591080",
+          "provider_event_id": "k82rekhgpk6vrep",
+          "source_url": "https://sportscore.com/football/match/yozgat-bld-bozokspor-vs-adanaspor/k82rekhgpk6vrep/",
+          "archived_competition": "3. Lig - Group 3",
+          "kickoff": "2026-11-15T10:00:00+00:00",
+          "source_sha256": "7a77913317a2d2401941522b9e30e807f01f17668271d5c44d141a1eb22441ee",
+          "source_competition": "Turkish Third League",
+          "metrics": 1,
+          "reasons": [
+            "competition_crosswalk_unconfirmed"
+          ],
+          "status": "not_confirmed"
+        },
+        {
+          "fixture_id": "1649549",
+          "provider_event_id": "2y8m4zhv3vd9ql0",
+          "source_url": "https://sportscore.com/football/match/brazil-u20-vs-peru-u20/2y8m4zhv3vd9ql0/",
+          "archived_competition": "Friendlies",
+          "kickoff": "2026-11-16T23:00:00+00:00",
+          "source_sha256": "20eef313d0e5ea11b63960cc7b9f426fe59b2480752cff14ffd828126d7268a7",
+          "source_competition": "International Friendly",
+          "metrics": 2,
+          "reasons": [],
+          "status": "partial_verified"
+        },
+        {
+          "fixture_id": "1649033",
+          "provider_event_id": "23xmvkhy3zgxqg8",
+          "source_url": "https://sportscore.com/football/match/martinique-vs-aruba/23xmvkhy3zgxqg8/",
+          "archived_competition": "CONCACAF Nations League",
+          "kickoff": "2026-11-17T00:00:00+00:00",
+          "source_sha256": "5cae1e839281c71b6c7318cec5cded7afd32d1123f5d1618901d58eaebb276b5",
+          "source_competition": "CONCACAF Nations League",
+          "metrics": 3,
+          "reasons": [],
+          "status": "partial_verified"
+        },
+        {
+          "fixture_id": "1649034",
+          "provider_event_id": "zp5rzgh3je22q82",
+          "source_url": "https://sportscore.com/football/match/trinidad-and-tobago-vs-antigua-and-barbuda/zp5rzgh3je22q82/",
+          "archived_competition": "CONCACAF Nations League",
+          "kickoff": "2026-11-17T00:00:00+00:00",
+          "source_sha256": "3fb3a0bdea93d353146792db4b3530cea0753b8745f6aeecdf152abfe9926406",
+          "source_competition": "CONCACAF Nations League",
+          "metrics": 2,
+          "reasons": [],
+          "status": "partial_verified"
+        },
+        {
+          "fixture_id": "1644694",
+          "provider_event_id": "jw2r09h5l6eprz8",
+          "source_url": "https://sportscore.com/football/match/canada-vs-guatemala/jw2r09h5l6eprz8/",
+          "archived_competition": "CONCACAF Nations League",
+          "kickoff": "2026-11-17T01:00:00+00:00",
+          "source_sha256": "6bbfab5a5af220ed494a34193a76140f863ae6c5eb6b5fb2cfb55562f65fd80e",
+          "source_competition": "CONCACAF Nations League",
+          "metrics": 2,
+          "reasons": [],
+          "status": "partial_verified"
+        },
+        {
+          "fixture_id": "1647367",
+          "provider_event_id": "jw2r09h5llj5rz8",
+          "source_url": "https://sportscore.com/football/match/malaysia-vs-yemen/jw2r09h5llj5rz8/",
+          "archived_competition": "Friendlies",
+          "kickoff": "2026-11-17T06:00:00+00:00",
+          "source_sha256": "e6f6fa97c39c7e1bdac8163f0fbb6503db1913aa346fa726e8b3cd310a26c6ca",
+          "source_competition": "CFA Team China International Tournament",
+          "metrics": 2,
+          "reasons": [
+            "competition_crosswalk_unconfirmed"
+          ],
+          "status": "not_confirmed"
+        },
+        {
+          "fixture_id": "1638034",
+          "provider_event_id": "965mkyhkpk9nr1g",
+          "source_url": "https://sportscore.com/football/match/maldives-u17-vs-iraq-u17/965mkyhkpk9nr1g/",
+          "archived_competition": "AFC U17 Asian Cup",
+          "kickoff": "2026-11-17T08:00:00+00:00",
+          "source_sha256": "7456f495032960f9d03073a273a3cc89064ee24e3f3c19fcc10b38d1ddf4ec0b",
+          "source_competition": "AFC U17 Asian Cup",
+          "metrics": 0,
+          "reasons": [],
+          "status": "no_complete_metrics"
+        }
+      ]
+    },
+    "duplicate_guard": {
+      "linked_archive_rows": [
+        {
+          "key": "fixture-download-uefa|fd-uefa-champions-league-2025-140",
+          "aliases": [
+            "football-data-uefa|fd-uefa-CL-551920"
+          ]
+        },
+        {
+          "key": "fixture-download-uefa|fd-uefa-champions-league-2025-170",
+          "aliases": [
+            "football-data-uefa|fd-uefa-CL-552076"
+          ]
+        },
+        {
+          "key": "fixture-download-uefa|fd-uefa-champions-league-2025-171",
+          "aliases": [
+            "football-data-uefa|fd-uefa-CL-552078"
+          ]
+        },
+        {
+          "key": "fixture-download-uefa|fd-uefa-champions-league-2025-179",
+          "aliases": [
+            "football-data-uefa|fd-uefa-CL-556718"
+          ]
+        },
+        {
+          "key": "fixture-download-uefa|fd-uefa-champions-league-2026-77",
+          "aliases": [
+            "football-data-uefa|fd-uefa-CL-575326"
+          ]
+        },
+        {
+          "key": "fixture-download-uefa|fd-uefa-champions-league-2026-84",
+          "aliases": [
+            "football-data-uefa|fd-uefa-CL-575333"
+          ]
+        },
+        {
+          "key": "fixture-download-uefa|fd-uefa-champions-league-2026-97",
+          "aliases": [
+            "football-data-uefa|fd-uefa-CL-575349"
+          ]
+        },
+        {
+          "key": "fixture-download-uefa|fd-uefa-champions-league-2026-103",
+          "aliases": [
+            "football-data-uefa|fd-uefa-CL-575352"
+          ]
+        },
+        {
+          "key": "fixture-download-uefa|fd-uefa-champions-league-2026-139",
+          "aliases": [
+            "football-data-uefa|fd-uefa-CL-575392"
+          ]
+        },
+        {
+          "key": "football-data-uefa|fd-uefa-CL-551920",
+          "aliases": [
+            "fixture-download-uefa|fd-uefa-champions-league-2025-140"
+          ]
+        },
+        {
+          "key": "football-data-uefa|fd-uefa-CL-552076",
+          "aliases": [
+            "fixture-download-uefa|fd-uefa-champions-league-2025-170"
+          ]
+        },
+        {
+          "key": "football-data-uefa|fd-uefa-CL-552078",
+          "aliases": [
+            "fixture-download-uefa|fd-uefa-champions-league-2025-171"
+          ]
+        },
+        {
+          "key": "football-data-uefa|fd-uefa-CL-556718",
+          "aliases": [
+            "fixture-download-uefa|fd-uefa-champions-league-2025-179"
+          ]
+        },
+        {
+          "key": "football-data-uefa|fd-uefa-CL-575326",
+          "aliases": [
+            "fixture-download-uefa|fd-uefa-champions-league-2026-77"
+          ]
+        },
+        {
+          "key": "football-data-uefa|fd-uefa-CL-575333",
+          "aliases": [
+            "fixture-download-uefa|fd-uefa-champions-league-2026-84"
+          ]
+        },
+        {
+          "key": "football-data-uefa|fd-uefa-CL-575349",
+          "aliases": [
+            "fixture-download-uefa|fd-uefa-champions-league-2026-97"
+          ]
+        },
+        {
+          "key": "football-data-uefa|fd-uefa-CL-575352",
+          "aliases": [
+            "fixture-download-uefa|fd-uefa-champions-league-2026-103"
+          ]
+        },
+        {
+          "key": "football-data-uefa|fd-uefa-CL-575392",
+          "aliases": [
+            "fixture-download-uefa|fd-uefa-champions-league-2026-139"
+          ]
+        }
+      ],
+      "eligible_duplicate_records": 0
+    },
+    "official_uefa_followup": {
+      "added": 7,
+      "full_stat_cases_with_official_id": 22
+    },
+    "u21_core_followup": {
+      "events": 19,
+      "team_responses": 38,
+      "promoted": 1,
+      "event_id": "732514",
+      "excluded": 18,
+      "reason": "Sparse, extreme, or ambiguous zero values did not establish a complete statistics payload."
     }
   },
   "full_statistics_added": 4,

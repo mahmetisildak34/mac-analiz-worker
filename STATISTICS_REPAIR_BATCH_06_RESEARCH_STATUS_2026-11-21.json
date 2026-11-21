@@ -30,8 +30,59 @@
       "provider_event_id": "1555810",
       "score": "1-0",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "statistics_availability": "partial",
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "source_urls": [
+        "https://sportscore.com/football/match/tochigi-sc-vs-nara-club/6ypq3nhvdvjpmd7/"
+      ],
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "6ypq3nhvdvjpmd7",
+        "source_url": "https://sportscore.com/football/match/tochigi-sc-vs-nara-club/6ypq3nhvdvjpmd7/",
+        "source_sha256": "d4bdfba473f2cb3694c630a352193b213aeeeaa8fffe635805a4ed3f0fe065ef",
+        "score": [
+          1,
+          0
+        ],
+        "kickoff": "2026-11-15T05:00:00+00:00",
+        "source_competition": "Japanese J3 League",
+        "statistics": {
+          "teams": [
+            {
+              "team": {
+                "name": "Tochigi SC"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 8
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "team": {
+                "name": "Nara Club"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 5
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        },
+        "coverage": 2,
+        "api_football_queried": false
+      }
     },
     {
       "source": "app",
@@ -72,8 +123,59 @@
       "provider_event_id": "1606765",
       "score": "2-3",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "statistics_availability": "partial",
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "source_urls": [
+        "https://sportscore.com/football/match/kataller-toyama-vs-tokushima-vortis/vjxm8gheoep8r6o/"
+      ],
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "vjxm8gheoep8r6o",
+        "source_url": "https://sportscore.com/football/match/kataller-toyama-vs-tokushima-vortis/vjxm8gheoep8r6o/",
+        "source_sha256": "9090c504405509df3a1f7842b56b4285b001d0cb89bbcd526c43953b6f1a1277",
+        "score": [
+          2,
+          3
+        ],
+        "kickoff": "2026-11-15T05:00:00+00:00",
+        "source_competition": "Japanese J2 League",
+        "statistics": {
+          "teams": [
+            {
+              "team": {
+                "name": "Kataller Toyama"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 8
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "team": {
+                "name": "Tokushima Vortis"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 5
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        },
+        "coverage": 2,
+        "api_football_queried": false
+      }
     },
     {
       "source": "app",
@@ -93,8 +195,59 @@
       "provider_event_id": "1648034",
       "score": "1-1",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "statistics_availability": "partial",
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "source_urls": [
+        "https://sportscore.com/football/match/machida-zelvia-vs-vissel-kobe/pxwrxlhlg5vdryk/"
+      ],
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "pxwrxlhlg5vdryk",
+        "source_url": "https://sportscore.com/football/match/machida-zelvia-vs-vissel-kobe/pxwrxlhlg5vdryk/",
+        "source_sha256": "9595eac4b2851ddee8782c14baf194364550b3c6b21548c508a0550506c04271",
+        "score": [
+          1,
+          1
+        ],
+        "kickoff": "2026-11-15T05:00:00+00:00",
+        "source_competition": "J.League Yamazaki Biscuit Levain Cup",
+        "statistics": {
+          "teams": [
+            {
+              "team": {
+                "name": "Machida Zelvia"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 8
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 2
+                }
+              ]
+            },
+            {
+              "team": {
+                "name": "Vissel Kobe"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 2
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 3
+                }
+              ]
+            }
+          ]
+        },
+        "coverage": 2,
+        "api_football_queried": false
+      }
     },
     {
       "source": "app",
@@ -324,8 +477,59 @@
       "provider_event_id": "1641935",
       "score": "0-3",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "statistics_availability": "partial",
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "source_urls": [
+        "https://sportscore.com/football/match/salavan-united-vs-namtha-united/318q66h8op8oqo9/"
+      ],
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "318q66h8op8oqo9",
+        "source_url": "https://sportscore.com/football/match/salavan-united-vs-namtha-united/318q66h8op8oqo9/",
+        "source_sha256": "ccefdd5c4983d75165c7c1f951cc58e4218b4f26849cc809a9e3681002223688",
+        "score": [
+          0,
+          3
+        ],
+        "kickoff": "2026-11-15T08:00:00+00:00",
+        "source_competition": "Laos Premier League",
+        "statistics": {
+          "teams": [
+            {
+              "team": {
+                "name": "Namtha United"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 2
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "team": {
+                "name": "Salavan United"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 8
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        },
+        "coverage": 2,
+        "api_football_queried": false
+      }
     },
     {
       "source": "app",
@@ -387,8 +591,59 @@
       "provider_event_id": "1648037",
       "score": "5-4",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "statistics_availability": "partial",
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "source_urls": [
+        "https://sportscore.com/football/match/kashiwa-reysol-vs-kawasaki-frontale/8yomo4hy73zdq0j/"
+      ],
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "8yomo4hy73zdq0j",
+        "source_url": "https://sportscore.com/football/match/kashiwa-reysol-vs-kawasaki-frontale/8yomo4hy73zdq0j/",
+        "source_sha256": "189d9ecbde09dde835ccdcf4085c7d8797fbb62ca4c25e623b5efd9c8eeea25c",
+        "score": [
+          5,
+          4
+        ],
+        "kickoff": "2026-11-15T08:00:00+00:00",
+        "source_competition": "J.League Yamazaki Biscuit Levain Cup",
+        "statistics": {
+          "teams": [
+            {
+              "team": {
+                "name": "Kashiwa Reysol"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 4
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "team": {
+                "name": "Kawasaki Frontale"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 3
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 4
+                }
+              ]
+            }
+          ]
+        },
+        "coverage": 2,
+        "api_football_queried": false
+      }
     },
     {
       "source": "app",
