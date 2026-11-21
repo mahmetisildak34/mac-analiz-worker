@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "batch_number": 2,
+  "generated_on": "2026-11-21",
+  "first_fixture_id": "1647363",
+  "description": "Research-only; not authorized for transfer. Match-level conflicts preserved, no synthetic JSON.",
+  "rows": [
+    {
+      "fixture_id": "1647363",
+      "match": "Ecuador — Costa Rica",
+      "status": "source_review",
+      "kickoff": "2026-11-14T00:00:00Z",
+      "home": "Ecuador",
+      "away": "Costa Rica",
+      "score": "2-0",
+      "source_urls": [
+        "https://www.skysports.com/football/ecuador-vs-costa-rica/stats/578900",
+        "https://www.flashscore.com/match/football/costa-rica-C4ePE2kq/ecuador-8tbm8Tri/summary/stats/",
+        "https://stats360.games/en/match/ecuador-vs-costa-rica-1647363",
+        "https://inplayflux.com/match/b724a8aed03f0d07?lang=en"
+      ],
+      "verified_common": {
+        "shots": [
+          19,
+          4
+        ],
+        "shots_on_target": [
+          7,
+          2
+        ],
+        "corners": [
+          11,
+          1
+        ],
+        "yellow_cards": [
+          1,
+          2
+        ],
+        "red_cards": [
+          0,
+          1
+        ]
+      },
+      "disputed": {
+        "possession": [
+          "Sky Sports 63.3/36.7",
+          "Flashscore 63/37",
+          "Stats360 63/37"
+        ],
+        "fouls": [
+          "Flashscore 6/13",
+          "Stats360 19/4"
+        ],
+        "shots": [
+          "Sky Sports 19/4",
+          "InplayFlux 20/5"
+        ]
+      },
+      "reason": "Fixture, ordered teams, kickoff and score corroborated; fouls disagree 6/13 versus 19/4 and one source differs on total shots. Do not combine metrics or generate SHA until authoritative provider and stat definition resolved.",
+      "statistics_sha256": null
+    }
+  ],
+  "counts": {
+    "full_verified": 0,
+    "blocked": 0,
+    "pending": 0,
+    "source_review": 1
+  },
+  "transfer_ready": 0
+}
