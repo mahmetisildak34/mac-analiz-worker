@@ -31,6 +31,23 @@ test("caps each team to newest five eligible fixtures", () => {
 test("blocks fewer than five verified venue fixtures", () => {
   assert.equal(predictTrustedGoals(matches.slice(0, 8), options).reason, "insufficient_verified_venue_sample");
 });
+test("uses a shared ESPN fixture once and rejects conflicting verified copies", () => {
+  const fixture = row("espn-fra.1-401876395", "Espanyol", "F", 3, 1, 7, {source:"ESPN"});
+  const mirror = {...fixture, source:"app"};
+  const baseline = predictTrustedGoals([fixture, ...matches], options);
+  for (const copies of [[mirror, fixture], [fixture, mirror]]) {
+    const result = predictTrustedGoals([...copies, ...matches], options);
+    assert.equal(result.reasons.duplicate_fixture, 1);
+    assert.deepEqual(result.probabilities, baseline.probabilities);
+    assert.deepEqual(result.used_fixtures.filter(x => x.fixture_id === fixture.fixture_id).map(x => x.source), ["ESPN"]);
+  }
+  for (const source of ["app", "ESPN"]) {
+    const conflict = {...mirror, source, home_goals:0, away_goals:0};
+    const result = predictTrustedGoals([conflict, fixture, ...matches], options);
+    assert.equal(result.reasons.conflicting_fixture, 2);
+    assert.ok(!result.used_fixtures.some(x => x.fixture_id === fixture.fixture_id));
+  }
+});
 test("excludes unverified scores and identities", () => {
   const data = [...matches, row("bad-score","Espanyol","X",2,0,7,{score_verified:false}),
     row("bad-id","X","Athletic Club",0,1,7,{identity_verified:false})];

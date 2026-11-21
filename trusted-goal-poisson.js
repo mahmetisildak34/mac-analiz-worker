@@ -28,7 +28,7 @@ export function predictTrustedGoals(matches, {
     return unavailable("missing_league_averages", { required: ["league_average_home_goals", "league_average_away_goals"] });
   }
 
-  const seen = new Set(), homeRows = [], awayRows = [];
+  const seen = new Set(), eligibleRows = [], espnGroups = new Map(), homeRows = [], awayRows = [];
   for (const match of matches) {
     if (!match || match.identity_verified !== true) { exclude("identity_not_verified"); continue; }
     if (match.score_verified !== true) { exclude("score_not_verified"); continue; }
@@ -39,12 +39,35 @@ export function predictTrustedGoals(matches, {
     const homeName = norm(match.home_team), awayName = norm(match.away_team);
     if (!homeName || !awayName || homeName === awayName || match.conflicting === true) { exclude("conflicting_teams"); continue; }
     if (!validScore(match.home_goals) || !validScore(match.away_goals)) { exclude("invalid_score"); continue; }
-    const key = String(match.source) + "|" + String(match.fixture_id);
-    if (seen.has(key)) { exclude("duplicate_fixture"); continue; }
-    seen.add(key);
     const row = { source: String(match.source), fixture_id: String(match.fixture_id), kickoff: new Date(timestamp).toISOString(),
       home_team: String(match.home_team), away_team: String(match.away_team),
       home_goals: Number(match.home_goals), away_goals: Number(match.away_goals) };
+    const source = row.source.toLowerCase();
+    if ((source === "espn" || source === "app") && /^espn-[a-z0-9._]+-\d+$/.test(row.fixture_id)) {
+      const group = espnGroups.get(row.fixture_id) ?? [];
+      group.push(row);
+      espnGroups.set(row.fixture_id, group);
+    } else {
+      const key = row.source + "|" + row.fixture_id;
+      if (seen.has(key)) { exclude("duplicate_fixture"); continue; }
+      seen.add(key);
+      eligibleRows.push(row);
+    }
+  }
+  for (const group of espnGroups.values()) {
+    const preferred = group.find(row => row.source.toLowerCase() === "espn") ?? group[0];
+    const agrees = row => row.kickoff === preferred.kickoff &&
+      norm(row.home_team) === norm(preferred.home_team) && norm(row.away_team) === norm(preferred.away_team) &&
+      row.home_goals === preferred.home_goals && row.away_goals === preferred.away_goals;
+    if (!group.every(agrees)) {
+      group.forEach(() => exclude("conflicting_fixture"));
+      continue;
+    }
+    eligibleRows.push(preferred);
+    group.filter(row => row !== preferred).forEach(() => exclude("duplicate_fixture"));
+  }
+  for (const row of eligibleRows) {
+    const homeName = norm(row.home_team), awayName = norm(row.away_team);
     if (homeName === home && awayName !== away) homeRows.push({ ...row, gf: row.home_goals, ga: row.away_goals });
     else if (awayName === away && homeName !== home) awayRows.push({ ...row, gf: row.away_goals, ga: row.home_goals });
     else exclude("not_relevant_home_or_away_venue");
