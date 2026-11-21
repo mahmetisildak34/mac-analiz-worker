@@ -49,3 +49,21 @@ Arşiv HTTP yolu sürüm eki taşımaz. Yeni alanlar mevcut yanıtla birlikte ge
 `league_id` ve hedef takım kimlikleri verilirse uyuşmayan veya eksik kimlikler ilgili örneklemden çıkarılır. Saha ve lig düzeyi filtresini kullanın. İptal, erteleme ve askıya alınma durumu bitmiş olarak işaretlenmiş satırlarda da tahmine girmez.
 
 `calibration_status: "uncalibrated"` iken bir olasılığı doğruluk veya güven oranı gibi göstermeyin. Normal tahmin, eksik lig verisi, yetersiz maç ve API hatası için [üretilmiş JSON örnekleri](poisson-integration-examples.json). Profesyonel model adayları [altı lig deneyinde](poisson-six-league-benchmark.json) karşılaştırıldı. Araştırma modelleri mevcut tahmin yoluna eklenmedi.
+
+## v1.2 dönemler ve gol dağılımları
+
+Worker arşiv uç noktası hâlâ `GET /api/archive/matches`. Bu sürüm bağımsız bir tahmin HTTP uç noktası eklemez. İstemci, `predictTrustedGoals(matches, options)` ile maç sonunu ve `predictTrustedHalfTime(matches, options)` ile ilk yarıyı hesaplar. İki sonucun `period` değeri sırasıyla `full_time` ve `first_half`.
+
+| Alan | Kullanımı |
+| --- | --- |
+| `probabilities` | 1X2, BTTS ve geriye uyumlu 2,5 alt/üst alanları |
+| `totals` | `"0.5"` ile `"4.5"` arasındaki beş eşik. Her anahtar `{ over, under }` içerir |
+| `goal_distribution.home`, `.away`, `.total` | Dizi indeksi gol adedidir. Her dizinin toplamı 1’dir |
+| `goal_distribution.retained_mass` | Normalize edilmeden önce hesaplanan skor kütlesi. Kütle yetersizse tahmin dönmez |
+| `most_likely_scores`, `other_score_probability` | İlk beş skor ve geri kalan skorların toplam olasılığı |
+| `lambda_home`, `lambda_away` | Seçilen dönemde beklenen gol. Şut tabanlı xG alanı değildir |
+| `team_rates`, `used_fixtures` | Seçilen dönem ve saha için hücum/savunma oranları ile kullanılan kaynak maçlar |
+
+İlk yarı girdisi aynı kimlik ve zaman alanlarına ek olarak `halftime_home_goals`, `halftime_away_goals` ve `halftime_score_verified` taşır. İlk yarı seçeneklerinde `league_average_home_half_goals` ve `league_average_away_half_goals` zorunludur. Arşivde `halftime_score_verified === true` ise `score.halftime.home` ve `.away` değerlerini eşleyin. Worker bu bayrağı yalnızca tanıdığı özgün sağlayıcı biçiminde, doğrulanmış maç sonu kaydıyla tutarlı bir devre skoru varsa etkinleştirir. Eksik, null veya doğrulanmamış devre alanını sıfıra çevirmeyin. Maç sonu golleri ilk yarı hesabında kullanılmaz.
+
+[Maç sonu, ilk yarı ve hata örnekleri](poisson-integration-examples.json) · [Tarihsel pazar testi](poisson-market-benchmark.json) · [Ek Süper Lig holdout testi](poisson-turkey-holdout.json)

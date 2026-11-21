@@ -28,6 +28,7 @@ assert.equal(fixture.source,"ESPN");
 assert.equal(fixture.mamSource,"ESPN");
 assert.equal(fixture.identity_verified,true);
 assert.equal(fixture.score_verified,true);
+assert.equal(fixture.halftime_score_verified,false);
 assert.equal(fixture.verification_evidence,"archived_espn_provider_payload");
 assert.equal(fixture.statistics,null);
 assert.equal(fixture.data_quality.status,"missing");
@@ -35,6 +36,13 @@ const badRows = [{...row,home_goals:2},{...row,kickoff:"2026-11-07T12:00:00Z"},
   {...row,raw_json:JSON.stringify({fixture:{id:row.fixture_id},goals:{home:1,away:0}})}];
 const bad = await (await worker.fetch(request,{DB:database(badRows)})).json();
 assert.deepEqual(bad.response.map(r=>[r.identity_verified,r.score_verified]),[[true,false],[false,false],[false,false]]);
+const appRow={...row,source:"app",fixture_id:"8961"};
+const appFixture={fixture:{id:8961,date:row.kickoff,timestamp:Date.parse(row.kickoff)/1000,status:{short:"FT"}},
+  teams:{home:{name:row.home_team},away:{name:row.away_team}}, goals:{home:1,away:0}};
+const halfRows=[{home:0,away:0},{home:2,away:0},{home:null,away:0}].map(halftime=>
+  ({...appRow,raw_json:JSON.stringify({...appFixture,score:{halftime}})}));
+const halftime=await (await worker.fetch(request,{DB:database(halfRows)})).json();
+assert.deepEqual(halftime.response.map(r=>r.halftime_score_verified),[true,false,false]);
 const toPoisson = r => ({
   source:r.source, fixture_id:r.fixture.id, kickoff:r.fixture.date, status:r.fixture.status.short,
   home_team:r.teams.home.name, away_team:r.teams.away.name, home_goals:r.goals.home,

@@ -15,7 +15,7 @@ export function predictTrustedGoals(matches, {
   min_matches = 5, max_matches = 10, max_goals = 10, league_id, home_team_id, away_team_id
 } = {}) {
   const cutoff = Date.parse(as_of);
-  const metadata = { model_version:"venue-poisson-v1.1", calibration_status:"uncalibrated",
+  const metadata = { model_version:"venue-poisson-v1.2", calibration_status:"uncalibrated", period:"full_time",
     as_of:Number.isFinite(cutoff)?new Date(cutoff).toISOString():null };
   const counts = { total: Array.isArray(matches) ? matches.length : 0, used: 0, excluded: 0, reasons: {} };
   const exclude = reason => { counts.excluded++; counts.reasons[reason] = (counts.reasons[reason] || 0) + 1; };
@@ -102,21 +102,26 @@ export function predictTrustedGoals(matches, {
 
   const homeGoals = Array.from({ length: max_goals + 1 }, (_, goals) => poisson(lambdaHome, goals));
   const awayGoals = Array.from({ length: max_goals + 1 }, (_, goals) => poisson(lambdaAway, goals));
-  let homeWin = 0, draw = 0, awayWin = 0, bttsYes = 0, over25 = 0, totalMass = 0;
+  let homeWin = 0, draw = 0, awayWin = 0, bttsYes = 0, totalMass = 0;
   const scores = [];
+  const totalGoals = Array(2*max_goals+1).fill(0);
   for (let h = 0; h <= max_goals; h++) for (let a = 0; a <= max_goals; a++) {
     const probability = homeGoals[h] * awayGoals[a];
     totalMass += probability;
     if (h > a) homeWin += probability; else if (h === a) draw += probability; else awayWin += probability;
     if (h > 0 && a > 0) bttsYes += probability;
-    if (h + a >= 3) over25 += probability;
+    totalGoals[h+a] += probability;
     scores.push({ home: h, away: a, probability });
   }
   if (totalMass < 0.999 || totalMass > 1.000001) return unavailable("probability_mass_truncated", { probability_mass: totalMass });
   const normalize = value => value / totalMass;
+  const totals = Object.fromEntries(Array.from({length:5},(_,i)=>{
+    const under=normalize(sum(totalGoals.slice(0,i+1)));
+    return [String(i+0.5),{under,over:Math.max(0,1-under)}];
+  }));
   const probabilities = { home_win: normalize(homeWin), draw: normalize(draw), away_win: normalize(awayWin),
     btts_yes: normalize(bttsYes), btts_no: normalize(totalMass - bttsYes),
-    over_2_5: normalize(over25), under_2_5: normalize(totalMass - over25) };
+    over_2_5: totals["2.5"].over, under_2_5: totals["2.5"].under };
   const outcomeTotal = probabilities.home_win + probabilities.draw + probabilities.away_win;
   const bttsTotal = probabilities.btts_yes + probabilities.btts_no;
   const goalsTotal = probabilities.over_2_5 + probabilities.under_2_5;
@@ -129,7 +134,22 @@ export function predictTrustedGoals(matches, {
     lambda_home: lambdaHome, lambda_away: lambdaAway, league_averages: { home: leagueHome, away: leagueAway },
     team_rates: { home_attack_goals: homeGF, home_conceded_goals: homeGA, away_attack_goals: awayGF, away_conceded_goals: awayGA },
     probabilities, most_likely_scores:likelyScores, other_score_probability:Math.max(0,1-sum(likelyScores.map(s=>s.probability))),
+    totals, goal_distribution:{home:homeGoals.map(value=>normalize(value*sum(awayGoals))),
+      away:awayGoals.map(value=>normalize(value*sum(homeGoals))),total:totalGoals.map(normalize),retained_mass:totalMass},
     used_fixtures: [...homeSample, ...awaySample],
     data_quality: { identity_and_score_verified: true, completed_only: true, venue_split: true, league_averages_supplied: true,
       reliability: homeSample.length >= 8 && awaySample.length >= 8 ? "good" : "limited_sample" }, ...counts };
+}
+
+export function predictTrustedHalfTime(matches, options={}) {
+  const {league_average_home_half_goals,league_average_away_half_goals,...scope}=options;
+  const half=Array.isArray(matches)?matches.map(match=>match&&({
+    ...match,score_verified:match.halftime_score_verified===true,
+    home_goals:match.halftime_home_goals,away_goals:match.halftime_away_goals
+  })):matches;
+  const result=predictTrustedGoals(half,{...scope,
+    league_average_home_goals:league_average_home_half_goals,
+    league_average_away_goals:league_average_away_half_goals});
+  return {...result,period:"first_half",
+    ...(result.reason==="missing_league_averages"?{required:["league_average_home_half_goals","league_average_away_half_goals"]}:{})};
 }

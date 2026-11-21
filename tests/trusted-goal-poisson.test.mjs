@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import { predictTrustedGoals } from "../trusted-goal-poisson.js";
+import { predictTrustedGoals, predictTrustedHalfTime } from "../trusted-goal-poisson.js";
 const row = (id, home, away, hg, ag, day, extra = {}) => ({
   source: "api-football", fixture_id: id, home_team: home, away_team: away,
   home_goals: hg, away_goals: ag, kickoff: `2026-10-${String(day).padStart(2,"0")}T12:00:00Z`,
@@ -28,6 +28,25 @@ test("caps each team to newest five eligible fixtures", () => {
   const result = predictTrustedGoals(matches, options);
   assert.ok(!result.used_fixtures.some(x => ["h1","a1"].includes(x.fixture_id)));
   assert.equal(result.reasons.outside_last_n, 2);
+});
+test("returns monotonic over and under lines with normalized score marginals",()=>{
+  const result=predictTrustedGoals(matches,options);
+  const over=Object.values(result.totals).map(x=>x.over);
+  assert.equal(over.length,5);
+  assert(over.every((x,i)=>x>=0&&x<=1&&(i===0||x<=over[i-1])));
+  for(const p of Object.values(result.totals))assert(Math.abs(p.over+p.under-1)<1e-12);
+  for(const key of ["home","away","total"])assert(Math.abs(result.goal_distribution[key].reduce((a,b)=>a+b,0)-1)<1e-12);
+  assert.equal(result.probabilities.over_2_5,result.totals["2.5"].over);
+});
+test("half-time predictions require verified half-time goals and ignore full-time scores",()=>{
+  const half=matches.map(m=>({...m,halftime_home_goals:1,halftime_away_goals:0,halftime_score_verified:true}));
+  const cfg={...options,league_average_home_half_goals:0.7,league_average_away_half_goals:0.5};
+  const prediction=predictTrustedHalfTime(half,cfg);
+  assert.equal(prediction.available,true);
+  assert.equal(prediction.period,"first_half");
+  assert.deepEqual(prediction,predictTrustedHalfTime(half.map(m=>({...m,home_goals:17,away_goals:18,score_verified:false})),cfg));
+  assert.equal(predictTrustedHalfTime(matches,cfg).reason,"insufficient_verified_venue_sample");
+  assert.equal(predictTrustedHalfTime(half,options).reason,"missing_league_averages");
 });
 test("blocks fewer than five verified venue fixtures", () => {
   assert.equal(predictTrustedGoals(matches.slice(0, 8), options).reason, "insufficient_verified_venue_sample");

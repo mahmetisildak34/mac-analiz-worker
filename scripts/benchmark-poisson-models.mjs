@@ -4,7 +4,11 @@ import { createHash } from "node:crypto";
 import { predictTrustedGoals } from "../trusted-goal-poisson.js";
 
 const directory=process.argv[2];
-const leagues=["tr.1","en.1","es.1","de.1","it.1","fr.1"];
+const turkeyEarly=process.argv.includes("--turkey-early");
+const leagues=turkeyEarly?["tr.1"]:["tr.1","en.1","es.1","de.1","it.1","fr.1"];
+const trainingEnd=turkeyEarly?"2024-11-01":"2025-01-01";
+const testStart=turkeyEarly?"2025-01-01":"2025-07-01";
+const testEnd=turkeyEarly?"2025-07-01":"9999-01-01";
 const seasons=["2024-25","2025-26"];
 const cap=15;
 const models=["frequency","current","window5","window10","window15","window20","recency","shrinkage","opponent","dixon_coles","elo","calibrated"];
@@ -62,6 +66,7 @@ function measures(rows){
   }
   const count=rows.length;
   return {count,brier:brier/count,logLoss:logLoss/count,ece:bins.reduce((sum,[,p,o])=>sum+Math.abs(p-o),0)/count,
+    reliability:bins.flatMap(([n,p,o],i)=>n?[{lower:i/10,count:n,confidence:p/n,observed:o/n}]:[]),
     ...(distributionCount?{bttsBrier:bttsBrier/distributionCount,over25Brier:overBrier/distributionCount,
       scoreLogLoss:scoreLoss/distributionCount,exactScoreAccuracy:exact/distributionCount}:{})};
 }
@@ -139,15 +144,15 @@ const reports=leagues.map(league=>{
     });
   });
   assert.equal(new Set(matches.map(r=>r.fixture_id)).size,matches.length);
-  const training=matches.filter(r=>r.kickoff<"2025-01-01").length;
+  const training=matches.filter(r=>r.kickoff<trainingEnd).length;
   assert(training>75,"Training data missing for "+league);
-  const validation=simulate(matches.filter(r=>r.kickoff<"2025-07-01"),"2025-01-01").filter(r=>r.map.shrinkage);
+  const validation=simulate(matches.filter(r=>r.kickoff<testStart),trainingEnd).filter(r=>r.map.shrinkage);
   const choices=[0.8,1,1.15,1.3,1.5,1.8,2.1].map(t=>[t,measures(validation.map(r=>({
     target:r.target,prediction:summary(temperature(r.map.shrinkage.values,t))
   }))).logLoss]);
   choices.sort((a,b)=>a[1]-b[1]);
   const [t]=choices[0];
-  const test=simulate(matches,"2025-07-01");
+  const test=simulate(matches.filter(r=>r.kickoff<testEnd),testStart);
   for(const r of test)if(r.map.shrinkage)r.map.calibrated=summary(temperature(r.map.shrinkage.values,t));
   const comparison=test.filter(r=>models.every(model=>r.map[model]));
   return {league,hashes,training,validation:validation.length,temperature:t,testFixtures:test.length,comparisonFixtures:comparison.length,
@@ -155,5 +160,5 @@ const reports=leagues.map(league=>{
       ...measures(comparison.map(r=>({target:r.target,prediction:r.map[model]})))}]))};
 });
 console.log(JSON.stringify({source:"https://github.com/openfootball/football.json",split:{
-  training:"2024-25 before 2025-01-01",validation:"2025-01-01 through 2025-06-30",test:"2025-26"
+  training_before:trainingEnd,validation_from:trainingEnd,test_from:testStart,test_before:testEnd
 },reports},null,2));

@@ -2346,6 +2346,10 @@ export default {
             mamSource: row.source || "app",
             identity_verified: identityVerified,
             score_verified: scoreVerified,
+            halftime_score_verified: scoreVerified && proofType === "archived_api_football_provider_payload" &&
+              validGoal(raw?.score?.halftime?.home) && validGoal(raw?.score?.halftime?.away) &&
+              Number(raw.score.halftime.home) <= Number(row.home_goals) &&
+              Number(raw.score.halftime.away) <= Number(row.away_goals),
             verification_evidence: proofType,
             fixture: { id: row.fixture_id, date: row.kickoff, status: { short: row.status || "FT" } },
             league: { id: String(row.league_id), name: row.league_name || "", country: canonicalLeagueCountry(row.source, row.league_id, row.league_name, row.country) },

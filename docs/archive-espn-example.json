@@ -17,6 +17,7 @@
       "mamSource": "ESPN",
       "identity_verified": true,
       "score_verified": true,
+      "halftime_score_verified": false,
       "verification_evidence": "archived_espn_provider_payload",
       "fixture": {
         "id": "espn-eng.1-401878758",
