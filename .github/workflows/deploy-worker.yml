@@ -43,6 +43,9 @@ jobs:
       - name: Validate Worker JavaScript syntax
         run: node --check worker.js
 
+      - name: Run trusted goal Poisson tests
+        run: node tests/trusted-goal-poisson.test.mjs
+
       - name: Verify isolated Cloudflare read-only bindings
         run: node tests/statistics-cloudflare-readonly.test.mjs
 
