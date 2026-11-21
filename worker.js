@@ -1,4 +1,5 @@
 import { runStatisticsRepair } from "./statistics-repair.js";
+import { runStatisticsApiCron } from "./statistics-api-cron.js";
 // Deployment refresh: publish the reviewed Worker configuration and cache policy.
 // Audit trigger: deploy this verified revision so the post-deploy archive audit runs.
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
@@ -1289,6 +1290,15 @@ export default {
         if (!repairReport.skipped) console.log("Scheduled statistics repair", repairReport);
       } catch (repairError) {
         console.log("Scheduled statistics repair failed", String(repairError?.message || repairError));
+      }
+
+      // Explicitly opt-in only after provider subscription and shared quota audits.
+      // By default this returns without database mutations or outbound requests.
+      try {
+        const apiRepair = await runStatisticsApiCron(env);
+        if (!apiRepair.skipped) console.log("Scheduled API statistics repair", apiRepair);
+      } catch (apiRepairError) {
+        console.log("Scheduled API statistics repair failed", String(apiRepairError?.message || apiRepairError));
       }
 
       try {
