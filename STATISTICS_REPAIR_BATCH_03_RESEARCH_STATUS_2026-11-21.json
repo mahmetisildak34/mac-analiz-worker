@@ -23,10 +23,12 @@
       "provider_group": "API-Football",
       "provider_event_id": null,
       "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "source_urls": [
+        "https://weleague.jp/matches/2026/11/14/"
+      ],
+      "status": "source_review",
+      "reason": "Tokyo Verdy Beleza W home Albirex Niigata W away, 14 Nov 2026 15:00 JST scheduled in WE League. Public competition schedule establishes fixture identity but match-specific FT score and seven standardized statistics have not been independently verified. Source review.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -39,10 +41,12 @@
       "provider_group": "API-Football",
       "provider_event_id": null,
       "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "source_urls": [
+        "https://weleague.jp/matches/2026/11/14/"
+      ],
+      "status": "source_review",
+      "reason": "Urawa Reds W home Elfen Saitama W away, 14 Nov 2026 15:00 JST planned WE League fixture. Exact FT score and seven event-level statistics not yet corroborated with an authoritative event report. Source review.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -55,10 +59,12 @@
       "provider_group": "API-Football",
       "provider_event_id": null,
       "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "source_urls": [
+        "https://www.espn.com/soccer/match/_/gameId/401930916"
+      ],
+      "status": "source_review",
+      "reason": "Bahrain home Yemen away international friendly scheduled 14 Nov 2026 06:00 UTC. ESPN fixture page identified but seven per-team match statistics and provider event identity/score have not been verified from primary evidence. Source review.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -417,8 +423,8 @@
   "counts": {
     "full_verified": 0,
     "blocked": 0,
-    "source_review": 0,
-    "pending": 25
+    "source_review": 3,
+    "pending": 22
   },
   "transfer_ready": 0
 }
