@@ -5,6 +5,10 @@ export const normalizeTeam = value => String(value||"").toLowerCase().replace(/Ä
 const day = value => String(value||"").slice(0,10);
 const validStats = value => typeof value==="string" && value.trim().length>5 && !["{}","[]","null"].includes(value.trim()) && (()=>{try {const parsed=JSON.parse(value);return parsed!==null && typeof parsed==="object" && Object.keys(parsed).length>0;}catch{return false;}})();
 export function sameFixture(a,b) {
+  for (const side of ["home","away"]) {
+    const left=String(a[side+"_team_id"]??""),right=String(b[side+"_team_id"]??"");
+    if(left&&right&&left!=="-1"&&right!=="-1"&&left!==right) return false;
+  }
   return day(a.kickoff)===day(b.kickoff) &&
     normalizeTeam(a.home_team)===normalizeTeam(b.home_team) &&
     normalizeTeam(a.away_team)===normalizeTeam(b.away_team) &&
@@ -21,8 +25,8 @@ async function findCandidates(db, table, target) {
   const from=day(target.kickoff);
   const until=new Date(Date.parse(from+"T00:00:00Z")+86400000).toISOString().slice(0,10);
   const sql=table==="matches"
-    ? "SELECT source,fixture_id,kickoff,home_team,away_team,home_goals,away_goals,statistics_json FROM matches WHERE kickoff>=? AND kickoff<? AND statistics_json IS NOT NULL AND length(trim(statistics_json))>5 LIMIT 500"
-    : "SELECT source,fixture_id,kickoff,home_team,away_team,home_goals,away_goals,statistics_json FROM mam_history_backfill_matches WHERE kickoff>=? AND kickoff<? AND statistics_json IS NOT NULL AND length(trim(statistics_json))>5 LIMIT 500";
+    ? "SELECT source,fixture_id,kickoff,home_team,away_team,home_team_id,away_team_id,home_goals,away_goals,statistics_json FROM matches WHERE kickoff>=? AND kickoff<? AND statistics_json IS NOT NULL AND length(trim(statistics_json))>5 LIMIT 500"
+    : "SELECT source,fixture_id,kickoff,home_team,away_team,home_team_id,away_team_id,home_goals,away_goals,statistics_json FROM mam_history_backfill_matches WHERE kickoff>=? AND kickoff<? AND statistics_json IS NOT NULL AND length(trim(statistics_json))>5 LIMIT 500";
   const result=await db.prepare(sql).bind(from,until).all();
   // Never assume a truncated result is exhaustive: ambiguous or incomplete matches must not be copied.
   if((result.results||[]).length>=500) return {truncated:true,rows:[]};
@@ -38,7 +42,7 @@ export async function runStatisticsRepair(env) {
   let scanned=0,repaired=0,unmatched=0,errors=0;
   try {
     const control=await db.prepare("SELECT cursor_kickoff,cursor_source,cursor_fixture_id FROM mam_statistics_repair_control WHERE id=1").first();
-    const query="SELECT source,fixture_id,kickoff,home_team,away_team,home_goals,away_goals FROM matches WHERE status IN ('FT','FINISHED','AET','PEN') AND "+emptySql+" AND kickoff < ? AND (kickoff>? OR (kickoff=? AND (source>? OR (source=? AND fixture_id>?)))) ORDER BY kickoff,source,fixture_id LIMIT 20";
+    const query="SELECT source,fixture_id,kickoff,home_team,away_team,home_team_id,away_team_id,home_goals,away_goals FROM matches WHERE status IN ('FT','FINISHED','AET','PEN') AND "+emptySql+" AND kickoff < ? AND (kickoff>? OR (kickoff=? AND (source>? OR (source=? AND fixture_id>?)))) ORDER BY kickoff,source,fixture_id LIMIT 20";
     const cutoff=new Date(Date.now()-86400000).toISOString();
     const args=[cutoff,control.cursor_kickoff,control.cursor_kickoff,control.cursor_source,control.cursor_source,control.cursor_fixture_id];
     let targets=(await db.prepare(query).bind(...args).all()).results||[];
