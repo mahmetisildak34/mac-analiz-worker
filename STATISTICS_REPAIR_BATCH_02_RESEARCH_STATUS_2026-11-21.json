@@ -67,13 +67,53 @@
       "home": "Montserrat",
       "away": "Nicaragua",
       "source_urls": [
-        "https://www.theeditorial.org/match/concacaf.nations.league/401929775/nicaragua-vs-montserrat"
+        "https://www.theeditorial.org/match/concacaf.nations.league/401929775/nicaragua-vs-montserrat",
+        "https://www.footballhours.com/match/401929775",
+        "https://kickmetrics.io/en/soccer/match/montserrat-nicaragua/01a128bc-a287-7ed5-89fb-251c0d98e28d"
       ],
       "status": "source_review",
-      "reason": "Match 13 Nov 2026 19:00 ET / 14 Nov 00:00 UTC, Montserrat home Nicaragua away, FT 1-2. The Editorial ESPN match 401929775 reports all seven per team: shots 6/28, on target 2/5, possession 21.1/78.9, corners 5/9, fouls 9/11, yellow 0/2, red 1/0. Candidate only pending primary-provider provenance and exact-byte SHA check; no manifest JSON yet.",
+      "reason": "All seven metrics are available consistently from ESPN-attributed republishers (The Editorial, FootballHours), and score/date/teams independently corroborated. However primary ESPN event URL/provider provenance not directly validated; remain source_review, no manifest JSON or SHA yet.",
       "research_date": "2026-11-21",
       "provider_event_id": "401929775",
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "verified_match": {
+        "kickoff_utc": "2026-11-14T00:00:00Z",
+        "home": "Montserrat",
+        "away": "Nicaragua",
+        "home_goals": 1,
+        "away_goals": 2,
+        "competition": "CONCACAF Nations League",
+        "statistics": {
+          "totalShots": [
+            6,
+            28
+          ],
+          "shotsOnTarget": [
+            2,
+            5
+          ],
+          "possessionPct": [
+            21.1,
+            78.9
+          ],
+          "wonCorners": [
+            5,
+            9
+          ],
+          "foulsCommitted": [
+            9,
+            11
+          ],
+          "yellowCards": [
+            0,
+            2
+          ],
+          "redCards": [
+            1,
+            0
+          ]
+        }
+      }
     },
     {
       "fixture_id": "1557233",
@@ -96,12 +136,24 @@
       "league": "Liga Premier Serie A",
       "home": "Guerreros del Pacifico",
       "away": "FC Santiago",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://www.sofascore.com/football/match/guerreros-del-pacifico-fc-santiagoc/AJUdsZTgk",
+        "https://www.apwin.com/es/partido/fc-santiago-guerreros-del-pacifico/CplDQq/",
+        "https://www.livesoccertv.com/es/match/fc-santiago-vs-guerreros-del-pacifico/uhmchn"
+      ],
+      "status": "source_review",
+      "reason": "Sofascore and LiveSoccerTV corroborate FT 1-1 and home/away; APWin returns -1 placeholders for possession, on-target shots, fouls and yellow cards. Seven genuine metrics not available; do not interpret -1 as values or create JSON.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "verified_match": {
+        "home": "Guerreros del Pacífico FC",
+        "away": "FC Santiago",
+        "home_goals": 1,
+        "away_goals": 1,
+        "competition": "Liga Premier Serie A",
+        "date_local": "2026-11-13"
+      }
     },
     {
       "fixture_id": "1639051",
@@ -110,12 +162,42 @@
       "league": "National League - National",
       "home": "Wellington Phoenix II",
       "away": "Auckland City",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://www.flashscore.com/match/football/auckland-city-ddkU52k3/wellington-phoenix-UP87Tii5/",
+        "https://koora-score.com/en/match/4860804/wellington-phoenix-ii-vs-auckland-city",
+        "https://www.edgebet.com/football/new-zealand/league/national-league-national/26/cg-8-wellington-phoenix-ii-vs-auckland-city"
+      ],
+      "status": "source_review",
+      "reason": "Flashscore and Koora report 1-1 with consistent shots 9/17, on-target 4/9, possession 33/67, corners 4/7. Event-specific fouls and yellow-card counts not verified; EdgeBet says no statistics recorded and its zeros must not be trusted. Remain source review.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "verified_match": {
+        "home": "Wellington Phoenix II",
+        "away": "Auckland City",
+        "home_goals": 1,
+        "away_goals": 1,
+        "date_local": "2026-11-14",
+        "competition": "New Zealand National League",
+        "partial_stats": {
+          "totalShots": [
+            9,
+            17
+          ],
+          "shotsOnTarget": [
+            4,
+            9
+          ],
+          "possessionPct": [
+            33,
+            67
+          ],
+          "wonCorners": [
+            4,
+            7
+          ]
+        }
+      }
     },
     {
       "fixture_id": "1647364",
@@ -142,12 +224,25 @@
       "league": "Primera A",
       "home": "Internacional de Bogota",
       "away": "Santa Fe",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://www.apuestasganadas.com/resultado-internacional-de-bogota-vs-santa-fe-13-11-2026/",
+        "https://www.tufutbolero.com/partido/internacional-de-bogota-santa-fe-liga-colombiana-2026-jornada-19",
+        "https://www.sportytrader.com/es/resultados-vivo/internacional-de-bogota-santa-fe-8984105/",
+        "https://scoutpicks.app/matches/liga-betplay/internacional-de-bogota-vs-santa-fe-19712930"
+      ],
+      "status": "blocked",
+      "reason": "Cross-provider statistical conflict: ApuestasGanadas 49/51 possession, 5/3 shots, 3/2 on-target, 2/2 corners, 3/3 fouls; TuFutbolero 52/48, 17/7, 7/4, 9/5, 5/5; Sportytrader 51/49, 16/6, 9/4, 9/5, 6/6; Scoutpicks 53/47, 18/7, 7/4, 9/5, 6/6. FT score 0-2 matches but values strongly conflict; block pending canonical provider resolution. Do not blend.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "verified_match": {
+        "home": "Internacional de Bogotá",
+        "away": "Santa Fe",
+        "home_goals": 0,
+        "away_goals": 2,
+        "date_local": "2026-11-13",
+        "competition": "Colombia Primera A"
+      }
     },
     {
       "fixture_id": "1583807",
@@ -404,9 +499,9 @@
   ],
   "counts": {
     "full_verified": 0,
-    "blocked": 0,
-    "source_review": 4,
-    "pending": 21
+    "blocked": 1,
+    "source_review": 6,
+    "pending": 18
   },
   "transfer_ready": 0,
   "research_date": "2026-11-21"
