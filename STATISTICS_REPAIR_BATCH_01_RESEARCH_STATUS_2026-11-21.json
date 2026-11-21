@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "batch_number": 1,
+  "generated_on": "2026-11-21",
+  "description": "Research status, not transfer authorization; pending is not researched or unavailable",
+  "rows": [
+    {
+      "fixture_id": "1600658",
+      "match": "Águila — Municipal Limeño",
+      "status": "awaiting_individual_source_verification",
+      "reason": null,
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1600659",
+      "match": "Atletico Balboa — Inca Aruba",
+      "status": "blocked",
+      "reason": "provider-statistics-conflict: Atletico Balboa–Inca Aruba; possession and shots differ across providers",
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1520977",
+      "match": "Ponte Preta — Operario-PR",
+      "status": "awaiting_individual_source_verification",
+      "reason": null,
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1559703",
+      "match": "Aurora — Mixco",
+      "status": "awaiting_individual_source_verification",
+      "reason": null,
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1612167",
+      "match": "Boca Juniors Res. — Newell's Old Boys Res.",
+      "status": "blocked",
+      "reason": "provider-statistics-conflict: Boca Juniors Res.–Newell's Old Boys Res.; card totals differ across providers",
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1646937",
+      "match": "Puerto Cabello — Monagas SC",
+      "status": "full_verified",
+      "reason": null,
+      "statistics_sha256": "bba0f0677af9128aca1e33d558879112931c29e07fb89c07897ef1b6d1b6e517"
+    },
+    {
+      "fixture_id": "1649029",
+      "match": "Aruba — Martinique",
+      "status": "full_verified",
+      "reason": null,
+      "statistics_sha256": "632a2b512fa230394cac32e1315f369132035ae5401fd4d8d1ea0d39b2fced7d"
+    },
+    {
+      "fixture_id": "1520978",
+      "match": "São Bernardo — Athletic Club",
+      "status": "full_verified",
+      "reason": null,
+      "statistics_sha256": "3f98a0fa6dbecf753ffe8db9016045873365663db54704f4abdc1f3c37f8de8d"
+    },
+    {
+      "fixture_id": "1549868",
+      "match": "Deportivo Pasto — Junior",
+      "status": "full_verified",
+      "reason": null,
+      "statistics_sha256": "6417a027957e6b2dfde14b113c1ed666f7f0f6b3f14e0e8eefb90314d9adba78"
+    },
+    {
+      "fixture_id": "1589960",
+      "match": "Estudiantes L.P. — Independ. Rivadavia",
+      "status": "awaiting_individual_source_verification",
+      "reason": null,
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1649030",
+      "match": "Antigua and Barbuda — Trinidad and Tobago",
+      "status": "awaiting_individual_source_verification",
+      "reason": null,
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1649056",
+      "match": "Cerro Largo — Progreso",
+      "status": "blocked",
+      "reason": "provider-statistics-conflict: Cerro Largo–Progreso; shot and possession totals differ",
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1649147",
+      "match": "Real Potosí — Nacional Potosí",
+      "status": "awaiting_individual_source_verification",
+      "reason": null,
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1549870",
+      "match": "Llaneros — Chico",
+      "status": "awaiting_individual_source_verification",
+      "reason": null,
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1646999",
+      "match": "Ulaanbaatar — Hunters",
+      "status": "awaiting_individual_source_verification",
+      "reason": null,
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1650036",
+      "match": "Rilindja 1974 — Mitrovica",
+      "status": "awaiting_individual_source_verification",
+      "reason": null,
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1650037",
+      "match": "Tefik Canga — Vjosa",
+      "status": "blocked",
+      "reason": "partial-source-data: Tefik Canga–Vjosa; fouls/cards not fully verified",
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1631810",
+      "match": "Calor de San Pedro — Real Apodaca",
+      "status": "awaiting_individual_source_verification",
+      "reason": null,
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1646959",
+      "match": "Sao Joao del Rei — Nacional AC MG",
+      "status": "awaiting_individual_source_verification",
+      "reason": null,
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1631640",
+      "match": "Heroes de Zaci 2 — Atletico Hidalgo",
+      "status": "awaiting_individual_source_verification",
+      "reason": null,
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1649948",
+      "match": "Colo Colo — Racing Club",
+      "status": "awaiting_individual_source_verification",
+      "reason": null,
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1647362",
+      "match": "Argentina — Uruguay",
+      "status": "full_verified",
+      "reason": null,
+      "statistics_sha256": "7e329cd3492b8ce793c439d483728173d92c7ddc682db1fec011bd6a139abdbc"
+    },
+    {
+      "fixture_id": "1649031",
+      "match": "Saint Martin — El Salvador",
+      "status": "awaiting_individual_source_verification",
+      "reason": null,
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1649545",
+      "match": "Brazil U20 — Peru U20",
+      "status": "awaiting_individual_source_verification",
+      "reason": null,
+      "statistics_sha256": null
+    },
+    {
+      "fixture_id": "1640518",
+      "match": "Colombia — Chile",
+      "status": "full_verified",
+      "reason": null,
+      "statistics_sha256": "d06d615d8531a201f4ce07ed0159f458a6f80f2a65f5ea4bc6ed1d07fd706729"
+    }
+  ],
+  "counts": {
+    "full_verified": 6,
+    "blocked": 4,
+    "pending": 15
+  },
+  "transfer_ready": 0,
+  "next_batch": {
+    "number": 2,
+    "first_fixture_id": "1647363",
+    "status": "research_started_full_verified"
+  }
+}
