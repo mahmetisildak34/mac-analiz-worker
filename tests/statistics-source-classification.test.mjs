@@ -50,7 +50,9 @@ assert.equal(classifyStatisticsPayload('{"teams":[{"statistics":[]},{"statistics
 console.log("Source matching: aliases, competition context, and full/partial/invalid payload classification passed");
 
 const verified = JSON.parse(readFileSync(new URL("../STATISTICS_REPAIR_VERIFIED_2026-11-21.json", import.meta.url), "utf8"));
-assert.equal(verified.counts.full, verified.fullMatches.length);
+assert.equal(verified.counts.full, verified.fullMatches.filter(x => x.statistics_class === "full").length);
+assert.equal(verified.counts.pending_source_provenance_review, verified.fullMatches.filter(x => x.statistics_class === "pending_source_provenance_review").length);
+assert.equal(verified.fullMatches.length, verified.counts.full + verified.counts.pending_source_provenance_review, "all manifest entries must have an explicit evidence class");
 assert.equal(verified.counts.partial, 0);
 assert.ok(verified.fullMatches.length >= 1);
 assert.ok(verified.fullMatches.some(evidence => evidence.fixture_id === "espn-fra.1-401876395"), "protected ESPN fixture is retained");
