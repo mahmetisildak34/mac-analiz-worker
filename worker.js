@@ -882,8 +882,8 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     await Promise.all(summaryBatch.slice(i, i + 4).map(async item => {
       let retryAfterHeader = null;
       let fetchedStatsJson = null;
+      const source = String(item.source || "ESPN");
       try {
-        const source = String(item.source || "ESPN");
         const target = await env.DB.prepare(
           "SELECT home_team, away_team, home_team_id, away_team_id FROM matches WHERE source = ? AND fixture_id = ? AND status IN ('FT','FINISHED','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR TRIM(statistics_json) IN ('','{}','[]','null')) LIMIT 1"
         ).bind(source, item.fixtureId).first();
