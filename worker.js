@@ -977,12 +977,12 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
         if (hasActualStatistics) {
           fetchedStatsJson = JSON.stringify({ teams: statistics, summaryAvailable: true, statisticsSource: "ESPN summary/core" });
           const statisticsWriteResult = await env.DB.prepare(
-            "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))"
-          ).bind(fetchedStatsJson, item.fixtureId).run();
+            "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = ? AND fixture_id = ? AND (statistics_json IS NULL OR TRIM(statistics_json) IN ('','{}','[]','null'))"
+          ).bind(fetchedStatsJson, source, item.fixtureId).run();
           const actualChanges = Number(statisticsWriteResult?.meta?.changes || 0);
           const stored = await env.DB.prepare(
-            "SELECT statistics_json FROM matches WHERE source = 'ESPN' AND fixture_id = ? LIMIT 1"
-          ).bind(item.fixtureId).first();
+            "SELECT statistics_json FROM matches WHERE source = ? AND fixture_id = ? LIMIT 1"
+          ).bind(source, item.fixtureId).first();
           summaryRun.fetchedWithStatistics++;
           if (hasPersistedTeamStats(stored?.statistics_json)) {
             summaryDoneSet.add(item.key);
@@ -992,8 +992,8 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
             // Record enough evidence to distinguish a missing row, source/ID mismatch,
             // malformed stored JSON, and a failed D1 write without exposing full payloads.
             const anySourceRow = await env.DB.prepare(
-              "SELECT source, fixture_id, typeof(statistics_json) AS statsType, length(statistics_json) AS statsLength FROM matches WHERE fixture_id = ? LIMIT 1"
-            ).bind(item.fixtureId).first();
+              "SELECT source, fixture_id, typeof(statistics_json) AS statsType, length(statistics_json) AS statsLength FROM matches WHERE source = ? AND fixture_id = ? LIMIT 1"
+            ).bind(source, item.fixtureId).first();
             if (summaryRun.unverifiedPersistenceSamples.length < 10) {
               summaryRun.unverifiedPersistenceSamples.push({
                 fixtureId: item.fixtureId,
@@ -1006,8 +1006,8 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
               });
             }
             // Preserve successfully fetched data if the fixture row is not present yet.
-            if (!pendingStats.some(entry => entry.fixtureId === item.fixtureId)) {
-              pendingStats.push({ fixtureId: item.fixtureId, key: item.key, statisticsJson: fetchedStatsJson, fetchedAt: new Date().toISOString() });
+            if (!pendingStats.some(entry => String(entry.source || 'ESPN') === source && entry.fixtureId === item.fixtureId)) {
+              pendingStats.push({ source, fixtureId: item.fixtureId, key: item.key, statisticsJson: fetchedStatsJson, fetchedAt: new Date().toISOString() });
             }
             summaryRun.requestFailureSamples.push({ fixtureId: item.fixtureId, error: "Statistics fetched but D1 persistence not verified; retained in KV pending queue" });
             console.log("ESPN box score retained in KV because D1 persistence could not be verified", item.fixtureId);
@@ -1027,7 +1027,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
         }
       } catch (error) {
         if (fetchedStatsJson) {
-          const pendingEntry = { fixtureId: item.fixtureId, key: item.key, statisticsJson: fetchedStatsJson, fetchedAt: new Date().toISOString() };
+          const pendingEntry = { source, fixtureId: item.fixtureId, key: item.key, statisticsJson: fetchedStatsJson, fetchedAt: new Date().toISOString() };
           if (!pendingStats.some(entry => entry.fixtureId === item.fixtureId)) pendingStats.push(pendingEntry);
           await env.MAM_KV.put(pendingStatsKey, JSON.stringify(pendingStats));
           summaryRun.fetchedWithStatistics++;
