@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: mahmetisildak34/mac-analiz-worker
-          ref: d48b179bf6ce728e57056932ee8ae37e4ac9a3b1
+          ref: ff649975d4b88e06de3e54b80b83bd8f8bfaaa42
           persist-credentials: false
       - name: Set up Python
         uses: actions/setup-python@v5
