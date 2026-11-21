@@ -98,22 +98,22 @@
     {
       "fixture_id": "1549870",
       "match": "Llaneros — Chico",
-      "status": "awaiting_individual_source_verification",
-      "reason": null,
+      "status": "blocked",
+      "reason": "Provider conflict: Llaneros–Boyacá Chicó, 12 Nov 2026, FT 0-0. ScoreProb and Rojadirecta give 62/38 possession, 10/10 shots, 10/4 corners; LiveSoccerTV reports 63/37 possession, 10/9 shots, 9/4 corners. Same home/away and date, different stats; no mixed-provider JSON. https://scoreprob.com/football/match/llaneros-vs-chico-2026-11-12-1549870 ; https://www.livesoccertv.com/match/boyaca-chico-vs-llaneros/groa9",
       "statistics_sha256": null
     },
     {
       "fixture_id": "1646999",
       "match": "Ulaanbaatar — Hunters",
-      "status": "awaiting_individual_source_verification",
-      "reason": null,
+      "status": "blocked",
+      "reason": "Provider conflict: FC Ulaanbaatar–Hunters, 13 Nov 2026 05:00 UTC, FT 7-1. GioScore reports possession 45/55, shots 16/9, on-target 11/2, corners 4/7, fouls 5/8; Rotascore reports possession 44/56 and shots 16/9, on-target 11/2. Seven verified metrics including cards unavailable from single trustworthy source. https://gioscore.com/football/match/hunters-ulaanbaatar/19901254 ; https://www.rotascore.com/en/match/ulaanbaatar-hunters/23xmvkhy3kjxqg8",
       "statistics_sha256": null
     },
     {
       "fixture_id": "1650036",
       "match": "Rilindja 1974 — Mitrovica",
-      "status": "awaiting_individual_source_verification",
-      "reason": null,
+      "status": "source_review",
+      "reason": "Rilindja 1974–Mitrovica, 13 Nov 2026 12:00 UTC, FT 1-0 (inventory identity only). No independently verified primary match page supplying shots, shots on target, possession, corners, fouls, yellow and red cards for BOTH sides in this research pass. Do not infer zeros or claim statistics unavailable globally; source investigation remains open.",
       "statistics_sha256": null
     },
     {
@@ -126,29 +126,29 @@
     {
       "fixture_id": "1631810",
       "match": "Calor de San Pedro — Real Apodaca",
-      "status": "awaiting_individual_source_verification",
-      "reason": null,
+      "status": "source_review",
+      "reason": "Calor de San Pedro–Real Apodaca, 13 Nov 2026 21:30 UTC, FT 0-5 (inventory identity only). Could not independently establish a full seven-metric match-statistics source for both teams; keep as source review, not full or zero-filled.",
       "statistics_sha256": null
     },
     {
       "fixture_id": "1646959",
       "match": "Sao Joao del Rei — Nacional AC MG",
-      "status": "awaiting_individual_source_verification",
-      "reason": null,
+      "status": "source_review",
+      "reason": "Sao Joao del Rei–Nacional AC MG, 13 Nov 2026 21:30 UTC, FT 4-0 (inventory identity only). No independently validated primary seven-metric match statistics for both teams in this pass. Club/fixture naming and provider event identity need further cross-check; do not generate JSON.",
       "statistics_sha256": null
     },
     {
       "fixture_id": "1631640",
       "match": "Heroes de Zaci 2 — Atletico Hidalgo",
-      "status": "awaiting_individual_source_verification",
-      "reason": null,
+      "status": "source_review",
+      "reason": "Héroes de Zaci FC II–Atlético Hidalgo, 13 Nov 2026 22:00 UTC, FT 3-2. Sofascore and Sportradar StatsHub verify identity and score; SoccerPunter gives shots 18/11, on target 12/7, corners 6/5, yellow 3/2 but full possession, fouls and red cards not independently verified from a single provider. https://www.sofascore.com/football/match/heroes-de-zaci-fc-ii-atletico-hidalgo/NRVisbUgk ; https://www.soccerpunter.com/match/19867830/Heroes-de-Zaci-FC-II-vs-Atletico-Hidalgo ; https://statshub.sportradar.com/sportradar/en/match/74063114",
       "statistics_sha256": null
     },
     {
       "fixture_id": "1649948",
       "match": "Colo Colo — Racing Club",
-      "status": "awaiting_individual_source_verification",
-      "reason": null,
+      "status": "source_review",
+      "reason": "Colo Colo–Racing Club, 13 Nov 2026 22:00 UTC, FT 2-1 (inventory identity only). No independently verified trustworthy event-specific page providing both teams' shots, on-target, possession, corners, fouls, yellow and red cards in this pass. Club friendly event identification and full statistics still require validation.",
       "statistics_sha256": null
     },
     {
@@ -168,7 +168,7 @@
     {
       "fixture_id": "1649545",
       "match": "Brazil U20 — Peru U20",
-      "status": "awaiting_individual_source_verification",
+      "status": "source_review",
       "reason": "REVIEW: existing manifest entry is NOT transfer-ready. Multicanais and multiple streaming/mirror sites repeat 74/26 possession, 24/3 shots, 15/0 shots on target, 9/5 corners, 11/11 fouls, 1/0 yellow, 0/0 red for 13 Nov 23:00 UTC (14 Nov UTC+03) Brazil U20–Peru U20 FT 2-0, but no clearly independent authoritative statistics provider established. Existing JSON preserved unchanged; verify primary data provenance before counting as full. https://multicanais-br.com/en/football/matches/2683722/brazil-u20-vs-peru-u20 ; https://kadario.com/es/football/matches/2683724/brazil-u20-vs-peru-u20 ; https://rojadirectas.app/en/football/matches/2683722/brazil-u20-vs-peru-u20/stats",
       "statistics_sha256": "f050ce650af2fff71061d99b3868bf712f0395d178edaca036d1b528c57b0d05"
     },
@@ -182,8 +182,9 @@
   ],
   "counts": {
     "full_verified": 7,
-    "blocked": 10,
-    "pending": 8
+    "blocked": 12,
+    "pending": 0,
+    "source_review": 6
   },
   "transfer_ready": 0,
   "next_batch": {
@@ -191,5 +192,5 @@
     "first_fixture_id": "1647363",
     "status": "research_started_full_verified"
   },
-  "research_notes": "2026-11-21: Real Potosí and Saint Martin blocked due to conflicting provider metrics; Brazil U20 prior verified claim downgraded to pending source provenance review without deleting its protected manifest JSON. Other pending remain pending pending trustworthy 7-metric sources. No transfer authorization."
+  "research_notes": "2026-11-21: All 25 classified; 'source_review' explicitly means not verified and not transferable, not a claim the stats do not exist. Brazil U20 original JSON remains preserved but under source review. Next batch 1647363 research may begin. No API-Football calls or D1 writes."
 }
