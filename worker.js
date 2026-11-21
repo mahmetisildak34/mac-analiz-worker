@@ -1,4 +1,5 @@
 import { assessStatistics } from "./statistics-data-quality.js";
+import { fixtureDownloadFeed, resolveFixtureDownloadImport } from "./uefa-fixture-import.js";
 import { runStatisticsRepair } from "./statistics-repair.js";
 import { runStatisticsApiCron } from "./statistics-api-cron.js";
 // Deployment refresh: publish the reviewed Worker configuration and cache policy.
@@ -2400,9 +2401,19 @@ export default {
            home_team_id=excluded.home_team_id, home_team=excluded.home_team,
            away_team_id=excluded.away_team_id, away_team=excluded.away_team,
            home_goals=excluded.home_goals, away_goals=excluded.away_goals,
-           statistics_json=excluded.statistics_json, raw_json=excluded.raw_json,
-           updated_at=CURRENT_TIMESTAMP`;
+           statistics_json=CASE WHEN excluded.source='fixture-download-uefa' THEN matches.statistics_json ELSE excluded.statistics_json END,
+           raw_json=excluded.raw_json, updated_at=CURRENT_TIMESTAMP
+          WHERE excluded.source<>'fixture-download-uefa' OR (
+            matches.league_id=excluded.league_id AND matches.home_team=excluded.home_team AND matches.away_team=excluded.away_team
+            AND matches.home_goals=excluded.home_goals AND matches.away_goals=excluded.away_goals
+            AND (
+              julianday(matches.kickoff)=julianday(excluded.kickoff)
+              OR matches.kickoff=substr(excluded.kickoff,1,10)||'T12:00:00Z'
+            )
+            AND (matches.kickoff<>excluded.kickoff OR matches.raw_json IS NOT excluded.raw_json)
+          )`;
         const statements = [];
+        const uefaFeeds = new Map();
         let skipped = 0;
         for (const m of incoming) {
           const fixture = m?.fixture || {};
@@ -2410,7 +2421,7 @@ export default {
           const home = teams.home || {};
           const away = teams.away || {};
           const league = m?.league || {};
-          const kickoff = String(fixture.date || m?.kickoff || "");
+          let kickoff = String(fixture.date || m?.kickoff || "");
           const homeName = String(home.name || m?.home_team || "").trim();
           const awayName = String(away.name || m?.away_team || "").trim();
           if (!kickoff || !homeName || !awayName) { skipped++; continue; }
@@ -2421,6 +2432,23 @@ export default {
           const status = String(fixture.status?.short || m?.status || "UNK").slice(0, 30);
           const homeGoals = m?.goals?.home == null ? null : Number(m.goals.home);
           const awayGoals = m?.goals?.away == null ? null : Number(m.goals.away);
+          let raw = m;
+          let statistics = m?.statistics ?? null;
+          if (source === "fixture-download-uefa") {
+            const spec = fixtureDownloadFeed(fixtureId, leagueId);
+            if (!spec) { skipped++; continue; }
+            if (!uefaFeeds.has(spec.slug)) {
+              try {
+                const response = await fetch("https://fixturedownload.com/feed/json/"+spec.slug, {signal:AbortSignal.timeout(5000)});
+                uefaFeeds.set(spec.slug, response.ok ? await response.json() : null);
+              } catch { uefaFeeds.set(spec.slug, null); }
+            }
+            const verified = resolveFixtureDownloadImport({kickoff,homeName,awayName,homeGoals:m?.goals?.home,awayGoals:m?.goals?.away,status},spec,uefaFeeds.get(spec.slug));
+            if (!verified) { skipped++; continue; }
+            kickoff = verified.kickoff;
+            statistics = null;
+            raw = {...m, fixture:{...fixture,date:kickoff}, statistics:null, provider_evidence:verified.evidence};
+          }
           statements.push(env.DB.prepare(sql).bind(
             source, fixtureId, leagueId,
             String(league.name || m?.league_name || "").slice(0, 120),
@@ -2430,8 +2458,8 @@ export default {
             away.id == null ? null : String(away.id).slice(0, 40), awayName.slice(0, 120),
             Number.isFinite(homeGoals) ? homeGoals : null,
             Number.isFinite(awayGoals) ? awayGoals : null,
-            m?.statistics == null ? null : JSON.stringify(m.statistics),
-            JSON.stringify(m)
+            statistics == null ? null : JSON.stringify(statistics),
+            JSON.stringify(raw)
           ));
         }
         let saved = 0;

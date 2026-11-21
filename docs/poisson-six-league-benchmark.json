@@ -1,0 +1,862 @@
+{
+  "source": "https://github.com/openfootball/football.json",
+  "split": {
+    "training": "2024-25 before 2025-01-01",
+    "validation": "2025-01-01 through 2025-06-30",
+    "test": "2025-26"
+  },
+  "reports": [
+    {
+      "league": "tr.1",
+      "hashes": {
+        "2024-25": "6bfa0c16f87ea59ab79c60873ad3d3c0288e3198e4d6d0f56a2ebcb117e708c4",
+        "2025-26": "31236abf06ccb59fdcdd7105138810157e3312faa29070ec9fbebf6f87c29ea2"
+      },
+      "training": 153,
+      "validation": 185,
+      "temperature": 1,
+      "testFixtures": 90,
+      "comparisonFixtures": 59,
+      "results": {
+        "frequency": {
+          "coverage": 1,
+          "count": 59,
+          "brier": 0.6687548955688536,
+          "logLoss": 1.0986758555080436,
+          "ece": 0.08630688293947818
+        },
+        "current": {
+          "coverage": 0.6555555555555556,
+          "count": 59,
+          "brier": 0.6099488125274778,
+          "logLoss": 1.0142329749052632,
+          "ece": 0.19083161979856672,
+          "bttsBrier": 0.2735364954020795,
+          "over25Brier": 0.26346302726979537,
+          "scoreLogLoss": 3.026040193507463,
+          "exactScoreAccuracy": 0.13559322033898305
+        },
+        "window5": {
+          "coverage": 0.6666666666666666,
+          "count": 59,
+          "brier": 0.6157417708781676,
+          "logLoss": 1.0398006844419545,
+          "ece": 0.13172967729893842,
+          "bttsBrier": 0.2651879838139592,
+          "over25Brier": 0.2802938864338851,
+          "scoreLogLoss": 3.647881450242126,
+          "exactScoreAccuracy": 0.1016949152542373
+        },
+        "window10": {
+          "coverage": 0.6666666666666666,
+          "count": 59,
+          "brier": 0.6099468281869908,
+          "logLoss": 1.0142291207590124,
+          "ece": 0.19082855499553666,
+          "bttsBrier": 0.27353650266473833,
+          "over25Brier": 0.2634624746898455,
+          "scoreLogLoss": 3.02606232797886,
+          "exactScoreAccuracy": 0.13559322033898305
+        },
+        "window15": {
+          "coverage": 0.6666666666666666,
+          "count": 59,
+          "brier": 0.6096088825855637,
+          "logLoss": 1.0168452084282333,
+          "ece": 0.11253141501731052,
+          "bttsBrier": 0.2515289698912655,
+          "over25Brier": 0.2643514624330395,
+          "scoreLogLoss": 2.96227195114739,
+          "exactScoreAccuracy": 0.1694915254237288
+        },
+        "window20": {
+          "coverage": 0.6666666666666666,
+          "count": 59,
+          "brier": 0.5706752186632378,
+          "logLoss": 0.9602492449960479,
+          "ece": 0.11763812169000627,
+          "bttsBrier": 0.23983842324512145,
+          "over25Brier": 0.2552398718889371,
+          "scoreLogLoss": 2.8733189820182985,
+          "exactScoreAccuracy": 0.1694915254237288
+        },
+        "recency": {
+          "coverage": 0.6666666666666666,
+          "count": 59,
+          "brier": 0.5836915803470456,
+          "logLoss": 0.9830244552966391,
+          "ece": 0.110081651749999,
+          "bttsBrier": 0.24492511125818847,
+          "over25Brier": 0.25539310274348725,
+          "scoreLogLoss": 2.9128688508609533,
+          "exactScoreAccuracy": 0.1864406779661017
+        },
+        "shrinkage": {
+          "coverage": 0.6666666666666666,
+          "count": 59,
+          "brier": 0.5757640063482287,
+          "logLoss": 0.9702698620875767,
+          "ece": 0.10244006324718519,
+          "bttsBrier": 0.23814676888800218,
+          "over25Brier": 0.24940375916433155,
+          "scoreLogLoss": 2.8595533685909196,
+          "exactScoreAccuracy": 0.23728813559322035
+        },
+        "opponent": {
+          "coverage": 0.6666666666666666,
+          "count": 59,
+          "brier": 0.5819998397589994,
+          "logLoss": 0.9796257485104931,
+          "ece": 0.026787212889776268,
+          "bttsBrier": 0.23860941265695024,
+          "over25Brier": 0.2501202493251675,
+          "scoreLogLoss": 2.870391358114875,
+          "exactScoreAccuracy": 0.2542372881355932
+        },
+        "dixon_coles": {
+          "coverage": 0.6666666666666666,
+          "count": 59,
+          "brier": 0.5756631881032941,
+          "logLoss": 0.9698380095465684,
+          "ece": 0.0580730779655023,
+          "bttsBrier": 0.23752779699971918,
+          "over25Brier": 0.24940375916433155,
+          "scoreLogLoss": 2.859396915390927,
+          "exactScoreAccuracy": 0.23728813559322035
+        },
+        "elo": {
+          "coverage": 0.6666666666666666,
+          "count": 59,
+          "brier": 0.5651186145547723,
+          "logLoss": 0.9531203296655972,
+          "ece": 0.11704422244881345,
+          "bttsBrier": 0.2385198802595388,
+          "over25Brier": 0.24925461474740618,
+          "scoreLogLoss": 2.845947014098933,
+          "exactScoreAccuracy": 0.22033898305084745
+        },
+        "calibrated": {
+          "coverage": 0.6666666666666666,
+          "count": 59,
+          "brier": 0.5757640063482287,
+          "logLoss": 0.9702698620875766,
+          "ece": 0.10244006324718521,
+          "bttsBrier": 0.23814676888800212,
+          "over25Brier": 0.24940375916433152,
+          "scoreLogLoss": 2.8595533685909196,
+          "exactScoreAccuracy": 0.23728813559322035
+        }
+      }
+    },
+    {
+      "league": "en.1",
+      "hashes": {
+        "2024-25": "c3d18f552d83382cd4b6b21127adbbfe38e7f8618ddc979fb5404f2df07d0a75",
+        "2025-26": "d6070bdf731546ccf97767f062e8af4bd26dd309dee69f6092025bf9c78f43c1"
+      },
+      "training": 188,
+      "validation": 192,
+      "temperature": 1,
+      "testFixtures": 353,
+      "comparisonFixtures": 318,
+      "results": {
+        "frequency": {
+          "coverage": 1,
+          "count": 318,
+          "brier": 0.6431825373754619,
+          "logLoss": 1.062889160199064,
+          "ece": 0.019562717657682725
+        },
+        "current": {
+          "coverage": 0.9008498583569405,
+          "count": 318,
+          "brier": 0.6347598252457193,
+          "logLoss": 1.058240784800067,
+          "ece": 0.08081653513152848,
+          "bttsBrier": 0.25878920092509183,
+          "over25Brier": 0.2728525518310313,
+          "scoreLogLoss": 3.07540362928032,
+          "exactScoreAccuracy": 0.10377358490566038
+        },
+        "window5": {
+          "coverage": 0.9206798866855525,
+          "count": 318,
+          "brier": 0.669684767062229,
+          "logLoss": 1.226017971815563,
+          "ece": 0.11249966049883005,
+          "bttsBrier": 0.275252076175066,
+          "over25Brier": 0.2904479399954886,
+          "scoreLogLoss": 3.3157894238922845,
+          "exactScoreAccuracy": 0.09119496855345911
+        },
+        "window10": {
+          "coverage": 0.9206798866855525,
+          "count": 318,
+          "brier": 0.634763491378129,
+          "logLoss": 1.058247297108035,
+          "ece": 0.08082318130855792,
+          "bttsBrier": 0.2587892029614255,
+          "over25Brier": 0.2728543996867162,
+          "scoreLogLoss": 3.0754361734472813,
+          "exactScoreAccuracy": 0.10377358490566038
+        },
+        "window15": {
+          "coverage": 0.9206798866855525,
+          "count": 318,
+          "brier": 0.6182234431891198,
+          "logLoss": 1.0323774271919792,
+          "ece": 0.04534362980823758,
+          "bttsBrier": 0.2521800904432995,
+          "over25Brier": 0.2617449074964975,
+          "scoreLogLoss": 3.008836869458189,
+          "exactScoreAccuracy": 0.10377358490566038
+        },
+        "window20": {
+          "coverage": 0.9206798866855525,
+          "count": 318,
+          "brier": 0.6090138318500511,
+          "logLoss": 1.0175075876593356,
+          "ece": 0.06612504884668316,
+          "bttsBrier": 0.25198664723516107,
+          "over25Brier": 0.25939059301969275,
+          "scoreLogLoss": 2.980894675207191,
+          "exactScoreAccuracy": 0.11006289308176101
+        },
+        "recency": {
+          "coverage": 0.9206798866855525,
+          "count": 318,
+          "brier": 0.6158851323975768,
+          "logLoss": 1.0286529701113518,
+          "ece": 0.08218583934122597,
+          "bttsBrier": 0.2534871387534917,
+          "over25Brier": 0.26639918070892304,
+          "scoreLogLoss": 3.006080560962152,
+          "exactScoreAccuracy": 0.08490566037735849
+        },
+        "shrinkage": {
+          "coverage": 0.9206798866855525,
+          "count": 318,
+          "brier": 0.6072403012281875,
+          "logLoss": 1.0140567338860946,
+          "ece": 0.04903443369986453,
+          "bttsBrier": 0.24390689070787658,
+          "over25Brier": 0.25081880440396226,
+          "scoreLogLoss": 2.9363030754931785,
+          "exactScoreAccuracy": 0.12578616352201258
+        },
+        "opponent": {
+          "coverage": 0.9206798866855525,
+          "count": 318,
+          "brier": 0.6092749959908342,
+          "logLoss": 1.0172362109704958,
+          "ece": 0.05121138940990762,
+          "bttsBrier": 0.2441751515622418,
+          "over25Brier": 0.25151570425570474,
+          "scoreLogLoss": 2.9391641063996197,
+          "exactScoreAccuracy": 0.1289308176100629
+        },
+        "dixon_coles": {
+          "coverage": 0.9206798866855525,
+          "count": 318,
+          "brier": 0.6082059941387368,
+          "logLoss": 1.015483177732926,
+          "ece": 0.05138519001517177,
+          "bttsBrier": 0.24317464737633607,
+          "over25Brier": 0.25081880440396226,
+          "scoreLogLoss": 2.9412564652813047,
+          "exactScoreAccuracy": 0.12264150943396226
+        },
+        "elo": {
+          "coverage": 0.9206798866855525,
+          "count": 318,
+          "brier": 0.6049943251900944,
+          "logLoss": 1.0103645026292922,
+          "ece": 0.05196453011513285,
+          "bttsBrier": 0.24416245785400426,
+          "over25Brier": 0.2505796528939631,
+          "scoreLogLoss": 2.937014873819931,
+          "exactScoreAccuracy": 0.11949685534591195
+        },
+        "calibrated": {
+          "coverage": 0.9206798866855525,
+          "count": 318,
+          "brier": 0.6072403012281875,
+          "logLoss": 1.0140567338860946,
+          "ece": 0.049034433699864516,
+          "bttsBrier": 0.24390689070787666,
+          "over25Brier": 0.2508188044039622,
+          "scoreLogLoss": 2.9363030754931785,
+          "exactScoreAccuracy": 0.12578616352201258
+        }
+      }
+    },
+    {
+      "league": "es.1",
+      "hashes": {
+        "2024-25": "da5bfa1b3634e1039d9e71aec50bdc847f8761189e3de235a4e730e0dc64ca38",
+        "2025-26": "b40397d8e62c640138548d57a1a9f76150549213d2a07fcbbb90ed0eabc6ccea"
+      },
+      "training": 181,
+      "validation": 189,
+      "temperature": 1,
+      "testFixtures": 365,
+      "comparisonFixtures": 327,
+      "results": {
+        "frequency": {
+          "coverage": 1,
+          "count": 327,
+          "brier": 0.623373342446473,
+          "logLoss": 1.0363121608122725,
+          "ece": 0.04607383039036609
+        },
+        "current": {
+          "coverage": 0.8958904109589041,
+          "count": 327,
+          "brier": 0.614797348439256,
+          "logLoss": 1.0332870015759024,
+          "ece": 0.04916425701515063,
+          "bttsBrier": 0.261938665206198,
+          "over25Brier": 0.257563092606444,
+          "scoreLogLoss": 2.918487787031108,
+          "exactScoreAccuracy": 0.14678899082568808
+        },
+        "window5": {
+          "coverage": 0.9260273972602739,
+          "count": 327,
+          "brier": 0.6512442789866214,
+          "logLoss": 1.0939327340400278,
+          "ece": 0.14059219342571377,
+          "bttsBrier": 0.28901929801014353,
+          "over25Brier": 0.271965847237151,
+          "scoreLogLoss": 3.0724111154128617,
+          "exactScoreAccuracy": 0.1162079510703364
+        },
+        "window10": {
+          "coverage": 0.9260273972602739,
+          "count": 327,
+          "brier": 0.6148016211639049,
+          "logLoss": 1.033294860408962,
+          "ece": 0.04917419950628973,
+          "bttsBrier": 0.261938526023163,
+          "over25Brier": 0.257564790848917,
+          "scoreLogLoss": 2.9185347787004137,
+          "exactScoreAccuracy": 0.14678899082568808
+        },
+        "window15": {
+          "coverage": 0.9260273972602739,
+          "count": 327,
+          "brier": 0.5997308956084718,
+          "logLoss": 1.0047192178729105,
+          "ece": 0.0523541629022211,
+          "bttsBrier": 0.26287632216903434,
+          "over25Brier": 0.2591957794378811,
+          "scoreLogLoss": 2.885663254430138,
+          "exactScoreAccuracy": 0.1651376146788991
+        },
+        "window20": {
+          "coverage": 0.9260273972602739,
+          "count": 327,
+          "brier": 0.5919027559878859,
+          "logLoss": 0.994438463518522,
+          "ece": 0.03948528044441464,
+          "bttsBrier": 0.261070899494664,
+          "over25Brier": 0.25853225746825187,
+          "scoreLogLoss": 2.8569830754441545,
+          "exactScoreAccuracy": 0.1559633027522936
+        },
+        "recency": {
+          "coverage": 0.9260273972602739,
+          "count": 327,
+          "brier": 0.6046767964870123,
+          "logLoss": 1.0138591084417838,
+          "ece": 0.03989661723953094,
+          "bttsBrier": 0.26387762734538056,
+          "over25Brier": 0.25609327136490867,
+          "scoreLogLoss": 2.8843545564297637,
+          "exactScoreAccuracy": 0.1437308868501529
+        },
+        "shrinkage": {
+          "coverage": 0.9260273972602739,
+          "count": 327,
+          "brier": 0.5849133646201689,
+          "logLoss": 0.9840321785439821,
+          "ece": 0.04381052278243997,
+          "bttsBrier": 0.25334425584206804,
+          "over25Brier": 0.2520468562333211,
+          "scoreLogLoss": 2.818096090527038,
+          "exactScoreAccuracy": 0.1559633027522936
+        },
+        "opponent": {
+          "coverage": 0.9260273972602739,
+          "count": 327,
+          "brier": 0.5871135866926581,
+          "logLoss": 0.9868840472686571,
+          "ece": 0.041611364878397915,
+          "bttsBrier": 0.2538410490781956,
+          "over25Brier": 0.25267478935873927,
+          "scoreLogLoss": 2.8211149189488514,
+          "exactScoreAccuracy": 0.1712538226299694
+        },
+        "dixon_coles": {
+          "coverage": 0.9260273972602739,
+          "count": 327,
+          "brier": 0.5866332545002038,
+          "logLoss": 0.9867253341771175,
+          "ece": 0.04480179135394774,
+          "bttsBrier": 0.25217141450846114,
+          "over25Brier": 0.2520468562333212,
+          "scoreLogLoss": 2.82315062142489,
+          "exactScoreAccuracy": 0.16819571865443425
+        },
+        "elo": {
+          "coverage": 0.9260273972602739,
+          "count": 327,
+          "brier": 0.5828925243000594,
+          "logLoss": 0.982268852168203,
+          "ece": 0.048900102460802945,
+          "bttsBrier": 0.25378079787399715,
+          "over25Brier": 0.2515863260565859,
+          "scoreLogLoss": 2.8196836940141727,
+          "exactScoreAccuracy": 0.16819571865443425
+        },
+        "calibrated": {
+          "coverage": 0.9260273972602739,
+          "count": 327,
+          "brier": 0.5849133646201689,
+          "logLoss": 0.9840321785439823,
+          "ece": 0.04381052278244001,
+          "bttsBrier": 0.2533442558420681,
+          "over25Brier": 0.2520468562333211,
+          "scoreLogLoss": 2.8180960905270385,
+          "exactScoreAccuracy": 0.1559633027522936
+        }
+      }
+    },
+    {
+      "league": "de.1",
+      "hashes": {
+        "2024-25": "f473d6595e6c29ebedc08b09177aed6a6b2ff0fa8378b82f51dea469139f44c3",
+        "2025-26": "17d0999db6281e6365823acdbce41a4f01dd469eac63e1f897e4e47c02906672"
+      },
+      "training": 135,
+      "validation": 171,
+      "temperature": 1.15,
+      "testFixtures": 294,
+      "comparisonFixtures": 255,
+      "results": {
+        "frequency": {
+          "coverage": 1,
+          "count": 255,
+          "brier": 0.6425109584815641,
+          "logLoss": 1.0614195677971645,
+          "ece": 0.04892531588755664
+        },
+        "current": {
+          "coverage": 0.8673469387755102,
+          "count": 255,
+          "brier": 0.6275905483697145,
+          "logLoss": 1.0570536217388184,
+          "ece": 0.09837347834965046,
+          "bttsBrier": 0.2643049058550546,
+          "over25Brier": 0.25683899485823924,
+          "scoreLogLoss": 3.2834405460922773,
+          "exactScoreAccuracy": 0.054901960784313725
+        },
+        "window5": {
+          "coverage": 0.935374149659864,
+          "count": 255,
+          "brier": 0.658929181727237,
+          "logLoss": 1.1332482852523118,
+          "ece": 0.13730858525943726,
+          "bttsBrier": 0.2873415662743565,
+          "over25Brier": 0.28231791600461126,
+          "scoreLogLoss": 3.665221574787281,
+          "exactScoreAccuracy": 0.09411764705882353
+        },
+        "window10": {
+          "coverage": 0.935374149659864,
+          "count": 255,
+          "brier": 0.6275964990621585,
+          "logLoss": 1.0570683268513381,
+          "ece": 0.09837785983348549,
+          "bttsBrier": 0.26430512948727714,
+          "over25Brier": 0.25684131284334255,
+          "scoreLogLoss": 3.283497039190857,
+          "exactScoreAccuracy": 0.054901960784313725
+        },
+        "window15": {
+          "coverage": 0.935374149659864,
+          "count": 255,
+          "brier": 0.6177587015446305,
+          "logLoss": 1.0308831921335027,
+          "ece": 0.11222963746474965,
+          "bttsBrier": 0.24948383433539797,
+          "over25Brier": 0.24275856521919134,
+          "scoreLogLoss": 3.1956041175103427,
+          "exactScoreAccuracy": 0.08627450980392157
+        },
+        "window20": {
+          "coverage": 0.935374149659864,
+          "count": 255,
+          "brier": 0.6023652111351152,
+          "logLoss": 1.0094448124402398,
+          "ece": 0.04201150519837825,
+          "bttsBrier": 0.24984850115996146,
+          "over25Brier": 0.24349733848293278,
+          "scoreLogLoss": 3.1611960422499963,
+          "exactScoreAccuracy": 0.0784313725490196
+        },
+        "recency": {
+          "coverage": 0.935374149659864,
+          "count": 255,
+          "brier": 0.6066967901151855,
+          "logLoss": 1.0200802663596638,
+          "ece": 0.04355728365750315,
+          "bttsBrier": 0.2535254899663713,
+          "over25Brier": 0.24716831767071853,
+          "scoreLogLoss": 3.201078190745639,
+          "exactScoreAccuracy": 0.07058823529411765
+        },
+        "shrinkage": {
+          "coverage": 0.935374149659864,
+          "count": 255,
+          "brier": 0.5974067259047995,
+          "logLoss": 1.00109710420113,
+          "ece": 0.06132970827760251,
+          "bttsBrier": 0.23865421669388304,
+          "over25Brier": 0.23448893464853013,
+          "scoreLogLoss": 3.1209298941128933,
+          "exactScoreAccuracy": 0.10588235294117647
+        },
+        "opponent": {
+          "coverage": 0.935374149659864,
+          "count": 255,
+          "brier": 0.6009669322028528,
+          "logLoss": 1.0063389348985805,
+          "ece": 0.039459993277879885,
+          "bttsBrier": 0.23897306623179276,
+          "over25Brier": 0.2360855315972598,
+          "scoreLogLoss": 3.1317416682830683,
+          "exactScoreAccuracy": 0.10588235294117647
+        },
+        "dixon_coles": {
+          "coverage": 0.935374149659864,
+          "count": 255,
+          "brier": 0.5982751636126095,
+          "logLoss": 1.002385272934012,
+          "ece": 0.06888269263956001,
+          "bttsBrier": 0.2378785978143475,
+          "over25Brier": 0.23448893464853007,
+          "scoreLogLoss": 3.126221749141648,
+          "exactScoreAccuracy": 0.10980392156862745
+        },
+        "elo": {
+          "coverage": 0.935374149659864,
+          "count": 255,
+          "brier": 0.5917553375604236,
+          "logLoss": 0.9927968207612207,
+          "ece": 0.04806921540282923,
+          "bttsBrier": 0.23954969336150297,
+          "over25Brier": 0.23309427503423358,
+          "scoreLogLoss": 3.1098250147502404,
+          "exactScoreAccuracy": 0.10588235294117647
+        },
+        "calibrated": {
+          "coverage": 0.935374149659864,
+          "count": 255,
+          "brier": 0.5976880707601623,
+          "logLoss": 1.0018574310405903,
+          "ece": 0.030848183900682207,
+          "bttsBrier": 0.23701627842102344,
+          "over25Brier": 0.2308663675024031,
+          "scoreLogLoss": 3.1226560443979925,
+          "exactScoreAccuracy": 0.10588235294117647
+        }
+      }
+    },
+    {
+      "league": "it.1",
+      "hashes": {
+        "2024-25": "7d9bb936de3ccaeec54d57371512a58a5eeb21277e7d5f0882911a834d22b659",
+        "2025-26": "28f7773dea86345aeb0cbb4aff2f90231033f7ed855219e70fdd1cf45d4d7e7f"
+      },
+      "training": 178,
+      "validation": 192,
+      "temperature": 0.8,
+      "testFixtures": 344,
+      "comparisonFixtures": 311,
+      "results": {
+        "frequency": {
+          "coverage": 1,
+          "count": 311,
+          "brier": 0.640664154678913,
+          "logLoss": 1.057785754508647,
+          "ece": 0.026294165860059473
+        },
+        "current": {
+          "coverage": 0.9040697674418605,
+          "count": 311,
+          "brier": 0.5979369743040893,
+          "logLoss": 1.0156577596343321,
+          "ece": 0.07067104467477832,
+          "bttsBrier": 0.2696419877906629,
+          "over25Brier": 0.270583848440572,
+          "scoreLogLoss": 2.928765569255155,
+          "exactScoreAccuracy": 0.0932475884244373
+        },
+        "window5": {
+          "coverage": 0.9186046511627907,
+          "count": 311,
+          "brier": 0.6115501621156946,
+          "logLoss": 1.1516871479219,
+          "ece": 0.08632199633238095,
+          "bttsBrier": 0.2852668763036718,
+          "over25Brier": 0.2857962768058412,
+          "scoreLogLoss": 3.287080528016872,
+          "exactScoreAccuracy": 0.12218649517684887
+        },
+        "window10": {
+          "coverage": 0.9186046511627907,
+          "count": 311,
+          "brier": 0.5979374813095489,
+          "logLoss": 1.0156605162640204,
+          "ece": 0.07067461559107768,
+          "bttsBrier": 0.2696419983377011,
+          "over25Brier": 0.27058552946537706,
+          "scoreLogLoss": 2.9287895235329984,
+          "exactScoreAccuracy": 0.0932475884244373
+        },
+        "window15": {
+          "coverage": 0.9186046511627907,
+          "count": 311,
+          "brier": 0.6009441938270824,
+          "logLoss": 1.0171931977797175,
+          "ece": 0.029292482565612888,
+          "bttsBrier": 0.26827364125937486,
+          "over25Brier": 0.2779517844046249,
+          "scoreLogLoss": 2.9042914058574865,
+          "exactScoreAccuracy": 0.1189710610932476
+        },
+        "window20": {
+          "coverage": 0.9186046511627907,
+          "count": 311,
+          "brier": 0.5862478026159672,
+          "logLoss": 0.995532394363488,
+          "ece": 0.042263922585703884,
+          "bttsBrier": 0.2647215656145888,
+          "over25Brier": 0.2709668360997196,
+          "scoreLogLoss": 2.8670322189229616,
+          "exactScoreAccuracy": 0.15755627009646303
+        },
+        "recency": {
+          "coverage": 0.9186046511627907,
+          "count": 311,
+          "brier": 0.5932755612219118,
+          "logLoss": 1.0056030578644046,
+          "ece": 0.04965520536633974,
+          "bttsBrier": 0.2656682097448524,
+          "over25Brier": 0.26927250720302515,
+          "scoreLogLoss": 2.893705898072972,
+          "exactScoreAccuracy": 0.09967845659163987
+        },
+        "shrinkage": {
+          "coverage": 0.9186046511627907,
+          "count": 311,
+          "brier": 0.585846806711987,
+          "logLoss": 0.9888972985898193,
+          "ece": 0.07729567284233613,
+          "bttsBrier": 0.2563289125263085,
+          "over25Brier": 0.2620886769416688,
+          "scoreLogLoss": 2.828460313370897,
+          "exactScoreAccuracy": 0.13504823151125403
+        },
+        "opponent": {
+          "coverage": 0.9186046511627907,
+          "count": 311,
+          "brier": 0.5911449892653826,
+          "logLoss": 0.9957355167770926,
+          "ece": 0.08708460100648151,
+          "bttsBrier": 0.2564012656734143,
+          "over25Brier": 0.26308457322513146,
+          "scoreLogLoss": 2.8373139814138897,
+          "exactScoreAccuracy": 0.13504823151125403
+        },
+        "dixon_coles": {
+          "coverage": 0.9186046511627907,
+          "count": 311,
+          "brier": 0.5893433479426825,
+          "logLoss": 0.9948606413538886,
+          "ece": 0.08400011308716457,
+          "bttsBrier": 0.2560352668042946,
+          "over25Brier": 0.26208867694166876,
+          "scoreLogLoss": 2.8392857580960573,
+          "exactScoreAccuracy": 0.12861736334405144
+        },
+        "elo": {
+          "coverage": 0.9186046511627907,
+          "count": 311,
+          "brier": 0.5797570756349734,
+          "logLoss": 0.9819912479408734,
+          "ece": 0.0566172330302727,
+          "bttsBrier": 0.25653626351601894,
+          "over25Brier": 0.2620618216830526,
+          "scoreLogLoss": 2.8228974129948843,
+          "exactScoreAccuracy": 0.1414790996784566
+        },
+        "calibrated": {
+          "coverage": 0.9186046511627907,
+          "count": 311,
+          "brier": 0.5899623120244349,
+          "logLoss": 0.9983934900003705,
+          "ece": 0.06856842094690764,
+          "bttsBrier": 0.259294678446854,
+          "over25Brier": 0.27215427339172893,
+          "scoreLogLoss": 2.851890228779093,
+          "exactScoreAccuracy": 0.13504823151125403
+        }
+      }
+    },
+    {
+      "league": "fr.1",
+      "hashes": {
+        "2024-25": "90e9974afe6597452622387ad218f6b0011a5f91f1b426f05152f5b9c105e355",
+        "2025-26": "3e9403445dd96f4bb7f740de22d4ea7e3ea7d640777a12eab621ae4d4dbf3bc7"
+      },
+      "training": 136,
+      "validation": 170,
+      "temperature": 1.5,
+      "testFixtures": 282,
+      "comparisonFixtures": 243,
+      "results": {
+        "frequency": {
+          "coverage": 1,
+          "count": 243,
+          "brier": 0.6164760686229689,
+          "logLoss": 1.0201992442635242,
+          "ece": 0.008471289388766857
+        },
+        "current": {
+          "coverage": 0.8617021276595744,
+          "count": 243,
+          "brier": 0.5899791142659706,
+          "logLoss": 1.0014740075397848,
+          "ece": 0.03245810255919526,
+          "bttsBrier": 0.2701650015333698,
+          "over25Brier": 0.2695671243993198,
+          "scoreLogLoss": 3.2362790787853783,
+          "exactScoreAccuracy": 0.102880658436214
+        },
+        "window5": {
+          "coverage": 0.900709219858156,
+          "count": 243,
+          "brier": 0.6381222815039894,
+          "logLoss": 1.0748196189787054,
+          "ece": 0.09938230512053851,
+          "bttsBrier": 0.28965193162495845,
+          "over25Brier": 0.30410902669624523,
+          "scoreLogLoss": 3.5715537793836707,
+          "exactScoreAccuracy": 0.09465020576131687
+        },
+        "window10": {
+          "coverage": 0.900709219858156,
+          "count": 243,
+          "brier": 0.5899811620472912,
+          "logLoss": 1.0014786906596376,
+          "ece": 0.03246627016934415,
+          "bttsBrier": 0.2701654677853515,
+          "over25Brier": 0.2695704282895775,
+          "scoreLogLoss": 3.236333812891823,
+          "exactScoreAccuracy": 0.102880658436214
+        },
+        "window15": {
+          "coverage": 0.900709219858156,
+          "count": 243,
+          "brier": 0.5857917189520985,
+          "logLoss": 0.9942068647137312,
+          "ece": 0.07221169252778818,
+          "bttsBrier": 0.26657119624235387,
+          "over25Brier": 0.2691506221727201,
+          "scoreLogLoss": 3.2029640827348844,
+          "exactScoreAccuracy": 0.09876543209876543
+        },
+        "window20": {
+          "coverage": 0.900709219858156,
+          "count": 243,
+          "brier": 0.5757101548582649,
+          "logLoss": 0.9760971036708318,
+          "ece": 0.0420750920763317,
+          "bttsBrier": 0.25953503167937925,
+          "over25Brier": 0.2638898858530397,
+          "scoreLogLoss": 3.1292737915486044,
+          "exactScoreAccuracy": 0.08641975308641975
+        },
+        "recency": {
+          "coverage": 0.900709219858156,
+          "count": 243,
+          "brier": 0.5818993916705455,
+          "logLoss": 0.9838246811141976,
+          "ece": 0.054442991164969895,
+          "bttsBrier": 0.2663222514268445,
+          "over25Brier": 0.26962241543022847,
+          "scoreLogLoss": 3.172868585858229,
+          "exactScoreAccuracy": 0.09465020576131687
+        },
+        "shrinkage": {
+          "coverage": 0.900709219858156,
+          "count": 243,
+          "brier": 0.5738608138214523,
+          "logLoss": 0.9678249323290953,
+          "ece": 0.04738075424600195,
+          "bttsBrier": 0.25468908253437117,
+          "over25Brier": 0.25618920915095117,
+          "scoreLogLoss": 3.070392472960763,
+          "exactScoreAccuracy": 0.102880658436214
+        },
+        "opponent": {
+          "coverage": 0.900709219858156,
+          "count": 243,
+          "brier": 0.5773572164350755,
+          "logLoss": 0.9727477525746184,
+          "ece": 0.06377749134417587,
+          "bttsBrier": 0.25472255096046575,
+          "over25Brier": 0.2556457281189881,
+          "scoreLogLoss": 3.0723267786567217,
+          "exactScoreAccuracy": 0.102880658436214
+        },
+        "dixon_coles": {
+          "coverage": 0.900709219858156,
+          "count": 243,
+          "brier": 0.5764389867253855,
+          "logLoss": 0.9723596799557194,
+          "ece": 0.041442989543181916,
+          "bttsBrier": 0.25499666263169424,
+          "over25Brier": 0.25618920915095117,
+          "scoreLogLoss": 3.084095535284184,
+          "exactScoreAccuracy": 0.10699588477366255
+        },
+        "elo": {
+          "coverage": 0.900709219858156,
+          "count": 243,
+          "brier": 0.5693823022057163,
+          "logLoss": 0.9618078754699116,
+          "ece": 0.038232029835287014,
+          "bttsBrier": 0.2534889618928133,
+          "over25Brier": 0.25683395976697343,
+          "scoreLogLoss": 3.0709824214594965,
+          "exactScoreAccuracy": 0.09053497942386832
+        },
+        "calibrated": {
+          "coverage": 0.900709219858156,
+          "count": 243,
+          "brier": 0.572377696725384,
+          "logLoss": 0.9633811400311113,
+          "ece": 0.05721831337006706,
+          "bttsBrier": 0.2552702315283894,
+          "over25Brier": 0.26105895188270656,
+          "scoreLogLoss": 3.1199661955999103,
+          "exactScoreAccuracy": 0.102880658436214
+        }
+      }
+    }
+  ]
+}

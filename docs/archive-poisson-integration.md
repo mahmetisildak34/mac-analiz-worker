@@ -41,3 +41,11 @@ Yedi metrik toplam şut, isabetli şut, topa sahip olma, korner, faul, sarı kar
 - Başarısız çıktıda `available: false` ve `reason` vardır. `insufficient_verified_venue_sample` için taraf başına varsayılan minimum beştir. `missing_league_averages`, `invalid_request`, `invalid_teams`, `invalid_expected_goals`, `probability_mass_truncated` ve `probability_invariant_failed` de tahminin gösterilmemesini gerektirir.
 - `data_quality.reliability` örneklem boyutunu anlatır. Ölçülmüş doğruluk veya kalibre edilmiş güven yüzdesi olarak gösterilmemelidir.
 - Sayısal doğrulama ve kalibrasyon sonuçları [geriye dönük test raporunda](poisson-backtest.md).
+
+## v1.1 istemci alanları
+
+Arşiv HTTP yolu sürüm eki taşımaz. Yeni alanlar mevcut yanıtla birlikte gelir. Model modülü her sonuçta `model_version`, `calibration_status` ve tahmin sınırı `as_of` sağlar. `latest_fixture_kickoff` kullanılan en yeni maçın başlangıç zamanıdır. Sağlayıcının güncelleme zamanı bu yanıtta mevcut değildir. `used` toplam örneklem, `home_samples` ve `away_samples` saha ayrımıdır. `lambda_home` ve `lambda_away` beklenen goller, `probabilities` 1X2, BTTS ve 2,5 gol alt/üst değerleridir. `most_likely_scores` ile `other_score_probability` toplamı 1’dir.
+
+`league_id` ve hedef takım kimlikleri verilirse uyuşmayan veya eksik kimlikler ilgili örneklemden çıkarılır. Saha ve lig düzeyi filtresini kullanın. İptal, erteleme ve askıya alınma durumu bitmiş olarak işaretlenmiş satırlarda da tahmine girmez.
+
+`calibration_status: "uncalibrated"` iken bir olasılığı doğruluk veya güven oranı gibi göstermeyin. Normal tahmin, eksik lig verisi, yetersiz maç ve API hatası için [üretilmiş JSON örnekleri](poisson-integration-examples.json). Profesyonel model adayları [altı lig deneyinde](poisson-six-league-benchmark.json) karşılaştırıldı. Araştırma modelleri mevcut tahmin yoluna eklenmedi.

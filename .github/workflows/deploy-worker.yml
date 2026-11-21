@@ -49,6 +49,9 @@ jobs:
       - name: Verify archive evidence and Poisson integration
         run: node tests/archive-evidence-integration.test.mjs
 
+      - name: Verify UEFA fixture import UTC and source evidence
+        run: node tests/uefa-fixture-import.test.mjs
+
       - name: Verify isolated Cloudflare read-only bindings
         run: node tests/statistics-cloudflare-readonly.test.mjs
 

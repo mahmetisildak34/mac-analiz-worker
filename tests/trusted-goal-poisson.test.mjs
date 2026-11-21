@@ -32,6 +32,28 @@ test("caps each team to newest five eligible fixtures", () => {
 test("blocks fewer than five verified venue fixtures", () => {
   assert.equal(predictTrustedGoals(matches.slice(0, 8), options).reason, "insufficient_verified_venue_sample");
 });
+test("keeps newly promoted teams, other divisions and invalid statuses out of the sample", () => {
+  const scoped=matches.map(m=>({...m,league_id:"140",home_team_id:"10",away_team_id:"20"}));
+  const cfg={...options,league_id:"140",home_team_id:"10",away_team_id:"20"};
+  const fake=[
+    {...scoped[5],fixture_id:"different-league",league_id:"141"},
+    {...scoped[5],fixture_id:"different-team",home_team_id:"11"},
+    {...scoped[5],fixture_id:"postponed",status:"PST"},
+    {...scoped[5],fixture_id:"cancelled",status:"CANC"},
+    {...scoped[5],fixture_id:"suspended",status:"SUSP"}
+  ];
+  const result=predictTrustedGoals([...scoped,...fake],cfg);
+  assert.deepEqual(result.probabilities,predictTrustedGoals(scoped,cfg).probabilities);
+  assert.equal(result.reasons.league_mismatch,1);
+  assert.equal(result.reasons.team_id_mismatch,1);
+  assert.equal(result.reasons.not_confirmed_finished,3);
+  const promoted=predictTrustedGoals([...scoped.filter(m=>m.home_team!=="Espanyol"),...fake],cfg);
+  assert.equal(promoted.reason,"insufficient_verified_venue_sample");
+  assert.equal(promoted.probabilities,undefined);
+  const mass=result.other_score_probability+result.most_likely_scores.reduce((s,x)=>s+x.probability,0);
+  assert(Math.abs(mass-1)<1e-12);
+  assert.equal(result.calibration_status,"uncalibrated");
+});
 test("uses a shared ESPN fixture once and rejects conflicting verified copies", () => {
   const fixture = row("espn-fra.1-401876395", "Espanyol", "F", 3, 1, 7, {source:"ESPN"});
   const mirror = {...fixture, source:"app"};

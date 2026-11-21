@@ -12,12 +12,15 @@ const rate = values => values.length ? sum(values) / values.length : null;
 
 export function predictTrustedGoals(matches, {
   home_team, away_team, as_of, league_average_home_goals, league_average_away_goals,
-  min_matches = 5, max_matches = 10, max_goals = 10
+  min_matches = 5, max_matches = 10, max_goals = 10, league_id, home_team_id, away_team_id
 } = {}) {
+  const cutoff = Date.parse(as_of);
+  const metadata = { model_version:"venue-poisson-v1.1", calibration_status:"uncalibrated",
+    as_of:Number.isFinite(cutoff)?new Date(cutoff).toISOString():null };
   const counts = { total: Array.isArray(matches) ? matches.length : 0, used: 0, excluded: 0, reasons: {} };
   const exclude = reason => { counts.excluded++; counts.reasons[reason] = (counts.reasons[reason] || 0) + 1; };
-  const unavailable = (reason, extra = {}) => ({ available: false, reason, ...counts, ...extra });
-  if (!Array.isArray(matches) || !home_team || !away_team || !Number.isFinite(Date.parse(as_of)) ||
+  const unavailable = (reason, extra = {}) => ({ available:false, reason, ...metadata, ...counts, ...extra });
+  if (!Array.isArray(matches) || !home_team || !away_team || !Number.isFinite(cutoff) ||
       !Number.isSafeInteger(min_matches) || min_matches < 1 ||
       !Number.isSafeInteger(max_matches) || max_matches < min_matches || max_matches > 10 ||
       !Number.isSafeInteger(max_goals) || max_goals < 5 || max_goals > 20) return unavailable("invalid_request");
@@ -32,12 +35,18 @@ export function predictTrustedGoals(matches, {
   for (const match of matches) {
     if (!match || match.identity_verified !== true) { exclude("identity_not_verified"); continue; }
     if (match.score_verified !== true) { exclude("score_not_verified"); continue; }
-    if (match.completed !== true && !finishedStatuses.has(String(match.status || "").toUpperCase())) { exclude("not_confirmed_finished"); continue; }
+    const status = String(match.status ?? "").toUpperCase();
+    if (status ? !finishedStatuses.has(status) : match.completed !== true) { exclude("not_confirmed_finished"); continue; }
+    if (league_id != null && String(match.league_id) !== String(league_id)) { exclude("league_mismatch"); continue; }
     if (!match.source || match.fixture_id == null) { exclude("missing_source_identity"); continue; }
     const timestamp = Date.parse(match.kickoff || "");
-    if (!Number.isFinite(timestamp) || timestamp >= Date.parse(as_of)) { exclude("invalid_or_future_date"); continue; }
+    if (!Number.isFinite(timestamp) || timestamp >= cutoff) { exclude("invalid_or_future_date"); continue; }
     const homeName = norm(match.home_team), awayName = norm(match.away_team);
     if (!homeName || !awayName || homeName === awayName || match.conflicting === true) { exclude("conflicting_teams"); continue; }
+    if ((homeName === home && home_team_id != null && String(match.home_team_id) !== String(home_team_id)) ||
+        (awayName === away && away_team_id != null && String(match.away_team_id) !== String(away_team_id))) {
+      exclude("team_id_mismatch"); continue;
+    }
     if (!validScore(match.home_goals) || !validScore(match.away_goals)) { exclude("invalid_score"); continue; }
     const row = { source: String(match.source), fixture_id: String(match.fixture_id), kickoff: new Date(timestamp).toISOString(),
       home_team: String(match.home_team), away_team: String(match.away_team),
@@ -113,10 +122,14 @@ export function predictTrustedGoals(matches, {
   const goalsTotal = probabilities.over_2_5 + probabilities.under_2_5;
   if ([outcomeTotal, bttsTotal, goalsTotal].some(value => Math.abs(value - 1) > 1e-10)) return unavailable("probability_invariant_failed");
   scores.sort((a, b) => b.probability - a.probability);
-  return { available: true, model: "venue_attack_defence_poisson", home_samples: homeSample.length, away_samples: awaySample.length,
+  const likelyScores = scores.slice(0,5).map(s=>({...s,probability:normalize(s.probability)}));
+  return { available: true, model: "venue_attack_defence_poisson", ...metadata,
+    latest_fixture_kickoff:[homeSample[0].kickoff,awaySample[0].kickoff].sort().at(-1),
+    home_samples: homeSample.length, away_samples: awaySample.length,
     lambda_home: lambdaHome, lambda_away: lambdaAway, league_averages: { home: leagueHome, away: leagueAway },
     team_rates: { home_attack_goals: homeGF, home_conceded_goals: homeGA, away_attack_goals: awayGF, away_conceded_goals: awayGA },
-    probabilities, most_likely_scores: scores.slice(0, 5), used_fixtures: [...homeSample, ...awaySample],
+    probabilities, most_likely_scores:likelyScores, other_score_probability:Math.max(0,1-sum(likelyScores.map(s=>s.probability))),
+    used_fixtures: [...homeSample, ...awaySample],
     data_quality: { identity_and_score_verified: true, completed_only: true, venue_split: true, league_averages_supplied: true,
       reliability: homeSample.length >= 8 && awaySample.length >= 8 ? "good" : "limited_sample" }, ...counts };
 }
