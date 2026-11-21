@@ -4,15 +4,68 @@
 const FINISHED = ["FT", "FINISHED", "AET", "PEN"];
 const EMPTY_SQL = "(statistics_json IS NULL OR length(trim(statistics_json)) = 0 OR trim(statistics_json) IN ('{}','[]','null'))";
 const MAX_BATCH = 25;
-const DEFAULT_BATCH = 20;
+const DEFAULT_BATCH = 25;
 
+const TEAM_ALIASES = Object.freeze({
+  "man utd":"manchester united", "man united":"manchester united", "manchester utd":"manchester united",
+  "man city":"manchester city", "inter":"inter milan", "ath madrid":"atletico madrid",
+  "atletico":"atletico madrid", "psg":"paris saint germain", "sporting lisbon":"sporting cp",
+  "istanbul basaksehir":"basaksehir", "istanbul bb":"basaksehir", "basaksehir fk":"basaksehir",
+  "erzurum bb":"erzurumspor", "amed sfk":"amedspor"
+});
+const LEAGUE_ALIASES = Object.freeze({
+  "uefa champions league":"uefa champions league", "champions league uefa":"uefa champions league",
+  "uefa europa league":"uefa europa league", "europa league uefa":"uefa europa league",
+  "uefa conference league":"uefa conference league", "uefa europa conference league":"uefa conference league",
+  "coupe de france":"coupe de france", "french cup":"coupe de france", "france cup":"coupe de france",
+  "uefa european u21 championship qualification":"uefa u21 championship qualification",
+  "uefa u21 championship qualification":"uefa u21 championship qualification",
+  "international friendly":"international friendly", "international friendlies":"international friendly",
+  "copa del rey":"copa del rey", "spanish cup":"copa del rey",
+  "esp 2":"segunda division spain", "segunda division":"segunda division spain", "laliga 2":"segunda division spain"
+});
 export function normalizeTeam(value) {
-  return String(value || "")
+  const normalized = String(value || "")
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     .toLowerCase().replace(/&/g, " and ")
     .replace(/\b(football club|fc|afc|cf|sc|sk|fk)\b/g, " ")
     .replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
+  return TEAM_ALIASES[normalized] || normalized;
 }
+export function normalizeLeague(value) {
+  const normalized = String(value || "").normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "").toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
+  return LEAGUE_ALIASES[normalized] || normalized;
+}
+export function sameCompetition(a, b) {
+  if (!a || !b) return true;
+  const aId = String(a.league_id ?? "").trim(), bId = String(b.league_id ?? "").trim();
+  if (aId && bId && aId === bId) return true;
+  const aLeague = normalizeLeague(a.league_name), bLeague = normalizeLeague(b.league_name);
+  if (aLeague && bLeague && aLeague === bLeague) return true;
+  const aCountry = String(a.country || "").trim().toLowerCase();
+  const bCountry = String(b.country || "").trim().toLowerCase();
+  return Boolean(aLeague && bLeague && aLeague === bLeague && aCountry === bCountry);
+}
+export function classifyStatisticsPayload(raw) {
+  let parsed;
+  try { parsed = typeof raw === "string" ? JSON.parse(raw) : raw; } catch { return "invalid"; }
+  const teams = Array.isArray(parsed?.teams) ? parsed.teams :
+    Array.isArray(parsed?.response) ? parsed.response : null;
+  if (!teams || teams.length !== 2 || !teams.every(t => Array.isArray(t?.statistics) && t.statistics.length)) return "invalid";
+  const aliases = [
+    ["totalshots","total shots","shots"], ["shotsontarget","shots on target","shots on goal"],
+    ["possessionpct","ball possession","possession"], ["woncorners","corner kicks","corners"],
+    ["foulscommitted","fouls committed","fouls"], ["yellowcards","yellow cards"], ["redcards","red cards"]
+  ].map(group => group.map(n=>n.replace(/[^a-z0-9]+/g,"")));
+  const complete = teams.every(team => {
+    const names = new Set(team.statistics.map(s => String(s.name || s.type || s.displayName || "").toLowerCase().replace(/[^a-z0-9]+/g,"")));
+    return aliases.every(group => group.some(name => names.has(name)));
+  });
+  return complete ? "full" : "partial";
+}
+
 export function utcDay(value) {
   const d = new Date(value);
   return Number.isNaN(d.getTime()) ? "" : d.toISOString().slice(0, 10);
@@ -74,11 +127,11 @@ export async function planStatisticsRepairTarget(previewDb, target) {
   if (!previewDb || typeof previewDb.prepare !== "function") return { state: "missing-preview-binding" };
   const date = utcDay(target.kickoff);
   if (!date) return { state: "invalid-target-date" };
-  const sql = "SELECT source,fixture_id,kickoff,home_team,away_team,home_team_id,away_team_id,home_goals,away_goals,statistics_json FROM mam_history_backfill_matches WHERE date(kickoff)=? AND statistics_json IS NOT NULL AND length(trim(statistics_json))>5 AND trim(statistics_json) NOT IN ('{}','[]','null') ORDER BY kickoff,source,fixture_id LIMIT 501";
+  const sql = "SELECT * FROM mam_history_backfill_matches WHERE date(kickoff)=? AND statistics_json IS NOT NULL AND length(trim(statistics_json))>5 AND trim(statistics_json) NOT IN ('{}','[]','null') ORDER BY kickoff,source,fixture_id LIMIT 501";
   const result = await previewDb.prepare(sql).bind(date).all();
   const rows = result.results || [];
   if (rows.length > 500) return { state: "ambiguous", reason: "same-day-preview-window-over-500" };
-  const tupleMatches = rows.filter(row => sameTuple(target, row));
+  const tupleMatches = rows.filter(row => sameTuple(target, row) && sameCompetition(target, row));
   const compatible = tupleMatches.filter(row =>
     idsCompatible(target.home_team_id, row.home_team_id) &&
     idsCompatible(target.away_team_id, row.away_team_id));
