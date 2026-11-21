@@ -76,3 +76,9 @@ assert.deepEqual(batchPlan.batches.slice(0,12).map(b=>b.provider_group),Array(12
 assert.equal(buildStatisticsProviderBatches(inventory.candidates,100).batch_size,25,"batch size is hard capped at 25");
 assert.throws(()=>buildStatisticsProviderBatches([...inventory.candidates,inventory.candidates[0]],25),/duplicated/);
 console.log("Provider-priority 25-fixture batch plan validation passed");
+
+const persistedPlan = JSON.parse(readFileSync(new URL("../STATISTICS_REPAIR_BATCH_PLAN_2026-11-21.json", import.meta.url), "utf8"));
+assert.equal(persistedPlan.remaining_candidate_count, batchPlan.candidate_count);
+assert.equal(persistedPlan.batch_count, batchPlan.batch_count);
+assert.ok(persistedPlan.batches.every(batch => batch.count <= 25));
+assert.equal(persistedPlan.execution_policy.api_football_requests_started, 0);
