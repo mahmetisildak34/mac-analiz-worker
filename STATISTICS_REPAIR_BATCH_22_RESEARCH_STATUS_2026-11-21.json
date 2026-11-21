@@ -7,9 +7,9 @@
   "policy": "Original-match evidence only; zero transfers authorized.",
   "counts": {
     "full_verified": 0,
-    "blocked": 0,
+    "blocked": 3,
     "source_review": 2,
-    "pending": 23
+    "pending": 20
   },
   "rows": [
     {
@@ -113,8 +113,99 @@
       "away": "Leverkusen",
       "league": "champions-league 2024",
       "provider_group": "UEFA",
-      "status": "pending",
-      "statistics_sha256": null
+      "status": "blocked",
+      "statistics_sha256": null,
+      "score": "0-4",
+      "identity_verified": false,
+      "score_verified": false,
+      "archive_score_matches_source": true,
+      "provider": "UEFA",
+      "provider_event_id": "2042028",
+      "provider_season": "2024/25",
+      "provider_kickoff": "2024-09-19T16:45:00Z",
+      "source_urls": [
+        "https://www.uefa.com/newsfiles/UCL/2025/2042028_TS.pdf",
+        "https://www.uefa.com/uefachampionsleague/match/2042028--feyenoord-vs-leverkusen/",
+        "https://www.bayer04.de/en-us/news/champions-league/matchday-news-feyb04-opening-game-of-202425-champions-league"
+      ],
+      "statistics_availability": "kickoff_conflict",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Feyenoord"
+            },
+            "statistics": [
+              {
+                "name": "totalShots",
+                "value": 13
+              },
+              {
+                "name": "shotsOnTarget",
+                "value": 4
+              },
+              {
+                "name": "possessionPct",
+                "value": 52
+              },
+              {
+                "name": "wonCorners",
+                "value": 6
+              },
+              {
+                "name": "foulsCommitted",
+                "value": 4
+              },
+              {
+                "name": "yellowCards",
+                "value": 1
+              },
+              {
+                "name": "redCards",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Leverkusen"
+            },
+            "statistics": [
+              {
+                "name": "totalShots",
+                "value": 11
+              },
+              {
+                "name": "shotsOnTarget",
+                "value": 4
+              },
+              {
+                "name": "possessionPct",
+                "value": 48
+              },
+              {
+                "name": "wonCorners",
+                "value": 2
+              },
+              {
+                "name": "foulsCommitted",
+                "value": 8
+              },
+              {
+                "name": "yellowCards",
+                "value": 0
+              },
+              {
+                "name": "redCards",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "reason": "Official teams, date and score agree, but the source kick-off is 16:45 UTC and the archive stores 12:00 UTC. Match link and transfer remain blocked.",
+      "transfer_ready": false
     },
     {
       "source": "fixture-download-uefa",
@@ -125,8 +216,24 @@
       "away": "Union SG",
       "league": "europa-league 2024",
       "provider_group": "UEFA",
-      "status": "pending",
-      "statistics_sha256": null
+      "status": "blocked",
+      "statistics_sha256": null,
+      "score": "2-1",
+      "identity_verified": false,
+      "score_verified": false,
+      "archive_score_matches_source": true,
+      "provider": "DFB",
+      "provider_event_id": "2389005",
+      "provider_season": "2024/25",
+      "provider_kickoff": "2024-09-26T16:45:00Z",
+      "source_urls": [
+        "https://datencenter.dfb.de/en/data-center/europa-league/2024-2025/matchday/2389005",
+        "https://www.tff.org/default.aspx?ftxtID=45457&pageID=267",
+        "https://www.football.com/livescore/web/en/Football/match/Fenerbahce_Istanbul_vs_Union_Saint-Gilloise/53160561?snId=sr%3Aseason%3A132030&snName=2.+Liga&stds=1&sub=1"
+      ],
+      "statistics_availability": "kickoff_conflict",
+      "reason": "Official teams, date and score agree, but the source kick-off is 16:45 UTC and the archive stores 12:00 UTC. Match link and transfer remain blocked.",
+      "transfer_ready": false
     },
     {
       "source": "fixture-download-uefa",
@@ -137,8 +244,98 @@
       "away": "Feyenoord",
       "league": "champions-league 2024",
       "provider_group": "UEFA",
-      "status": "pending",
-      "statistics_sha256": null
+      "status": "blocked",
+      "statistics_sha256": null,
+      "score": "2-3",
+      "identity_verified": false,
+      "score_verified": false,
+      "archive_score_matches_source": true,
+      "provider": "UEFA",
+      "provider_event_id": "2041951",
+      "provider_season": "2024/25",
+      "provider_kickoff": "2024-10-02T16:45:00Z",
+      "source_urls": [
+        "https://www.uefa.com/newsfiles/UCL/2025/2041951_TS.pdf",
+        "https://editorial.uefa.com/resources/0290-1bbe0f238404-c5dbaf60ad4d-1000/uefa_champions_league_2024-25_league_phase_draw_results_calendar_by_pot.pdf"
+      ],
+      "statistics_availability": "kickoff_conflict",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Girona"
+            },
+            "statistics": [
+              {
+                "name": "totalShots",
+                "value": 14
+              },
+              {
+                "name": "shotsOnTarget",
+                "value": 6
+              },
+              {
+                "name": "possessionPct",
+                "value": 63
+              },
+              {
+                "name": "wonCorners",
+                "value": 11
+              },
+              {
+                "name": "foulsCommitted",
+                "value": 11
+              },
+              {
+                "name": "yellowCards",
+                "value": 6
+              },
+              {
+                "name": "redCards",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Feyenoord"
+            },
+            "statistics": [
+              {
+                "name": "totalShots",
+                "value": 7
+              },
+              {
+                "name": "shotsOnTarget",
+                "value": 2
+              },
+              {
+                "name": "possessionPct",
+                "value": 37
+              },
+              {
+                "name": "wonCorners",
+                "value": 0
+              },
+              {
+                "name": "foulsCommitted",
+                "value": 15
+              },
+              {
+                "name": "yellowCards",
+                "value": 3
+              },
+              {
+                "name": "redCards",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "reason": "Official teams, date and score agree, but the source kick-off is 16:45 UTC and the archive stores 12:00 UTC. Match link and transfer remain blocked.",
+      "transfer_ready": false
     },
     {
       "source": "fixture-download-uefa",

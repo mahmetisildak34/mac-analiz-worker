@@ -9876,14 +9876,14 @@
   "current_research_progress": {
     "date": "2026-11-21",
     "total": 678,
-    "pending": 345,
+    "pending": 342,
     "identity_verified_explicit": 225,
     "score_verified_explicit": 222,
     "partial_statistics_verified": 0,
     "partial_alternate_unverified": 4,
     "full_statistics_manifest": 43,
     "unavailable_in_checked_source": 147,
-    "blocked": 22,
+    "blocked": 25,
     "transfer_ready": 0,
     "group_key": "provider|league|provider_season|availability",
     "groups": {
@@ -10036,8 +10036,8 @@
       "ESPN|A-League|2026|unconfirmed": 2,
       "ESPN|J1 League|2026|unconfirmed": 9,
       "ESPN|Ligue 1|2026|full": 1,
-      "UEFA|champions-league 2024|unknown|pending": 16,
-      "UEFA|europa-league 2024|unknown|pending": 10,
+      "UEFA|champions-league 2024|unknown|pending": 14,
+      "UEFA|europa-league 2024|unknown|pending": 9,
       "UEFA|champions-league 2025|unknown|pending": 4,
       "UEFA|champions-league 2026|unknown|pending": 15,
       "UEFA|europa-league 2026|unknown|pending": 10,
@@ -10052,7 +10052,9 @@
       "SportScore|Greek Super League|unknown|pending": 3,
       "SportScore|Greek Cup|unknown|pending": 1,
       "SportScore|International Club Friendly|unknown|pending": 1,
-      "Football-Data|UEFA Champions League|unknown|pending": 23
+      "Football-Data|UEFA Champions League|unknown|pending": 23,
+      "UEFA|champions-league 2024|2024/25|kickoff_conflict": 2,
+      "UEFA|europa-league 2024|2024/25|kickoff_conflict": 1
     }
   }
 }
