@@ -23,7 +23,7 @@ export function hasApiFootballIdentity(match) {
 export function classifyApiCandidate(match) {
   if(!match||!finished.has(String(match.status||"").toUpperCase())) return "not-finished";
   const stats = String(match.statistics_json ?? "").trim();
-  if(stats.length>5 && !["{}","[]","null"].includes(stats)) return "already-populated";
+  if(stats !== "" && !["{}","[]","null"].includes(stats)) return "already-populated";
   if(!hasApiFootballIdentity(match)) return "unverified-provider-source";
   return "eligible-for-verified-provider-check";
 }
