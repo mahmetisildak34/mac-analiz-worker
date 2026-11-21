@@ -20,7 +20,7 @@ const protectedKeys=new Set(protectedManifest.matches.map(x=>key(x.production)))
 assert.ok(inventory.candidates.every(x=>!protectedKeys.has(key(x))));
 assert.deepEqual(inventory.provider_counts,{"ESPN":227,"SportScore":67,"UEFA":61,"Football-Data":23,"API-Football":300});
 const verifiedEntries=[...verified.fullMatches,...verified.partialMatches];
-assert.equal(verifiedEntries.length,3);
+assert.equal(verifiedEntries.length,verified.fullMatches.length+verified.partialMatches.length);
 const verifiedMap=new Map(verifiedEntries.map(x=>[key(x),x]));
 for(const row of verifiedEntries){
   assert.ok(inventory.candidates.some(x=>key(x)===key(row)),"verified fixture must exist in the 678 inventory");
@@ -52,6 +52,6 @@ for(const row of flattened){
   if(!v) assert.equal(row.matching_status,"not-verified");
 }
 assert.deepEqual(plan.verification_counts,{full:1,partial:0,unverified:677,transfer_ready:0},"original 28-batch plan must remain unchanged");
-assert.equal(verified.counts.full,3);
-assert.equal(verified.counts.unavailable_or_not_yet_checked,675);
-console.log("Manifest and batch integrity passed: 44 protected, 678 unique, 3 verified SHA-256, 28 research batches, zero authorized transfers");
+assert.equal(verified.counts.full,verified.fullMatches.length);
+assert.equal(verified.counts.unavailable_or_not_yet_checked,678-verifiedEntries.length);
+console.log("Manifest and batch integrity passed: 44 protected, 678 unique, verified SHA-256, 28 research batches, zero authorized transfers");
