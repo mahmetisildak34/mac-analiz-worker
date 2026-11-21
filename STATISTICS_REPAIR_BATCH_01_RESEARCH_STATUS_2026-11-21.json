@@ -168,9 +168,9 @@
     {
       "fixture_id": "1649545",
       "match": "Brazil U20 — Peru U20",
-      "status": "awaiting_individual_source_verification",
-      "reason": null,
-      "statistics_sha256": null
+      "status": "full_verified",
+      "reason": "Brazil U20–Peru U20 Nov 14 2026 FT 2-0: seven metrics per side from https://multicanais-br.com/en/football/matches/2683722/brazil-u20-vs-peru-u20 . Distinct from Nov 16 9-0 match; source event identity and home/away match inventory.",
+      "statistics_sha256": "f050ce650af2fff71061d99b3868bf712f0395d178edaca036d1b528c57b0d05"
     },
     {
       "fixture_id": "1640518",
@@ -181,9 +181,9 @@
     }
   ],
   "counts": {
-    "full_verified": 7,
+    "full_verified": 8,
     "blocked": 8,
-    "pending": 10
+    "pending": 9
   },
   "transfer_ready": 0,
   "next_batch": {
