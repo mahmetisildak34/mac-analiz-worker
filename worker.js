@@ -1028,7 +1028,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
       } catch (error) {
         if (fetchedStatsJson) {
           const pendingEntry = { source, fixtureId: item.fixtureId, key: item.key, statisticsJson: fetchedStatsJson, fetchedAt: new Date().toISOString() };
-          if (!pendingStats.some(entry => entry.fixtureId === item.fixtureId)) pendingStats.push(pendingEntry);
+          if (!pendingStats.some(entry => String(entry.source || 'ESPN') === source && entry.fixtureId === item.fixtureId)) pendingStats.push(pendingEntry);
           await env.MAM_KV.put(pendingStatsKey, JSON.stringify(pendingStats));
           summaryRun.fetchedWithStatistics++;
           summaryRun.requestFailureSamples.push({ fixtureId: item.fixtureId, error: "Box score downloaded; D1 write deferred to KV pending queue" });
