@@ -6,10 +6,11 @@
   "protected_existing_manifest": "STATISTICS_REPAIR_INVENTORY_2026-11-21.json",
   "candidate_inventory": "STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json",
   "counts": {
-    "full": 12,
+    "full": 11,
     "partial": 0,
     "ambiguous": 0,
-    "unavailable_or_not_yet_checked": 666
+    "unavailable_or_not_yet_checked": 667,
+    "pending_source_provenance_review": 1
   },
   "policy": {
     "production_preview_writes": 0,
@@ -17,7 +18,8 @@
     "statistics_sha256": "SHA-256 over exact serialized statistics_json included below",
     "source_payload_sha256": "SHA-256 over exact raw_json string read from Production",
     "cards": "yellow/red card counts are counted from ESPN match event details",
-    "external_statistics_source": "Each newly appended record contains single-provider stats and exact source URLs; local inventory fixture IDs are preserved."
+    "external_statistics_source": "Each newly appended record contains single-provider stats and exact source URLs; local inventory fixture IDs are preserved.",
+    "review_entries_not_transfer_ready": true
   },
   "fullMatches": [
     {
@@ -471,7 +473,7 @@
       "provider": "Multicanais",
       "provider_event_id": "2683722",
       "provider_url": "https://multicanais-br.com/en/football/matches/2683722/brazil-u20-vs-peru-u20",
-      "statistics_class": "full",
+      "statistics_class": "pending_source_provenance_review",
       "statistics_sha256": "f050ce650af2fff71061d99b3868bf712f0395d178edaca036d1b528c57b0d05",
       "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":\"Brazil U20\",\"teamId\":\"16200\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"24\"},{\"name\":\"shotsOnTarget\",\"value\":\"15\"},{\"name\":\"possessionPct\",\"value\":\"74\"},{\"name\":\"wonCorners\",\"value\":\"9\"},{\"name\":\"foulsCommitted\",\"value\":\"11\"},{\"name\":\"yellowCards\",\"value\":\"1\"},{\"name\":\"redCards\",\"value\":\"0\"}]},{\"homeAway\":\"away\",\"team\":\"Peru U20\",\"teamId\":\"16203\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"3\"},{\"name\":\"shotsOnTarget\",\"value\":\"0\"},{\"name\":\"possessionPct\",\"value\":\"26\"},{\"name\":\"wonCorners\",\"value\":\"5\"},{\"name\":\"foulsCommitted\",\"value\":\"11\"},{\"name\":\"yellowCards\",\"value\":\"0\"},{\"name\":\"redCards\",\"value\":\"0\"}]}],\"statisticsSource\":\"Multicanais match 2683722, 2026-11-14\"}",
       "verification": {
@@ -482,9 +484,10 @@
         "provider_event_id_verified": true,
         "inventory_fixture_id_is_api_football_alias": true,
         "both_sides_have_all_seven_required_metrics": true,
-        "source_single_provider": true
+        "source_single_provider": true,
+        "source_independence_verified": false
       },
-      "notes": "2-0 Nov 14 match, distinct from 9-0 Nov 16 Brazil U20–Peru U20 fixture. Do not conflate match identities. Not transfer authorized."
+      "notes": "2-0 Nov 14 match, distinct from 9-0 Nov 16 Brazil U20–Peru U20 fixture. Do not conflate match identities. Not transfer authorized. SOURCE REVIEW 2026-11-21: Multicanais and mirrored streaming sites alone are insufficient independent provenance; this JSON is preserved for audit, but must not be transferred or counted as fully verified until primary provider identified. https://kadario.com/es/football/matches/2683724/brazil-u20-vs-peru-u20"
     }
   ],
   "partialMatches": []
