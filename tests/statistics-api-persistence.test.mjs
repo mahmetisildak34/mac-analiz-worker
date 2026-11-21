@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import {DatabaseSync} from "node:sqlite";
 import {validateApiStatistics,persistApiCandidate,scheduleApiRetry,processApiCandidate} from "../statistics-api-persistence.js";
 const raw=new DatabaseSync(":memory:");
-raw.exec("CREATE TABLE matches(source TEXT,fixture_id TEXT,kickoff TEXT,status TEXT,home_team_id INTEGER,away_team_id INTEGER,home_goals INTEGER,away_goals INTEGER,statistics_json TEXT,updated_at TEXT,PRIMARY KEY(source,fixture_id))");
-raw.prepare("INSERT INTO matches VALUES (?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)").run("api-football","123","2025-10-01T12:00:00Z","FT",10,20,2,1,null);
+raw.exec("CREATE TABLE matches(source TEXT,fixture_id TEXT,kickoff TEXT,status TEXT,home_team_id INTEGER,away_team_id INTEGER,home_goals INTEGER,away_goals INTEGER,statistics_json TEXT,raw_json TEXT,updated_at TEXT,PRIMARY KEY(source,fixture_id))");
+raw.prepare("INSERT INTO matches VALUES (?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)").run("api-football","123","2025-10-01T12:00:00Z","FT",10,20,2,1,null,null);
 const wrap=database=>({prepare(sql){const stmt=database.prepare(sql);let args=[];return {bind(...values){args=values;return this},async first(){return stmt.get(...args)||null},async run(){const r=stmt.run(...args);return {meta:{changes:r.changes}}},async all(){return {results:stmt.all(...args)}}}}});
 const db=wrap(raw),fixture={source:"api-football",fixture_id:"123",kickoff:"2025-10-01T12:00:00Z",status:"FT",home_team_id:10,away_team_id:20,home_goals:2,away_goals:1,statistics_json:null};
 const result={state:"candidate",statistics:[{team:{id:10,name:"Home"},statistics:[{type:"Shots on Goal",value:4}]},{team:{id:20,name:"Away"},statistics:[{type:"Shots on Goal",value:2}]}]};
@@ -25,3 +25,15 @@ const off=await processApiCandidate({DB:db,STATISTICS_API_BACKFILL_ENABLED:"fals
 assert.equal(off.state,"disabled");
 assert.equal(calls,0);
 console.log("API persistence: fixture identity, team order, immutable filled stats, retry durability, disabled network passed");
+
+const appDbRaw=new DatabaseSync(":memory:");
+appDbRaw.exec("CREATE TABLE matches(source TEXT,fixture_id TEXT,kickoff TEXT,status TEXT,home_team_id TEXT,away_team_id TEXT,home_goals INTEGER,away_goals INTEGER,statistics_json TEXT,raw_json TEXT,updated_at TEXT,PRIMARY KEY(source,fixture_id))");
+const appRaw=JSON.stringify({fixture:{id:123456},league:{logo:"https://media.api-sports.io/football/leagues/39.png"},teams:{home:{id:10},away:{id:20}}});
+appDbRaw.prepare("INSERT INTO matches VALUES (?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)").run("app","123456","2025-10-01T12:00:00Z","FT","10","20",2,1,null,appRaw);
+const appDb=wrap(appDbRaw);
+const appFixture={source:"app",fixture_id:"123456",kickoff:"2025-10-01T12:00:00Z",status:"FT",home_team_id:"10",away_team_id:"20",home_goals:2,away_goals:1,statistics_json:null,raw_json:appRaw};
+assert.equal((await persistApiCandidate(appDb,appFixture,result)).state,"saved");
+const appSaved=appDbRaw.prepare("SELECT statistics_json FROM matches WHERE source='app'").get().statistics_json;
+assert.ok(appSaved);
+assert.equal((await persistApiCandidate(appDb,appFixture,result)).state,"stale-or-conflicting");
+assert.equal(appDbRaw.prepare("SELECT statistics_json FROM matches WHERE source='app'").get().statistics_json,appSaved);
