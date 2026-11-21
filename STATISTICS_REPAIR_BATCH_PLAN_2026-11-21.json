@@ -9877,15 +9877,15 @@
     "date": "2026-11-21",
     "total": 678,
     "pending": 0,
-    "identity_verified_explicit": 483,
-    "score_verified_explicit": 480,
+    "identity_verified_explicit": 488,
+    "score_verified_explicit": 485,
     "partial_statistics_verified": 39,
     "partial_alternate_unverified": 4,
-    "full_statistics_manifest": 64,
-    "unavailable_in_checked_source": 150,
+    "full_statistics_manifest": 68,
+    "unavailable_in_checked_source": 151,
     "source_unreachable": 1,
     "source_not_queried_quota": 194,
-    "event_not_confirmed": 24,
+    "event_not_confirmed": 19,
     "kickoff_conflict": 55,
     "provider_only_full_with_kickoff_conflict": 28,
     "blocked": 77,
@@ -10020,7 +10020,7 @@
       "API-Football|Division di Honor|unknown|source_not_queried_quota": 1,
       "API-Football|USL Championship|unknown|source_not_queried_quota": 1,
       "API-Football|AFC U17 Asian Cup|unknown|source_not_queried_quota": 1,
-      "ESPN|fifa.friendly|2024|unavailable_in_checked_source": 10,
+      "ESPN|fifa.friendly|2024|unavailable_in_checked_source": 6,
       "ESPN|fifa.friendly|2025|unavailable_in_checked_source": 1,
       "ESPN|ksa.1|2025|full": 5,
       "ESPN|esp.2|2025|full": 1,
@@ -10049,7 +10049,6 @@
       "UEFA|champions-league 2026|2026|kickoff_conflict": 15,
       "UEFA|europa-league 2026|2026|kickoff_conflict": 10,
       "UEFA|conference-league 2026|unknown|unconfirmed": 6,
-      "SportScore|UEFA European U21 Championship qualification|unknown|event_not_confirmed": 5,
       "SportScore|UEFA European U21 Championship qualification|unknown|partial": 19,
       "SportScore|International Friendly|unknown|event_not_confirmed": 7,
       "SportScore|International Friendly|unknown|partial": 11,
@@ -10065,7 +10064,9 @@
       "SportScore|Greek Cup|unknown|event_not_confirmed": 1,
       "SportScore|International Club Friendly|unknown|unavailable_in_checked_source": 1,
       "Football-Data|UEFA Champions League|unknown|full": 21,
-      "Football-Data|UEFA Champions League|unknown|event_not_found": 2
+      "Football-Data|UEFA Champions League|unknown|event_not_found": 2,
+      "ESPN|fifa.friendly|2024|full": 4,
+      "SportScore|UEFA European U21 Championship qualification|unknown|unavailable_in_checked_source": 5
     }
   }
 }

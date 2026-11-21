@@ -504,8 +504,947 @@
         "https://www.sofascore.com/es/football/match/ad-cariari-pococi-municipal-grecia/CIecsBWec"
       ],
       "result": "score corroborated; no seven-metric data"
+    },
+    "espn_core_followup": [
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932767",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932768",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932769",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932770",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932771",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932772",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932773",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932774",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932775",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932776",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932777",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932778",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932795",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932796",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932797",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932798",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932799",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932800",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932801",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932802",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932803",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932804",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932805",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932806",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932807",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932808",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932809",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932810",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932811",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932812",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932813",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932814",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932815",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932816",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932817",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932818",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932819",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932820",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932821",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932822",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932823",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932824",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932825",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932826",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932827",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932828",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932829",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932830",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932831",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932832",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932833",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932834",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932835",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932836",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932837",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932838",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932839",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932840",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932841",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932842",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932843",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932844",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932845",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932855",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932856",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932857",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932858",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932859",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401932860",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401933039",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401933040",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401933060",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401933096",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401933097",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fra.coupe_de_france",
+        "provider_event_id": "401933098",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fifa.friendly_u21",
+        "provider_event_id": "401933436",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fifa.friendly",
+        "provider_event_id": "401933635",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fifa.friendly",
+        "provider_event_id": "401933879",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fifa.friendly_u21",
+        "provider_event_id": "401934336",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fifa.friendly",
+        "provider_event_id": "697520",
+        "statuses": [
+          "200",
+          "200"
+        ],
+        "result": "placeholder_like_or_unconfirmed_zero_values"
+      },
+      {
+        "league": "fifa.friendly",
+        "provider_event_id": "698287",
+        "statuses": [
+          "200",
+          "200"
+        ],
+        "result": "seven_metrics_verified"
+      },
+      {
+        "league": "fifa.friendly",
+        "provider_event_id": "698289",
+        "statuses": [
+          "200",
+          "200"
+        ],
+        "result": "placeholder_like_or_unconfirmed_zero_values"
+      },
+      {
+        "league": "fifa.friendly",
+        "provider_event_id": "699128",
+        "statuses": [
+          "200",
+          "200"
+        ],
+        "result": "placeholder_like_or_unconfirmed_zero_values"
+      },
+      {
+        "league": "fifa.friendly",
+        "provider_event_id": "699800",
+        "statuses": [
+          "200",
+          "200"
+        ],
+        "result": "seven_metrics_verified"
+      },
+      {
+        "league": "fifa.friendly",
+        "provider_event_id": "699861",
+        "statuses": [
+          "200",
+          "200"
+        ],
+        "result": "seven_metrics_verified"
+      },
+      {
+        "league": "fifa.friendly",
+        "provider_event_id": "702330",
+        "statuses": [
+          "200",
+          "200"
+        ],
+        "result": "seven_metrics_verified"
+      },
+      {
+        "league": "fifa.friendly",
+        "provider_event_id": "702361",
+        "statuses": [
+          "200",
+          "200"
+        ],
+        "result": "placeholder_like_or_unconfirmed_zero_values"
+      },
+      {
+        "league": "fifa.friendly",
+        "provider_event_id": "718532",
+        "statuses": [
+          "404",
+          "404"
+        ]
+      },
+      {
+        "league": "fifa.friendly",
+        "provider_event_id": "720256",
+        "statuses": [
+          "200",
+          "200"
+        ],
+        "result": "placeholder_like_or_unconfirmed_zero_values"
+      },
+      {
+        "league": "fifa.friendly",
+        "provider_event_id": "733984",
+        "statuses": [
+          "200",
+          "200"
+        ],
+        "result": "placeholder_like_or_unconfirmed_zero_values"
+      }
+    ],
+    "espn_core_new_full": [
+      {
+        "fixture_id": "698287",
+        "event_id": "698287",
+        "source_urls": [
+          "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/698287/competitions/698287/competitors/587/statistics",
+          "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/698287/competitions/698287/competitors/467/statistics"
+        ]
+      },
+      {
+        "fixture_id": "699800",
+        "event_id": "699800",
+        "source_urls": [
+          "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/699800/competitions/699800/competitors/585/statistics",
+          "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/699800/competitions/699800/competitors/581/statistics"
+        ]
+      },
+      {
+        "fixture_id": "699861",
+        "event_id": "699861",
+        "source_urls": [
+          "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/699861/competitions/699861/competitors/164/statistics",
+          "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/699861/competitions/699861/competitors/587/statistics"
+        ]
+      },
+      {
+        "fixture_id": "702330",
+        "event_id": "702330",
+        "source_urls": [
+          "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/702330/competitions/702330/competitors/586/statistics",
+          "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/702330/competitions/702330/competitors/587/statistics"
+        ]
+      }
+    ],
+    "official_u21": [
+      {
+        "archive_match": "Romania U21 — Montenegro U21",
+        "official_id": "2037391",
+        "url": "https://www.uefa.com/under21/match/2037391--romania-vs-montenegro/",
+        "result": "official match identity found; seven metrics not exposed by the fetched page"
+      },
+      {
+        "archive_match": "Montenegro U21 — Switzerland U21",
+        "official_id": "5862500",
+        "url": "https://fscg.me/en/matches/crna-gora-svajcarska-5862500/",
+        "result": "official federation report showed final score and venue; seven metrics not exposed"
+      }
+    ],
+    "u21_espn": {
+      "exact_original_events": 24,
+      "new_identity_score_matches": 5,
+      "existing_partial_rechecked": 19,
+      "no_espn_stats": 24
+    },
+    "api_quota_alternative": {
+      "provider": "SportScore",
+      "acquired_utc_days": [
+        "2026-11-15",
+        "2026-11-16",
+        "2026-11-17"
+      ],
+      "attempted": 194,
+      "ordered_team_time_score_leads": [
+        {
+          "id": "1636038",
+          "day": "2026-11-15",
+          "competition": "Primera Premier",
+          "candidateUrl": "https://sportscore.com/football/match/chapulineros-vs-los-cabos-united/dn1m1ghl5jvkmoe/",
+          "alternateCompetition": "MEX Liga Premier"
+        },
+        {
+          "id": "1586133",
+          "day": "2026-11-15",
+          "competition": "Friendlies",
+          "candidateUrl": "https://sportscore.com/football/match/new-zealand-vs-india/8yomo4hyex2yq0j/",
+          "alternateCompetition": "International Friendly"
+        },
+        {
+          "id": "1555804",
+          "day": "2026-11-15",
+          "competition": "J3 League",
+          "candidateUrl": "https://sportscore.com/football/match/gainare-tottori-vs-kagoshima-united/zp5rzghgeglyq82/",
+          "alternateCompetition": "Japanese J3 League"
+        },
+        {
+          "id": "1640367",
+          "day": "2026-11-15",
+          "competition": "Australian Championship",
+          "candidateUrl": "https://sportscore.com/football/match/canberra-fc-vs-sutherland-sharks/318q66h8z9j5qo9/",
+          "alternateCompetition": "Aus Champ"
+        },
+        {
+          "id": "1606762",
+          "day": "2026-11-15",
+          "competition": "J2 League",
+          "candidateUrl": "https://sportscore.com/football/match/blaublitz-akita-vs-vegalta-sendai/y0or5jh8d8glqwz/",
+          "alternateCompetition": "Japanese J2 League"
+        },
+        {
+          "id": "1555805",
+          "day": "2026-11-15",
+          "competition": "J3 League",
+          "candidateUrl": "https://sportscore.com/football/match/kamatamare-sanuki-vs-renofa-yamaguchi/4wyrn4h61632q86/",
+          "alternateCompetition": "Japanese J3 League"
+        },
+        {
+          "id": "1555810",
+          "day": "2026-11-15",
+          "competition": "J3 League",
+          "candidateUrl": "https://sportscore.com/football/match/tochigi-sc-vs-nara-club/6ypq3nhvdvjpmd7/",
+          "alternateCompetition": "Japanese J3 League"
+        },
+        {
+          "id": "1606765",
+          "day": "2026-11-15",
+          "competition": "J2 League",
+          "candidateUrl": "https://sportscore.com/football/match/kataller-toyama-vs-tokushima-vortis/vjxm8gheoep8r6o/",
+          "alternateCompetition": "Japanese J2 League"
+        },
+        {
+          "id": "1648034",
+          "day": "2026-11-15",
+          "competition": "J-League Cup",
+          "candidateUrl": "https://sportscore.com/football/match/machida-zelvia-vs-vissel-kobe/pxwrxlhlg5vdryk/",
+          "alternateCompetition": "J.League Yamazaki Biscuit Levain Cup"
+        },
+        {
+          "id": "1641935",
+          "day": "2026-11-15",
+          "competition": "Lao League",
+          "candidateUrl": "https://sportscore.com/football/match/salavan-united-vs-namtha-united/318q66h8op8oqo9/",
+          "alternateCompetition": "Laos Premier League"
+        },
+        {
+          "id": "1648037",
+          "day": "2026-11-15",
+          "competition": "J-League Cup",
+          "candidateUrl": "https://sportscore.com/football/match/kashiwa-reysol-vs-kawasaki-frontale/8yomo4hy73zdq0j/",
+          "alternateCompetition": "J.League Yamazaki Biscuit Levain Cup"
+        },
+        {
+          "id": "1568239",
+          "day": "2026-11-15",
+          "competition": "III Liga - Group 4",
+          "candidateUrl": "https://sportscore.com/football/match/moravia-morawica-vs-korona-kielce-ii/2y8m4zhv3v1gql0/",
+          "alternateCompetition": "Poland Liga 3"
+        },
+        {
+          "id": "1590471",
+          "day": "2026-11-15",
+          "competition": "3. Lig - Group 1",
+          "candidateUrl": "https://sportscore.com/football/match/duzcespor-vs-fatsa-belediyespor/l7oqdehgwwyxr51/",
+          "alternateCompetition": "Turkish Third League"
+        },
+        {
+          "id": "1591080",
+          "day": "2026-11-15",
+          "competition": "3. Lig - Group 3",
+          "candidateUrl": "https://sportscore.com/football/match/yozgat-bld-bozokspor-vs-adanaspor/k82rekhgpk6vrep/",
+          "alternateCompetition": "Turkish Third League"
+        },
+        {
+          "id": "1649549",
+          "day": "2026-11-16",
+          "competition": "Friendlies",
+          "candidateUrl": "https://sportscore.com/football/match/brazil-u20-vs-peru-u20/2y8m4zhv3vd9ql0/",
+          "alternateCompetition": "International Friendly"
+        },
+        {
+          "id": "1649033",
+          "day": "2026-11-17",
+          "competition": "CONCACAF Nations League",
+          "candidateUrl": "https://sportscore.com/football/match/martinique-vs-aruba/23xmvkhy3zgxqg8/",
+          "alternateCompetition": "CONCACAF Nations League"
+        },
+        {
+          "id": "1649034",
+          "day": "2026-11-17",
+          "competition": "CONCACAF Nations League",
+          "candidateUrl": "https://sportscore.com/football/match/trinidad-and-tobago-vs-antigua-and-barbuda/zp5rzgh3je22q82/",
+          "alternateCompetition": "CONCACAF Nations League"
+        },
+        {
+          "id": "1644694",
+          "day": "2026-11-17",
+          "competition": "CONCACAF Nations League",
+          "candidateUrl": "https://sportscore.com/football/match/canada-vs-guatemala/jw2r09h5l6eprz8/",
+          "alternateCompetition": "CONCACAF Nations League"
+        },
+        {
+          "id": "1647367",
+          "day": "2026-11-17",
+          "competition": "Friendlies",
+          "candidateUrl": "https://sportscore.com/football/match/malaysia-vs-yemen/jw2r09h5llj5rz8/",
+          "alternateCompetition": "CFA Team China International Tournament"
+        },
+        {
+          "id": "1638034",
+          "day": "2026-11-17",
+          "competition": "AFC U17 Asian Cup",
+          "candidateUrl": "https://sportscore.com/football/match/maldives-u17-vs-iraq-u17/965mkyhkpk9nr1g/",
+          "alternateCompetition": "AFC U17 Asian Cup"
+        }
+      ],
+      "not_found_in_bounded_day_list": 174,
+      "note": "Daily lists may be capped and provider competition aliases are not automatically accepted. These are candidate leads only."
     }
   },
-  "full_statistics_added": 0,
+  "full_statistics_added": 4,
   "production_writes": 0
 }

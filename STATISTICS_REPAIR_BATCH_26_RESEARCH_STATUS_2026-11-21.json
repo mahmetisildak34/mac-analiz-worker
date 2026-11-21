@@ -52,7 +52,8 @@
       "provider_event_id": "2y8m4zh53edkql0",
       "source_urls": [
         "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-03-31&status=finished&limit=1000",
-        "https://sportscore.com/football/match/montenegro-u21-vs-poland-u21/2y8m4zh53edkql0/"
+        "https://sportscore.com/football/match/montenegro-u21-vs-poland-u21/2y8m4zh53edkql0/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732556"
       ],
       "statistics_availability": "partial",
       "partial_statistics": {
@@ -98,7 +99,17 @@
         ]
       },
       "source_payload_sha256": "ea5423cb4d5cf70192e154c59e1725eb7fb2446b3810f5c9752ce2b31bb1b684",
-      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded.",
+      "second_pass_espn": {
+        "event_id": "732556",
+        "ordered_team_ids": [
+          "20931",
+          "18414"
+        ],
+        "utc": "2026-03-31T12:00Z",
+        "score": "0-1",
+        "statistics": "unavailable_in_checked_source"
+      }
     },
     {
       "source": "app",
@@ -163,14 +174,26 @@
       "status": "source_review",
       "statistics_sha256": null,
       "research_date": "2026-11-21",
-      "identity_verified": false,
-      "score_verified": false,
+      "identity_verified": true,
+      "score_verified": true,
       "transfer_ready": false,
       "source_urls": [
-        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-03-31&status=finished&limit=1000"
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-03-31&status=finished&limit=1000",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732552"
       ],
-      "statistics_availability": "event_not_confirmed",
-      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+      "statistics_availability": "unavailable_in_checked_source",
+      "reason": "Original ESPN U21 qualifier matched date, kickoff, ordered teams and final score. No match statistics supplied.",
+      "second_pass_espn": {
+        "event_id": "732552",
+        "ordered_team_ids": [
+          "4371",
+          "20926"
+        ],
+        "utc": "2026-03-31T17:00Z",
+        "score": "2-0",
+        "statistics": "unavailable_in_checked_source"
+      },
+      "score": "2-0"
     },
     {
       "source": "app",
@@ -527,7 +550,8 @@
       "provider_event_id": "y0or5jh8lwn7qwz",
       "source_urls": [
         "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-09-24&status=finished&limit=1000",
-        "https://sportscore.com/football/match/san-marino-u21-vs-kosovo-u21/y0or5jh8lwn7qwz/"
+        "https://sportscore.com/football/match/san-marino-u21-vs-kosovo-u21/y0or5jh8lwn7qwz/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732413"
       ],
       "statistics_availability": "partial",
       "partial_statistics": {
@@ -565,7 +589,17 @@
         ]
       },
       "source_payload_sha256": "f99156627e316bb95fd43d3175ac1e60ccd2578f9ebd681e2ef64486f58adf68",
-      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded.",
+      "second_pass_espn": {
+        "event_id": "732413",
+        "ordered_team_ids": [
+          "20943",
+          "20926"
+        ],
+        "utc": "2026-09-24T18:30Z",
+        "score": "0-3",
+        "statistics": "unavailable_in_checked_source"
+      }
     },
     {
       "source": "app",
@@ -645,7 +679,8 @@
       "provider_event_id": "23xmvkh63l63qg8",
       "source_urls": [
         "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-09-30&status=finished&limit=1000",
-        "https://sportscore.com/football/match/kosovo-u21-vs-cyprus-u21/23xmvkh63l63qg8/"
+        "https://sportscore.com/football/match/kosovo-u21-vs-cyprus-u21/23xmvkh63l63qg8/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732436"
       ],
       "statistics_availability": "partial",
       "partial_statistics": {
@@ -691,7 +726,17 @@
         ]
       },
       "source_payload_sha256": "b4619728638844693e63c1cf221c2bc70320138fce6adf4e183e91bc8df985b3",
-      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded.",
+      "second_pass_espn": {
+        "event_id": "732436",
+        "ordered_team_ids": [
+          "20926",
+          "20927"
+        ],
+        "utc": "2026-09-30T17:00Z",
+        "score": "2-1",
+        "statistics": "unavailable_in_checked_source"
+      }
     },
     {
       "source": "app",
@@ -712,7 +757,8 @@
       "provider_event_id": "3glrw7hnwg5wqdy",
       "source_urls": [
         "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-10-01&status=finished&limit=1000",
-        "https://sportscore.com/football/match/montenegro-u21-vs-north-macedonia-u21/3glrw7hnwg5wqdy/"
+        "https://sportscore.com/football/match/montenegro-u21-vs-north-macedonia-u21/3glrw7hnwg5wqdy/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732440"
       ],
       "statistics_availability": "partial",
       "partial_statistics": {
@@ -750,7 +796,17 @@
         ]
       },
       "source_payload_sha256": "87cf75e88ede4c07cb877eddcc88b1d6fff5b668c3eeb2a936d40a88e983a94c",
-      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded.",
+      "second_pass_espn": {
+        "event_id": "732440",
+        "ordered_team_ids": [
+          "18413",
+          "20931"
+        ],
+        "utc": "2026-10-01T16:00Z",
+        "score": "1-1",
+        "statistics": "unavailable_in_checked_source"
+      }
     },
     {
       "source": "app",
@@ -771,7 +827,8 @@
       "provider_event_id": "vjxm8ghe476gr6o",
       "source_urls": [
         "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-10-05&status=finished&limit=1000",
-        "https://sportscore.com/football/match/montenegro-u21-vs-armenia-u21/vjxm8ghe476gr6o/"
+        "https://sportscore.com/football/match/montenegro-u21-vs-armenia-u21/vjxm8ghe476gr6o/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732448"
       ],
       "statistics_availability": "partial",
       "partial_statistics": {
@@ -809,7 +866,17 @@
         ]
       },
       "source_payload_sha256": "47b157256f4a08bf23504460e7b0612b3d7d6d429b2e5e7398a982ebb77bb6ee",
-      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded.",
+      "second_pass_espn": {
+        "event_id": "732448",
+        "ordered_team_ids": [
+          "20931",
+          "20937"
+        ],
+        "utc": "2026-10-05T14:30Z",
+        "score": "1-1",
+        "statistics": "unavailable_in_checked_source"
+      }
     },
     {
       "source": "app",
@@ -830,7 +897,8 @@
       "provider_event_id": "ednm9whwkpwgryo",
       "source_urls": [
         "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-10-06&status=finished&limit=1000",
-        "https://sportscore.com/football/match/kosovo-u21-vs-finland-u21/ednm9whwkpwgryo/"
+        "https://sportscore.com/football/match/kosovo-u21-vs-finland-u21/ednm9whwkpwgryo/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732347"
       ],
       "statistics_availability": "partial",
       "partial_statistics": {
@@ -868,7 +936,17 @@
         ]
       },
       "source_payload_sha256": "3e37205b3908cf26de51622b70b7d0e528bad298abd61d5a963861a877445e78",
-      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded.",
+      "second_pass_espn": {
+        "event_id": "732347",
+        "ordered_team_ids": [
+          "20926",
+          "20933"
+        ],
+        "utc": "2026-10-06T17:00Z",
+        "score": "4-4",
+        "statistics": "unavailable_in_checked_source"
+      }
     },
     {
       "source": "app",

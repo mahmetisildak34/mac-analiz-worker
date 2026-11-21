@@ -17,12 +17,13 @@ def identity(row):
 
 
 repairs = read("UEFA_KICKOFF_REPAIR_MANIFEST")["repairs"]
-audit = read("STATISTICS_TRANSFER_REVALIDATION")["rows"]
+audit_manifest = read("STATISTICS_TRANSFER_REVALIDATION")
+audit = audit_manifest["rows"]
 eligible = [row for row in audit if row["candidate_data_eligible"]]
 verified = {identity(row): row for row in read("STATISTICS_REPAIR_VERIFIED")["fullMatches"]}
 assert len({identity(row) for row in repairs}) == len(repairs) == 55
-assert len({identity(row) for row in audit}) == len(audit) == 64
-assert len({(row["provider"], row["provider_event_id"]) for row in eligible}) == len(eligible) == 32
+assert len({identity(row) for row in audit}) == len(audit) == audit_manifest["total"]
+assert len({(row["provider"], row["provider_event_id"]) for row in eligible}) == len(eligible) == audit_manifest["data_eligible"]
 assert all(not row["live_apply_approved"] for row in repairs + audit)
 
 db = sqlite3.connect(":memory:")
@@ -79,7 +80,8 @@ def apply(dry_run=False, fail_after=None):
 
 
 before = snapshot()
-assert apply(dry_run=True) == 87 and snapshot() == before
+planned = len(repairs) + len(eligible)
+assert apply(dry_run=True) == planned and snapshot() == before
 try:
     apply(fail_after=56)
 except RuntimeError:
@@ -87,8 +89,8 @@ except RuntimeError:
 else:
     raise AssertionError("Expected injected failure")
 assert snapshot() == before and db.execute("SELECT count(*) FROM prior").fetchone()[0] == 0
-assert apply() == 87 and apply() == 0
-assert db.execute("SELECT count(*) FROM fixture").fetchone()[0] == 87
+assert apply() == planned and apply() == 0
+assert db.execute("SELECT count(*) FROM fixture").fetchone()[0] == planned
 with db:
     for source, fixture, kind, previous, written in db.execute("SELECT * FROM prior"):
         assert kind in {"kickoff", "stats"}
@@ -96,4 +98,4 @@ with db:
                           (previous, source, fixture, written)).rowcount == 1
     db.execute("DELETE FROM prior")
 assert snapshot() == before
-print("PASS 55 kickoff repairs, 32 statistics candidates, dry-run, atomic failure, idempotence, rollback")
+print(f"PASS {len(repairs)} kickoff repairs, {len(eligible)} statistics candidates, dry-run, atomic failure, idempotence, rollback")

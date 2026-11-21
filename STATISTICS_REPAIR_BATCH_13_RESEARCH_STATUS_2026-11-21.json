@@ -6,9 +6,9 @@
   "branch": "feature/bulk-statistics-repair-hardening",
   "policy": "Original-match evidence only; zero transfers authorized.",
   "counts": {
-    "full_verified": 13,
+    "full_verified": 17,
     "blocked": 0,
-    "source_review": 12,
+    "source_review": 8,
     "pending": 0
   },
   "rows": [
@@ -21,26 +21,28 @@
       "away": "South Africa",
       "league": "fifa.friendly",
       "provider_group": "ESPN",
-      "status": "source_review",
-      "statistics_sha256": null,
+      "status": "full_verified",
+      "statistics_sha256": "fe16d6f00dad657e53eed038f03e508feae43762fc2ba1c29bfaa971580ff2da",
       "provider_event_id": "698287",
       "provider_league": "fifa.friendly",
       "provider_season": 2024,
       "source_urls": [
-        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=698287"
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=698287",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/698287/competitions/698287/competitors/587/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/698287/competitions/698287/competitors/467/statistics"
       ],
       "research_date": "2026-11-21",
       "identity_verified": true,
       "score_verified": true,
-      "source_payload_sha256": "463992d2768f14f092c3485503a5aeead120e2c508b34f3757627c62afc8573e",
+      "source_payload_sha256": "48bbfdafbb48bcd23cd811bc1c92dd17aad4c2b0e24e2400ae4bf23bda6f4c0c",
       "score": "1-1",
       "metric_coverage": {
         "home": [],
         "away": []
       },
-      "statistics_availability": "unavailable_in_checked_source",
+      "statistics_availability": "full",
       "transfer_ready": false,
-      "reason": "Matched original ESPN event; no complete verified statistics payload."
+      "reason": "Original ESPN competitor statistics and final event header corroborate exact ordered teams, UTC kickoff and score; all seven metrics passed."
     },
     {
       "source": "espn",
@@ -141,26 +143,28 @@
       "away": "Andorra",
       "league": "fifa.friendly",
       "provider_group": "ESPN",
-      "status": "source_review",
-      "statistics_sha256": null,
+      "status": "full_verified",
+      "statistics_sha256": "fbc8a489dd4a60abdf1b493f99f5c69aa52ae0cecfbbdca77448c5a1f08313dc",
       "provider_event_id": "699861",
       "provider_league": "fifa.friendly",
       "provider_season": 2024,
       "source_urls": [
-        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=699861"
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=699861",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/699861/competitions/699861/competitors/164/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/699861/competitions/699861/competitors/587/statistics"
       ],
       "research_date": "2026-11-21",
       "identity_verified": true,
       "score_verified": true,
-      "source_payload_sha256": "dba64788d806002133a1ce71c0a2ff90a1e7d96d81d14d235a0e64efe256704c",
+      "source_payload_sha256": "c9e7095d4144b0d3df19e064eeff9217df41c062861ae8d2b0d414d3dc1db93a",
       "score": "5-0",
       "metric_coverage": {
         "home": [],
         "away": []
       },
-      "statistics_availability": "unavailable_in_checked_source",
+      "statistics_availability": "full",
       "transfer_ready": false,
-      "reason": "Matched original ESPN event; no complete verified statistics payload."
+      "reason": "Original ESPN competitor statistics and final event header corroborate exact ordered teams, UTC kickoff and score; all seven metrics passed."
     },
     {
       "source": "espn",
@@ -171,26 +175,28 @@
       "away": "Azerbaijan",
       "league": "fifa.friendly",
       "provider_group": "ESPN",
-      "status": "source_review",
-      "statistics_sha256": null,
+      "status": "full_verified",
+      "statistics_sha256": "10863dbf2739036169905489b85f3424bbba0dd581caa0f25fcfe25a5b09c406",
       "provider_event_id": "699800",
       "provider_league": "fifa.friendly",
       "provider_season": 2024,
       "source_urls": [
-        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=699800"
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=699800",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/699800/competitions/699800/competitors/585/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/699800/competitions/699800/competitors/581/statistics"
       ],
       "research_date": "2026-11-21",
       "identity_verified": true,
       "score_verified": true,
-      "source_payload_sha256": "f78f8e278e7541e4c3b8043c64cbd7c7f78462cda7d3e629c0533abb6ccaf227",
+      "source_payload_sha256": "323d63d82466034a86a5eed8cc3e9ec1bc7fba6829ba2cf46b012f89f114875a",
       "score": "3-1",
       "metric_coverage": {
         "home": [],
         "away": []
       },
-      "statistics_availability": "unavailable_in_checked_source",
+      "statistics_availability": "full",
       "transfer_ready": false,
-      "reason": "Matched original ESPN event; no complete verified statistics payload."
+      "reason": "Original ESPN competitor statistics and final event header corroborate exact ordered teams, UTC kickoff and score; all seven metrics passed."
     },
     {
       "source": "espn",
@@ -231,26 +237,28 @@
       "away": "Andorra",
       "league": "fifa.friendly",
       "provider_group": "ESPN",
-      "status": "source_review",
-      "statistics_sha256": null,
+      "status": "full_verified",
+      "statistics_sha256": "36bec3434e44eaf76f13caf93541dde3a6457ce8b0187b6ae87399d28948e948",
       "provider_event_id": "702330",
       "provider_league": "fifa.friendly",
       "provider_season": 2024,
       "source_urls": [
-        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=702330"
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=702330",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/702330/competitions/702330/competitors/586/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/702330/competitions/702330/competitors/587/statistics"
       ],
       "research_date": "2026-11-21",
       "identity_verified": true,
       "score_verified": true,
-      "source_payload_sha256": "0938e8f943e157973a3fdacb9b6e77a99114ac8452ac0bbc359637c36c037ddd",
+      "source_payload_sha256": "5e45b5cf53ea534705af2f67a4d3c33606dd3c5b2e6f1929c00e1f5b843cd02f",
       "score": "2-0",
       "metric_coverage": {
         "home": [],
         "away": []
       },
-      "statistics_availability": "unavailable_in_checked_source",
+      "statistics_availability": "full",
       "transfer_ready": false,
-      "reason": "Matched original ESPN event; no complete verified statistics payload."
+      "reason": "Original ESPN competitor statistics and final event header corroborate exact ordered teams, UTC kickoff and score; all seven metrics passed."
     },
     {
       "source": "espn",

@@ -153,7 +153,12 @@
       },
       "current_updated_at": "2026-11-19 08:15:47",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2041950",
+        "url": "https://www.uefa.com/newsfiles/UCL/2025/2041950_TS.pdf",
+        "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -227,7 +232,12 @@
       },
       "current_updated_at": "2026-11-19 08:16:15",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2041967",
+        "url": "https://www.uefa.com/newsfiles/UCL/2025/2041967_FR.pdf",
+        "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -369,7 +379,12 @@
       },
       "current_updated_at": "2026-11-19 08:16:15",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2041989",
+        "url": "https://www.uefa.com/newsfiles/UCL/2025/2041989_TS.pdf",
+        "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -545,7 +560,12 @@
       },
       "current_updated_at": "2026-11-19 08:16:15",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2042064",
+        "url": "https://www.uefa.com/newsfiles/UCL/2025/2042064_TS.pdf",
+        "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -619,7 +639,12 @@
       },
       "current_updated_at": "2026-11-19 08:16:15",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2042075",
+        "url": "https://www.uefa.com/newsfiles/UCL/2025/2042075_TS.pdf",
+        "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -909,7 +934,12 @@
       },
       "current_updated_at": "2026-11-19 08:15:47",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2044848",
+        "url": "https://www.uefa.com/newsfiles/UCL/2025/2044848_TS.pdf",
+        "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -989,7 +1019,12 @@
       },
       "current_updated_at": "2026-11-14 04:38:29",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2046042",
+        "url": "https://www.uefa.com/newsfiles/UCL/2026/2046042_TS.pdf",
+        "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -1069,7 +1104,12 @@
       },
       "current_updated_at": "2026-11-14 04:38:24",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2048057",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2048057/",
+        "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -1183,7 +1223,12 @@
       },
       "current_updated_at": "2026-11-14 04:38:28",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2049555",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2049555--porto-vs-man-city/",
+        "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -1223,7 +1268,12 @@
       },
       "current_updated_at": "2026-11-19 08:16:15",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2049561",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2049561--barcelona-vs-feyenoord/",
+        "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -1303,7 +1353,12 @@
       },
       "current_updated_at": "2026-11-14 15:01:18",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2049568",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2049568--fenerbahce-vs-roma/",
+        "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -1485,7 +1540,12 @@
       },
       "current_updated_at": "2026-11-19 08:16:15",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2049584",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2049584/",
+        "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
+      }
     },
     {
       "source": "fixture-download-uefa",
@@ -1525,7 +1585,12 @@
       },
       "current_updated_at": "2026-11-14 15:01:18",
       "reason": "Exact FixtureDownload season, competition, fixture number, ordered teams, UTC day and final score. Stored time is the importer's synthetic noon value.",
-      "live_apply_approved": false
+      "live_apply_approved": false,
+      "official_uefa_event": {
+        "id": "2049581",
+        "url": "https://www.uefa.com/uefachampionsleague/match/2049581--roma-vs-real-madrid/",
+        "role": "Official fixture corroboration. The validated statistics payload remains attributed to its original provider."
+      }
     },
     {
       "source": "fixture-download-uefa",

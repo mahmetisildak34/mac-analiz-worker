@@ -1,8 +1,8 @@
 {
   "date": "2026-11-21",
-  "total": 64,
+  "total": 68,
   "live_apply_approved": false,
-  "data_eligible": 32,
+  "data_eligible": 36,
   "rows": [
     {
       "source": "ESPN",
@@ -1676,6 +1676,106 @@
         "cross_source_duplicate_review"
       ],
       "candidate_data_eligible": false,
+      "live_apply_approved": false
+    },
+    {
+      "source": "espn",
+      "fixture_id": "698287",
+      "provider": "ESPN",
+      "provider_event_id": "698287",
+      "kickoff": "2024-03-21T21:00Z",
+      "home": {
+        "name": "Andorra",
+        "id": "587",
+        "goals": 1
+      },
+      "away": {
+        "name": "South Africa",
+        "id": "467",
+        "goals": 1
+      },
+      "statistics_sha256": "fe16d6f00dad657e53eed038f03e508feae43762fc2ba1c29bfaa971580ff2da",
+      "provider_url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/698287/competitions/698287/competitors/587/statistics",
+      "current_archive_updated_at": "2026-11-16 08:44:11",
+      "revalidated_source_snapshot": true,
+      "strict_metrics": "verified_full",
+      "reasons": [],
+      "candidate_data_eligible": true,
+      "live_apply_approved": false
+    },
+    {
+      "source": "espn",
+      "fixture_id": "699800",
+      "provider": "ESPN",
+      "provider_event_id": "699800",
+      "kickoff": "2024-06-07T17:00Z",
+      "home": {
+        "name": "Albania",
+        "id": "585",
+        "goals": 3
+      },
+      "away": {
+        "name": "Azerbaijan",
+        "id": "581",
+        "goals": 1
+      },
+      "statistics_sha256": "10863dbf2739036169905489b85f3424bbba0dd581caa0f25fcfe25a5b09c406",
+      "provider_url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/699800/competitions/699800/competitors/585/statistics",
+      "current_archive_updated_at": "2026-11-16 08:44:14",
+      "revalidated_source_snapshot": true,
+      "strict_metrics": "verified_full",
+      "reasons": [],
+      "candidate_data_eligible": true,
+      "live_apply_approved": false
+    },
+    {
+      "source": "espn",
+      "fixture_id": "699861",
+      "provider": "ESPN",
+      "provider_event_id": "699861",
+      "kickoff": "2024-06-05T19:30Z",
+      "home": {
+        "name": "Spain",
+        "id": "164",
+        "goals": 5
+      },
+      "away": {
+        "name": "Andorra",
+        "id": "587",
+        "goals": 0
+      },
+      "statistics_sha256": "fbc8a489dd4a60abdf1b493f99f5c69aa52ae0cecfbbdca77448c5a1f08313dc",
+      "provider_url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/699861/competitions/699861/competitors/164/statistics",
+      "current_archive_updated_at": "2026-11-16 08:44:11",
+      "revalidated_source_snapshot": true,
+      "strict_metrics": "verified_full",
+      "reasons": [],
+      "candidate_data_eligible": true,
+      "live_apply_approved": false
+    },
+    {
+      "source": "espn",
+      "fixture_id": "702330",
+      "provider": "ESPN",
+      "provider_event_id": "702330",
+      "kickoff": "2024-06-11T18:45Z",
+      "home": {
+        "name": "Northern Ireland",
+        "id": "586",
+        "goals": 2
+      },
+      "away": {
+        "name": "Andorra",
+        "id": "587",
+        "goals": 0
+      },
+      "statistics_sha256": "36bec3434e44eaf76f13caf93541dde3a6457ce8b0187b6ae87399d28948e948",
+      "provider_url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/702330/competitions/702330/competitors/586/statistics",
+      "current_archive_updated_at": "2026-11-16 08:44:11",
+      "revalidated_source_snapshot": true,
+      "strict_metrics": "verified_full",
+      "reasons": [],
+      "candidate_data_eligible": true,
       "live_apply_approved": false
     }
   ]

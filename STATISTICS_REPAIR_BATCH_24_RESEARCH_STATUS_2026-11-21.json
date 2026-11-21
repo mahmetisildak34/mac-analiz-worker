@@ -836,14 +836,26 @@
       "status": "source_review",
       "statistics_sha256": null,
       "research_date": "2026-11-21",
-      "identity_verified": false,
-      "score_verified": false,
+      "identity_verified": true,
+      "score_verified": true,
       "transfer_ready": false,
       "source_urls": [
-        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2024-09-06&status=finished&limit=1000"
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2024-09-06&status=finished&limit=1000",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=665059"
       ],
-      "statistics_availability": "event_not_confirmed",
-      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+      "statistics_availability": "unavailable_in_checked_source",
+      "reason": "Original ESPN U21 qualifier matched date, kickoff, ordered teams and final score. No match statistics supplied.",
+      "second_pass_espn": {
+        "event_id": "665059",
+        "ordered_team_ids": [
+          "19349",
+          "20931"
+        ],
+        "utc": "2024-09-06T16:30Z",
+        "score": "1-0",
+        "statistics": "unavailable_in_checked_source"
+      },
+      "score": "1-0"
     },
     {
       "source": "app",
@@ -864,7 +876,8 @@
       "provider_event_id": "y39mp1h0nvowmoj",
       "source_urls": [
         "https://sportscore.com/api/v1/fixtures/?sport=football&date=2024-09-10&status=finished&limit=1000",
-        "https://sportscore.com/football/match/montenegro-u21-vs-switzerland-u21/y39mp1h0nvowmoj/"
+        "https://sportscore.com/football/match/montenegro-u21-vs-switzerland-u21/y39mp1h0nvowmoj/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=665068"
       ],
       "statistics_availability": "partial",
       "partial_statistics": {
@@ -902,7 +915,17 @@
         ]
       },
       "source_payload_sha256": "4ac2a74f1316dcf575ac61b99a207db7100a31cd0474ab01552acde8aa6ef168",
-      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded.",
+      "second_pass_espn": {
+        "event_id": "665068",
+        "ordered_team_ids": [
+          "20931",
+          "4257"
+        ],
+        "utc": "2024-09-10T17:30Z",
+        "score": "0-2",
+        "statistics": "unavailable_in_checked_source"
+      }
     },
     {
       "source": "app",
@@ -923,7 +946,8 @@
       "provider_event_id": "k82rekh04zexrep",
       "source_urls": [
         "https://sportscore.com/api/v1/fixtures/?sport=football&date=2024-10-11&status=finished&limit=1000",
-        "https://sportscore.com/football/match/montenegro-u21-vs-romania-u21/k82rekh04zexrep/"
+        "https://sportscore.com/football/match/montenegro-u21-vs-romania-u21/k82rekh04zexrep/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=665095"
       ],
       "statistics_availability": "partial",
       "partial_statistics": {
@@ -961,7 +985,17 @@
         ]
       },
       "source_payload_sha256": "42119daff86b908756d20c6b5e14316695b37cb95db3879888dd6fcbbb382a01",
-      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded.",
+      "second_pass_espn": {
+        "event_id": "665095",
+        "ordered_team_ids": [
+          "20931",
+          "19349"
+        ],
+        "utc": "2024-10-11T14:00Z",
+        "score": "2-6",
+        "statistics": "unavailable_in_checked_source"
+      }
     },
     {
       "source": "app",
@@ -982,7 +1016,8 @@
       "provider_event_id": "4wyrn4honzw6q86",
       "source_urls": [
         "https://sportscore.com/api/v1/fixtures/?sport=football&date=2024-10-15&status=finished&limit=1000",
-        "https://sportscore.com/football/match/montenegro-u21-vs-finland-u21/4wyrn4honzw6q86/"
+        "https://sportscore.com/football/match/montenegro-u21-vs-finland-u21/4wyrn4honzw6q86/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=665112"
       ],
       "statistics_availability": "partial",
       "partial_statistics": {
@@ -1020,7 +1055,17 @@
         ]
       },
       "source_payload_sha256": "f022ba0d31d10cbb5d6a7d766ccc150bad9231cc2009196f6e8cd83fedc7a27b",
-      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded.",
+      "second_pass_espn": {
+        "event_id": "665112",
+        "ordered_team_ids": [
+          "20933",
+          "20931"
+        ],
+        "utc": "2024-10-15T16:00Z",
+        "score": "2-1",
+        "statistics": "unavailable_in_checked_source"
+      }
     },
     {
       "source": "app",

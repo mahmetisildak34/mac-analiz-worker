@@ -6,10 +6,10 @@
   "protected_existing_manifest": "STATISTICS_REPAIR_INVENTORY_2026-11-21.json",
   "candidate_inventory": "STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json",
   "counts": {
-    "full": 64,
+    "full": 68,
     "partial": 0,
     "ambiguous": 0,
-    "unavailable_or_not_yet_checked": 614,
+    "unavailable_or_not_yet_checked": 610,
     "pending_source_provenance_review": 1
   },
   "policy": {
@@ -2184,6 +2184,170 @@
         "score": true,
         "all_required_metrics": true
       }
+    },
+    {
+      "source": "espn",
+      "fixture_id": "698287",
+      "kickoff": "2024-03-21T21:00Z",
+      "status": "FT",
+      "league": {
+        "id": "fifa.friendly",
+        "name": "fifa.friendly"
+      },
+      "home": {
+        "name": "Andorra",
+        "id": "587",
+        "goals": 1
+      },
+      "away": {
+        "name": "South Africa",
+        "id": "467",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "provider_event_id": "698287",
+      "provider_url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/698287/competitions/698287/competitors/587/statistics",
+      "source_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/698287/competitions/698287/competitors/587/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/698287/competitions/698287/competitors/467/statistics"
+      ],
+      "source_payload_sha256": "48bbfdafbb48bcd23cd811bc1c92dd17aad4c2b0e24e2400ae4bf23bda6f4c0c",
+      "source_payload_hashes": [
+        "c7df50d547b5275b6ddc5cb6d85abc70b18ae59e59b7daf2c18f66cd05b5269c",
+        "dfdab7e08aa649707508e740f8908bf3035e5d6529064fb246ea53738919d097"
+      ],
+      "statistics_class": "full",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"587\",\"name\":\"Andorra\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayName\":\"Fouls Committed\",\"shortDisplayName\":\"FC\",\"description\":\"The number of fouls comitted by a player or team.\",\"abbreviation\":\"FC\",\"value\":13,\"displayValue\":\"13\"},{\"name\":\"redCards\",\"displayName\":\"Red Cards\",\"shortDisplayName\":\"RC\",\"description\":\"The number of red cards that have been issued.\",\"abbreviation\":\"RC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"wonCorners\",\"displayName\":\"Corners Won\",\"shortDisplayName\":\"CW\",\"description\":\"The number of corners won.\",\"abbreviation\":\"CW\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"yellowCards\",\"displayName\":\"Yellow Cards\",\"shortDisplayName\":\"YC\",\"description\":\"The number of yellow cards accumulated.\",\"abbreviation\":\"YC\",\"value\":1,\"displayValue\":\"1\"},{\"name\":\"possessionPct\",\"displayName\":\"Possession Percentage\",\"shortDisplayName\":\"PP\",\"description\":\"The percentage of the game this team had possession\",\"abbreviation\":\"PP\",\"value\":20.6,\"displayValue\":\"20.6\"},{\"name\":\"shotsOnTarget\",\"displayName\":\"Shots On Goal\",\"shortDisplayName\":\"SOG\",\"description\":\"The number of shots that are on goal.\",\"abbreviation\":\"SOG\",\"value\":2,\"displayValue\":\"2\"},{\"name\":\"totalShots\",\"displayName\":\"Shots\",\"shortDisplayName\":\"SHOT\",\"description\":\"The number of shots attempted.\",\"abbreviation\":\"SHOT\",\"value\":4,\"displayValue\":\"4\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"467\",\"name\":\"South Africa\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayName\":\"Fouls Committed\",\"shortDisplayName\":\"FC\",\"description\":\"The number of fouls comitted by a player or team.\",\"abbreviation\":\"FC\",\"value\":9,\"displayValue\":\"9\"},{\"name\":\"redCards\",\"displayName\":\"Red Cards\",\"shortDisplayName\":\"RC\",\"description\":\"The number of red cards that have been issued.\",\"abbreviation\":\"RC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"wonCorners\",\"displayName\":\"Corners Won\",\"shortDisplayName\":\"CW\",\"description\":\"The number of corners won.\",\"abbreviation\":\"CW\",\"value\":6,\"displayValue\":\"6\"},{\"name\":\"yellowCards\",\"displayName\":\"Yellow Cards\",\"shortDisplayName\":\"YC\",\"description\":\"The number of yellow cards accumulated.\",\"abbreviation\":\"YC\",\"value\":1,\"displayValue\":\"1\"},{\"name\":\"possessionPct\",\"displayName\":\"Possession Percentage\",\"shortDisplayName\":\"PP\",\"description\":\"The percentage of the game this team had possession\",\"abbreviation\":\"PP\",\"value\":79.4,\"displayValue\":\"79.4\"},{\"name\":\"shotsOnTarget\",\"displayName\":\"Shots On Goal\",\"shortDisplayName\":\"SOG\",\"description\":\"The number of shots that are on goal.\",\"abbreviation\":\"SOG\",\"value\":4,\"displayValue\":\"4\"},{\"name\":\"totalShots\",\"displayName\":\"Shots\",\"shortDisplayName\":\"SHOT\",\"description\":\"The number of shots attempted.\",\"abbreviation\":\"SHOT\",\"value\":16,\"displayValue\":\"16\"}]}]}",
+      "statistics_sha256": "fe16d6f00dad657e53eed038f03e508feae43762fc2ba1c29bfaa971580ff2da",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      },
+      "transfer_ready": false
+    },
+    {
+      "source": "espn",
+      "fixture_id": "699800",
+      "kickoff": "2024-06-07T17:00Z",
+      "status": "FT",
+      "league": {
+        "id": "fifa.friendly",
+        "name": "fifa.friendly"
+      },
+      "home": {
+        "name": "Albania",
+        "id": "585",
+        "goals": 3
+      },
+      "away": {
+        "name": "Azerbaijan",
+        "id": "581",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "provider_event_id": "699800",
+      "provider_url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/699800/competitions/699800/competitors/585/statistics",
+      "source_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/699800/competitions/699800/competitors/585/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/699800/competitions/699800/competitors/581/statistics"
+      ],
+      "source_payload_sha256": "323d63d82466034a86a5eed8cc3e9ec1bc7fba6829ba2cf46b012f89f114875a",
+      "source_payload_hashes": [
+        "ceed936d843f490d40d53659b7ba9c5db249a537adc893188afb0bce24a64603",
+        "7df298fc629da3ff04771d5c398dac52c85d9a9acd6c4f82b2d43b65495a7b31"
+      ],
+      "statistics_class": "full",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"585\",\"name\":\"Albania\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayName\":\"Fouls Committed\",\"shortDisplayName\":\"FC\",\"description\":\"The number of fouls comitted by a player or team.\",\"abbreviation\":\"FC\",\"value\":6,\"displayValue\":\"6\"},{\"name\":\"redCards\",\"displayName\":\"Red Cards\",\"shortDisplayName\":\"RC\",\"description\":\"The number of red cards that have been issued.\",\"abbreviation\":\"RC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"wonCorners\",\"displayName\":\"Corners Won\",\"shortDisplayName\":\"CW\",\"description\":\"The number of corners won.\",\"abbreviation\":\"CW\",\"value\":4,\"displayValue\":\"4\"},{\"name\":\"yellowCards\",\"displayName\":\"Yellow Cards\",\"shortDisplayName\":\"YC\",\"description\":\"The number of yellow cards accumulated.\",\"abbreviation\":\"YC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"possessionPct\",\"displayName\":\"Possession Percentage\",\"shortDisplayName\":\"PP\",\"description\":\"The percentage of the game this team had possession\",\"abbreviation\":\"PP\",\"value\":38.8,\"displayValue\":\"38.8\"},{\"name\":\"shotsOnTarget\",\"displayName\":\"Shots On Goal\",\"shortDisplayName\":\"SOG\",\"description\":\"The number of shots that are on goal.\",\"abbreviation\":\"SOG\",\"value\":5,\"displayValue\":\"5\"},{\"name\":\"totalShots\",\"displayName\":\"Shots\",\"shortDisplayName\":\"SHOT\",\"description\":\"The number of shots attempted.\",\"abbreviation\":\"SHOT\",\"value\":12,\"displayValue\":\"12\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"581\",\"name\":\"Azerbaijan\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayName\":\"Fouls Committed\",\"shortDisplayName\":\"FC\",\"description\":\"The number of fouls comitted by a player or team.\",\"abbreviation\":\"FC\",\"value\":11,\"displayValue\":\"11\"},{\"name\":\"redCards\",\"displayName\":\"Red Cards\",\"shortDisplayName\":\"RC\",\"description\":\"The number of red cards that have been issued.\",\"abbreviation\":\"RC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"wonCorners\",\"displayName\":\"Corners Won\",\"shortDisplayName\":\"CW\",\"description\":\"The number of corners won.\",\"abbreviation\":\"CW\",\"value\":3,\"displayValue\":\"3\"},{\"name\":\"yellowCards\",\"displayName\":\"Yellow Cards\",\"shortDisplayName\":\"YC\",\"description\":\"The number of yellow cards accumulated.\",\"abbreviation\":\"YC\",\"value\":1,\"displayValue\":\"1\"},{\"name\":\"possessionPct\",\"displayName\":\"Possession Percentage\",\"shortDisplayName\":\"PP\",\"description\":\"The percentage of the game this team had possession\",\"abbreviation\":\"PP\",\"value\":61.2,\"displayValue\":\"61.2\"},{\"name\":\"shotsOnTarget\",\"displayName\":\"Shots On Goal\",\"shortDisplayName\":\"SOG\",\"description\":\"The number of shots that are on goal.\",\"abbreviation\":\"SOG\",\"value\":4,\"displayValue\":\"4\"},{\"name\":\"totalShots\",\"displayName\":\"Shots\",\"shortDisplayName\":\"SHOT\",\"description\":\"The number of shots attempted.\",\"abbreviation\":\"SHOT\",\"value\":14,\"displayValue\":\"14\"}]}]}",
+      "statistics_sha256": "10863dbf2739036169905489b85f3424bbba0dd581caa0f25fcfe25a5b09c406",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      },
+      "transfer_ready": false
+    },
+    {
+      "source": "espn",
+      "fixture_id": "699861",
+      "kickoff": "2024-06-05T19:30Z",
+      "status": "FT",
+      "league": {
+        "id": "fifa.friendly",
+        "name": "fifa.friendly"
+      },
+      "home": {
+        "name": "Spain",
+        "id": "164",
+        "goals": 5
+      },
+      "away": {
+        "name": "Andorra",
+        "id": "587",
+        "goals": 0
+      },
+      "provider": "ESPN",
+      "provider_event_id": "699861",
+      "provider_url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/699861/competitions/699861/competitors/164/statistics",
+      "source_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/699861/competitions/699861/competitors/164/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/699861/competitions/699861/competitors/587/statistics"
+      ],
+      "source_payload_sha256": "c9e7095d4144b0d3df19e064eeff9217df41c062861ae8d2b0d414d3dc1db93a",
+      "source_payload_hashes": [
+        "83e84c8deb81c938274c64cf4da544586fdcbade5fc82c8117004c7dae1e988e",
+        "af8e1d9162dd9926598851e7f57f01f4c47c61980e07770f3d69630a87711481"
+      ],
+      "statistics_class": "full",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"164\",\"name\":\"Spain\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayName\":\"Fouls Committed\",\"shortDisplayName\":\"FC\",\"description\":\"The number of fouls comitted by a player or team.\",\"abbreviation\":\"FC\",\"value\":8,\"displayValue\":\"8\"},{\"name\":\"redCards\",\"displayName\":\"Red Cards\",\"shortDisplayName\":\"RC\",\"description\":\"The number of red cards that have been issued.\",\"abbreviation\":\"RC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"wonCorners\",\"displayName\":\"Corners Won\",\"shortDisplayName\":\"CW\",\"description\":\"The number of corners won.\",\"abbreviation\":\"CW\",\"value\":8,\"displayValue\":\"8\"},{\"name\":\"yellowCards\",\"displayName\":\"Yellow Cards\",\"shortDisplayName\":\"YC\",\"description\":\"The number of yellow cards accumulated.\",\"abbreviation\":\"YC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"possessionPct\",\"displayName\":\"Possession Percentage\",\"shortDisplayName\":\"PP\",\"description\":\"The percentage of the game this team had possession\",\"abbreviation\":\"PP\",\"value\":83.9,\"displayValue\":\"83.9\"},{\"name\":\"shotsOnTarget\",\"displayName\":\"Shots On Goal\",\"shortDisplayName\":\"SOG\",\"description\":\"The number of shots that are on goal.\",\"abbreviation\":\"SOG\",\"value\":10,\"displayValue\":\"10\"},{\"name\":\"totalShots\",\"displayName\":\"Shots\",\"shortDisplayName\":\"SHOT\",\"description\":\"The number of shots attempted.\",\"abbreviation\":\"SHOT\",\"value\":21,\"displayValue\":\"21\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"587\",\"name\":\"Andorra\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayName\":\"Fouls Committed\",\"shortDisplayName\":\"FC\",\"description\":\"The number of fouls comitted by a player or team.\",\"abbreviation\":\"FC\",\"value\":5,\"displayValue\":\"5\"},{\"name\":\"redCards\",\"displayName\":\"Red Cards\",\"shortDisplayName\":\"RC\",\"description\":\"The number of red cards that have been issued.\",\"abbreviation\":\"RC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"wonCorners\",\"displayName\":\"Corners Won\",\"shortDisplayName\":\"CW\",\"description\":\"The number of corners won.\",\"abbreviation\":\"CW\",\"value\":1,\"displayValue\":\"1\"},{\"name\":\"yellowCards\",\"displayName\":\"Yellow Cards\",\"shortDisplayName\":\"YC\",\"description\":\"The number of yellow cards accumulated.\",\"abbreviation\":\"YC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"possessionPct\",\"displayName\":\"Possession Percentage\",\"shortDisplayName\":\"PP\",\"description\":\"The percentage of the game this team had possession\",\"abbreviation\":\"PP\",\"value\":16.1,\"displayValue\":\"16.1\"},{\"name\":\"shotsOnTarget\",\"displayName\":\"Shots On Goal\",\"shortDisplayName\":\"SOG\",\"description\":\"The number of shots that are on goal.\",\"abbreviation\":\"SOG\",\"value\":2,\"displayValue\":\"2\"},{\"name\":\"totalShots\",\"displayName\":\"Shots\",\"shortDisplayName\":\"SHOT\",\"description\":\"The number of shots attempted.\",\"abbreviation\":\"SHOT\",\"value\":4,\"displayValue\":\"4\"}]}]}",
+      "statistics_sha256": "fbc8a489dd4a60abdf1b493f99f5c69aa52ae0cecfbbdca77448c5a1f08313dc",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      },
+      "transfer_ready": false
+    },
+    {
+      "source": "espn",
+      "fixture_id": "702330",
+      "kickoff": "2024-06-11T18:45Z",
+      "status": "FT",
+      "league": {
+        "id": "fifa.friendly",
+        "name": "fifa.friendly"
+      },
+      "home": {
+        "name": "Northern Ireland",
+        "id": "586",
+        "goals": 2
+      },
+      "away": {
+        "name": "Andorra",
+        "id": "587",
+        "goals": 0
+      },
+      "provider": "ESPN",
+      "provider_event_id": "702330",
+      "provider_url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/702330/competitions/702330/competitors/586/statistics",
+      "source_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/702330/competitions/702330/competitors/586/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/702330/competitions/702330/competitors/587/statistics"
+      ],
+      "source_payload_sha256": "5e45b5cf53ea534705af2f67a4d3c33606dd3c5b2e6f1929c00e1f5b843cd02f",
+      "source_payload_hashes": [
+        "97d8a1f5b1728335d6dc2c4c99d868b469573fda140de310a499765415ba7aaf",
+        "48409c78b46e1b0a88c7054435905cd70d343912a7fed2a0f78acf284b05408e"
+      ],
+      "statistics_class": "full",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"586\",\"name\":\"Northern Ireland\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayName\":\"Fouls Committed\",\"shortDisplayName\":\"FC\",\"description\":\"The number of fouls comitted by a player or team.\",\"abbreviation\":\"FC\",\"value\":12,\"displayValue\":\"12\"},{\"name\":\"redCards\",\"displayName\":\"Red Cards\",\"shortDisplayName\":\"RC\",\"description\":\"The number of red cards that have been issued.\",\"abbreviation\":\"RC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"wonCorners\",\"displayName\":\"Corners Won\",\"shortDisplayName\":\"CW\",\"description\":\"The number of corners won.\",\"abbreviation\":\"CW\",\"value\":8,\"displayValue\":\"8\"},{\"name\":\"yellowCards\",\"displayName\":\"Yellow Cards\",\"shortDisplayName\":\"YC\",\"description\":\"The number of yellow cards accumulated.\",\"abbreviation\":\"YC\",\"value\":2,\"displayValue\":\"2\"},{\"name\":\"possessionPct\",\"displayName\":\"Possession Percentage\",\"shortDisplayName\":\"PP\",\"description\":\"The percentage of the game this team had possession\",\"abbreviation\":\"PP\",\"value\":75.5,\"displayValue\":\"75.5\"},{\"name\":\"shotsOnTarget\",\"displayName\":\"Shots On Goal\",\"shortDisplayName\":\"SOG\",\"description\":\"The number of shots that are on goal.\",\"abbreviation\":\"SOG\",\"value\":6,\"displayValue\":\"6\"},{\"name\":\"totalShots\",\"displayName\":\"Shots\",\"shortDisplayName\":\"SHOT\",\"description\":\"The number of shots attempted.\",\"abbreviation\":\"SHOT\",\"value\":17,\"displayValue\":\"17\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"587\",\"name\":\"Andorra\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayName\":\"Fouls Committed\",\"shortDisplayName\":\"FC\",\"description\":\"The number of fouls comitted by a player or team.\",\"abbreviation\":\"FC\",\"value\":22,\"displayValue\":\"22\"},{\"name\":\"redCards\",\"displayName\":\"Red Cards\",\"shortDisplayName\":\"RC\",\"description\":\"The number of red cards that have been issued.\",\"abbreviation\":\"RC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"wonCorners\",\"displayName\":\"Corners Won\",\"shortDisplayName\":\"CW\",\"description\":\"The number of corners won.\",\"abbreviation\":\"CW\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"yellowCards\",\"displayName\":\"Yellow Cards\",\"shortDisplayName\":\"YC\",\"description\":\"The number of yellow cards accumulated.\",\"abbreviation\":\"YC\",\"value\":3,\"displayValue\":\"3\"},{\"name\":\"possessionPct\",\"displayName\":\"Possession Percentage\",\"shortDisplayName\":\"PP\",\"description\":\"The percentage of the game this team had possession\",\"abbreviation\":\"PP\",\"value\":24.5,\"displayValue\":\"24.5\"},{\"name\":\"shotsOnTarget\",\"displayName\":\"Shots On Goal\",\"shortDisplayName\":\"SOG\",\"description\":\"The number of shots that are on goal.\",\"abbreviation\":\"SOG\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"totalShots\",\"displayName\":\"Shots\",\"shortDisplayName\":\"SHOT\",\"description\":\"The number of shots attempted.\",\"abbreviation\":\"SHOT\",\"value\":2,\"displayValue\":\"2\"}]}]}",
+      "statistics_sha256": "36bec3434e44eaf76f13caf93541dde3a6457ce8b0187b6ae87399d28948e948",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      },
+      "transfer_ready": false
     }
   ],
   "partialMatches": []
