@@ -618,17 +618,14 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     // D1 has a bounded bind-parameter budget. Do not generate one SQL placeholder
     // per queued fixture (a 458-item queue can make the query fail before summaries run).
     // Read a bounded candidate window and exclude queued IDs in JavaScript instead.
-    const queuedFixtureIds = new Set(summaryQueue.map(item => String(item.fixtureId || "")).filter(Boolean));
-    const discoveryCursorKey = "mam:espn-summary-discovery-cursor:v1";
+    const queuedFixtureIds = new Set(summaryQueue.map(item => String(item.source || "ESPN") + "|" + String(item.fixtureId || "")).filter(Boolean));
+    const discoveryCursorKey = "mam:espn-summary-discovery-cursor:v2";
     const discoveryCursor = await env.MAM_KV.get(discoveryCursorKey, "json");
-    const discoverySql = "SELECT fixture_id AS fixtureId, kickoff FROM matches WHERE source = 'ESPN' AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (" +
-      "statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (" +
-      "CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR " +
-      "CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))" +
-      (discoveryCursor ? " AND (kickoff > ? OR (kickoff = ? AND fixture_id > ?))" : "") +
-      " ORDER BY kickoff ASC, fixture_id ASC LIMIT 100";
+    const discoverySql = "SELECT source, fixture_id AS fixtureId, kickoff FROM matches WHERE (source IN ('ESPN','espn') OR (source = 'app' AND fixture_id LIKE 'espn-%')) AND status IN ('FT','AET','PEN','LIVE','1H','2H','HT','ET','P','INT') AND (statistics_json IS NULL OR TRIM(statistics_json) IN ('','{}','[]','null'))" +
+      (discoveryCursor ? " AND (kickoff > ? OR (kickoff = ? AND (fixture_id > ? OR (fixture_id = ? AND source > ?))))" : "") +
+      " ORDER BY kickoff ASC, fixture_id ASC, source ASC LIMIT 100";
     const missingRows = discoveryCursor
-      ? await env.DB.prepare(discoverySql).bind(discoveryCursor.kickoff, discoveryCursor.kickoff, discoveryCursor.fixtureId).all()
+      ? await env.DB.prepare(discoverySql).bind(discoveryCursor.kickoff, discoveryCursor.kickoff, discoveryCursor.fixtureId, discoveryCursor.fixtureId, discoveryCursor.source || "").all()
       : await env.DB.prepare(discoverySql).all();
     const discoveredRows = Array.isArray(missingRows?.results) ? missingRows.results : [];
     let lastDiscoveryProcessed = null;
@@ -636,25 +633,25 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     for (const row of discoveredRows) {
       if (summaryQueue.length >= 480) break;
       lastDiscoveryProcessed = row;
+      const source = String(row.source || "ESPN");
       const fixtureId = String(row.fixtureId || "");
       if (!fixtureId.startsWith("espn-")) continue;
       const splitAt = fixtureId.lastIndexOf("-");
       if (splitAt <= 5 || splitAt >= fixtureId.length - 1) continue;
       const slug = fixtureId.slice(5, splitAt);
       const eventId = fixtureId.slice(splitAt + 1);
-      const key = "ESPN:" + fixtureId;
-      // A missing-stat row must never be suppressed by a stale done marker.
+      const key = source + ":" + fixtureId;
+      const queuedKey = source + "|" + fixtureId;
       summaryDoneSet.delete(key);
-      if (!queuedFixtureIds.has(fixtureId) && !summaryQueue.some(item => item.key === key)) {
-        summaryQueue.push({ key, slug, fixtureId, eventId, attempts: 0, retryAfter: 0 });
-        queuedFixtureIds.add(fixtureId);
+      if (!queuedFixtureIds.has(queuedKey) && !summaryQueue.some(item => item.key === key)) {
+        summaryQueue.push({ key, source, slug, fixtureId, eventId, attempts: 0, retryAfter: 0 });
+        queuedFixtureIds.add(queuedKey);
         recoveredSummaryItems++;
       }
     }
-    // Advance only through rows actually examined; never skip overflow when the queue fills.
     await env.MAM_KV.put(discoveryCursorKey, JSON.stringify(
       discoveredRows.length === 100 && lastDiscoveryProcessed
-        ? { kickoff: lastDiscoveryProcessed.kickoff, fixtureId: lastDiscoveryProcessed.fixtureId }
+        ? { kickoff: lastDiscoveryProcessed.kickoff, fixtureId: lastDiscoveryProcessed.fixtureId, source: lastDiscoveryProcessed.source }
         : null
     ), { expirationTtl: 60 * 60 * 24 * 30 });
   }
