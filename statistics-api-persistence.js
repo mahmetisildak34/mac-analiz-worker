@@ -2,7 +2,7 @@ import {classifyApiCandidate,fetchVerifiedFixtureStatistics,retryDelayMs} from "
 
 // This processor is NOT connected to cron until provider quota and shared counter are audited.
 // It writes only to an explicitly passed test/staging D1 database.
-const empty="(statistics_json IS NULL OR length(trim(statistics_json))<=5 OR trim(statistics_json) IN ('{}','[]'))";
+const empty="(statistics_json IS NULL OR trim(statistics_json) IN ('','{}','[]','null'))";
 export async function ensureApiRetrySchema(db) {
   await db.prepare("CREATE TABLE IF NOT EXISTS mam_statistics_api_retry (source TEXT NOT NULL, fixture_id TEXT NOT NULL, attempts INTEGER NOT NULL DEFAULT 0, state TEXT NOT NULL DEFAULT 'pending', next_attempt_ms INTEGER NOT NULL DEFAULT 0, last_error TEXT, updated_at TEXT DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(source,fixture_id))").run();
 }
