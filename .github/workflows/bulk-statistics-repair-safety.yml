@@ -25,10 +25,22 @@ on:
     branches:
       - main
     paths:
+      - "worker.js"
       - "statistics-repair.js"
       - "statistics-repair-bulk.js"
+      - "statistics-api-backfill.js"
+      - "statistics-api-cron.js"
+      - "statistics-api-persistence.js"
       - "tests/statistics-repair-*.test.mjs"
       - "tests/statistics-preview-integration.test.mjs"
+      - "tests/statistics-api-*.test.mjs"
+      - "tests/statistics-source-classification.test.mjs"
+      - "tests/espn-summary-source-alias.test.mjs"
+      - "tests/cross-source-*.test.mjs"
+      - "tests/espn-core-statistics-fallback.test.mjs"
+      - "tests/summary-statistics-overwrite-guard.test.mjs"
+      - "tests/team-name-aliases.test.mjs"
+      - ".github/workflows/bulk-statistics-repair-safety.yml"
 
 permissions:
   contents: read
