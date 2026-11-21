@@ -6,10 +6,10 @@
   "protected_existing_manifest": "STATISTICS_REPAIR_INVENTORY_2026-11-21.json",
   "candidate_inventory": "STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json",
   "counts": {
-    "full": 4,
+    "full": 5,
     "partial": 0,
     "ambiguous": 0,
-    "unavailable_or_not_yet_checked": 674
+    "unavailable_or_not_yet_checked": 673
   },
   "policy": {
     "production_preview_writes": 0,
@@ -166,6 +166,44 @@
         "source_single_provider": true
       },
       "notes": "1Result event 401930876, Nov 13 2026 18:00 UTC-05 = Nov 13 23:00 UTC = Nov 14 02:00 UTC+03; API-Football fixture 1647362 is distinct provider identifier. Do not equate IDs. Not transfer authorized."
+    },
+    {
+      "source": "app",
+      "fixture_id": "1646937",
+      "kickoff": "2026-11-13T01:00:00+03:00",
+      "status": "FT",
+      "league": {
+        "id": "299",
+        "name": "Primera División",
+        "country": "Venezuela"
+      },
+      "home": {
+        "name": "Puerto Cabello",
+        "id": "2827",
+        "goals": 0
+      },
+      "away": {
+        "name": "Monagas SC",
+        "id": "2811",
+        "goals": 1
+      },
+      "provider": "Scorely",
+      "provider_event_id": "academia-puerto-cabello-vs-monagas-sc-2026-11-12",
+      "provider_url": "https://scorely.tv/es-es/partido/academia-puerto-cabello-vs-monagas-sc-2026-11-12/",
+      "statistics_class": "full",
+      "statistics_sha256": "bba0f0677af9128aca1e33d558879112931c29e07fb89c07897ef1b6d1b6e517",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":\"Puerto Cabello\",\"teamId\":\"2827\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"14\"},{\"name\":\"shotsOnTarget\",\"value\":\"2\"},{\"name\":\"possessionPct\",\"value\":\"62\"},{\"name\":\"wonCorners\",\"value\":\"4\"},{\"name\":\"foulsCommitted\",\"value\":\"13\"},{\"name\":\"yellowCards\",\"value\":\"0\"},{\"name\":\"redCards\",\"value\":\"0\"}]},{\"homeAway\":\"away\",\"team\":\"Monagas SC\",\"teamId\":\"2811\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"14\"},{\"name\":\"shotsOnTarget\",\"value\":\"5\"},{\"name\":\"possessionPct\",\"value\":\"38\"},{\"name\":\"wonCorners\",\"value\":\"6\"},{\"name\":\"foulsCommitted\",\"value\":\"13\"},{\"name\":\"yellowCards\",\"value\":\"2\"},{\"name\":\"redCards\",\"value\":\"0\"}]}],\"statisticsSource\":\"Scorely\"}",
+      "verification": {
+        "match_date_verified": true,
+        "ordered_teams_verified": true,
+        "score_verified": true,
+        "competition_verified": true,
+        "provider_event_id_verified": true,
+        "inventory_fixture_id_is_api_football_alias": true,
+        "both_sides_have_all_seven_required_metrics": true,
+        "source_single_provider": true
+      },
+      "notes": "Scorely full-time (Total tab) stats; API-Football inventory fixture ID 1646937 is a distinct provider ID. Some other sources disagree on shots or yellow cards; never combine their numbers. Not transfer authorized."
     }
   ],
   "partialMatches": []
