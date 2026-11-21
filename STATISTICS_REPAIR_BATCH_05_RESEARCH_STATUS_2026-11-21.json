@@ -7,9 +7,9 @@
   "policy": "Single-origin match statistics and exact event identity; do not blend providers; absent metrics not zero; copied mirrors not independent; no production writes.",
   "counts": {
     "full_verified": 0,
-    "blocked": 1,
-    "source_review": 2,
-    "pending": 22
+    "blocked": 2,
+    "source_review": 4,
+    "pending": 19
   },
   "rows": [
     {
@@ -54,11 +54,14 @@
       "away": "Municipal",
       "league": "Liga Nacional",
       "provider_group": "API-Football",
-      "status": "pending",
-      "score": null,
-      "source_urls": [],
-      "research_date": null,
-      "reason": "Plan inventory only; not yet individually researched.",
+      "status": "source_review",
+      "score": "0-1",
+      "source_urls": [
+        "https://www.clarosports.com/centroamerica/futbol-cenam/malacateco-vs-municipal-en-vivo-resultado-y-goles-del-partido-de-la-liga-de-guatemala-2026/",
+        "https://www.rotascore.com/es/match/malacateco-csd-municipal/n54qllhn6yn0qvy"
+      ],
+      "research_date": "2026-11-21",
+      "reason": "14 Nov 2026 Guatemala Liga Nacional Apertura round 20, Malacateco home Municipal away FT 0-1 corroborated by contemporaneous Claro Sports report and RotaScore. RotaScore has partial 4/10 shots, 3/4 on target, 52/48 possession, but corners, fouls and complete card counts lack authoritative match-specific provenance. Keep review.",
       "statistics_sha256": null
     },
     {
@@ -69,11 +72,15 @@
       "away": "Deportiva Venados",
       "league": "Primera Premier",
       "provider_group": "API-Football",
-      "status": "pending",
-      "score": null,
-      "source_urls": [],
-      "research_date": null,
-      "reason": "Plan inventory only; not yet individually researched.",
+      "status": "blocked",
+      "score": "1-3",
+      "source_urls": [
+        "https://lobosulmx.com/event/1051/",
+        "https://www.soccerway.com/match/deportiva-venados-nXz6QS12/lobos-ulmx-S6v5DFaf/",
+        "https://scoremondo.com/pt/partida/lobos-ulmx-deportiva-venados-31552655"
+      ],
+      "research_date": "2026-11-21",
+      "reason": "Club's official fixture confirms 14 Nov 2026 19:00 Mexico local Lobos ULMX home Deportiva Venados away FT 1-3. Soccerway reports shots on target 3/5 and possession 63/37, ScoreMondo reports on target 6/8. Serious disagreement in a core metric; block until originating provider reconciled. Streaming mirrors showing fouls 0/0 cannot establish true zeros.",
       "statistics_sha256": null
     },
     {
@@ -119,11 +126,14 @@
       "away": "Firpo",
       "league": "Primera Division",
       "provider_group": "API-Football",
-      "status": "pending",
-      "score": null,
-      "source_urls": [],
-      "research_date": null,
-      "reason": "Plan inventory only; not yet individually researched.",
+      "status": "source_review",
+      "score": "3-1",
+      "source_urls": [
+        "https://www.sofascore.com/football/match/cd-luis-angel-firpo-isidro-metapan/HMjsNMj",
+        "https://scoremondo.com/en/match/ad-isidro-metapan-cd-luis-angel-firpo-31566164"
+      ],
+      "research_date": "2026-11-21",
+      "reason": "14 Nov 2026 El Salvador Primera Division Apertura round 21, Isidro Metapán home Firpo away FT 3-1 confirmed. ScoreMondo displays on-target 0/2 while goal sequence shows 3 home goals; this is an internally suspect stat, and full seven metric set is absent. Source review, no fabricated zero.",
       "statistics_sha256": null
     },
     {
