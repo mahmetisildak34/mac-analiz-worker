@@ -1,0 +1,1331 @@
+{
+  "schema_version": 1,
+  "batch_number": 25,
+  "generated_on": "2026-11-21",
+  "source_plan": "STATISTICS_REPAIR_BATCH_PLAN_2026-11-21.json",
+  "branch": "feature/bulk-statistics-repair-hardening",
+  "policy": "Read-only research. No transfer authorized.",
+  "counts": {
+    "full_verified": 0,
+    "blocked": 0,
+    "source_review": 25,
+    "pending": 0
+  },
+  "rows": [
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-06-08T16:00:00+00:00-Azerbaijan U21-Montenegro U21",
+      "match": "Azerbaijan U21 — Montenegro U21",
+      "planned_kickoff": "2025-06-08T16:00:00+00:00",
+      "home": "Azerbaijan U21",
+      "away": "Montenegro U21",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-06-08&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-06-10T13:00:00+00:00-Mozambique-Zimbabwe",
+      "match": "Mozambique — Zimbabwe",
+      "planned_kickoff": "2025-06-10T13:00:00+00:00",
+      "home": "Mozambique",
+      "away": "Zimbabwe",
+      "league": "CAF South Africa Confederations Cup",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "1-3",
+      "provider_event_id": "1l4rjnh96g73m7v",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-06-10&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-mozambique/1l4rjnh96g73m7v/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Mozambique"
+            },
+            "statistics": [
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Zimbabwe"
+            },
+            "statistics": [
+              {
+                "name": "yellowCards",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "63f69da1251f38ca5b25cb9fc59e343c7e92e09735adb2e943afae9ff137e5a4",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-06-10T16:00:00+00:00-Niger-Zimbabwe",
+      "match": "Niger — Zimbabwe",
+      "planned_kickoff": "2025-06-10T16:00:00+00:00",
+      "home": "Niger",
+      "away": "Zimbabwe",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "1-1",
+      "provider_event_id": "3glrw7hn1k4pqdy",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-06-10&status=finished&limit=1000",
+        "https://sportscore.com/football/match/niger-vs-zimbabwe/3glrw7hn1k4pqdy/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Niger"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 4
+              },
+              {
+                "name": "yellowCards",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Zimbabwe"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 3
+              },
+              {
+                "name": "yellowCards",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "e4f3cd0ac4e74b4a04b0335f690226c8f6beaeec9d50fe427a7e0825ff101c2f",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-09-05T15:30:00+00:00-Romania U21-Kosovo U21",
+      "match": "Romania U21 — Kosovo U21",
+      "planned_kickoff": "2025-09-05T15:30:00+00:00",
+      "home": "Romania U21",
+      "away": "Kosovo U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "0-0",
+      "provider_event_id": "y39mp1h63ez5moj",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-09-05&status=finished&limit=1000",
+        "https://sportscore.com/football/match/romania-u21-vs-kosovo-u21/y39mp1h63ez5moj/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Romania U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 7
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Kosovo U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 4
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "57ce0731e6213f1b8f3d0838731f529c2bca9948a375f545f02208a1fbee08fe",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-09-05T16:00:00+00:00-Benin-Zimbabwe",
+      "match": "Benin — Zimbabwe",
+      "planned_kickoff": "2025-09-05T16:00:00+00:00",
+      "home": "Benin",
+      "away": "Zimbabwe",
+      "league": "FIFA World Cup qualification (CAF)",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "1-0",
+      "provider_event_id": "x7lm7phzol34m2w",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-09-05&status=finished&limit=1000",
+        "https://sportscore.com/football/match/benin-vs-zimbabwe/x7lm7phzol34m2w/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Benin"
+            },
+            "statistics": [
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Zimbabwe"
+            },
+            "statistics": [
+              {
+                "name": "yellowCards",
+                "value": 3
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "e190bc491d151c63afcc40e565d0cfc6711cecdb5100e6e0c81b8eac4680e751",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-09-05T16:15:00+00:00-Italy U21-Montenegro U21",
+      "match": "Italy U21 — Montenegro U21",
+      "planned_kickoff": "2025-09-05T16:15:00+00:00",
+      "home": "Italy U21",
+      "away": "Montenegro U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-09-05&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-09-09T13:00:00+00:00-Zimbabwe-Rwanda",
+      "match": "Zimbabwe — Rwanda",
+      "planned_kickoff": "2025-09-09T13:00:00+00:00",
+      "home": "Zimbabwe",
+      "away": "Rwanda",
+      "league": "FIFA World Cup qualification (CAF)",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "0-1",
+      "provider_event_id": "y0or5jhn4vngqwz",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-09-09&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-rwanda/y0or5jhn4vngqwz/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Zimbabwe"
+            },
+            "statistics": [
+              {
+                "name": "yellowCards",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Rwanda"
+            },
+            "statistics": [
+              {
+                "name": "yellowCards",
+                "value": 4
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "a618de10f8a46ab36665c7c282c442d8d1cf85168cbaa3f209a1d5c7f341872c",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-09-09T17:00:00+00:00-Kosovo U21-Spain U21",
+      "match": "Kosovo U21 — Spain U21",
+      "planned_kickoff": "2025-09-09T17:00:00+00:00",
+      "home": "Kosovo U21",
+      "away": "Spain U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "1-3",
+      "provider_event_id": "k82rekhgvjwyrep",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-09-09&status=finished&limit=1000",
+        "https://sportscore.com/football/match/spain-u21-vs-kosovo-u21/k82rekhgvjwyrep/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Kosovo U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 2
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Spain U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 8
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "8a27f43b90e27c65404f041d092c231cded0493ee4a4d0001699ed98ac128bb5",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-09-09T18:00:00+00:00-Montenegro U21-Sweden U21",
+      "match": "Montenegro U21 — Sweden U21",
+      "planned_kickoff": "2025-09-09T18:00:00+00:00",
+      "home": "Montenegro U21",
+      "away": "Sweden U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "2-0",
+      "provider_event_id": "y0or5jh8lwd3qwz",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-09-09&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-sweden-u21/y0or5jh8lwd3qwz/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Montenegro U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 5
+              },
+              {
+                "name": "yellowCards",
+                "value": 3
+              },
+              {
+                "name": "redCards",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Sweden U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 9
+              },
+              {
+                "name": "yellowCards",
+                "value": 3
+              },
+              {
+                "name": "redCards",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "ac88771e9435e23038e273b1b0d2798544027ccbbb74925867e5af7e0dd31ef3",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-10-10T16:00:00+00:00-Poland U21-Montenegro U21",
+      "match": "Poland U21 — Montenegro U21",
+      "planned_kickoff": "2025-10-10T16:00:00+00:00",
+      "home": "Poland U21",
+      "away": "Montenegro U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "2-0",
+      "provider_event_id": "zp5rzghgjde2q82",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-10-10&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-poland-u21/zp5rzghgjde2q82/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Poland U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 2
+              },
+              {
+                "name": "yellowCards",
+                "value": 1
+              },
+              {
+                "name": "redCards",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Montenegro U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 2
+              },
+              {
+                "name": "yellowCards",
+                "value": 3
+              },
+              {
+                "name": "redCards",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "14753c9ecc7ee8c2edffd9b2a95afe54336f183b6ab981808a8efe9284c6359a",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-10-10T16:00:00+00:00-Zimbabwe-South Africa",
+      "match": "Zimbabwe — South Africa",
+      "planned_kickoff": "2025-10-10T16:00:00+00:00",
+      "home": "Zimbabwe",
+      "away": "South Africa",
+      "league": "FIFA World Cup qualification (CAF)",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "0-0",
+      "provider_event_id": "6ypq3nh3527ymd7",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-10-10&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-south-africa/6ypq3nh3527ymd7/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Zimbabwe"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 4
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              },
+              {
+                "name": "redCards",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "South Africa"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 14
+              },
+              {
+                "name": "yellowCards",
+                "value": 0
+              },
+              {
+                "name": "redCards",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "707c2ca411d25b445ec69d5570aa3fc39e0c6ea1df946bbec4bde453b9319c6d",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-10-13T16:00:00+00:00-Lesotho-Zimbabwe",
+      "match": "Lesotho — Zimbabwe",
+      "planned_kickoff": "2025-10-13T16:00:00+00:00",
+      "home": "Lesotho",
+      "away": "Zimbabwe",
+      "league": "FIFA World Cup qualification (CAF)",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "1-0",
+      "provider_event_id": "n54qllh7el7dqvy",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-10-13&status=finished&limit=1000",
+        "https://sportscore.com/football/match/lesotho-vs-zimbabwe/n54qllh7el7dqvy/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Lesotho"
+            },
+            "statistics": [
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Zimbabwe"
+            },
+            "statistics": [
+              {
+                "name": "yellowCards",
+                "value": 3
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "dead619f2ef2e3be90386b8bc95e3fea6fe7cd267f343ba6b2d0bd653bc8edd0",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-10-14T16:00:00+00:00-Kosovo U21-San Marino U21",
+      "match": "Kosovo U21 — San Marino U21",
+      "planned_kickoff": "2025-10-14T16:00:00+00:00",
+      "home": "Kosovo U21",
+      "away": "San Marino U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "7-0",
+      "provider_event_id": "jw2r09hklg27rz8",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-10-14&status=finished&limit=1000",
+        "https://sportscore.com/football/match/san-marino-u21-vs-kosovo-u21/jw2r09hklg27rz8/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Kosovo U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 10
+              },
+              {
+                "name": "yellowCards",
+                "value": 0
+              },
+              {
+                "name": "redCards",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "San Marino U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 4
+              },
+              {
+                "name": "yellowCards",
+                "value": 5
+              },
+              {
+                "name": "redCards",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "f2b87db5b12997fda47ae6cf3e627b6a66b4a5ace63093c60043d0a584107a0e",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-10-14T16:00:00+00:00-Montenegro U21-North Macedonia U21",
+      "match": "Montenegro U21 — North Macedonia U21",
+      "planned_kickoff": "2025-10-14T16:00:00+00:00",
+      "home": "Montenegro U21",
+      "away": "North Macedonia U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "3-2",
+      "provider_event_id": "4jwq2ghn45dpm0v",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-10-14&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-north-macedonia-u21/4jwq2ghn45dpm0v/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Montenegro U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 7
+              },
+              {
+                "name": "yellowCards",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "North Macedonia U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 2
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "893c86cd5ab46e1029c47fd9f6dab3e17b27fb1818a4f0e1534dd9c9c3f46bc7",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-13T16:30:00+00:00-Algeria-Zimbabwe",
+      "match": "Algeria — Zimbabwe",
+      "planned_kickoff": "2025-11-13T16:30:00+00:00",
+      "home": "Algeria",
+      "away": "Zimbabwe",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "3-1",
+      "provider_event_id": "y39mp1h6w7dnmoj",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-11-13&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-algeria/y39mp1h6w7dnmoj/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Algeria"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Zimbabwe"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "a900dae4919ae2314e0802e1a9943340c2f838c46579fa807715a4eeeff69fc6",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-14T11:00:00+00:00-Armenia U21-Montenegro U21",
+      "match": "Armenia U21 — Montenegro U21",
+      "planned_kickoff": "2025-11-14T11:00:00+00:00",
+      "home": "Armenia U21",
+      "away": "Montenegro U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "1-2",
+      "provider_event_id": "y39mp1h63e8zmoj",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-11-14&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-armenia-u21/y39mp1h63e8zmoj/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Armenia U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 4
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Montenegro U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 1
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "15dae398d7c5dc0389968d9e322f0aaa4f8f714ec179bfcd28b5366fb9d71ee2",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-14T17:00:00+00:00-Cyprus U21-Kosovo U21",
+      "match": "Cyprus U21 — Kosovo U21",
+      "planned_kickoff": "2025-11-14T17:00:00+00:00",
+      "home": "Cyprus U21",
+      "away": "Kosovo U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "0-4",
+      "provider_event_id": "2y8m4zh53e6wql0",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-11-14&status=finished&limit=1000",
+        "https://sportscore.com/football/match/kosovo-u21-vs-cyprus-u21/2y8m4zh53e6wql0/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Cyprus U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 3
+              },
+              {
+                "name": "yellowCards",
+                "value": 4
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Kosovo U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 2
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "ce76e09ff7207d9ca2a982835e8b31338073d9e8b1faabfbef4d113aedb13ccd",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-17T16:30:00+00:00-Qatar-Zimbabwe",
+      "match": "Qatar — Zimbabwe",
+      "planned_kickoff": "2025-11-17T16:30:00+00:00",
+      "home": "Qatar",
+      "away": "Zimbabwe",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "1-2",
+      "provider_event_id": "6ypq3nhvnzjlmd7",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-11-17&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-qatar/6ypq3nhvnzjlmd7/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Qatar"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 6
+              },
+              {
+                "name": "yellowCards",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Zimbabwe"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 6
+              },
+              {
+                "name": "yellowCards",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "429c53f4da5e63c3895911fd56c0aff1e3594d31399143534a30fab61d1750a7",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-18T16:30:00+00:00-Finland U21-Kosovo U21",
+      "match": "Finland U21 — Kosovo U21",
+      "planned_kickoff": "2025-11-18T16:30:00+00:00",
+      "home": "Finland U21",
+      "away": "Kosovo U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "0-0",
+      "provider_event_id": "8yomo4h17633q0j",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-11-18&status=finished&limit=1000",
+        "https://sportscore.com/football/match/kosovo-u21-vs-finland-u21/8yomo4h17633q0j/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Finland U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 6
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Kosovo U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 2
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "395fafa5a27940465f6af3dd7ba8fa8fb01a3db36467f3a272b3c78807c35783",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-18T17:30:00+00:00-Montenegro U21-Italy U21",
+      "match": "Montenegro U21 — Italy U21",
+      "planned_kickoff": "2025-11-18T17:30:00+00:00",
+      "home": "Montenegro U21",
+      "away": "Italy U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "1-4",
+      "provider_event_id": "dn1m1ghl4gdxmoe",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-11-18&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-italy-u21/dn1m1ghl4gdxmoe/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Montenegro U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 3
+              },
+              {
+                "name": "yellowCards",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Italy U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 6
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "2c13e4992136946a1dd0a929fcfd33a6dd66de41bdb5f7134ea10eb5e82e08eb",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-22T20:00:00+00:00-Egypt-Zimbabwe",
+      "match": "Egypt — Zimbabwe",
+      "planned_kickoff": "2025-12-22T20:00:00+00:00",
+      "home": "Egypt",
+      "away": "Zimbabwe",
+      "league": "CAF Africa Cup of Nations",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "2-1",
+      "provider_event_id": "1l4rjnh95pg4m7v",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-12-22&status=finished&limit=1000",
+        "https://sportscore.com/football/match/egypt-vs-zimbabwe/1l4rjnh95pg4m7v/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Egypt"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 8
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Zimbabwe"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 3
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "83a24c9abaebc762c45cb8b0d048dc4719a065db0086d520a9c61e0249c8323d",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-26T12:30:00+00:00-Angola-Zimbabwe",
+      "match": "Angola — Zimbabwe",
+      "planned_kickoff": "2025-12-26T12:30:00+00:00",
+      "home": "Angola",
+      "away": "Zimbabwe",
+      "league": "CAF Africa Cup of Nations",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "1-1",
+      "provider_event_id": "8yomo4h1xj6kq0j",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-12-26&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-angola/8yomo4h1xj6kq0j/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Angola"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 5
+              },
+              {
+                "name": "yellowCards",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Zimbabwe"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 6
+              },
+              {
+                "name": "yellowCards",
+                "value": 4
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "f302acf4e49f73977aa6e973e30500dbe1bd53aaff7774a6523f17dc0928337b",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-29T16:00:00+00:00-Zimbabwe-South Africa",
+      "match": "Zimbabwe — South Africa",
+      "planned_kickoff": "2025-12-29T16:00:00+00:00",
+      "home": "Zimbabwe",
+      "away": "South Africa",
+      "league": "CAF Africa Cup of Nations",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "2-3",
+      "provider_event_id": "ednm9whwxlp5ryo",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-12-29&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-south-africa/ednm9whwxlp5ryo/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Zimbabwe"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 3
+              },
+              {
+                "name": "yellowCards",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "South Africa"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 3
+              },
+              {
+                "name": "yellowCards",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "eb5069b91f95de918f1aeb25ce325a2db2e2f80357467be25404b8d3b1234e02",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-03-27T17:30:00+00:00-Sweden U21-Montenegro U21",
+      "match": "Sweden U21 — Montenegro U21",
+      "planned_kickoff": "2026-03-27T17:30:00+00:00",
+      "home": "Sweden U21",
+      "away": "Montenegro U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-03-27&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-03-27T18:00:00+00:00-Kosovo U21-Romania U21",
+      "match": "Kosovo U21 — Romania U21",
+      "planned_kickoff": "2026-03-27T18:00:00+00:00",
+      "home": "Kosovo U21",
+      "away": "Romania U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-03-27&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    }
+  ]
+}

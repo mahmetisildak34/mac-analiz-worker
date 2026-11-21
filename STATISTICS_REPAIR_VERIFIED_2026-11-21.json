@@ -6,10 +6,10 @@
   "protected_existing_manifest": "STATISTICS_REPAIR_INVENTORY_2026-11-21.json",
   "candidate_inventory": "STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json",
   "counts": {
-    "full": 43,
+    "full": 64,
     "partial": 0,
     "ambiguous": 0,
-    "unavailable_or_not_yet_checked": 635,
+    "unavailable_or_not_yet_checked": 614,
     "pending_source_provenance_review": 1
   },
   "policy": {
@@ -1507,6 +1507,678 @@
       "source_payload_sha256": "61645d4a65e26b34ec86c712fb8e99e42f8df170109b1a1ac91641715fe76666",
       "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"132335\",\"name\":\"Amed SFK\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"25\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"7\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"1\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"1\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"30.5\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"10\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"8\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"1895\",\"name\":\"Besiktas\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"7\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"5\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"10\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"69.5\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"21\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"8\",\"label\":\"ON GOAL\"}]}]}",
       "statistics_sha256": "79c83b937ecfa6e258a7984a501a2744a0e15e1be39e7bece3b96292b5d02441",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-552038",
+      "kickoff": "2026-01-20T20:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "FC København",
+        "id": "909",
+        "goals": 1
+      },
+      "away": {
+        "name": "SSC Napoli",
+        "id": "114",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "provider_event_id": "757767",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757767",
+      "statistics_class": "full",
+      "source_payload_sha256": "87bf4d41747cf5381ee526d3d4b6d30662a05e56596321618225e11a88a132bc",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"909\",\"name\":\"FC København\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"13\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"1\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"1\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"29.7\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"5\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"114\",\"name\":\"SSC Napoli\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"15\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"11\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"70.3\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"19\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "f1fcf517c13767452eee08cd4025cd39e83980838cfb5639bd2857c802baf48b",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-551920",
+      "kickoff": "2026-01-28T20:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "SSC Napoli",
+        "id": "114",
+        "goals": 2
+      },
+      "away": {
+        "name": "Chelsea FC",
+        "id": "363",
+        "goals": 3
+      },
+      "provider": "ESPN",
+      "provider_event_id": "757792",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757792",
+      "statistics_class": "full",
+      "source_payload_sha256": "e179b04f59636d2b0a2b7c710e56ea768df197711de45b2252b7471b6454e6d2",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"114\",\"name\":\"SSC Napoli\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"15\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"4\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"46\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"8\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"363\",\"name\":\"Chelsea FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"15\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"1\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"54\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"11\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "697b3e10c2d3fd05ad16ef7385fd79c793123aa23da7fc33f6e1a8f37a9d7f58",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-552070",
+      "kickoff": "2026-03-11T20:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "Real Madrid CF",
+        "id": "86",
+        "goals": 3
+      },
+      "away": {
+        "name": "Manchester City FC",
+        "id": "382",
+        "goals": 0
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401862645",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862645",
+      "statistics_class": "full",
+      "source_payload_sha256": "fbcfac59b4a6a24d83e95912da5280d8fddf03d08b8bbc9815aa9eefd05a64ce",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"86\",\"name\":\"Real Madrid CF\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"11\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"1\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"40.2\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"12\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"7\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"382\",\"name\":\"Manchester City FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"13\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"10\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"59.8\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"8\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "a9cf6abd39411303a0f5a5aca660e4b5dbd3377625dafab6bd59f251fe572616",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-552076",
+      "kickoff": "2026-03-17T20:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "Chelsea FC",
+        "id": "363",
+        "goals": 0
+      },
+      "away": {
+        "name": "Paris Saint-Germain FC",
+        "id": "160",
+        "goals": 3
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401862648",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862648",
+      "statistics_class": "full",
+      "source_payload_sha256": "d3d2446e1137f47a6327addc134aff1be4c7bd80a379675699af625209d59df2",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"363\",\"name\":\"Chelsea FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"8\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"9\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"45.4\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"18\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"9\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"160\",\"name\":\"Paris Saint-Germain FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"10\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"54.6\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"8\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "aeb35b2413d1ab6f3a207f73104a869a0181ca1c6647c38e2cd623c9002c2e13",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-552078",
+      "kickoff": "2026-03-17T20:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "Manchester City FC",
+        "id": "382",
+        "goals": 1
+      },
+      "away": {
+        "name": "Real Madrid CF",
+        "id": "86",
+        "goals": 2
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401862647",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862647",
+      "statistics_class": "full",
+      "source_payload_sha256": "8243952cafc04857337eacca362ca6d401875d70c34854801b8b6a7988b25278",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"382\",\"name\":\"Manchester City FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"6\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"1\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"9\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"47.3\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"22\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"8\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"86\",\"name\":\"Real Madrid CF\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"7\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"6\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"52.7\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"14\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"7\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "65159e7ae89b1cf73a30cb4011a7049dc58735543606db4028bc152f62fa5148",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-556718",
+      "kickoff": "2026-04-08T19:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "Paris Saint-Germain FC",
+        "id": "160",
+        "goals": 2
+      },
+      "away": {
+        "name": "Liverpool FC",
+        "id": "364",
+        "goals": 0
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401862885",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862885",
+      "statistics_class": "full",
+      "source_payload_sha256": "10870df6b310759118f533f1a950a6f5e4638ef22750d9b068bd79d5839063ad",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"160\",\"name\":\"Paris Saint-Germain FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"8\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"74\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"18\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"6\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"364\",\"name\":\"Liverpool FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"12\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"1\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"26\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"3\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"0\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "fd1e1c012c640920e2f570a752e6ea5db9883a281cb5258e58c9254c3393d628",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-556722",
+      "kickoff": "2026-04-14T19:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "Liverpool FC",
+        "id": "364",
+        "goals": 0
+      },
+      "away": {
+        "name": "Paris Saint-Germain FC",
+        "id": "160",
+        "goals": 2
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401862889",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862889",
+      "statistics_class": "full",
+      "source_payload_sha256": "ac70eb646b3b59e32876e866d2cb4c8ac165e26e2a65132735a9e62aea6b0a4e",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"364\",\"name\":\"Liverpool FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"9\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"8\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"52.7\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"21\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"160\",\"name\":\"Paris Saint-Germain FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"10\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"2\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"47.3\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"12\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"6\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "a70d791c04544649d01a5fe4a6fc4609671e9c90405a91620d896b568fa46a04",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-552092",
+      "kickoff": "2026-04-28T19:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "Paris Saint-Germain FC",
+        "id": "160",
+        "goals": 5
+      },
+      "away": {
+        "name": "FC Bayern München",
+        "id": "132",
+        "goals": 4
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401862893",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862893",
+      "statistics_class": "full",
+      "source_payload_sha256": "ba164824c6b698930f6ef976734bbf1d43fdd2a4b837a068b119f600415b1fcf",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"160\",\"name\":\"Paris Saint-Germain FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"14\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"2\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"42.6\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"12\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"132\",\"name\":\"FC Bayern München\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"4\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"5\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"57.4\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"10\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"8\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "3ff165f8ffa9e05fbdd5aa9b57fc17826d6139679aa618fd2cb3c5b1002b78f2",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-552094",
+      "kickoff": "2026-05-06T19:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "FC Bayern München",
+        "id": "132",
+        "goals": 1
+      },
+      "away": {
+        "name": "Paris Saint-Germain FC",
+        "id": "160",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401862895",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862895",
+      "statistics_class": "full",
+      "source_payload_sha256": "51328608ed70e27a7b75a5539a111fc2950ab2cccd923755cde0c3af84818533",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"132\",\"name\":\"FC Bayern München\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"11\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"1\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"65.5\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"18\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"6\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"160\",\"name\":\"Paris Saint-Germain FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"12\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"8\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"34.5\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"15\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"7\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "c1e4a5a65d4bfc44f5b9fedd83ff25ee3ee38f8895eb53e6b83b0e5965cf47a2",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575326",
+      "kickoff": "2026-09-08T19:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "FC Porto",
+        "id": "437",
+        "goals": 0
+      },
+      "away": {
+        "name": "Manchester City FC",
+        "id": "382",
+        "goals": 2
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401915425",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915425",
+      "statistics_class": "full",
+      "source_payload_sha256": "e6686c890a59287b446ae66937dd8b5b33b89b224012c662503bca0ad96e0586",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"437\",\"name\":\"FC Porto\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"10\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"2\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"35.5\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"5\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"0\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"382\",\"name\":\"Manchester City FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"17\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"5\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"64.5\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"20\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"10\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "7c61d7f07353d8f42ea12bd04bd2b4c6dbb869f5518d25010a3fbe83c69af1bc",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575332",
+      "kickoff": "2026-09-09T19:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "Paris Saint-Germain FC",
+        "id": "160",
+        "goals": 6
+      },
+      "away": {
+        "name": "ŠK Slovan Bratislava",
+        "id": "521",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401915445",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915445",
+      "statistics_class": "full",
+      "source_payload_sha256": "163184a83d06c72e780647bc40aaa84f26eee7bec533200fa0d133792d5ebc68",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"160\",\"name\":\"Paris Saint-Germain FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"8\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"7\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"72.1\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"35\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"14\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"521\",\"name\":\"ŠK Slovan Bratislava\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"6\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"2\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"27.9\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"9\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "143841821135899d7f328280ebf8bcec4a2d87458fcf6392a6da3763f3431c1e",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575333",
+      "kickoff": "2026-09-09T19:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "SSC Napoli",
+        "id": "114",
+        "goals": 0
+      },
+      "away": {
+        "name": "Arsenal FC",
+        "id": "359",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401915423",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915423",
+      "statistics_class": "full",
+      "source_payload_sha256": "45671b9bc0e2184b87806ba32381206fa880c41f4bb3d26373ff1aff6c336cae",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"114\",\"name\":\"SSC Napoli\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"12\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"0\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"42.3\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"5\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"3\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"359\",\"name\":\"Arsenal FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"11\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"6\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"57.7\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"26\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"8\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "02ceea67d337113862b0b292beaa96823ffded27b687b8ea83746395ddb8431f",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575349",
+      "kickoff": "2026-10-13T19:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "Villarreal CF",
+        "id": "102",
+        "goals": 3
+      },
+      "away": {
+        "name": "SSC Napoli",
+        "id": "114",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401915410",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915410",
+      "statistics_class": "full",
+      "source_payload_sha256": "137f4315d5560c6477243aa822fdb89f8ceb3746f5856a3304cf787339e057c3",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"102\",\"name\":\"Villarreal CF\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"8\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"4\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"52\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"17\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"114\",\"name\":\"SSC Napoli\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"15\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"4\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"48\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"11\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"3\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "d4bdc7af1428c81282678e0ec67d898eff6aa42837ef484ed9c9ef71b1db59b7",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575352",
+      "kickoff": "2026-10-14T19:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "AS Roma",
+        "id": "104",
+        "goals": 3
+      },
+      "away": {
+        "name": "Real Madrid CF",
+        "id": "86",
+        "goals": 4
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401915414",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915414",
+      "statistics_class": "full",
+      "source_payload_sha256": "b36a2d9c66855aa324a74a3affdea8e1e4576ea0fe29d8e6202259f3ccd2aa84",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"104\",\"name\":\"AS Roma\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"15\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"5\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"54\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"14\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"7\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"86\",\"name\":\"Real Madrid CF\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"8\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"9\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"46\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"16\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"8\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "d94a132665cfd0cf81ffa582de4060bca4a364022054083a374793ec48ec5541",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575353",
+      "kickoff": "2026-10-14T19:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "Manchester City FC",
+        "id": "382",
+        "goals": 2
+      },
+      "away": {
+        "name": "Paris Saint-Germain FC",
+        "id": "160",
+        "goals": 4
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401915407",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915407",
+      "statistics_class": "full",
+      "source_payload_sha256": "0d14a78fce06e7058103cca1eafaae7ab8c3f2a09b7b968b8afa8062e7aa6c81",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"382\",\"name\":\"Manchester City FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"10\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"11\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"53.9\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"27\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"9\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"160\",\"name\":\"Paris Saint-Germain FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"11\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"2\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"46.1\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"15\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"10\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "743355e532dd14a96882d5c64d756703da26d9d475b8cd28d0dc2354e6cdbb35",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575361",
+      "kickoff": "2026-10-20T19:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "Manchester City FC",
+        "id": "382",
+        "goals": 5
+      },
+      "away": {
+        "name": "PAE AEK",
+        "id": "887",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401915401",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915401",
+      "statistics_class": "full",
+      "source_payload_sha256": "8a33186d49152ac10526c82ee983ad185025688481de8d9a2c2c47d47878a66a",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"382\",\"name\":\"Manchester City FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"6\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"8\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"63.6\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"17\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"7\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"887\",\"name\":\"PAE AEK\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"10\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"36.4\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"11\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"3\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "e05acbbed2468a844d38bb6a2eefce6b31b5efe0ff1b58108f02035f0715803f",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575367",
+      "kickoff": "2026-10-20T19:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "Paris Saint-Germain FC",
+        "id": "160",
+        "goals": 4
+      },
+      "away": {
+        "name": "FC Barcelona",
+        "id": "83",
+        "goals": 2
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401915399",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915399",
+      "statistics_class": "full",
+      "source_payload_sha256": "886e434ccb9c21d29673343a6ebc923cd6f2ffbaaf4956bd21753cde9b9aa12b",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"160\",\"name\":\"Paris Saint-Germain FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"11\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"0\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"2\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"47.1\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"22\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"14\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"83\",\"name\":\"FC Barcelona\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"10\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"52.9\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"18\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "42d34562bfdaa2b174e0d109adad93ccc71198cc4972bd979922882f26926be5",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575382",
+      "kickoff": "2026-11-03T20:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "Villarreal CF",
+        "id": "102",
+        "goals": 0
+      },
+      "away": {
+        "name": "Paris Saint-Germain FC",
+        "id": "160",
+        "goals": 6
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401915309",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915309",
+      "statistics_class": "full",
+      "source_payload_sha256": "d124e9749d7079abcde5d6f992dcca6615d999b83e30d8eaf5944926cd6f7f9e",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"102\",\"name\":\"Villarreal CF\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"19\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"4\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"4\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"29.4\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"14\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"2\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"160\",\"name\":\"Paris Saint-Germain FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"4\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"8\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"70.6\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"22\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"12\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "eb597e62317923d8fe8c63b49c65e821afef2c068e8dc9960de6fe5687944b3d",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575383",
+      "kickoff": "2026-11-03T20:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "Manchester United FC",
+        "id": "360",
+        "goals": 3
+      },
+      "away": {
+        "name": "AS Roma",
+        "id": "104",
+        "goals": 2
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401915308",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915308",
+      "statistics_class": "full",
+      "source_payload_sha256": "4d68d974ae741d7bae2bf96afad73137d4e5653782f929505d5085bbe602518e",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"360\",\"name\":\"Manchester United FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"11\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"1\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"52.4\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"15\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"6\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"104\",\"name\":\"AS Roma\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"14\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"3\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"1\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"47.6\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"7\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"4\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "f3e2e25a3b40927d5cd7b0c1cb6599a14f2d9bd134669a6c411566fdf6f3065c",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575388",
+      "kickoff": "2026-11-04T20:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "RB Leipzig",
+        "id": "11420",
+        "goals": 2
+      },
+      "away": {
+        "name": "Manchester City FC",
+        "id": "382",
+        "goals": 3
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401915306",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915306",
+      "statistics_class": "full",
+      "source_payload_sha256": "7303d20f17e344cf213f66d64d601500cc7461c4a20939d1b21f0abe80892b28",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"11420\",\"name\":\"RB Leipzig\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"20\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"4\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"5\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"35.4\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"14\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"6\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"382\",\"name\":\"Manchester City FC\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"7\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"2\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"3\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"64.6\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"12\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"5\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "41d7da04b7cd7d17f97c9ef41ff2d11acd3a5b678e64552820ca0041f24a6cf8",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      }
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575392",
+      "kickoff": "2026-11-04T20:00:00Z",
+      "status": "FT",
+      "league": {
+        "id": "CL",
+        "name": "UEFA Champions League"
+      },
+      "home": {
+        "name": "FC Porto",
+        "id": "437",
+        "goals": 4
+      },
+      "away": {
+        "name": "SSC Napoli",
+        "id": "114",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "provider_event_id": "401915301",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915301",
+      "statistics_class": "full",
+      "source_payload_sha256": "b1ff3e941323a8e8b6f273e75e04a22a0598f66ecbd7ef6caeef94b832d5d8fc",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"437\",\"name\":\"FC Porto\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"8\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"1\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"0\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"6\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"51.6\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"19\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"8\",\"label\":\"ON GOAL\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"114\",\"name\":\"SSC Napoli\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayValue\":\"11\",\"label\":\"Fouls\"},{\"name\":\"yellowCards\",\"displayValue\":\"4\",\"label\":\"Yellow Cards\"},{\"name\":\"redCards\",\"displayValue\":\"1\",\"label\":\"Red Cards\"},{\"name\":\"wonCorners\",\"displayValue\":\"5\",\"label\":\"Corner Kicks\"},{\"name\":\"possessionPct\",\"displayValue\":\"48.4\",\"label\":\"Possession\"},{\"name\":\"totalShots\",\"displayValue\":\"11\",\"label\":\"SHOTS\"},{\"name\":\"shotsOnTarget\",\"displayValue\":\"6\",\"label\":\"ON GOAL\"}]}]}",
+      "statistics_sha256": "19bb259cbf5121152c85eeb140b645e43f3fbd2b46a4c8637602deb7af9b8936",
       "verification": {
         "identity": true,
         "score": true,

@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "batch_number": 28,
+  "generated_on": "2026-11-21",
+  "source_plan": "STATISTICS_REPAIR_BATCH_PLAN_2026-11-21.json",
+  "branch": "feature/bulk-statistics-repair-hardening",
+  "policy": "Read-only research. No transfer authorized.",
+  "counts": {
+    "full_verified": 3,
+    "blocked": 0,
+    "source_review": 0,
+    "pending": 0
+  },
+  "rows": [
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575383",
+      "match": "Manchester United FC — AS Roma",
+      "planned_kickoff": "2026-11-03T20:00:00Z",
+      "home": "Manchester United FC",
+      "away": "AS Roma",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "f3e2e25a3b40927d5cd7b0c1cb6599a14f2d9bd134669a6c411566fdf6f3065c",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401915308",
+      "provider_kickoff": "2026-11-03T20:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261103",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915308",
+        "https://api.football-data.org/v4/matches/575383"
+      ],
+      "score": "3-2",
+      "statistics_availability": "full"
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575388",
+      "match": "RB Leipzig — Manchester City FC",
+      "planned_kickoff": "2026-11-04T20:00:00Z",
+      "home": "RB Leipzig",
+      "away": "Manchester City FC",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "41d7da04b7cd7d17f97c9ef41ff2d11acd3a5b678e64552820ca0041f24a6cf8",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401915306",
+      "provider_kickoff": "2026-11-04T20:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261104",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915306",
+        "https://api.football-data.org/v4/matches/575388"
+      ],
+      "score": "2-3",
+      "statistics_availability": "full"
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575392",
+      "match": "FC Porto — SSC Napoli",
+      "planned_kickoff": "2026-11-04T20:00:00Z",
+      "home": "FC Porto",
+      "away": "SSC Napoli",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "19bb259cbf5121152c85eeb140b645e43f3fbd2b46a4c8637602deb7af9b8936",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401915301",
+      "provider_kickoff": "2026-11-04T20:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261104",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915301",
+        "https://api.football-data.org/v4/matches/575392"
+      ],
+      "score": "4-1",
+      "statistics_availability": "full",
+      "related_archive_keys": [
+        "fixture-download-uefa|fd-uefa-champions-league-2026-139"
+      ]
+    }
+  ]
+}

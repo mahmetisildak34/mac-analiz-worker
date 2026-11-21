@@ -1,0 +1,2175 @@
+{
+  "schema_version": 1,
+  "batch_number": 23,
+  "generated_on": "2026-11-21",
+  "source_plan": "STATISTICS_REPAIR_BATCH_PLAN_2026-11-21.json",
+  "branch": "feature/bulk-statistics-repair-hardening",
+  "policy": "Read-only research. No transfer authorized.",
+  "counts": {
+    "full_verified": 0,
+    "blocked": 23,
+    "source_review": 2,
+    "pending": 0
+  },
+  "rows": [
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2024-171",
+      "match": "Inter — Feyenoord",
+      "planned_kickoff": "2025-03-11T12:00:00Z",
+      "home": "Inter",
+      "away": "Feyenoord",
+      "league": "champions-league 2024",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "171",
+      "provider_season": "2024",
+      "provider_round": 12,
+      "provider_kickoff": "2025-03-11T20:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2024",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20250311",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=733150"
+      ],
+      "score": "2-1",
+      "alternate_event_id": "733150",
+      "alternate_kickoff": "2025-03-11T20:00Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "110",
+              "name": "Inter"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "10",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "2",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "6",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "55.7",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "12",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "5",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "142",
+              "name": "Feyenoord"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "8",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "1",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "3",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "44.3",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "14",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "4",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "44bad2f54625dec0a7efe1b3def73d19cb3c4e4df51cedf3bff3e259f2cbc607",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2024-179",
+      "match": "Paris — Aston Villa",
+      "planned_kickoff": "2025-04-09T12:00:00Z",
+      "home": "Paris",
+      "away": "Aston Villa",
+      "league": "champions-league 2024",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "179",
+      "provider_season": "2024",
+      "provider_round": 13,
+      "provider_kickoff": "2025-04-09T19:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2024",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20250409",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=733609"
+      ],
+      "score": "3-1",
+      "alternate_event_id": "733609",
+      "alternate_kickoff": "2025-04-09T19:00Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "160",
+              "name": "Paris"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "9",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "0",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "10",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "75.4",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "29",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "10",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "362",
+              "name": "Aston Villa"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "8",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "1",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "1",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "24.6",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "7",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "2",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "e3c174f72ac79014cc645b158ece3daaee408f06e662a59ae00ecab9a77d1a8e",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2024-182",
+      "match": "Aston Villa — Paris",
+      "planned_kickoff": "2025-04-15T12:00:00Z",
+      "home": "Aston Villa",
+      "away": "Paris",
+      "league": "champions-league 2024",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "182",
+      "provider_season": "2024",
+      "provider_round": 14,
+      "provider_kickoff": "2025-04-15T19:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2024",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20250415",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=733613"
+      ],
+      "score": "3-2",
+      "alternate_event_id": "733613",
+      "alternate_kickoff": "2025-04-15T19:00Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "362",
+              "name": "Aston Villa"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "15",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "1",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "5",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "34.3",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "17",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "9",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "160",
+              "name": "Paris"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "3",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "0",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "5",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "65.7",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "14",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "7",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "f1deaa112f396d531f678a93b19c8171e457800645a67427805a7a18f6639622",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2025-140",
+      "match": "Napoli — Chelsea",
+      "planned_kickoff": "2026-01-28T12:00:00Z",
+      "home": "Napoli",
+      "away": "Chelsea",
+      "league": "champions-league 2025",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "140",
+      "provider_season": "2025",
+      "provider_round": 8,
+      "provider_kickoff": "2026-01-28T20:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2025",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260128",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757792"
+      ],
+      "score": "2-3",
+      "alternate_event_id": "757792",
+      "alternate_kickoff": "2026-01-28T20:00Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "114",
+              "name": "Napoli"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "15",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "2",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "4",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "46",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "8",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "5",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "363",
+              "name": "Chelsea"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "15",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "1",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "1",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "54",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "11",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "5",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "e179b04f59636d2b0a2b7c710e56ea768df197711de45b2252b7471b6454e6d2",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified.",
+      "related_archive_keys": [
+        "football-data-uefa|fd-uefa-CL-551920"
+      ]
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2025-170",
+      "match": "Chelsea — Paris",
+      "planned_kickoff": "2026-03-17T12:00:00Z",
+      "home": "Chelsea",
+      "away": "Paris",
+      "league": "champions-league 2025",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "170",
+      "provider_season": "2025",
+      "provider_round": 12,
+      "provider_kickoff": "2026-03-17T20:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2025",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260317",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862648"
+      ],
+      "score": "0-3",
+      "alternate_event_id": "401862648",
+      "alternate_kickoff": "2026-03-17T20:00Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "363",
+              "name": "Chelsea"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "8",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "0",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "9",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "45.4",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "18",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "9",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "160",
+              "name": "Paris"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "10",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "0",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "3",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "54.6",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "8",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "5",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "d3d2446e1137f47a6327addc134aff1be4c7bd80a379675699af625209d59df2",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified.",
+      "related_archive_keys": [
+        "football-data-uefa|fd-uefa-CL-552076"
+      ]
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2025-171",
+      "match": "Man City — Real Madrid",
+      "planned_kickoff": "2026-03-17T12:00:00Z",
+      "home": "Man City",
+      "away": "Real Madrid",
+      "league": "champions-league 2025",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "171",
+      "provider_season": "2025",
+      "provider_round": 12,
+      "provider_kickoff": "2026-03-17T20:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2025",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260317",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862647"
+      ],
+      "score": "1-2",
+      "alternate_event_id": "401862647",
+      "alternate_kickoff": "2026-03-17T20:00Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "382",
+              "name": "Man City"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "6",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "1",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "1",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "9",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "47.3",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "22",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "8",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "86",
+              "name": "Real Madrid"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "7",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "2",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "6",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "52.7",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "14",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "7",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "8243952cafc04857337eacca362ca6d401875d70c34854801b8b6a7988b25278",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified.",
+      "related_archive_keys": [
+        "football-data-uefa|fd-uefa-CL-552078"
+      ]
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2025-179",
+      "match": "Paris — Liverpool",
+      "planned_kickoff": "2026-04-08T12:00:00Z",
+      "home": "Paris",
+      "away": "Liverpool",
+      "league": "champions-league 2025",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "179",
+      "provider_season": "2025",
+      "provider_round": 13,
+      "provider_kickoff": "2026-04-08T19:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2025",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260408",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862885"
+      ],
+      "score": "2-0",
+      "alternate_event_id": "401862885",
+      "alternate_kickoff": "2026-04-08T19:00Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "160",
+              "name": "Paris"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "8",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "0",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "3",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "74",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "18",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "6",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "364",
+              "name": "Liverpool"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "12",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "2",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "1",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "26",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "3",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "0",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "10870df6b310759118f533f1a950a6f5e4638ef22750d9b068bd79d5839063ad",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified.",
+      "related_archive_keys": [
+        "football-data-uefa|fd-uefa-CL-556718"
+      ]
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2026-74",
+      "match": "AEK Athens — LASK",
+      "planned_kickoff": "2026-09-08T12:00:00Z",
+      "home": "AEK Athens",
+      "away": "LASK",
+      "league": "champions-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "74",
+      "provider_season": "2026",
+      "provider_round": 1,
+      "provider_kickoff": "2026-09-08T16:45:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260908"
+      ],
+      "score": "1-0",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2026-77",
+      "match": "Porto — Man City",
+      "planned_kickoff": "2026-09-08T12:00:00Z",
+      "home": "Porto",
+      "away": "Man City",
+      "league": "champions-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "77",
+      "provider_season": "2026",
+      "provider_round": 1,
+      "provider_kickoff": "2026-09-08T19:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260908",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915425"
+      ],
+      "score": "0-2",
+      "alternate_event_id": "401915425",
+      "alternate_kickoff": "2026-09-08T19:00Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "437",
+              "name": "Porto"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "10",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "1",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "2",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "35.5",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "5",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "0",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "382",
+              "name": "Man City"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "17",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "3",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "5",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "64.5",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "20",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "10",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "e6686c890a59287b446ae66937dd8b5b33b89b224012c662503bca0ad96e0586",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified.",
+      "related_archive_keys": [
+        "football-data-uefa|fd-uefa-CL-575326"
+      ]
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2026-79",
+      "match": "Barcelona — Feyenoord",
+      "planned_kickoff": "2026-09-09T12:00:00Z",
+      "home": "Barcelona",
+      "away": "Feyenoord",
+      "league": "champions-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "79",
+      "provider_season": "2026",
+      "provider_round": 1,
+      "provider_kickoff": "2026-09-09T16:45:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260909",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915424"
+      ],
+      "score": "5-1",
+      "alternate_event_id": "401915424",
+      "alternate_kickoff": "2026-09-09T16:45Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "83",
+              "name": "Barcelona"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "10",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "1",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "4",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "71.6",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "24",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "9",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "142",
+              "name": "Feyenoord"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "12",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "1",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "1",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "28.4",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "4",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "2",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "7d1d0378522b1c98f234b25567e7572d26fa639ded487c1e2c810179dba8621e",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2026-84",
+      "match": "Napoli — Arsenal",
+      "planned_kickoff": "2026-09-09T12:00:00Z",
+      "home": "Napoli",
+      "away": "Arsenal",
+      "league": "champions-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "84",
+      "provider_season": "2026",
+      "provider_round": 1,
+      "provider_kickoff": "2026-09-09T19:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260909",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915423"
+      ],
+      "score": "0-1",
+      "alternate_event_id": "401915423",
+      "alternate_kickoff": "2026-09-09T19:00Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "114",
+              "name": "Napoli"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "12",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "2",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "0",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "42.3",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "5",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "3",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "359",
+              "name": "Arsenal"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "11",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "1",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "6",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "57.7",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "26",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "8",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "45671b9bc0e2184b87806ba32381206fa880c41f4bb3d26373ff1aff6c336cae",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified.",
+      "related_archive_keys": [
+        "football-data-uefa|fd-uefa-CL-575333"
+      ]
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2026-86",
+      "match": "Fenerbahçe — Roma",
+      "planned_kickoff": "2026-09-10T12:00:00Z",
+      "home": "Fenerbahçe",
+      "away": "Roma",
+      "league": "champions-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "86",
+      "provider_season": "2026",
+      "provider_round": 1,
+      "provider_kickoff": "2026-09-10T16:45:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260910",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915444"
+      ],
+      "score": "1-1",
+      "alternate_event_id": "401915444",
+      "alternate_kickoff": "2026-09-10T16:45Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "436",
+              "name": "Fenerbahçe"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "12",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "4",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "1",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "41.7",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "11",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "5",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "104",
+              "name": "Roma"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "19",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "2",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "3",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "58.3",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "8",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "3",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "941b052ee48780e3eaba159d8b394afaf4fafab61ade5072a765fe2d157cb090",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-europa-league-2026-73",
+      "match": "Omonia — Celta",
+      "planned_kickoff": "2026-09-16T12:00:00Z",
+      "home": "Omonia",
+      "away": "Celta",
+      "league": "europa-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "73",
+      "provider_season": "2026",
+      "provider_round": 1,
+      "provider_kickoff": "2026-09-16T16:45:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/europa-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/scoreboard?dates=20260916"
+      ],
+      "score": "1-0",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-europa-league-2026-75",
+      "match": "Leverkusen — Celje",
+      "planned_kickoff": "2026-09-16T12:00:00Z",
+      "home": "Leverkusen",
+      "away": "Celje",
+      "league": "europa-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "75",
+      "provider_season": "2026",
+      "provider_round": 1,
+      "provider_kickoff": "2026-09-16T19:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/europa-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/scoreboard?dates=20260916"
+      ],
+      "score": "2-0",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-europa-league-2026-86",
+      "match": "Viktoria Plzen — Union SG",
+      "planned_kickoff": "2026-09-17T12:00:00Z",
+      "home": "Viktoria Plzen",
+      "away": "Union SG",
+      "league": "europa-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "86",
+      "provider_season": "2026",
+      "provider_round": 1,
+      "provider_kickoff": "2026-09-17T19:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/europa-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/scoreboard?dates=20260917"
+      ],
+      "score": "0-3",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2026-97",
+      "match": "Villarreal — Napoli",
+      "planned_kickoff": "2026-10-13T12:00:00Z",
+      "home": "Villarreal",
+      "away": "Napoli",
+      "league": "champions-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "97",
+      "provider_season": "2026",
+      "provider_round": 2,
+      "provider_kickoff": "2026-10-13T19:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261013",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915410"
+      ],
+      "score": "3-1",
+      "alternate_event_id": "401915410",
+      "alternate_kickoff": "2026-10-13T19:00Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "102",
+              "name": "Villarreal"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "8",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "2",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "4",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "52",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "17",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "4",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "114",
+              "name": "Napoli"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "15",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "3",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "4",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "48",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "11",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "3",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "137f4315d5560c6477243aa822fdb89f8ceb3746f5856a3304cf787339e057c3",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified.",
+      "related_archive_keys": [
+        "football-data-uefa|fd-uefa-CL-575349"
+      ]
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2026-100",
+      "match": "Feyenoord — Como",
+      "planned_kickoff": "2026-10-14T12:00:00Z",
+      "home": "Feyenoord",
+      "away": "Como",
+      "league": "champions-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "100",
+      "provider_season": "2026",
+      "provider_round": 2,
+      "provider_kickoff": "2026-10-14T16:45:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261014",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915416"
+      ],
+      "score": "3-2",
+      "alternate_event_id": "401915416",
+      "alternate_kickoff": "2026-10-14T16:45Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "142",
+              "name": "Feyenoord"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "19",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "2",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "5",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "47.8",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "13",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "5",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "2572",
+              "name": "Como"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "18",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "3",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "1",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "52.2",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "11",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "5",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "73b7465610004585fbdaaea184118ed2a0da9d3cb97f4d638cc089b72b5a26a6",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2026-103",
+      "match": "Roma — Real Madrid",
+      "planned_kickoff": "2026-10-14T12:00:00Z",
+      "home": "Roma",
+      "away": "Real Madrid",
+      "league": "champions-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "103",
+      "provider_season": "2026",
+      "provider_round": 2,
+      "provider_kickoff": "2026-10-14T19:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261014",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915414"
+      ],
+      "score": "3-4",
+      "alternate_event_id": "401915414",
+      "alternate_kickoff": "2026-10-14T19:00Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "104",
+              "name": "Roma"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "15",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "3",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "5",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "54",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "14",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "7",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "86",
+              "name": "Real Madrid"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "8",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "1",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "9",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "46",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "16",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "8",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "b36a2d9c66855aa324a74a3affdea8e1e4576ea0fe29d8e6202259f3ccd2aa84",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified.",
+      "related_archive_keys": [
+        "football-data-uefa|fd-uefa-CL-575352"
+      ]
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2026-107",
+      "match": "Shakhtar — AEK Athens",
+      "planned_kickoff": "2026-10-14T12:00:00Z",
+      "home": "Shakhtar",
+      "away": "AEK Athens",
+      "league": "champions-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "107",
+      "provider_season": "2026",
+      "provider_round": 2,
+      "provider_kickoff": "2026-10-14T19:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261014"
+      ],
+      "score": "3-1",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-conference-league-2026-60",
+      "match": "Riga — Kairat Almaty",
+      "planned_kickoff": "2026-10-15T12:00:00Z",
+      "home": "Riga",
+      "away": "Kairat Almaty",
+      "league": "conference-league 2026",
+      "provider_group": "UEFA",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "statistics_availability": "unconfirmed",
+      "reason": "Fixture number cannot be parsed safely."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-conference-league-2026-63",
+      "match": "Mjällby — Inter Escaldes",
+      "planned_kickoff": "2026-10-15T12:00:00Z",
+      "home": "Mjällby",
+      "away": "Inter Escaldes",
+      "league": "conference-league 2026",
+      "provider_group": "UEFA",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "statistics_availability": "unconfirmed",
+      "reason": "Fixture number cannot be parsed safely."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-europa-league-2026-93",
+      "match": "Union SG — Real Sociedad",
+      "planned_kickoff": "2026-10-15T12:00:00Z",
+      "home": "Union SG",
+      "away": "Real Sociedad",
+      "league": "europa-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "93",
+      "provider_season": "2026",
+      "provider_round": 2,
+      "provider_kickoff": "2026-10-15T16:45:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/europa-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/scoreboard?dates=20261015"
+      ],
+      "score": "1-1",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-europa-league-2026-96",
+      "match": "Lech Poznan — Leverkusen",
+      "planned_kickoff": "2026-10-15T12:00:00Z",
+      "home": "Lech Poznan",
+      "away": "Leverkusen",
+      "league": "europa-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "96",
+      "provider_season": "2026",
+      "provider_round": 2,
+      "provider_kickoff": "2026-10-15T16:45:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/europa-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/scoreboard?dates=20261015",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/summary?event=401915576"
+      ],
+      "score": "0-4",
+      "alternate_event_id": "401915576",
+      "alternate_kickoff": "2026-10-15T16:45Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "2990",
+              "name": "Lech Poznan"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "5",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "1",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "4",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "39.1",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "10",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "3",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "131",
+              "name": "Leverkusen"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "16",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "2",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "5",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "60.9",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "22",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "10",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "0ab02c59ce2decf49ff2ce8280232e2cf358e45397e58bea6a376cfa1518edd8",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-europa-league-2026-97",
+      "match": "Celje — Omonia",
+      "planned_kickoff": "2026-10-15T12:00:00Z",
+      "home": "Celje",
+      "away": "Omonia",
+      "league": "europa-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "97",
+      "provider_season": "2026",
+      "provider_round": 2,
+      "provider_kickoff": "2026-10-15T16:45:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/europa-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/scoreboard?dates=20261015"
+      ],
+      "score": "0-3",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2026-116",
+      "match": "Napoli — Bodø/Glimt",
+      "planned_kickoff": "2026-10-20T12:00:00Z",
+      "home": "Napoli",
+      "away": "Bodø/Glimt",
+      "league": "champions-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "116",
+      "provider_season": "2026",
+      "provider_round": 3,
+      "provider_kickoff": "2026-10-20T19:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261020"
+      ],
+      "score": "4-3",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    }
+  ]
+}

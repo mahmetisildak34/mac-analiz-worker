@@ -1,0 +1,706 @@
+{
+  "schema_version": 1,
+  "batch_number": 27,
+  "generated_on": "2026-11-21",
+  "source_plan": "STATISTICS_REPAIR_BATCH_PLAN_2026-11-21.json",
+  "branch": "feature/bulk-statistics-repair-hardening",
+  "policy": "Read-only research. No transfer authorized.",
+  "counts": {
+    "full_verified": 18,
+    "blocked": 0,
+    "source_review": 7,
+    "pending": 0
+  },
+  "rows": [
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-11-08T15:00:00+00:00-AEK Athens-Levadiakos",
+      "match": "AEK Athens — Levadiakos",
+      "planned_kickoff": "2026-11-08T15:00:00+00:00",
+      "home": "AEK Athens",
+      "away": "Levadiakos",
+      "league": "Greek Super League",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-08&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-11-08T16:00:00+00:00-Ourense CF-Portugalete",
+      "match": "Ourense CF — Portugalete",
+      "planned_kickoff": "2026-11-08T16:00:00+00:00",
+      "home": "Ourense CF",
+      "away": "Portugalete",
+      "league": "Spanish Segunda División RFEF",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-08&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-11-13T13:00:00+00:00-Montenegro U21-Bosnia and Herzegovina U21",
+      "match": "Montenegro U21 — Bosnia and Herzegovina U21",
+      "planned_kickoff": "2026-11-13T13:00:00+00:00",
+      "home": "Montenegro U21",
+      "away": "Bosnia and Herzegovina U21",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "1-3",
+      "provider_event_id": "k82rekh2ve77rep",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-13&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-bosnia-herzegovina-u21/k82rekh2ve77rep/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Montenegro U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 4
+              },
+              {
+                "name": "yellowCards",
+                "value": 3
+              },
+              {
+                "name": "redCards",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Bosnia and Herzegovina U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 1
+              },
+              {
+                "name": "yellowCards",
+                "value": 3
+              },
+              {
+                "name": "redCards",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "dca7be25121d5e0752237df0d0432aca66c6a25d537ac1b683ceef81975c8e67",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-11-14T17:00:00+00:00-Portugalete-Marino luanco",
+      "match": "Portugalete — Marino luanco",
+      "planned_kickoff": "2026-11-14T17:00:00+00:00",
+      "home": "Portugalete",
+      "away": "Marino luanco",
+      "league": "Spanish Segunda División RFEF",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-14&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-11-16T10:00:00+00:00-AEK Athens-AEL Limassol",
+      "match": "AEK Athens — AEL Limassol",
+      "planned_kickoff": "2026-11-16T10:00:00+00:00",
+      "home": "AEK Athens",
+      "away": "AEL Limassol",
+      "league": "International Club Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "3-0",
+      "provider_event_id": "6ypq3nhk0pe2md7",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-16&status=finished&limit=1000",
+        "https://sportscore.com/football/match/ael-limassol-vs-aek-athens/6ypq3nhk0pe2md7/"
+      ],
+      "statistics_availability": "unavailable_in_checked_source",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-552038",
+      "match": "FC København — SSC Napoli",
+      "planned_kickoff": "2026-01-20T20:00:00Z",
+      "home": "FC København",
+      "away": "SSC Napoli",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "f1fcf517c13767452eee08cd4025cd39e83980838cfb5639bd2857c802baf48b",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "757767",
+      "provider_kickoff": "2026-01-20T20:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260120",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757767",
+        "https://api.football-data.org/v4/matches/552038"
+      ],
+      "score": "1-1",
+      "statistics_availability": "full"
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-551920",
+      "match": "SSC Napoli — Chelsea FC",
+      "planned_kickoff": "2026-01-28T20:00:00Z",
+      "home": "SSC Napoli",
+      "away": "Chelsea FC",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "697b3e10c2d3fd05ad16ef7385fd79c793123aa23da7fc33f6e1a8f37a9d7f58",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "757792",
+      "provider_kickoff": "2026-01-28T20:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260128",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757792",
+        "https://api.football-data.org/v4/matches/551920"
+      ],
+      "score": "2-3",
+      "statistics_availability": "full",
+      "related_archive_keys": [
+        "fixture-download-uefa|fd-uefa-champions-league-2025-140"
+      ]
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-552070",
+      "match": "Real Madrid CF — Manchester City FC",
+      "planned_kickoff": "2026-03-11T20:00:00Z",
+      "home": "Real Madrid CF",
+      "away": "Manchester City FC",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "a9cf6abd39411303a0f5a5aca660e4b5dbd3377625dafab6bd59f251fe572616",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401862645",
+      "provider_kickoff": "2026-03-11T20:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260311",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862645",
+        "https://api.football-data.org/v4/matches/552070"
+      ],
+      "score": "3-0",
+      "statistics_availability": "full"
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-552076",
+      "match": "Chelsea FC — Paris Saint-Germain FC",
+      "planned_kickoff": "2026-03-17T20:00:00Z",
+      "home": "Chelsea FC",
+      "away": "Paris Saint-Germain FC",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "aeb35b2413d1ab6f3a207f73104a869a0181ca1c6647c38e2cd623c9002c2e13",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401862648",
+      "provider_kickoff": "2026-03-17T20:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260317",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862648",
+        "https://api.football-data.org/v4/matches/552076"
+      ],
+      "score": "0-3",
+      "statistics_availability": "full",
+      "related_archive_keys": [
+        "fixture-download-uefa|fd-uefa-champions-league-2025-170"
+      ]
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-552078",
+      "match": "Manchester City FC — Real Madrid CF",
+      "planned_kickoff": "2026-03-17T20:00:00Z",
+      "home": "Manchester City FC",
+      "away": "Real Madrid CF",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "65159e7ae89b1cf73a30cb4011a7049dc58735543606db4028bc152f62fa5148",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401862647",
+      "provider_kickoff": "2026-03-17T20:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260317",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862647",
+        "https://api.football-data.org/v4/matches/552078"
+      ],
+      "score": "1-2",
+      "statistics_availability": "full",
+      "related_archive_keys": [
+        "fixture-download-uefa|fd-uefa-champions-league-2025-171"
+      ]
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-556718",
+      "match": "Paris Saint-Germain FC — Liverpool FC",
+      "planned_kickoff": "2026-04-08T19:00:00Z",
+      "home": "Paris Saint-Germain FC",
+      "away": "Liverpool FC",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "fd1e1c012c640920e2f570a752e6ea5db9883a281cb5258e58c9254c3393d628",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401862885",
+      "provider_kickoff": "2026-04-08T19:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260408",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862885",
+        "https://api.football-data.org/v4/matches/556718"
+      ],
+      "score": "2-0",
+      "statistics_availability": "full",
+      "related_archive_keys": [
+        "fixture-download-uefa|fd-uefa-champions-league-2025-179"
+      ]
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-556722",
+      "match": "Liverpool FC — Paris Saint-Germain FC",
+      "planned_kickoff": "2026-04-14T19:00:00Z",
+      "home": "Liverpool FC",
+      "away": "Paris Saint-Germain FC",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "a70d791c04544649d01a5fe4a6fc4609671e9c90405a91620d896b568fa46a04",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401862889",
+      "provider_kickoff": "2026-04-14T19:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260414",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862889",
+        "https://api.football-data.org/v4/matches/556722"
+      ],
+      "score": "0-2",
+      "statistics_availability": "full"
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-552092",
+      "match": "Paris Saint-Germain FC — FC Bayern München",
+      "planned_kickoff": "2026-04-28T19:00:00Z",
+      "home": "Paris Saint-Germain FC",
+      "away": "FC Bayern München",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "3ff165f8ffa9e05fbdd5aa9b57fc17826d6139679aa618fd2cb3c5b1002b78f2",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401862893",
+      "provider_kickoff": "2026-04-28T19:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260428",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862893",
+        "https://api.football-data.org/v4/matches/552092"
+      ],
+      "score": "5-4",
+      "statistics_availability": "full"
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-552094",
+      "match": "FC Bayern München — Paris Saint-Germain FC",
+      "planned_kickoff": "2026-05-06T19:00:00Z",
+      "home": "FC Bayern München",
+      "away": "Paris Saint-Germain FC",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "c1e4a5a65d4bfc44f5b9fedd83ff25ee3ee38f8895eb53e6b83b0e5965cf47a2",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401862895",
+      "provider_kickoff": "2026-05-06T19:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260506",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401862895",
+        "https://api.football-data.org/v4/matches/552094"
+      ],
+      "score": "1-1",
+      "statistics_availability": "full"
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-552096",
+      "match": "Paris Saint-Germain FC — Arsenal FC",
+      "planned_kickoff": "2026-05-30T16:00:00Z",
+      "home": "Paris Saint-Germain FC",
+      "away": "Arsenal FC",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260530",
+        "https://api.football-data.org/v4/matches/552096"
+      ],
+      "statistics_availability": "event_not_found",
+      "reason": "No unambiguous ESPN match with the same date, ordered teams and score was established."
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575326",
+      "match": "FC Porto — Manchester City FC",
+      "planned_kickoff": "2026-09-08T19:00:00Z",
+      "home": "FC Porto",
+      "away": "Manchester City FC",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "7c61d7f07353d8f42ea12bd04bd2b4c6dbb869f5518d25010a3fbe83c69af1bc",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401915425",
+      "provider_kickoff": "2026-09-08T19:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260908",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915425",
+        "https://api.football-data.org/v4/matches/575326"
+      ],
+      "score": "0-2",
+      "statistics_availability": "full",
+      "related_archive_keys": [
+        "fixture-download-uefa|fd-uefa-champions-league-2026-77"
+      ]
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575332",
+      "match": "Paris Saint-Germain FC — ŠK Slovan Bratislava",
+      "planned_kickoff": "2026-09-09T19:00:00Z",
+      "home": "Paris Saint-Germain FC",
+      "away": "ŠK Slovan Bratislava",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "143841821135899d7f328280ebf8bcec4a2d87458fcf6392a6da3763f3431c1e",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401915445",
+      "provider_kickoff": "2026-09-09T19:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260909",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915445",
+        "https://api.football-data.org/v4/matches/575332"
+      ],
+      "score": "6-1",
+      "statistics_availability": "full"
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575333",
+      "match": "SSC Napoli — Arsenal FC",
+      "planned_kickoff": "2026-09-09T19:00:00Z",
+      "home": "SSC Napoli",
+      "away": "Arsenal FC",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "02ceea67d337113862b0b292beaa96823ffded27b687b8ea83746395ddb8431f",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401915423",
+      "provider_kickoff": "2026-09-09T19:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20260909",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915423",
+        "https://api.football-data.org/v4/matches/575333"
+      ],
+      "score": "0-1",
+      "statistics_availability": "full",
+      "related_archive_keys": [
+        "fixture-download-uefa|fd-uefa-champions-league-2026-84"
+      ]
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575349",
+      "match": "Villarreal CF — SSC Napoli",
+      "planned_kickoff": "2026-10-13T19:00:00Z",
+      "home": "Villarreal CF",
+      "away": "SSC Napoli",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "d4bdc7af1428c81282678e0ec67d898eff6aa42837ef484ed9c9ef71b1db59b7",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401915410",
+      "provider_kickoff": "2026-10-13T19:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261013",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915410",
+        "https://api.football-data.org/v4/matches/575349"
+      ],
+      "score": "3-1",
+      "statistics_availability": "full",
+      "related_archive_keys": [
+        "fixture-download-uefa|fd-uefa-champions-league-2026-97"
+      ]
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575352",
+      "match": "AS Roma — Real Madrid CF",
+      "planned_kickoff": "2026-10-14T19:00:00Z",
+      "home": "AS Roma",
+      "away": "Real Madrid CF",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "d94a132665cfd0cf81ffa582de4060bca4a364022054083a374793ec48ec5541",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401915414",
+      "provider_kickoff": "2026-10-14T19:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261014",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915414",
+        "https://api.football-data.org/v4/matches/575352"
+      ],
+      "score": "3-4",
+      "statistics_availability": "full",
+      "related_archive_keys": [
+        "fixture-download-uefa|fd-uefa-champions-league-2026-103"
+      ]
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575353",
+      "match": "Manchester City FC — Paris Saint-Germain FC",
+      "planned_kickoff": "2026-10-14T19:00:00Z",
+      "home": "Manchester City FC",
+      "away": "Paris Saint-Germain FC",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "743355e532dd14a96882d5c64d756703da26d9d475b8cd28d0dc2354e6cdbb35",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401915407",
+      "provider_kickoff": "2026-10-14T19:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261014",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915407",
+        "https://api.football-data.org/v4/matches/575353"
+      ],
+      "score": "2-4",
+      "statistics_availability": "full"
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575361",
+      "match": "Manchester City FC — PAE AEK",
+      "planned_kickoff": "2026-10-20T19:00:00Z",
+      "home": "Manchester City FC",
+      "away": "PAE AEK",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "e05acbbed2468a844d38bb6a2eefce6b31b5efe0ff1b58108f02035f0715803f",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401915401",
+      "provider_kickoff": "2026-10-20T19:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261020",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915401",
+        "https://api.football-data.org/v4/matches/575361"
+      ],
+      "score": "5-1",
+      "statistics_availability": "full"
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575366",
+      "match": "SSC Napoli — FK Bodø/Glimt",
+      "planned_kickoff": "2026-10-20T19:00:00Z",
+      "home": "SSC Napoli",
+      "away": "FK Bodø/Glimt",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261020",
+        "https://api.football-data.org/v4/matches/575366"
+      ],
+      "statistics_availability": "event_not_found",
+      "reason": "No unambiguous ESPN match with the same date, ordered teams and score was established."
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575367",
+      "match": "Paris Saint-Germain FC — FC Barcelona",
+      "planned_kickoff": "2026-10-20T19:00:00Z",
+      "home": "Paris Saint-Germain FC",
+      "away": "FC Barcelona",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "42d34562bfdaa2b174e0d109adad93ccc71198cc4972bd979922882f26926be5",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401915399",
+      "provider_kickoff": "2026-10-20T19:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261020",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915399",
+        "https://api.football-data.org/v4/matches/575367"
+      ],
+      "score": "4-2",
+      "statistics_availability": "full"
+    },
+    {
+      "source": "football-data-uefa",
+      "fixture_id": "fd-uefa-CL-575382",
+      "match": "Villarreal CF — Paris Saint-Germain FC",
+      "planned_kickoff": "2026-11-03T20:00:00Z",
+      "home": "Villarreal CF",
+      "away": "Paris Saint-Germain FC",
+      "league": "UEFA Champions League",
+      "provider_group": "Football-Data",
+      "status": "full_verified",
+      "statistics_sha256": "eb597e62317923d8fe8c63b49c65e821afef2c068e8dc9960de6fe5687944b3d",
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "archive_score_matches_source": true,
+      "provider_event_id": "401915309",
+      "provider_kickoff": "2026-11-03T20:00Z",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261103",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915309",
+        "https://api.football-data.org/v4/matches/575382"
+      ],
+      "score": "0-6",
+      "statistics_availability": "full"
+    }
+  ]
+}

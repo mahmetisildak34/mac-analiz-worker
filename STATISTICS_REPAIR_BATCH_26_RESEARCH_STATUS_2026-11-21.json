@@ -1,0 +1,1021 @@
+{
+  "schema_version": 1,
+  "batch_number": 26,
+  "generated_on": "2026-11-21",
+  "source_plan": "STATISTICS_REPAIR_BATCH_PLAN_2026-11-21.json",
+  "branch": "feature/bulk-statistics-repair-hardening",
+  "policy": "Read-only research. No transfer authorized.",
+  "counts": {
+    "full_verified": 0,
+    "blocked": 0,
+    "source_review": 25,
+    "pending": 0
+  },
+  "rows": [
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-03-28T16:00:00+00:00-Botswana-Zimbabwe",
+      "match": "Botswana — Zimbabwe",
+      "planned_kickoff": "2026-03-28T16:00:00+00:00",
+      "home": "Botswana",
+      "away": "Zimbabwe",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-03-28&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-03-31T12:00:00+00:00-Montenegro U21-Poland U21",
+      "match": "Montenegro U21 — Poland U21",
+      "planned_kickoff": "2026-03-31T12:00:00+00:00",
+      "home": "Montenegro U21",
+      "away": "Poland U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "0-1",
+      "provider_event_id": "2y8m4zh53edkql0",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-03-31&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-poland-u21/2y8m4zh53edkql0/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Montenegro U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 2
+              },
+              {
+                "name": "yellowCards",
+                "value": 5
+              },
+              {
+                "name": "redCards",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Poland U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 2
+              },
+              {
+                "name": "yellowCards",
+                "value": 4
+              },
+              {
+                "name": "redCards",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "ea5423cb4d5cf70192e154c59e1725eb7fb2446b3810f5c9752ce2b31bb1b684",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-03-31T16:00:00+00:00-Zimbabwe-Zambia U23",
+      "match": "Zimbabwe — Zambia U23",
+      "planned_kickoff": "2026-03-31T16:00:00+00:00",
+      "home": "Zimbabwe",
+      "away": "Zambia U23",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "1-0",
+      "provider_event_id": "4wyrn4h6w0w9q86",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-03-31&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zambia-u23-vs-zimbabwe/4wyrn4h6w0w9q86/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Zimbabwe"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 4
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Zambia U23"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "ca725a0dd442ffd137d1e33b38970a7c4e2c42a96129909a0d7047bc6af572c2",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-03-31T17:00:00+00:00-Spain U21-Kosovo U21",
+      "match": "Spain U21 — Kosovo U21",
+      "planned_kickoff": "2026-03-31T17:00:00+00:00",
+      "home": "Spain U21",
+      "away": "Kosovo U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-03-31&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-05-26T18:30:00+00:00-Nigeria-Zimbabwe",
+      "match": "Nigeria — Zimbabwe",
+      "planned_kickoff": "2026-05-26T18:30:00+00:00",
+      "home": "Nigeria",
+      "away": "Zimbabwe",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "2-0",
+      "provider_event_id": "dn1m1ghlg9lxmoe",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-05-26&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-nigeria/dn1m1ghlg9lxmoe/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Nigeria"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 0
+              },
+              {
+                "name": "yellowCards",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Zimbabwe"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 5
+              },
+              {
+                "name": "yellowCards",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "97d7ba67dfc2570c2630baf1eae933d1814086217ee9e7794494204d3207b66e",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-05-30T13:30:00+00:00-Zimbabwe-India",
+      "match": "Zimbabwe — India",
+      "planned_kickoff": "2026-05-30T13:30:00+00:00",
+      "home": "Zimbabwe",
+      "away": "India",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-05-30&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-06-03T17:00:00+00:00-Turkiye U21-Kosovo U21",
+      "match": "Turkiye U21 — Kosovo U21",
+      "planned_kickoff": "2026-06-03T17:00:00+00:00",
+      "home": "Turkiye U21",
+      "away": "Kosovo U21",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "1-0",
+      "provider_event_id": "vjxm8ghe7y0nr6o",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-06-03&status=finished&limit=1000",
+        "https://sportscore.com/football/match/turkiye-u21-vs-kosovo-u21/vjxm8ghe7y0nr6o/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Turkiye U21"
+            },
+            "statistics": [
+              {
+                "name": "possessionPct",
+                "value": 55
+              },
+              {
+                "name": "totalShots",
+                "value": 11
+              },
+              {
+                "name": "shotsOnTarget",
+                "value": 7
+              },
+              {
+                "name": "wonCorners",
+                "value": 8
+              },
+              {
+                "name": "yellowCards",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Kosovo U21"
+            },
+            "statistics": [
+              {
+                "name": "possessionPct",
+                "value": 45
+              },
+              {
+                "name": "totalShots",
+                "value": 11
+              },
+              {
+                "name": "shotsOnTarget",
+                "value": 7
+              },
+              {
+                "name": "wonCorners",
+                "value": 2
+              },
+              {
+                "name": "yellowCards",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "20fc4ebf948cda8c63d4be1aeba6840fcbe6ca06a4d5e6d45f26f4659fc32408",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-06-05T15:00:00+00:00-Montenegro U21-Cyprus U21",
+      "match": "Montenegro U21 — Cyprus U21",
+      "planned_kickoff": "2026-06-05T15:00:00+00:00",
+      "home": "Montenegro U21",
+      "away": "Cyprus U21",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "1-1",
+      "provider_event_id": "4jwq2ghndo64m0v",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-06-05&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-cyprus-u21/4jwq2ghndo64m0v/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Montenegro U21"
+            },
+            "statistics": [
+              {
+                "name": "possessionPct",
+                "value": 56
+              },
+              {
+                "name": "totalShots",
+                "value": 8
+              },
+              {
+                "name": "shotsOnTarget",
+                "value": 3
+              },
+              {
+                "name": "wonCorners",
+                "value": 1
+              },
+              {
+                "name": "yellowCards",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Cyprus U21"
+            },
+            "statistics": [
+              {
+                "name": "possessionPct",
+                "value": 44
+              },
+              {
+                "name": "totalShots",
+                "value": 5
+              },
+              {
+                "name": "shotsOnTarget",
+                "value": 3
+              },
+              {
+                "name": "wonCorners",
+                "value": 0
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "3e9bcb8f36fd456374c2b3efb609b31ce822a88f052c13ca5bee587dab6afb5d",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-06-06T15:00:00+00:00-Kosovo U21-Luxembourg U21",
+      "match": "Kosovo U21 — Luxembourg U21",
+      "planned_kickoff": "2026-06-06T15:00:00+00:00",
+      "home": "Kosovo U21",
+      "away": "Luxembourg U21",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-06-06&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-08-22T08:30:00+00:00-Algeria U21-Kosovo U21",
+      "match": "Algeria U21 — Kosovo U21",
+      "planned_kickoff": "2026-08-22T08:30:00+00:00",
+      "home": "Algeria U21",
+      "away": "Kosovo U21",
+      "league": "European Mediterranean Football Games",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "2-1",
+      "provider_event_id": "y0or5jh8v10oqwz",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-08-22&status=finished&limit=1000",
+        "https://sportscore.com/football/match/algeria-u21-vs-kosovo-u21/y0or5jh8v10oqwz/"
+      ],
+      "statistics_availability": "unavailable_in_checked_source",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-08-24T19:00:00+00:00-Albania U21-Kosovo U21",
+      "match": "Albania U21 — Kosovo U21",
+      "planned_kickoff": "2026-08-24T19:00:00+00:00",
+      "home": "Albania U21",
+      "away": "Kosovo U21",
+      "league": "European Mediterranean Football Games",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "3-1",
+      "provider_event_id": "l5ergph4zpyer8k",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-08-24&status=finished&limit=1000",
+        "https://sportscore.com/football/match/albania-u21-vs-kosovo-u21/l5ergph4zpyer8k/"
+      ],
+      "statistics_availability": "unavailable_in_checked_source",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-08-26T19:00:00+00:00-Italy U21-Kosovo U21",
+      "match": "Italy U21 — Kosovo U21",
+      "planned_kickoff": "2026-08-26T19:00:00+00:00",
+      "home": "Italy U21",
+      "away": "Kosovo U21",
+      "league": "European Mediterranean Football Games",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-08-26&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-09-24T18:30:00+00:00-San Marino U21-Kosovo U21",
+      "match": "San Marino U21 — Kosovo U21",
+      "planned_kickoff": "2026-09-24T18:30:00+00:00",
+      "home": "San Marino U21",
+      "away": "Kosovo U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "0-3",
+      "provider_event_id": "y0or5jh8lwn7qwz",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-09-24&status=finished&limit=1000",
+        "https://sportscore.com/football/match/san-marino-u21-vs-kosovo-u21/y0or5jh8lwn7qwz/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "San Marino U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 1
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Kosovo U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 8
+              },
+              {
+                "name": "yellowCards",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "f99156627e316bb95fd43d3175ac1e60ccd2578f9ebd681e2ef64486f58adf68",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-09-28T16:00:00+00:00-Zimbabwe-Democratic Republic of the Congo",
+      "match": "Zimbabwe — Democratic Republic of the Congo",
+      "planned_kickoff": "2026-09-28T16:00:00+00:00",
+      "home": "Zimbabwe",
+      "away": "Democratic Republic of the Congo",
+      "league": "CAF Africa Cup of Nations",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "1-2",
+      "provider_event_id": "1l4rjnh9v7kom7v",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-09-28&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-democratic-republic-of-the-congo/1l4rjnh9v7kom7v/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Zimbabwe"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 6
+              },
+              {
+                "name": "yellowCards",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Democratic Republic of the Congo"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 1
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "79333a28297399c38c7b17f35431d476504aebab96958e7e2edcd5a0eb45a55f",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-09-30T17:00:00+00:00-Kosovo U21-Cyprus U21",
+      "match": "Kosovo U21 — Cyprus U21",
+      "planned_kickoff": "2026-09-30T17:00:00+00:00",
+      "home": "Kosovo U21",
+      "away": "Cyprus U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "2-1",
+      "provider_event_id": "23xmvkh63l63qg8",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-09-30&status=finished&limit=1000",
+        "https://sportscore.com/football/match/kosovo-u21-vs-cyprus-u21/23xmvkh63l63qg8/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Kosovo U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 2
+              },
+              {
+                "name": "yellowCards",
+                "value": 3
+              },
+              {
+                "name": "redCards",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Cyprus U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 5
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              },
+              {
+                "name": "redCards",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "b4619728638844693e63c1cf221c2bc70320138fce6adf4e183e91bc8df985b3",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-10-01T16:00:00+00:00-North Macedonia U21-Montenegro U21",
+      "match": "North Macedonia U21 — Montenegro U21",
+      "planned_kickoff": "2026-10-01T16:00:00+00:00",
+      "home": "North Macedonia U21",
+      "away": "Montenegro U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "1-1",
+      "provider_event_id": "3glrw7hnwg5wqdy",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-10-01&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-north-macedonia-u21/3glrw7hnwg5wqdy/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "North Macedonia U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 4
+              },
+              {
+                "name": "yellowCards",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Montenegro U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 6
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "87cf75e88ede4c07cb877eddcc88b1d6fff5b668c3eeb2a936d40a88e983a94c",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-10-05T14:30:00+00:00-Montenegro U21-Armenia U21",
+      "match": "Montenegro U21 — Armenia U21",
+      "planned_kickoff": "2026-10-05T14:30:00+00:00",
+      "home": "Montenegro U21",
+      "away": "Armenia U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "1-1",
+      "provider_event_id": "vjxm8ghe476gr6o",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-10-05&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-armenia-u21/vjxm8ghe476gr6o/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Montenegro U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 7
+              },
+              {
+                "name": "yellowCards",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Armenia U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 6
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "47b157256f4a08bf23504460e7b0612b3d7d6d429b2e5e7398a982ebb77bb6ee",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-10-06T17:00:00+00:00-Kosovo U21-Finland U21",
+      "match": "Kosovo U21 — Finland U21",
+      "planned_kickoff": "2026-10-06T17:00:00+00:00",
+      "home": "Kosovo U21",
+      "away": "Finland U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "4-4",
+      "provider_event_id": "ednm9whwkpwgryo",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-10-06&status=finished&limit=1000",
+        "https://sportscore.com/football/match/kosovo-u21-vs-finland-u21/ednm9whwkpwgryo/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Kosovo U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 4
+              },
+              {
+                "name": "yellowCards",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Finland U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 4
+              },
+              {
+                "name": "yellowCards",
+                "value": 3
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "3e37205b3908cf26de51622b70b7d0e528bad298abd61d5a963861a877445e78",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-10-10T16:00:00+00:00-SD Amorebieta-Portugalete",
+      "match": "SD Amorebieta — Portugalete",
+      "planned_kickoff": "2026-10-10T16:00:00+00:00",
+      "home": "SD Amorebieta",
+      "away": "Portugalete",
+      "league": "Spanish Segunda División RFEF",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-10-10&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-10-17T15:00:00+00:00-Portugalete-Eibar B",
+      "match": "Portugalete — Eibar B",
+      "planned_kickoff": "2026-10-17T15:00:00+00:00",
+      "home": "Portugalete",
+      "away": "Eibar B",
+      "league": "Spanish Segunda División RFEF",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-10-17&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-10-24T17:00:00+00:00-AEK Athens-Panetolikos Agrinio",
+      "match": "AEK Athens — Panetolikos Agrinio",
+      "planned_kickoff": "2026-10-24T17:00:00+00:00",
+      "home": "AEK Athens",
+      "away": "Panetolikos Agrinio",
+      "league": "Greek Super League",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-10-24&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-10-25T16:30:00+00:00-CD Basconia-Portugalete",
+      "match": "CD Basconia — Portugalete",
+      "planned_kickoff": "2026-10-25T16:30:00+00:00",
+      "home": "CD Basconia",
+      "away": "Portugalete",
+      "league": "Spanish Segunda División RFEF",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-10-25&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-10-28T18:30:00+00:00-PAOK Saloniki-AEK Athens",
+      "match": "PAOK Saloniki — AEK Athens",
+      "planned_kickoff": "2026-10-28T18:30:00+00:00",
+      "home": "PAOK Saloniki",
+      "away": "AEK Athens",
+      "league": "Greek Cup",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-10-28&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-11-01T10:30:00+00:00-Portugalete-Arosa SC",
+      "match": "Portugalete — Arosa SC",
+      "planned_kickoff": "2026-11-01T10:30:00+00:00",
+      "home": "Portugalete",
+      "away": "Arosa SC",
+      "league": "Spanish Segunda División RFEF",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-01&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-11-01T17:30:00+00:00-Panathinaikos-AEK Athens",
+      "match": "Panathinaikos — AEK Athens",
+      "planned_kickoff": "2026-11-01T17:30:00+00:00",
+      "home": "Panathinaikos",
+      "away": "AEK Athens",
+      "league": "Greek Super League",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-01&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    }
+  ]
+}

@@ -1,0 +1,1307 @@
+{
+  "schema_version": 1,
+  "batch_number": 24,
+  "generated_on": "2026-11-21",
+  "source_plan": "STATISTICS_REPAIR_BATCH_PLAN_2026-11-21.json",
+  "branch": "feature/bulk-statistics-repair-hardening",
+  "policy": "Read-only research. No transfer authorized.",
+  "counts": {
+    "full_verified": 0,
+    "blocked": 9,
+    "source_review": 16,
+    "pending": 0
+  },
+  "rows": [
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2026-124",
+      "match": "Aston Villa — Viking",
+      "planned_kickoff": "2026-10-21T12:00:00Z",
+      "home": "Aston Villa",
+      "away": "Viking",
+      "league": "champions-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "124",
+      "provider_season": "2026",
+      "provider_round": 3,
+      "provider_kickoff": "2026-10-21T19:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261021"
+      ],
+      "score": "3-1",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2026-126",
+      "match": "Real Betis — Feyenoord",
+      "planned_kickoff": "2026-10-21T12:00:00Z",
+      "home": "Real Betis",
+      "away": "Feyenoord",
+      "league": "champions-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "126",
+      "provider_season": "2026",
+      "provider_round": 3,
+      "provider_kickoff": "2026-10-21T19:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261021",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915389"
+      ],
+      "score": "1-0",
+      "alternate_event_id": "401915389",
+      "alternate_kickoff": "2026-10-21T19:00Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "244",
+              "name": "Real Betis"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "8",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "1",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "4",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "47.3",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "23",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "10",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "142",
+              "name": "Feyenoord"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "10",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "2",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "4",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "52.7",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "12",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "2",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "86e428a4542f6b2b86d6abd7525469f3c5d4c522b380e626044f0abca96bbcab",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-conference-league-2026-73",
+      "match": "Kairat Almaty — Panathinaikos",
+      "planned_kickoff": "2026-10-22T12:00:00Z",
+      "home": "Kairat Almaty",
+      "away": "Panathinaikos",
+      "league": "conference-league 2026",
+      "provider_group": "UEFA",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "statistics_availability": "unconfirmed",
+      "reason": "Fixture number cannot be parsed safely."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-conference-league-2026-82",
+      "match": "Iberia Tbilisi — Mjällby",
+      "planned_kickoff": "2026-10-22T12:00:00Z",
+      "home": "Iberia Tbilisi",
+      "away": "Mjällby",
+      "league": "conference-league 2026",
+      "provider_group": "UEFA",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "statistics_availability": "unconfirmed",
+      "reason": "Fixture number cannot be parsed safely."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-europa-league-2026-115",
+      "match": "OFI Crete — Leverkusen",
+      "planned_kickoff": "2026-10-22T12:00:00Z",
+      "home": "OFI Crete",
+      "away": "Leverkusen",
+      "league": "europa-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "115",
+      "provider_season": "2026",
+      "provider_round": 3,
+      "provider_kickoff": "2026-10-22T16:45:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/europa-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/scoreboard?dates=20261022",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/summary?event=401915559"
+      ],
+      "score": "0-2",
+      "alternate_event_id": "401915559",
+      "alternate_kickoff": "2026-10-22T16:45Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "1010",
+              "name": "OFI Crete"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "5",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "1",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "5",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "37.2",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "6",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "2",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "131",
+              "name": "Leverkusen"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "21",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "3",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "10",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "62.8",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "33",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "15",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "ceec20d9a52e170f32fb11c0d7d045de143067c2c3c2ae7488dae6924475fa31",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2026-132",
+      "match": "Feyenoord — Inter",
+      "planned_kickoff": "2026-11-03T12:00:00Z",
+      "home": "Feyenoord",
+      "away": "Inter",
+      "league": "champions-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "132",
+      "provider_season": "2026",
+      "provider_round": 4,
+      "provider_kickoff": "2026-11-03T20:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261103",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915307"
+      ],
+      "score": "0-3",
+      "alternate_event_id": "401915307",
+      "alternate_kickoff": "2026-11-03T20:00Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "142",
+              "name": "Feyenoord"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "7",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "1",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "5",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "53.1",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "11",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "2",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "110",
+              "name": "Inter"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "13",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "2",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "4",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "46.9",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "11",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "6",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "7ddc6fd4f3059182ab66e9de79f52ef9f6f4576435578e0c34791af03a7f3aca",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2026-139",
+      "match": "Porto — Napoli",
+      "planned_kickoff": "2026-11-04T12:00:00Z",
+      "home": "Porto",
+      "away": "Napoli",
+      "league": "champions-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "139",
+      "provider_season": "2026",
+      "provider_round": 4,
+      "provider_kickoff": "2026-11-04T20:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261104",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915301"
+      ],
+      "score": "4-1",
+      "alternate_event_id": "401915301",
+      "alternate_kickoff": "2026-11-04T20:00Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "437",
+              "name": "Porto"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "8",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "1",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "6",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "51.6",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "19",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "8",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "114",
+              "name": "Napoli"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "11",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "4",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "1",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "5",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "48.4",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "11",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "6",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "b1ff3e941323a8e8b6f273e75e04a22a0598f66ecbd7ef6caeef94b832d5d8fc",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified.",
+      "related_archive_keys": [
+        "football-data-uefa|fd-uefa-CL-575392"
+      ]
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-champions-league-2026-141",
+      "match": "Leipzig — Man City",
+      "planned_kickoff": "2026-11-04T12:00:00Z",
+      "home": "Leipzig",
+      "away": "Man City",
+      "league": "champions-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "141",
+      "provider_season": "2026",
+      "provider_round": 4,
+      "provider_kickoff": "2026-11-04T20:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/champions-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261104"
+      ],
+      "score": "2-3",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-conference-league-2026-91",
+      "match": "Atalanta — Kairat Almaty",
+      "planned_kickoff": "2026-11-05T12:00:00Z",
+      "home": "Atalanta",
+      "away": "Kairat Almaty",
+      "league": "conference-league 2026",
+      "provider_group": "UEFA",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "statistics_availability": "unconfirmed",
+      "reason": "Fixture number cannot be parsed safely."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-conference-league-2026-99",
+      "match": "Mjällby — Borac",
+      "planned_kickoff": "2026-11-05T12:00:00Z",
+      "home": "Mjällby",
+      "away": "Borac",
+      "league": "conference-league 2026",
+      "provider_group": "UEFA",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "statistics_availability": "unconfirmed",
+      "reason": "Fixture number cannot be parsed safely."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-europa-league-2026-133",
+      "match": "N.E.C. — Omonia",
+      "planned_kickoff": "2026-11-05T12:00:00Z",
+      "home": "N.E.C.",
+      "away": "Omonia",
+      "league": "europa-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "133",
+      "provider_season": "2026",
+      "provider_round": 4,
+      "provider_kickoff": "2026-11-05T17:45:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/europa-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/scoreboard?dates=20261105"
+      ],
+      "score": "3-1",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-europa-league-2026-136",
+      "match": "Leverkusen — Marseille",
+      "planned_kickoff": "2026-11-05T12:00:00Z",
+      "home": "Leverkusen",
+      "away": "Marseille",
+      "league": "europa-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "136",
+      "provider_season": "2026",
+      "provider_round": 4,
+      "provider_kickoff": "2026-11-05T20:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/europa-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/scoreboard?dates=20261105",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/summary?event=401915533"
+      ],
+      "score": "0-1",
+      "alternate_event_id": "401915533",
+      "alternate_kickoff": "2026-11-05T20:00Z",
+      "provider_metrics_verified": 7,
+      "provider_statistics": {
+        "teams": [
+          {
+            "homeAway": "home",
+            "team": {
+              "id": "131",
+              "name": "Leverkusen"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "7",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "1",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "6",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "58.2",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "10",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "3",
+                "label": "ON GOAL"
+              }
+            ]
+          },
+          {
+            "homeAway": "away",
+            "team": {
+              "id": "176",
+              "name": "Marseille"
+            },
+            "statistics": [
+              {
+                "name": "foulsCommitted",
+                "displayValue": "12",
+                "label": "Fouls"
+              },
+              {
+                "name": "yellowCards",
+                "displayValue": "3",
+                "label": "Yellow Cards"
+              },
+              {
+                "name": "redCards",
+                "displayValue": "0",
+                "label": "Red Cards"
+              },
+              {
+                "name": "wonCorners",
+                "displayValue": "2",
+                "label": "Corner Kicks"
+              },
+              {
+                "name": "possessionPct",
+                "displayValue": "41.8",
+                "label": "Possession"
+              },
+              {
+                "name": "totalShots",
+                "displayValue": "8",
+                "label": "SHOTS"
+              },
+              {
+                "name": "shotsOnTarget",
+                "displayValue": "2",
+                "label": "ON GOAL"
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "d49304c864a626903a40fd056a35b2e902b90a29455e48a1fb626dabb28299b3",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "fixture-download-uefa",
+      "fixture_id": "fd-uefa-europa-league-2026-142",
+      "match": "Celta — Union SG",
+      "planned_kickoff": "2026-11-05T12:00:00Z",
+      "home": "Celta",
+      "away": "Union SG",
+      "league": "europa-league 2026",
+      "provider_group": "UEFA",
+      "status": "blocked",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "provider_event_id": "142",
+      "provider_season": "2026",
+      "provider_round": 4,
+      "provider_kickoff": "2026-11-05T20:00:00.000Z",
+      "archive_score_matches_source": true,
+      "source_urls": [
+        "https://fixturedownload.com/feed/json/europa-league-2026",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/scoreboard?dates=20261105"
+      ],
+      "score": "1-2",
+      "statistics_availability": "kickoff_conflict",
+      "reason": "The importer's synthetic noon kickoff differs from the original feed; archive identity and transfer remain unverified."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2024-09-06T16:30:00+00:00-Romania U21-Montenegro U21",
+      "match": "Romania U21 — Montenegro U21",
+      "planned_kickoff": "2024-09-06T16:30:00+00:00",
+      "home": "Romania U21",
+      "away": "Montenegro U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2024-09-06&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2024-09-10T17:30:00+00:00-Montenegro U21-Switzerland U21",
+      "match": "Montenegro U21 — Switzerland U21",
+      "planned_kickoff": "2024-09-10T17:30:00+00:00",
+      "home": "Montenegro U21",
+      "away": "Switzerland U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "0-2",
+      "provider_event_id": "y39mp1h0nvowmoj",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2024-09-10&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-switzerland-u21/y39mp1h0nvowmoj/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Montenegro U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 5
+              },
+              {
+                "name": "yellowCards",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Switzerland U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 2
+              },
+              {
+                "name": "yellowCards",
+                "value": 3
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "4ac2a74f1316dcf575ac61b99a207db7100a31cd0474ab01552acde8aa6ef168",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2024-10-11T14:00:00+00:00-Montenegro U21-Romania U21",
+      "match": "Montenegro U21 — Romania U21",
+      "planned_kickoff": "2024-10-11T14:00:00+00:00",
+      "home": "Montenegro U21",
+      "away": "Romania U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "2-6",
+      "provider_event_id": "k82rekh04zexrep",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2024-10-11&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-romania-u21/k82rekh04zexrep/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Montenegro U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 2
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Romania U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 2
+              },
+              {
+                "name": "yellowCards",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "42119daff86b908756d20c6b5e14316695b37cb95db3879888dd6fcbbb382a01",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2024-10-15T16:00:00+00:00-Finland U21-Montenegro U21",
+      "match": "Finland U21 — Montenegro U21",
+      "planned_kickoff": "2024-10-15T16:00:00+00:00",
+      "home": "Finland U21",
+      "away": "Montenegro U21",
+      "league": "UEFA European U21 Championship qualification",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "2-1",
+      "provider_event_id": "4wyrn4honzw6q86",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2024-10-15&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-finland-u21/4wyrn4honzw6q86/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Finland U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 6
+              },
+              {
+                "name": "yellowCards",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Montenegro U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 2
+              },
+              {
+                "name": "yellowCards",
+                "value": 3
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "f022ba0d31d10cbb5d6a7d766ccc150bad9231cc2009196f6e8cd83fedc7a27b",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2024-11-17T11:00:00+00:00-North Macedonia U21-Kosovo U21",
+      "match": "North Macedonia U21 — Kosovo U21",
+      "planned_kickoff": "2024-11-17T11:00:00+00:00",
+      "home": "North Macedonia U21",
+      "away": "Kosovo U21",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2024-11-17&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-03-21T17:30:00+00:00-Turkiye U21-Kosovo U21",
+      "match": "Turkiye U21 — Kosovo U21",
+      "planned_kickoff": "2025-03-21T17:30:00+00:00",
+      "home": "Turkiye U21",
+      "away": "Kosovo U21",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-03-21&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-03-25T13:00:00+00:00-Moldova U21-Kosovo U21",
+      "match": "Moldova U21 — Kosovo U21",
+      "planned_kickoff": "2025-03-25T13:00:00+00:00",
+      "home": "Moldova U21",
+      "away": "Kosovo U21",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "1-2",
+      "provider_event_id": "dn1m1gh26lk9moe",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-03-25&status=finished&limit=1000",
+        "https://sportscore.com/football/match/moldova-u21-vs-kosovo-u21/dn1m1gh26lk9moe/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Moldova U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 10
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Kosovo U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 5
+              },
+              {
+                "name": "yellowCards",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "6a0d40036de70f4d6714a74ef612d26f1a4f7adb6dc81c9ad710cd8aac25f6b2",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-03-25T14:00:00+00:00-Bosnia and Herzegovina U21-Montenegro U21",
+      "match": "Bosnia and Herzegovina U21 — Montenegro U21",
+      "planned_kickoff": "2025-03-25T14:00:00+00:00",
+      "home": "Bosnia and Herzegovina U21",
+      "away": "Montenegro U21",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "2-3",
+      "provider_event_id": "6ypq3nh3xv4dmd7",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-03-25&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-bosnia-herzegovina-u21/6ypq3nh3xv4dmd7/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Bosnia and Herzegovina U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 6
+              },
+              {
+                "name": "yellowCards",
+                "value": 4
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "Montenegro U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 5
+              },
+              {
+                "name": "yellowCards",
+                "value": 4
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "6beb0c1bd21e44d5abc14a535f5d2e441a0fe5599294834a71dbbe1d5b89bcd1",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-05-28T17:00:00+00:00-Kosovo U21-North Macedonia U21",
+      "match": "Kosovo U21 — North Macedonia U21",
+      "planned_kickoff": "2025-05-28T17:00:00+00:00",
+      "home": "Kosovo U21",
+      "away": "North Macedonia U21",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": true,
+      "score_verified": true,
+      "transfer_ready": false,
+      "score": "0-0",
+      "provider_event_id": "4wyrn4h68xjeq86",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-05-28&status=finished&limit=1000",
+        "https://sportscore.com/football/match/north-macedonia-u21-vs-kosovo-u21/4wyrn4h68xjeq86/"
+      ],
+      "statistics_availability": "partial",
+      "partial_statistics": {
+        "teams": [
+          {
+            "team": {
+              "name": "Kosovo U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 7
+              },
+              {
+                "name": "yellowCards",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "team": {
+              "name": "North Macedonia U21"
+            },
+            "statistics": [
+              {
+                "name": "wonCorners",
+                "value": 1
+              },
+              {
+                "name": "yellowCards",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "source_payload_sha256": "b6a9d2e9530ff688fe57adba576efb29b5c5bf672dd8df30ee44b9109ec02fd6",
+      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-05-31T13:00:00+00:00-North Macedonia U21-Kosovo U21",
+      "match": "North Macedonia U21 — Kosovo U21",
+      "planned_kickoff": "2025-05-31T13:00:00+00:00",
+      "home": "North Macedonia U21",
+      "away": "Kosovo U21",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-05-31&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-06-05T17:00:00+00:00-Turkiye U21-Montenegro U21",
+      "match": "Turkiye U21 — Montenegro U21",
+      "planned_kickoff": "2025-06-05T17:00:00+00:00",
+      "home": "Turkiye U21",
+      "away": "Montenegro U21",
+      "league": "International Friendly",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-06-05&status=finished&limit=1000"
+      ],
+      "statistics_availability": "source_unreachable"
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-06-07T13:00:00+00:00-South Africa-Zimbabwe",
+      "match": "South Africa — Zimbabwe",
+      "planned_kickoff": "2025-06-07T13:00:00+00:00",
+      "home": "South Africa",
+      "away": "Zimbabwe",
+      "league": "CAF South Africa Confederations Cup",
+      "provider_group": "SportScore",
+      "status": "source_review",
+      "statistics_sha256": null,
+      "research_date": "2026-11-21",
+      "identity_verified": false,
+      "score_verified": false,
+      "transfer_ready": false,
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-06-07&status=finished&limit=1000"
+      ],
+      "statistics_availability": "event_not_confirmed",
+      "reason": "The accessible daily feed is capped; a missing event does not establish absence."
+    }
+  ]
+}
