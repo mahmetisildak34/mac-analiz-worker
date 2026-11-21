@@ -1,0 +1,23 @@
+name: TheSportsDB offline crosswalk eligibility
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/bulk-statistics-repair-hardening]
+    paths:
+      - scripts/thesportsdb-crosswalk-eligibility.mjs
+      - .github/workflows/thesportsdb-crosswalk-eligibility.yml
+permissions:
+  contents: read
+jobs:
+  offline-crosswalk:
+    if: github.ref == 'refs/heads/feature/bulk-statistics-repair-hardening'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check scripts/thesportsdb-crosswalk-eligibility.mjs
+      - name: Check source-qualified exact match candidates without network calls
+        run: node scripts/thesportsdb-crosswalk-eligibility.mjs
