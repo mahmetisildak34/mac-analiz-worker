@@ -23,6 +23,8 @@ jobs:
         run: node --check scripts/statistics-research-audit.mjs
       - name: Verify plan, protected records, SHA-256, and research resume queue
         run: node scripts/statistics-research-audit.mjs > research-audit-report.json
+      - name: Verify transfer revalidation and original UEFA times
+        run: node --test tests/statistics-repair-transfer-acceptance.test.mjs
       - name: Exercise isolated archive repair transactions
         run: python3 tests/archive-repair-local-acceptance.py
       - name: Print summary without publishing protected payloads

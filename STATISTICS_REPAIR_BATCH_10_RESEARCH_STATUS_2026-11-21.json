@@ -109,13 +109,24 @@
       "statistics_sha256": null,
       "research_date": "2026-11-21",
       "identity_verified": true,
-      "score_verified": true,
+      "score_verified": false,
       "transfer_ready": false,
       "provider_event_id": "1613107",
       "score": "3-1",
       "verification_evidence": "archived_api_football_provider_payload",
       "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "score_conflict": {
+        "date": "2026-11-22",
+        "archive": "3-1",
+        "public_results": "3-2",
+        "federation_index": "2-2",
+        "decision": "Quarantined pending unambiguous federation result; original archive score preserved.",
+        "source_urls": [
+          "https://www.asturfutbol.es/pnfg/NPcd/NFG_CmpPartido?CodActa=25744510&cod_acta=25744510&cod_primaria=1000120",
+          "https://www.bdfutbol.com/es/c/partido.html?d=15%2F11%2F2026&id=6169&l=Praviano&v=Condal+Club"
+        ]
+      }
     },
     {
       "source": "app",
