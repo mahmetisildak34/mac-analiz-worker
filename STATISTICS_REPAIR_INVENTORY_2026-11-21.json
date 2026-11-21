@@ -1,0 +1,1092 @@
+{
+  "snapshot_date": "2026-11-21",
+  "source": "Cloudflare D1 read-only SELECT",
+  "production_database": "mac-analiz-arsiv",
+  "preview_database": "mac-analiz-preview",
+  "summary": {
+    "production_total_matches": 13372,
+    "production_completed_matches": 9897,
+    "production_completed_missing_statistics": 722,
+    "production_completed_with_statistics": 9175,
+    "preview_matches_with_nonempty_statistics": 2554,
+    "unique_reliable_preview_matches": 44,
+    "ambiguous_matches": 0,
+    "unmatched_matches": 678,
+    "invalid_or_incomplete_statistics": 0,
+    "known_team_id_conflicts": 0,
+    "transfers_performed": 0
+  },
+  "previous_count_explanation": {
+    "earlier_715_query_cutoff": "kickoff < 2026-11-21",
+    "current_count": 722,
+    "additional_same_day_matches": 7,
+    "note": "The seven additional completed matches have kickoff timestamps on 2026-11-21 and were excluded by the earlier date cutoff."
+  },
+  "seven_same_day_matches": [
+    {
+      "fixture_id": "401877531",
+      "home_team": "Sanfrecce Hiroshima",
+      "away_team": "Yokohama F. Marinos",
+      "score": "2-2",
+      "kickoff_time_utc": "05:00Z"
+    },
+    {
+      "fixture_id": "401877533",
+      "home_team": "Tokyo Verdy 1969",
+      "away_team": "Nagoya Grampus",
+      "score": "0-0",
+      "kickoff_time_utc": "05:00Z"
+    },
+    {
+      "fixture_id": "401877550",
+      "home_team": "Kyoto Sanga",
+      "away_team": "Urawa Red Diamonds",
+      "score": "2-1",
+      "kickoff_time_utc": "05:00Z"
+    },
+    {
+      "fixture_id": "401877552",
+      "home_team": "Machida Zelvia",
+      "away_team": "V-Varen Nagasaki",
+      "score": "0-0",
+      "kickoff_time_utc": "05:00Z"
+    },
+    {
+      "fixture_id": "401892136",
+      "home_team": "Central Coast Mariners FC",
+      "away_team": "Perth Glory FC",
+      "score": "0-0",
+      "kickoff_time_utc": "06:00Z"
+    },
+    {
+      "fixture_id": "401877549",
+      "home_team": "Cerezo Osaka",
+      "away_team": "FC Tokyo",
+      "score": "0-3",
+      "kickoff_time_utc": "06:00Z"
+    },
+    {
+      "fixture_id": "401877551",
+      "home_team": "Kawasaki Frontale",
+      "away_team": "Avispa Fukuoka",
+      "score": "1-0",
+      "kickoff_time_utc": "06:00Z"
+    }
+  ],
+  "matching_method": "UTC date + normalized ordered home/away names + exact score + unique Preview fixture + compatible known team IDs + matching numeric fixture-id suffix + valid two-team nonempty statistics JSON + SHA-256",
+  "matching_caveat": "All 44 Production candidates have at least one unknown team ID (-1); no known-ID conflicts were found. Their date, ordered normalized team names, score and numeric fixture-id suffix match uniquely.",
+  "matches": [
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698884",
+        "kickoff": "2024-09-05T18:45Z",
+        "status": "FT",
+        "home_team": "Denmark",
+        "away_team": "Switzerland",
+        "home_team_id": "479",
+        "away_team_id": "-1",
+        "home_goals": 2,
+        "away_goals": 0,
+        "updated_at": "2026-11-17 20:04:14"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698884",
+        "home_team_id": "479",
+        "away_team_id": "475",
+        "statistics_length": 3836,
+        "statistics_sha256": "6fcbbc0fc911a5927961a4dadb6a75f28a3551cf61bf4dc561a2776726b05435"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698886",
+        "kickoff": "2024-09-05T18:45Z",
+        "status": "FT",
+        "home_team": "Scotland",
+        "away_team": "Poland",
+        "home_team_id": "-1",
+        "away_team_id": "471",
+        "home_goals": 2,
+        "away_goals": 3,
+        "updated_at": "2026-11-17 20:04:15"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698886",
+        "home_team_id": "580",
+        "away_team_id": "471",
+        "statistics_length": 3834,
+        "statistics_sha256": "1f7dc2f2587bb47416ebc7793200e8e6fdf49abf36af99d39850d3187643a695"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698888",
+        "kickoff": "2024-09-05T18:45Z",
+        "status": "FT",
+        "home_team": "Portugal",
+        "away_team": "Croatia",
+        "home_team_id": "482",
+        "away_team_id": "-1",
+        "home_goals": 2,
+        "away_goals": 1,
+        "updated_at": "2026-11-17 20:04:17"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698888",
+        "home_team_id": "482",
+        "away_team_id": "477",
+        "statistics_length": 3835,
+        "statistics_sha256": "cbde9540f36d7c771a0e98dfae9dc6484d6f6c1e3b793d409c10e40529b068b5"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698889",
+        "kickoff": "2024-09-05T18:45Z",
+        "status": "FT",
+        "home_team": "Northern Ireland",
+        "away_team": "Luxembourg",
+        "home_team_id": "586",
+        "away_team_id": "-1",
+        "home_goals": 2,
+        "away_goals": 0,
+        "updated_at": "2026-11-17 20:04:15"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698889",
+        "home_team_id": "586",
+        "away_team_id": "582",
+        "statistics_length": 3847,
+        "statistics_sha256": "b7a4e1b5a075866330441846036764fa3fff272cc92f3ac1b06df22f6970764c"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698890",
+        "kickoff": "2024-09-05T18:45Z",
+        "status": "FT",
+        "home_team": "Estonia",
+        "away_team": "Slovakia",
+        "home_team_id": "444",
+        "away_team_id": "-1",
+        "home_goals": 0,
+        "away_goals": 1,
+        "updated_at": "2026-11-16 08:50:04"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698890",
+        "home_team_id": "444",
+        "away_team_id": "468",
+        "statistics_length": 3836,
+        "statistics_sha256": "9424f4e1898ebd3deaa088bb997bcf29bd2dc69117a00a7f127271bdea84b89e"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698891",
+        "kickoff": "2024-09-06T14:00Z",
+        "status": "FT",
+        "home_team": "Kazakhstan",
+        "away_team": "Norway",
+        "home_team_id": "-1",
+        "away_team_id": "464",
+        "home_goals": 0,
+        "away_goals": 0,
+        "updated_at": "2026-11-17 20:04:14"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698891",
+        "home_team_id": "2619",
+        "away_team_id": "464",
+        "statistics_length": 3838,
+        "statistics_sha256": "921c291fa268881f3dd30b499c72ef0b3df1b87739e6409514b51106d3e53ed5"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698894",
+        "kickoff": "2024-09-06T16:00Z",
+        "status": "FT",
+        "home_team": "Lithuania",
+        "away_team": "Cyprus",
+        "home_team_id": "-1",
+        "away_team_id": "445",
+        "home_goals": 0,
+        "away_goals": 1,
+        "updated_at": "2026-11-15 15:16:35"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698894",
+        "home_team_id": "460",
+        "away_team_id": "445",
+        "statistics_length": 3836,
+        "statistics_sha256": "01e5f2abd750dc57ed7175c042092a1a24f0520159c3886ed64c46b39a80b902"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698892",
+        "kickoff": "2024-09-06T18:45Z",
+        "status": "FT",
+        "home_team": "Wales",
+        "away_team": "Türkiye",
+        "home_team_id": "578",
+        "away_team_id": "-1",
+        "home_goals": 0,
+        "away_goals": 0,
+        "updated_at": "2026-11-17 20:04:17"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698892",
+        "home_team_id": "578",
+        "away_team_id": "465",
+        "statistics_length": 3827,
+        "statistics_sha256": "96682992bb159f3fcaf5a6bb9abfa372fb1937614b309ddf04eb7ad8e9983833"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698893",
+        "kickoff": "2024-09-06T18:45Z",
+        "status": "FT",
+        "home_team": "Iceland",
+        "away_team": "Montenegro",
+        "home_team_id": "-1",
+        "away_team_id": "6775",
+        "home_goals": 2,
+        "away_goals": 0,
+        "updated_at": "2026-11-15 15:16:34"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698893",
+        "home_team_id": "470",
+        "away_team_id": "6775",
+        "statistics_length": 3839,
+        "statistics_sha256": "b17acd443d5d869bdb24635b7a41704c1aeeb0d4ae9806bd8aefa2018ccbadd5"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698895",
+        "kickoff": "2024-09-06T18:45Z",
+        "status": "FT",
+        "home_team": "Kosovo",
+        "away_team": "Romania",
+        "home_team_id": "18272",
+        "away_team_id": "-1",
+        "home_goals": 0,
+        "away_goals": 3,
+        "updated_at": "2026-11-17 20:04:16"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698895",
+        "home_team_id": "18272",
+        "away_team_id": "473",
+        "statistics_length": 3832,
+        "statistics_sha256": "db140c53e4231882fe0dddea3e6be6828c9f431cf28b4dec4253c17f0d4f70b5"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698896",
+        "kickoff": "2024-09-06T18:45Z",
+        "status": "FT",
+        "home_team": "Slovenia",
+        "away_team": "Austria",
+        "home_team_id": "-1",
+        "away_team_id": "474",
+        "home_goals": 1,
+        "away_goals": 1,
+        "updated_at": "2026-11-17 20:04:15"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698896",
+        "home_team_id": "472",
+        "away_team_id": "474",
+        "statistics_length": 3835,
+        "statistics_sha256": "81dc3f9d0c1d9ef5509f172bf6cc5e5eb5a952c51a0e420725e158d16548ab89"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698897",
+        "kickoff": "2024-09-06T18:45Z",
+        "status": "FT",
+        "home_team": "Belgium",
+        "away_team": "Israel",
+        "home_team_id": "-1",
+        "away_team_id": "461",
+        "home_goals": 3,
+        "away_goals": 1,
+        "updated_at": "2026-11-17 20:04:15"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698897",
+        "home_team_id": "459",
+        "away_team_id": "461",
+        "statistics_length": 3831,
+        "statistics_sha256": "82944d2de67d03636c20358b6b1e6360b74a409dc05b0af32443b3ee16617765"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698898",
+        "kickoff": "2024-09-06T18:45Z",
+        "status": "FT",
+        "home_team": "France",
+        "away_team": "Italy",
+        "home_team_id": "478",
+        "away_team_id": "-1",
+        "home_goals": 1,
+        "away_goals": 3,
+        "updated_at": "2026-11-15 20:38:15"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698898",
+        "home_team_id": "478",
+        "away_team_id": "162",
+        "statistics_length": 3833,
+        "statistics_sha256": "db5b73639dbd95437d5df1db2b656e86d79e689d36775421cc00ba048d0a0f36"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698900",
+        "kickoff": "2024-09-07T16:00Z",
+        "status": "FT",
+        "home_team": "Armenia",
+        "away_team": "Latvia",
+        "home_team_id": "579",
+        "away_team_id": "-1",
+        "home_goals": 4,
+        "away_goals": 1,
+        "updated_at": "2026-11-15 15:16:34"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698900",
+        "home_team_id": "579",
+        "away_team_id": "456",
+        "statistics_length": 3833,
+        "statistics_sha256": "863af1a41360dc66409ef8029f307c029bf5ac9060d88275c602a7eeb9f3f9f1"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698903",
+        "kickoff": "2024-09-07T16:00Z",
+        "status": "FT",
+        "home_team": "Republic of Ireland",
+        "away_team": "England",
+        "home_team_id": "476",
+        "away_team_id": "-1",
+        "home_goals": 0,
+        "away_goals": 2,
+        "updated_at": "2026-11-17 20:04:16"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698903",
+        "home_team_id": "476",
+        "away_team_id": "448",
+        "statistics_length": 3845,
+        "statistics_sha256": "207488c9a9b65c43ffcf5e85caf3291221d95b54de874f6765dfdd25857f3e0b"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698910",
+        "kickoff": "2024-09-08T16:00Z",
+        "status": "FT",
+        "home_team": "Denmark",
+        "away_team": "Serbia",
+        "home_team_id": "479",
+        "away_team_id": "-1",
+        "home_goals": 2,
+        "away_goals": 0,
+        "updated_at": "2026-11-17 20:04:14"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698910",
+        "home_team_id": "479",
+        "away_team_id": "6757",
+        "statistics_length": 3836,
+        "statistics_sha256": "06633621e111489bdb58f16d598504abc583e2eca1465b1ed308180eaea9a4b4"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698911",
+        "kickoff": "2024-09-08T16:00Z",
+        "status": "FT",
+        "home_team": "Slovakia",
+        "away_team": "Azerbaijan",
+        "home_team_id": "468",
+        "away_team_id": "-1",
+        "home_goals": 2,
+        "away_goals": 0,
+        "updated_at": "2026-11-16 08:49:59"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698911",
+        "home_team_id": "468",
+        "away_team_id": "581",
+        "statistics_length": 3839,
+        "statistics_sha256": "06a963c3aaf88f1dbd50b2634cf4483205327615c92d359f76b02e9dffaf10b8"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698915",
+        "kickoff": "2024-09-08T18:45Z",
+        "status": "FT",
+        "home_team": "Croatia",
+        "away_team": "Poland",
+        "home_team_id": "-1",
+        "away_team_id": "471",
+        "home_goals": 1,
+        "away_goals": 0,
+        "updated_at": "2026-11-17 20:04:15"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698915",
+        "home_team_id": "477",
+        "away_team_id": "471",
+        "statistics_length": 3836,
+        "statistics_sha256": "59146b8f6c08f3ca8caa84f050233a9e9984774f22993d78a317be91b2f2bad2"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698916",
+        "kickoff": "2024-09-08T18:45Z",
+        "status": "FT",
+        "home_team": "Portugal",
+        "away_team": "Scotland",
+        "home_team_id": "482",
+        "away_team_id": "-1",
+        "home_goals": 2,
+        "away_goals": 1,
+        "updated_at": "2026-11-17 20:04:17"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698916",
+        "home_team_id": "482",
+        "away_team_id": "580",
+        "statistics_length": 3837,
+        "statistics_sha256": "2a1bf8f3dfdebade3c1273ae507301672ff4dbc5938194315c2ae8c41c833f0c"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698919",
+        "kickoff": "2024-09-09T16:00Z",
+        "status": "FT",
+        "home_team": "Cyprus",
+        "away_team": "Kosovo",
+        "home_team_id": "-1",
+        "away_team_id": "18272",
+        "home_goals": 0,
+        "away_goals": 4,
+        "updated_at": "2026-11-17 20:04:16"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698919",
+        "home_team_id": "445",
+        "away_team_id": "18272",
+        "statistics_length": 3834,
+        "statistics_sha256": "6def15a053ff97157c80bd35266d7fc251b666276362b0eb77126c7ba79950ac"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698917",
+        "kickoff": "2024-09-09T18:45Z",
+        "status": "FT",
+        "home_team": "Israel",
+        "away_team": "Italy",
+        "home_team_id": "461",
+        "away_team_id": "-1",
+        "home_goals": 1,
+        "away_goals": 2,
+        "updated_at": "2026-11-17 20:04:15"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698917",
+        "home_team_id": "461",
+        "away_team_id": "162",
+        "statistics_length": 3832,
+        "statistics_sha256": "c28f1fa7934194d7a3e42393c443dc402c0715c5f234519ecf53c4fb9fad189a"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698918",
+        "kickoff": "2024-09-09T18:45Z",
+        "status": "FT",
+        "home_team": "France",
+        "away_team": "Belgium",
+        "home_team_id": "478",
+        "away_team_id": "-1",
+        "home_goals": 2,
+        "away_goals": 0,
+        "updated_at": "2026-11-15 20:38:15"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698918",
+        "home_team_id": "478",
+        "away_team_id": "459",
+        "statistics_length": 3834,
+        "statistics_sha256": "d1b5249f8737127cf56490faa0f8c358109740094c29bd8bcfa8cabc261bb23b"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698920",
+        "kickoff": "2024-09-09T18:45Z",
+        "status": "FT",
+        "home_team": "Montenegro",
+        "away_team": "Wales",
+        "home_team_id": "-1",
+        "away_team_id": "578",
+        "home_goals": 1,
+        "away_goals": 2,
+        "updated_at": "2026-11-17 20:04:17"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698920",
+        "home_team_id": "6775",
+        "away_team_id": "578",
+        "statistics_length": 3840,
+        "statistics_sha256": "27dca255bf38d6cb5628b9eb6cccf2b3e8d11ddeb546ececf37365d5bcfb0e9c"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698921",
+        "kickoff": "2024-09-09T18:45Z",
+        "status": "FT",
+        "home_team": "Türkiye",
+        "away_team": "Iceland",
+        "home_team_id": "465",
+        "away_team_id": "-1",
+        "home_goals": 3,
+        "away_goals": 1,
+        "updated_at": "2026-11-15 20:38:15"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698921",
+        "home_team_id": "465",
+        "away_team_id": "470",
+        "statistics_length": 3833,
+        "statistics_sha256": "78489fe912d8d127ad73c8f9f2b68228c680b158c35737e0164e215e5c3049e2"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698924",
+        "kickoff": "2024-09-09T18:45Z",
+        "status": "FT",
+        "home_team": "Norway",
+        "away_team": "Austria",
+        "home_team_id": "-1",
+        "away_team_id": "474",
+        "home_goals": 2,
+        "away_goals": 1,
+        "updated_at": "2026-11-17 20:04:15"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698924",
+        "home_team_id": "464",
+        "away_team_id": "474",
+        "statistics_length": 3833,
+        "statistics_sha256": "23b903ce8d99d70c956e35fe28775771240a3db8517488a3ba9498802129d954"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698931",
+        "kickoff": "2024-09-10T16:00Z",
+        "status": "FT",
+        "home_team": "Latvia",
+        "away_team": "Faroe Islands",
+        "home_team_id": "456",
+        "away_team_id": "-1",
+        "home_goals": 1,
+        "away_goals": 0,
+        "updated_at": "2026-11-15 15:16:34"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698931",
+        "home_team_id": "456",
+        "away_team_id": "447",
+        "statistics_length": 3841,
+        "statistics_sha256": "0f6eb0bd5624b73d3f420298f049afa41f05aec6156091485dff4b0c9103bfff"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698929",
+        "kickoff": "2024-09-10T18:45Z",
+        "status": "FT",
+        "home_team": "Republic of Ireland",
+        "away_team": "Greece",
+        "home_team_id": "476",
+        "away_team_id": "-1",
+        "home_goals": 0,
+        "away_goals": 2,
+        "updated_at": "2026-11-17 20:04:16"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698929",
+        "home_team_id": "476",
+        "away_team_id": "455",
+        "statistics_length": 3844,
+        "statistics_sha256": "9dd7d3bd1b4d6e8555ffb37f6990ebeb4809369cda636273a2eec5de91436831"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698933",
+        "kickoff": "2024-09-10T18:45Z",
+        "status": "FT",
+        "home_team": "North Macedonia",
+        "away_team": "Armenia",
+        "home_team_id": "-1",
+        "away_team_id": "579",
+        "home_goals": 2,
+        "away_goals": 0,
+        "updated_at": "2026-11-15 15:16:34"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698933",
+        "home_team_id": "463",
+        "away_team_id": "579",
+        "statistics_length": 3843,
+        "statistics_sha256": "65b62d4da2932e7cbc94ba2ea16dc8f04cad06548496643377c62cfa749884d5"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698940",
+        "kickoff": "2024-10-10T16:00Z",
+        "status": "FT",
+        "home_team": "Latvia",
+        "away_team": "North Macedonia",
+        "home_team_id": "456",
+        "away_team_id": "-1",
+        "home_goals": 0,
+        "away_goals": 3,
+        "updated_at": "2026-11-15 15:16:34"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698940",
+        "home_team_id": "456",
+        "away_team_id": "463",
+        "statistics_length": 3840,
+        "statistics_sha256": "04f9360e884dc51660553482c04ce41344f483e53ccd2d6e97a7772a575253f6"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698934",
+        "kickoff": "2024-10-10T18:45Z",
+        "status": "FT",
+        "home_team": "Faroe Islands",
+        "away_team": "Armenia",
+        "home_team_id": "-1",
+        "away_team_id": "579",
+        "home_goals": 2,
+        "away_goals": 2,
+        "updated_at": "2026-11-15 15:16:34"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698934",
+        "home_team_id": "447",
+        "away_team_id": "579",
+        "statistics_length": 3839,
+        "statistics_sha256": "a641d94a4ee722fa57dff7713efdb8d76602b7b904d753dc1de7c4d29c5b6d5b"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698936",
+        "kickoff": "2024-10-10T18:45Z",
+        "status": "FT",
+        "home_team": "Austria",
+        "away_team": "Kazakhstan",
+        "home_team_id": "474",
+        "away_team_id": "-1",
+        "home_goals": 4,
+        "away_goals": 0,
+        "updated_at": "2026-11-17 20:04:15"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698936",
+        "home_team_id": "474",
+        "away_team_id": "2619",
+        "statistics_length": 3837,
+        "statistics_sha256": "597a1e6dc7fc8fdecd3335962d77c9c59dd740048ca8942539e38542f20f2e26"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698937",
+        "kickoff": "2024-10-10T18:45Z",
+        "status": "FT",
+        "home_team": "Finland",
+        "away_team": "Republic of Ireland",
+        "home_team_id": "-1",
+        "away_team_id": "476",
+        "home_goals": 1,
+        "away_goals": 2,
+        "updated_at": "2026-11-17 20:04:16"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698937",
+        "home_team_id": "458",
+        "away_team_id": "476",
+        "statistics_length": 3848,
+        "statistics_sha256": "62c89e4025dd17ed55e0f98194d54af2e3e4fd15a39aef4fe882d93201601b3f"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698939",
+        "kickoff": "2024-10-10T18:45Z",
+        "status": "FT",
+        "home_team": "Italy",
+        "away_team": "Belgium",
+        "home_team_id": "-1",
+        "away_team_id": "459",
+        "home_goals": 2,
+        "away_goals": 2,
+        "updated_at": "2026-11-15 20:38:14"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698939",
+        "home_team_id": "162",
+        "away_team_id": "459",
+        "statistics_length": 3831,
+        "statistics_sha256": "87257182c795c1c7cf639a816915f76c92477f55d195f72285da1c9c361bd8f7"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698942",
+        "kickoff": "2024-10-10T18:45Z",
+        "status": "FT",
+        "home_team": "Norway",
+        "away_team": "Slovenia",
+        "home_team_id": "464",
+        "away_team_id": "-1",
+        "home_goals": 3,
+        "away_goals": 0,
+        "updated_at": "2026-11-17 20:04:14"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698942",
+        "home_team_id": "464",
+        "away_team_id": "472",
+        "statistics_length": 3836,
+        "statistics_sha256": "c1112f001894cf57d65bc96e0b02f8e659613e75fc28bd3ddc83e11c55141666"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698956",
+        "kickoff": "2024-10-12T18:45Z",
+        "status": "FT",
+        "home_team": "Spain",
+        "away_team": "Denmark",
+        "home_team_id": "-1",
+        "away_team_id": "479",
+        "home_goals": 1,
+        "away_goals": 0,
+        "updated_at": "2026-11-17 20:04:14"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698956",
+        "home_team_id": "164",
+        "away_team_id": "479",
+        "statistics_length": 3832,
+        "statistics_sha256": "8874754d21e3f5abf0aac8721e0910275605d946b97ad230f5dc7b382f3dda1f"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698961",
+        "kickoff": "2024-10-13T16:00Z",
+        "status": "FT",
+        "home_team": "Armenia",
+        "away_team": "North Macedonia",
+        "home_team_id": "579",
+        "away_team_id": "-1",
+        "home_goals": 0,
+        "away_goals": 2,
+        "updated_at": "2026-11-15 15:16:34"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698961",
+        "home_team_id": "579",
+        "away_team_id": "463",
+        "statistics_length": 3837,
+        "statistics_sha256": "ccd4e1ae986258ddb2417122b11a76446c64cb43194089345e45cf0cf8981ee7"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698965",
+        "kickoff": "2024-10-13T18:45Z",
+        "status": "FT",
+        "home_team": "Austria",
+        "away_team": "Norway",
+        "home_team_id": "474",
+        "away_team_id": "-1",
+        "home_goals": 5,
+        "away_goals": 1,
+        "updated_at": "2026-11-17 20:04:15"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698965",
+        "home_team_id": "474",
+        "away_team_id": "464",
+        "statistics_length": 3831,
+        "statistics_sha256": "5397b4e27b6e9ff4092ae7df184d9387983f95c3e874b288e322c5b7cddca8c3"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698966",
+        "kickoff": "2024-10-13T18:45Z",
+        "status": "FT",
+        "home_team": "Greece",
+        "away_team": "Republic of Ireland",
+        "home_team_id": "-1",
+        "away_team_id": "476",
+        "home_goals": 2,
+        "away_goals": 0,
+        "updated_at": "2026-11-17 20:04:16"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698966",
+        "home_team_id": "455",
+        "away_team_id": "476",
+        "statistics_length": 3846,
+        "statistics_sha256": "fba4279ef60fca0b462ad4b46c91f072b9962159edf0ac479ae0526e52bb1182"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698967",
+        "kickoff": "2024-10-13T18:45Z",
+        "status": "FT",
+        "home_team": "Faroe Islands",
+        "away_team": "Latvia",
+        "home_team_id": "-1",
+        "away_team_id": "456",
+        "home_goals": 1,
+        "away_goals": 1,
+        "updated_at": "2026-11-15 15:16:34"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698967",
+        "home_team_id": "447",
+        "away_team_id": "456",
+        "statistics_length": 3839,
+        "statistics_sha256": "1d60b2bb45736aff274029172be3f0de9e9fb5f22ad034360c3b5eee3536d730"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698970",
+        "kickoff": "2024-10-14T18:45Z",
+        "status": "FT",
+        "home_team": "Iceland",
+        "away_team": "Türkiye",
+        "home_team_id": "-1",
+        "away_team_id": "465",
+        "home_goals": 2,
+        "away_goals": 4,
+        "updated_at": "2026-11-15 20:38:15"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698970",
+        "home_team_id": "470",
+        "away_team_id": "465",
+        "statistics_length": 3837,
+        "statistics_sha256": "58ae7dde16c7df518ac31b1dfd9b2d5d93ac81446eb804e693374dd9c26d419d"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698982",
+        "kickoff": "2024-10-15T18:45Z",
+        "status": "FT",
+        "home_team": "Scotland",
+        "away_team": "Portugal",
+        "home_team_id": "-1",
+        "away_team_id": "482",
+        "home_goals": 0,
+        "away_goals": 0,
+        "updated_at": "2026-11-17 20:04:17"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698982",
+        "home_team_id": "580",
+        "away_team_id": "482",
+        "statistics_length": 3829,
+        "statistics_sha256": "ad37b4d20dd136843b0e8ef0aae495da79b281cec3a9077efed1f3ad599de9b9"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698987",
+        "kickoff": "2024-11-14T17:00Z",
+        "status": "FT",
+        "home_team": "Armenia",
+        "away_team": "Faroe Islands",
+        "home_team_id": "579",
+        "away_team_id": "-1",
+        "home_goals": 0,
+        "away_goals": 1,
+        "updated_at": "2026-11-15 15:16:34"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698987",
+        "home_team_id": "579",
+        "away_team_id": "447",
+        "statistics_length": 3837,
+        "statistics_sha256": "1dba71ce36da6016a401b72df2385ada16b6951fd47b6ba0fe29904c1375d21e"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "698991",
+        "kickoff": "2024-11-14T19:45Z",
+        "status": "FT",
+        "home_team": "North Macedonia",
+        "away_team": "Latvia",
+        "home_team_id": "-1",
+        "away_team_id": "456",
+        "home_goals": 1,
+        "away_goals": 0,
+        "updated_at": "2026-11-15 15:16:34"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-698991",
+        "home_team_id": "463",
+        "away_team_id": "456",
+        "statistics_length": 3841,
+        "statistics_sha256": "4e30e248805d9baf1f771175e8500693ebf7a4a66818f5263a284cd61f6c2956"
+      }
+    },
+    {
+      "production": {
+        "source": "espn",
+        "fixture_id": "699005",
+        "kickoff": "2024-11-16T17:00Z",
+        "status": "FT",
+        "home_team": "Türkiye",
+        "away_team": "Wales",
+        "home_team_id": "-1",
+        "away_team_id": "578",
+        "home_goals": 0,
+        "away_goals": 0,
+        "updated_at": "2026-11-17 20:04:17"
+      },
+      "preview": {
+        "source": "ESPN",
+        "fixture_id": "espn-uefa.nations-699005",
+        "home_team_id": "465",
+        "away_team_id": "578",
+        "statistics_length": 3829,
+        "statistics_sha256": "28a3c552a04871c2bcff8148b2c8653409645a8019f63ff869d4d0acc39f8419"
+      }
+    }
+  ]
+}
