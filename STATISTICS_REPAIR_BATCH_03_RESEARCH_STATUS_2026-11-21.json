@@ -76,11 +76,13 @@
       "league": "League Cup",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "4-3",
+      "source_urls": [
+        "https://www.sofascore.com/football/match/golik-north-district-hong-kong-fc/CJCbswDwc"
+      ],
+      "status": "source_review",
+      "reason": "14 Nov 2026 07:00 UTC Hong Kong League Cup; North District home Hong Kong FC away FT 4-3. Event and goals corroborated; source page does not expose all seven comparable statistics for both teams.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -112,11 +114,13 @@
       "league": "Liga Nacional",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "4-0",
+      "source_urls": [
+        "https://www.rotascore.com/en/match/xelaju-mc-guastatoya/x7lm7phjedjem2w"
+      ],
+      "status": "source_review",
+      "reason": "14 Nov 2026 21:00 UTC Guatemala Liga Nacional, Xelajú home Guastatoya away FT 4-0. Score and red-card event available; seven event statistics not verified. Secondary match feeds may share provenance.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -185,11 +189,13 @@
       "league": "Segunda División",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "2-1",
+      "source_urls": [
+        "https://www.campeonatochileno.cl/match/atl%C3%A9tico-colina-provincial-ovalle-2026-11-14/"
+      ],
+      "status": "blocked",
+      "reason": "14 Nov 2026 18:00 Chile local official ANFP: Atlético Colina home Provincial Ovalle away FT 2-1. APWin reports possession 61/39, corners 12/5, fouls 9/10 while Flashscore reports possession 62/38 and shots 14/9; provider disagreement on possession and insufficient seven-metric canonical match source. Block pending reconciliation.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -201,11 +207,13 @@
       "league": "Segunda División",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "1-3",
+      "source_urls": [
+        "https://www.campeonatochileno.cl/match/conc%C3%B3n-national-santiago-city-2026-11-14/"
+      ],
+      "status": "source_review",
+      "reason": "14 Nov 2026 18:00 Chile local official ANFP: Concón National home Santiago City away FT 1-3. ANFP official page provides score/events, not complete seven metrics; third-party sources give partial on-target and corner data.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -217,11 +225,13 @@
       "league": "Segunda División",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "0-0",
+      "source_urls": [
+        "https://www.campeonatochileno.cl/match/provincial-osorno-brujas-de-salamanca-2026-11-14/"
+      ],
+      "status": "source_review",
+      "reason": "14 Nov 2026 18:00 Chile local official ANFP: Provincial Osorno home Brujas de Salamanca (Municipal Salamanca in inventory) away FT 0-0. Team alias identity reconciled from official name; seven per-team statistics not present in accessible official match page.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -233,11 +243,13 @@
       "league": "Segunda División",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "0-4",
+      "source_urls": [
+        "https://www.campeonatochileno.cl/match/real-san-joaqu%C3%ADn-general-vel%C3%A1squez-2026-11-14/"
+      ],
+      "status": "source_review",
+      "reason": "14 Nov 2026 18:00 Chile local official ANFP: Real San Joaquín home General Velásquez away FT 0-4. Official match report score confirmed, seven standardized match statistics unavailable.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -249,11 +261,13 @@
       "league": "Primera Nacional",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "1-0",
+      "source_urls": [
+        "https://www.afa.com.ar/es/posts/primera-nacional-iniciaron-las-instancias-finales-por-los-ascensos"
+      ],
+      "status": "source_review",
+      "reason": "14 Nov 2026 Argentina Primera Nacional playoff: Colón Santa Fe home FC Midland away FT 1-0. AFA official confirms; secondary sources give partial possession and shots on goal but no complete seven comparable metrics from a traceable originating provider.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -265,11 +279,13 @@
       "league": "Primera B Metropolitana",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "2-3",
+      "source_urls": [
+        "https://pelotita.com.ar/partidos/401933142"
+      ],
+      "status": "source_review",
+      "reason": "14 Nov 2026 Primera B Metropolitana playoff: Comunicaciones home Arsenal de Sarandí away FT 2-3. Match-level score/events corroborated by RotaScore; seven per-team statistics not established.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -301,11 +317,13 @@
       "league": "Premier Division",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "4-0",
+      "source_urls": [
+        "https://www.tntsports.co.uk/football/antigua-premier-league/2026-2027/aston-villa-all-saints-united_mtc22080421/live.shtml"
+      ],
+      "status": "source_review",
+      "reason": "14 Nov 2026 Antigua Premier League: Aston Villa home All Saints United away FT 4-0. TNT Sports event page confirms match identity and result; seven standardized statistics not accessible.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -337,11 +355,13 @@
       "league": "Liga Premier Serie A",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "0-7",
+      "source_urls": [
+        "https://www.sofascore.com/es/football/match/la-tribu-de-ciudad-juarez-club-de-ciervosc/rRmcsWTgk"
+      ],
+      "status": "source_review",
+      "reason": "14 Nov 2026 Liga Premier Serie A: Ciervos home La Tribu de Ciudad Juárez away FT 0-7. Sofascore and Flashscore agree identity/score; GOLTIKI API-Football cached match explicitly reports stats unavailable. No full seven-metric source; do not consume API-Football quota.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -353,11 +373,13 @@
       "league": "Liga Premier Serie A",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "2-2 (penalties 5-4)",
+      "source_urls": [
+        "https://www.sofascore.com/es/football/match/deportivo-delfines-coatzacoalcos-mineros-de-fresnillo-fc/CWvcsYTgk"
+      ],
+      "status": "source_review",
+      "reason": "14 Nov 2026 Liga Premier Serie A: Delfines Coatzacoalcos home Mineros de Fresnillo away FT 2-2, penalties 5-4. Sofascore and Flashscore corroborate; SportScore provides corners/cards but no all-seven event statistics.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -369,11 +391,13 @@
       "league": "Primera Premier",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "0-2",
+      "source_urls": [
+        "https://www.sofascore.com/es-la/football/match/zacatepecc-montanesesc/cxhdsPvQg"
+      ],
+      "status": "source_review",
+      "reason": "14 Nov 2026 Liga Primera Premier: Zacatepec home Montañeses away FT 0-2. Sofascore confirms identity and goals; all seven stats not verified.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -385,11 +409,13 @@
       "league": "Primera Premier",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "1-0",
+      "source_urls": [
+        "https://www.sofascore.com/es-la/football/match/cordobesc-pioneros-de-cancun/PUtcsqvQg"
+      ],
+      "status": "source_review",
+      "reason": "14 Nov 2026 Liga Primera Premier: Cordobés home Pioneros Cancún away FT 1-0. Sofascore confirms, ScoreMondo gives on-target/corners/cards partial; missing trusted possession, total shots and fouls.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -421,11 +447,13 @@
       "league": "Segunda División",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "2-0",
+      "source_urls": [
+        "https://www.sofascore.com/es-la/football/match/deportes-linares-colchagua-cd/OuXbsiZHc"
+      ],
+      "status": "source_review",
+      "reason": "14 Nov 2026 Chile Segunda División: Colchagua home Deportes Linares away FT 2-0. Sofascore and ScoreMondo confirm score, but seven comparable team statistics incomplete.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -437,19 +465,21 @@
       "league": "Liga Premier Serie B",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "5-0",
+      "source_urls": [
+        "https://www.sofascore.com/es/football/match/internacional-laguna-gorilas-de-juanacatlan/FYVisfUgk"
+      ],
+      "status": "source_review",
+      "reason": "14 Nov 2026 Liga Premier Serie B: Gorilas de Juanacatlán home Internacional Laguna away FT 5-0. Sofascore match events confirm; no verified complete seven-statistics provider.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     }
   ],
   "counts": {
     "full_verified": 0,
-    "blocked": 0,
-    "source_review": 10,
-    "pending": 15
+    "blocked": 1,
+    "source_review": 24,
+    "pending": 0
   },
   "transfer_ready": 0
 }
