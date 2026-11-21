@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "title": "Maç Analiz Merkezi — newly verified statistics manifest",
+  "generated_on": "2026-11-21",
+  "source_branch": "feature/bulk-statistics-repair-hardening",
+  "protected_existing_manifest": "STATISTICS_REPAIR_INVENTORY_2026-11-21.json",
+  "candidate_inventory": "STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json",
+  "counts": {
+    "full": 1,
+    "partial": 0,
+    "ambiguous": 0,
+    "unavailable_or_not_yet_checked": 677
+  },
+  "policy": {
+    "production_preview_writes": 0,
+    "api_football_requests": 0,
+    "statistics_sha256": "SHA-256 over exact serialized statistics_json included below",
+    "source_payload_sha256": "SHA-256 over exact raw_json string read from Production",
+    "cards": "yellow/red card counts are counted from ESPN match event details"
+  },
+  "fullMatches": [
+    {
+      "source": "ESPN",
+      "fixture_id": "espn-fra.1-401876395",
+      "kickoff": "2026-11-20T19:45Z",
+      "status": "FT",
+      "league": {
+        "id": "61",
+        "name": "Ligue 1",
+        "country": "France"
+      },
+      "home": {
+        "name": "Troyes",
+        "id": "170",
+        "goals": 3
+      },
+      "away": {
+        "name": "Le Havre AC",
+        "id": "3236",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "statistics_class": "full",
+      "statistics_sha256": "cfd260df6d449c7489b75e37f6d64d51fa072d2918e796b65c38f1feb3ed7580",
+      "source_payload_sha256": "ff9ded97bee85a42ac385703b38723b234cf16677fdd0d94a48e8f9329fc244e",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":\"Troyes\",\"teamId\":\"170\",\"statistics\":[{\"name\":\"appearances\",\"abbreviation\":\"APP\",\"value\":\"0\"},{\"name\":\"foulsCommitted\",\"abbreviation\":\"FC\",\"value\":\"19\"},{\"name\":\"wonCorners\",\"abbreviation\":\"CW\",\"value\":\"7\"},{\"name\":\"goalAssists\",\"abbreviation\":\"A\",\"value\":\"2\"},{\"name\":\"possessionPct\",\"abbreviation\":\"PP\",\"value\":\"46.5\"},{\"name\":\"shotAssists\",\"abbreviation\":\"SHAST\",\"value\":\"14\"},{\"name\":\"shotsOnTarget\",\"abbreviation\":\"SOG\",\"value\":\"7\"},{\"name\":\"totalGoals\",\"abbreviation\":\"G\",\"value\":\"3\"},{\"name\":\"totalShots\",\"abbreviation\":\"SHOT\",\"value\":\"19\"},{\"name\":\"yellowCards\",\"abbreviation\":\"YC\",\"value\":\"2\",\"valueSource\":\"event-details\"},{\"name\":\"redCards\",\"abbreviation\":\"RC\",\"value\":\"0\",\"valueSource\":\"event-details\"}]},{\"homeAway\":\"away\",\"team\":\"Le Havre AC\",\"teamId\":\"3236\",\"statistics\":[{\"name\":\"appearances\",\"abbreviation\":\"APP\",\"value\":\"0\"},{\"name\":\"foulsCommitted\",\"abbreviation\":\"FC\",\"value\":\"22\"},{\"name\":\"wonCorners\",\"abbreviation\":\"CW\",\"value\":\"0\"},{\"name\":\"goalAssists\",\"abbreviation\":\"A\",\"value\":\"0\"},{\"name\":\"possessionPct\",\"abbreviation\":\"PP\",\"value\":\"53.5\"},{\"name\":\"shotAssists\",\"abbreviation\":\"SHAST\",\"value\":\"4\"},{\"name\":\"shotsOnTarget\",\"abbreviation\":\"SOG\",\"value\":\"3\"},{\"name\":\"totalGoals\",\"abbreviation\":\"G\",\"value\":\"1\"},{\"name\":\"totalShots\",\"abbreviation\":\"SHOT\",\"value\":\"7\"},{\"name\":\"yellowCards\",\"abbreviation\":\"YC\",\"value\":\"3\",\"valueSource\":\"event-details\"},{\"name\":\"redCards\",\"abbreviation\":\"RC\",\"value\":\"1\",\"valueSource\":\"event-details\"}]}],\"summaryAvailable\":true,\"statisticsSource\":\"ESPN event competitor statistics; cards counted from match event details\"}",
+      "verification": {
+        "fixture_id_matches_event_id": true,
+        "ordered_team_ids_match": true,
+        "score_matches_competitors": true,
+        "both_sides_have_all_seven_required_metrics": true
+      }
+    }
+  ],
+  "partialMatches": []
+}
