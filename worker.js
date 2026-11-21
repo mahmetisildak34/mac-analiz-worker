@@ -849,34 +849,34 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     } catch (_) { return false; }
   };
   // Retry previously fetched box scores from KV before spending another ESPN request.
+  const pendingKey = entry => String(entry.source || "ESPN") + "|" + String(entry.fixtureId || "");
   const pendingConfirmed = new Set();
   const pendingAttempted = pendingStats.slice(0, 8);
   for (const pending of pendingAttempted) {
     try {
+      const source = String(pending.source || "ESPN");
       const pendingWriteResult = await env.DB.prepare(
-        "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = 'ESPN' AND fixture_id = ? AND (statistics_json IS NULL OR statistics_json = '' OR statistics_json = 'null' OR json_valid(statistics_json) = 0 OR (CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[0].statistics')), 0) ELSE 0 END = 0 OR CASE WHEN json_valid(statistics_json) = 1 THEN COALESCE(json_array_length(json_extract(statistics_json, '$.teams[1].statistics')), 0) ELSE 0 END = 0))"
-      ).bind(pending.statisticsJson, pending.fixtureId).run();
+        "UPDATE matches SET statistics_json = ?, updated_at = CURRENT_TIMESTAMP WHERE source = ? AND fixture_id = ? AND (statistics_json IS NULL OR TRIM(statistics_json) IN ('','{}','[]','null'))"
+      ).bind(pending.statisticsJson, source, pending.fixtureId).run();
       const pendingChanges = Number(pendingWriteResult?.meta?.changes || 0);
       const stored = await env.DB.prepare(
-        "SELECT statistics_json FROM matches WHERE source = 'ESPN' AND fixture_id = ? LIMIT 1"
-      ).bind(pending.fixtureId).first();
+        "SELECT statistics_json FROM matches WHERE source = ? AND fixture_id = ? LIMIT 1"
+      ).bind(source, pending.fixtureId).first();
       if (hasPersistedTeamStats(stored?.statistics_json)) {
         if (pendingChanges > 0) summaryRun.saved += pendingChanges;
-        pendingConfirmed.add(pending.fixtureId);
+        pendingConfirmed.add(pendingKey(pending));
       } else {
-        console.log("Pending ESPN summary remains queued: D1 row/statistics not verified", pending.fixtureId);
+        console.log("Pending ESPN summary remains queued: D1 row/statistics not verified", source, pending.fixtureId);
       }
     } catch (pendingWriteError) {
-      console.log("Pending ESPN summary D1 write retained for retry", pending.fixtureId, String(pendingWriteError?.message || pendingWriteError));
+      console.log("Pending ESPN summary D1 write retained for retry", pending.source || "ESPN", pending.fixtureId, String(pendingWriteError?.message || pendingWriteError));
       break;
     }
   }
-  pendingStats = pendingStats.filter(entry => !pendingConfirmed.has(entry.fixtureId));
-  // Rotate unconfirmed attempts to the back so one missing fixture cannot starve
-  // every later pending payload on subsequent scheduled runs.
-  const attemptedIds = new Set(pendingAttempted.map(entry => entry.fixtureId));
-  const deferredPending = pendingStats.filter(entry => attemptedIds.has(entry.fixtureId));
-  pendingStats = pendingStats.filter(entry => !attemptedIds.has(entry.fixtureId)).concat(deferredPending);
+  pendingStats = pendingStats.filter(entry => !pendingConfirmed.has(pendingKey(entry)));
+  const attemptedIds = new Set(pendingAttempted.map(pendingKey));
+  const deferredPending = pendingStats.filter(entry => attemptedIds.has(pendingKey(entry)));
+  pendingStats = pendingStats.filter(entry => !attemptedIds.has(pendingKey(entry))).concat(deferredPending);
   await env.MAM_KV.put(pendingStatsKey, JSON.stringify(pendingStats));
   for (let i = 0; i < summaryBatch.length; i += 4) {
     await Promise.all(summaryBatch.slice(i, i + 4).map(async item => {
