@@ -2334,7 +2334,38 @@ export default {
           let raw = null;
           try { statistics = row.statistics_json ? JSON.parse(row.statistics_json) : null; } catch (_) {}
           try { raw = row.raw_json ? JSON.parse(row.raw_json) : null; } catch (_) {}
-          const halftime = raw?.score?.halftime || raw?.score?.halfTime || null;
+          const readHalfScore = value => {
+            if (value == null) return null;
+            if ((typeof value === "number" || typeof value === "string" && value.trim() !== "") &&
+                Number.isSafeInteger(Number(value)) && Number(value) >= 0 && Number(value) <= 30) return Number(value);
+            if (typeof value === "object") {
+              const nested = value.value ?? value.score ?? value.goals;
+              if (nested != null && Number.isSafeInteger(Number(nested)) && Number(nested) >= 0 && Number(nested) <= 30) return Number(nested);
+            }
+            return null;
+          };
+          const extractArchivedHalfTime = provider => {
+            if (!provider || typeof provider !== "object") return null;
+            const direct = provider.score?.halftime || provider.score?.halfTime || provider.score?.half_time ||
+              provider.halftime || provider.halfTime || provider.half_time;
+            if (direct && typeof direct === "object") {
+              const home = readHalfScore(direct.home ?? direct.homeTeam);
+              const away = readHalfScore(direct.away ?? direct.awayTeam);
+              if (home != null && away != null) return { home, away };
+            }
+            // ESPN stores soccer period scores in competitors[].linescores, not score.halftime.
+            const competition = provider.competitions?.[0] || provider.header?.competitions?.[0];
+            const competitors = Array.isArray(competition?.competitors) ? competition.competitors : [];
+            const homeTeam = competitors.find(team => String(team?.homeAway || "").toLowerCase() === "home");
+            const awayTeam = competitors.find(team => String(team?.homeAway || "").toLowerCase() === "away");
+            const homeLines = homeTeam?.linescores, awayLines = awayTeam?.linescores;
+            if (Array.isArray(homeLines) && Array.isArray(awayLines) && homeLines.length >= 1 && awayLines.length >= 1) {
+              const home = readHalfScore(homeLines[0]), away = readHalfScore(awayLines[0]);
+              if (home != null && away != null) return { home, away };
+            }
+            return null;
+          };
+          const halftime = extractArchivedHalfTime(raw);
           // Only original provider-shaped payloads can attest identity/score.
           // Reconstructed mamSource/fixture/goals wrappers are NOT independent evidence.
           const sameDate = (x,y) => Number.isFinite(Date.parse(x)) && Date.parse(x) === Date.parse(y);

@@ -24,3 +24,22 @@ test("archive response keeps both source spellings and proof fields",()=>{assert
 
 test("ESPN suspended or scheduled fixture cannot verify a final score",()=>{const unfinished={...raw,competitions:[{...raw.competitions[0],status:{type:{completed:false}}}]};const v=classify(row,unfinished,norm);assert.equal(v.identityVerified,true);assert.equal(v.scoreVerified,false)});
 test("API-Football non-finished fixture cannot verify a final score",()=>{const r={...row,source:"app",fixture_id:"99"};const p={fixture:{id:99,timestamp:1793535600,date:r.kickoff,status:{short:"NS"}},teams:{home:{name:"Home"},away:{name:"Away"}},goals:{home:0,away:0}};const v=classify(r,p,norm);assert.equal(v.identityVerified,true);assert.equal(v.scoreVerified,false)});
+
+const halfStart=code.indexOf("          const readHalfScore = value =>");
+const halfEnd=code.indexOf("          const halftime = extractArchivedHalfTime(raw);",halfStart);
+assert.ok(halfStart>0&&halfEnd>halfStart,"archive half-time extractor must exist");
+const extractHalf=new Function("provider",code.slice(halfStart,halfEnd)+";return extractArchivedHalfTime(provider);");
+test("ESPN first-period linescores are exposed as verified half-time scores",()=>{
+ const provider={competitions:[{competitors:[
+  {homeAway:"home",linescores:[{value:1},{value:0}]},
+  {homeAway:"away",linescores:[{value:0},{value:1}]}
+ ]}]};
+ assert.deepEqual(extractHalf(provider),{home:1,away:0});
+});
+test("API-Football direct half-time score remains supported",()=>{
+ assert.deepEqual(extractHalf({score:{halftime:{home:2,away:1}}}),{home:2,away:1});
+});
+test("missing or invalid half-time scores are not inferred",()=>{
+ assert.equal(extractHalf({competitions:[{competitors:[{homeAway:"home",linescores:[{value:31}]},{homeAway:"away",linescores:[{value:0}]}]}]}),null);
+ assert.equal(extractHalf({id:"fixture",competitions:[]}),null);
+});
