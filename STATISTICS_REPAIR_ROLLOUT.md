@@ -8,7 +8,7 @@
 - Completed statuses (`FT`, `FINISHED`, `AET`, `PEN`): **9,897**
 - Completed matches with NULL/empty statistics: **722**
 - Completed matches with populated statistics: **9,175**
-- Preview matches with non-empty statistics JSON: **2,554**
+- Preview matches with non-empty statistics JSON: **2,554** (confirmed in both Preview history tables; zero orphan rows in either direction)
 - Unique, reliable Preview candidates: **44**
 - Unmatched: **678**
 - Ambiguous: **0**
@@ -16,7 +16,7 @@
 - Known team-ID conflicts among the 44: **0**
 - Actual writes/transfers: **0**
 
-See `STATISTICS_REPAIR_INVENTORY_2026-11-21.json` for the 44-row SHA-256 manifest and the seven same-day records.
+See `STATISTICS_REPAIR_INVENTORY_2026-11-21.json` for the 44-row SHA-256 manifest and the seven same-day records. An earlier Preview count of 2,548 was superseded by the subsequent full SELECT scan, which found 2,554 in both the match and statistics tables; this reinforces the need for a fresh read immediately before any future apply.
 
 ## Why 715 became 722
 
@@ -61,7 +61,7 @@ All 44 current candidates have at least one Production team ID marked `-1`; howe
 
 `tests/statistics-repair-bulk.test.mjs` exercises a synthetic **722-row** candidate pool over batches capped at 25, with 44 Preview matches, 678 unmatched rows, a duplicate identical-payload ambiguity, existing populated statistics, unfinished rows, idempotent re-runs, backup/rollback, SHA validation, Preview read-only enforcement, invalid JSON, team-ID conflict, and injected write failure. The workflow now includes this test.
 
-The GitHub Actions run for this new branch has not yet been executed; no CI result is claimed here.
+GitHub Actions run **#1** on this branch completed successfully (run ID `44891662595`, commit `0b04cc9955fac2b817c3efd020c0ce83004b0c24`). Syntax checks, both focused integration tests, and the full 722-row SQLite suite passed. The synthetic stress suite applied 43 rows, rejected one ambiguous duplicate, left 678 unmatched, and verified rollback, idempotence, Preview read-only enforcement and fail-stop behavior.
 
 ## PR #69 review
 
