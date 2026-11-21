@@ -29,6 +29,7 @@ on:
       - "ARCHIVE_PROVIDER_SEASON_MANIFEST_2026-11-21.json"
       - "tests/archive-backfill-batch-size.test.mjs"
       - "tests/archive-provider-manifest.test.mjs"
+      - "tests/espn-archive-existing-date-skip.test.mjs"
       - "STATISTICS_REPAIR_*_2026-11-21.json"
       - "STATISTICS_PROVIDER_COVERAGE_MATRIX_2026-11-21.json"
       - "STATISTICS_PROVIDER_COVERAGE_DECISION_2026-11-21.md"
@@ -87,6 +88,7 @@ jobs:
         run: |
           node tests/archive-backfill-batch-size.test.mjs
           node tests/archive-provider-manifest.test.mjs
+          node tests/espn-archive-existing-date-skip.test.mjs
       - name: Run trusted goal Poisson tests
         run: node tests/trusted-goal-poisson.test.mjs
       - name: Run strict data quality tests
