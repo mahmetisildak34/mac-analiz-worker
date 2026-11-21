@@ -6,10 +6,10 @@
   "protected_existing_manifest": "STATISTICS_REPAIR_INVENTORY_2026-11-21.json",
   "candidate_inventory": "STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json",
   "counts": {
-    "full": 10,
+    "full": 11,
     "partial": 0,
     "ambiguous": 0,
-    "unavailable_or_not_yet_checked": 668
+    "unavailable_or_not_yet_checked": 667
   },
   "policy": {
     "production_preview_writes": 0,
@@ -409,6 +409,44 @@
         "source_single_provider": true
       },
       "notes": "Flashscore match page 14 Nov 00:00 UTC corresponds to 14 Nov 03:00 UTC+03. Flashscore fouls 6–13 differ from Stats360's 19–4; all metrics from Flashscore only. No transfer authorized."
+    },
+    {
+      "source": "app",
+      "fixture_id": "1649030",
+      "kickoff": "2026-11-13T02:00:00+03:00",
+      "status": "FT",
+      "league": {
+        "id": "536",
+        "name": "CONCACAF Nations League",
+        "country": "World"
+      },
+      "home": {
+        "name": "Antigua and Barbuda",
+        "id": "5526",
+        "goals": 2
+      },
+      "away": {
+        "name": "Trinidad and Tobago",
+        "id": "5168",
+        "goals": 3
+      },
+      "provider": "The Editorial (ESPN match data)",
+      "provider_event_id": "401929796",
+      "provider_url": "https://www.theeditorial.org/match/concacaf.nations.league/401929796/trin-and-tob-vs-antigua-barbuda",
+      "statistics_class": "full",
+      "statistics_sha256": "79232ea6e032c99ff9b57a8310f272ab391b604eb31b056d2dad32c86531f3fb",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":\"Antigua and Barbuda\",\"teamId\":\"5526\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"8\"},{\"name\":\"shotsOnTarget\",\"value\":\"3\"},{\"name\":\"possessionPct\",\"value\":\"33.1\"},{\"name\":\"wonCorners\",\"value\":\"5\"},{\"name\":\"foulsCommitted\",\"value\":\"13\"},{\"name\":\"yellowCards\",\"value\":\"1\"},{\"name\":\"redCards\",\"value\":\"0\"}]},{\"homeAway\":\"away\",\"team\":\"Trinidad and Tobago\",\"teamId\":\"5168\",\"statistics\":[{\"name\":\"totalShots\",\"value\":\"11\"},{\"name\":\"shotsOnTarget\",\"value\":\"8\"},{\"name\":\"possessionPct\",\"value\":\"66.9\"},{\"name\":\"wonCorners\",\"value\":\"1\"},{\"name\":\"foulsCommitted\",\"value\":\"14\"},{\"name\":\"yellowCards\",\"value\":\"2\"},{\"name\":\"redCards\",\"value\":\"0\"}]}],\"statisticsSource\":\"The Editorial ESPN match 401929796, 2026-11-12\"}",
+      "verification": {
+        "match_date_verified": true,
+        "ordered_teams_verified": true,
+        "score_verified": true,
+        "competition_verified": true,
+        "provider_event_id_verified": true,
+        "inventory_fixture_id_is_api_football_alias": true,
+        "both_sides_have_all_seven_required_metrics": true,
+        "source_single_provider": true
+      },
+      "notes": "Nov 12 18:00 ET equals Nov 13 02:00 UTC+03; full-time 2-3. 33.1/66.9 possession directly from single source. No cross-provider mixing. Not transfer authorized."
     }
   ],
   "partialMatches": []
