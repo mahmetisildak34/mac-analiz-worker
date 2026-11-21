@@ -9,7 +9,6 @@ const block = worker.slice(summaryStart, summaryEnd);
 const updateAt = block.indexOf("UPDATE matches SET statistics_json");
 assert.ok(updateAt >= 0, "summary statistics update exists");
 const sql = block.slice(updateAt, block.indexOf("\n", updateAt));
-assert.ok(sql.includes("WHERE source = 'ESPN' AND fixture_id = ?"), "update is scoped to ESPN fixture");
 assert.ok(sql.includes("statistics_json IS NULL"), "only empty statistics can be filled");
 assert.ok(sql.includes("TRIM(statistics_json) IN ('','{}','[]','null')"), "valid empty placeholders are eligible");
 assert.ok(sql.includes("WHERE source = ? AND fixture_id = ?"), "update is scoped to the exact ESPN source and fixture");
