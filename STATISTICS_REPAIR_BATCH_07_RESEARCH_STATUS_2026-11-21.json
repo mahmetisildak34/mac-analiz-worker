@@ -30,8 +30,50 @@
       "provider_event_id": "1561203",
       "score": "2-0",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "statistics_availability": "partial",
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "source_urls": [
+        "https://sportscore.com/football/match/slovan-bratislava-b-vs-ofk-malzenice/l5ergph41e2xr8k/",
+        "https://sportnet.sme.sk/futbalnet/z/sfz/zapas/6a2ff0b4e4bf1215246536f7/",
+        "https://www.eurofotbal.cz/souteze/slovensko/druha-liga/2026-2027/reportaz/slovan-bratislava-b-ofk-malzenice-1080589/"
+      ],
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "l5ergph41e2xr8k",
+        "source_url": "https://sportscore.com/football/match/slovan-bratislava-b-vs-ofk-malzenice/l5ergph41e2xr8k/",
+        "source_sha256": "147ae4d18fc37e757d61376dcb7ff39e9771081162697092078659e66a4a8363",
+        "kickoff": "2026-11-15T09:30:00+00:00",
+        "source_competition": "Slovak 2.Liga",
+        "coverage": 1,
+        "statistics": {
+          "teams": [
+            {
+              "homeAway": "home",
+              "team": {
+                "name": "Slovan Bratislava B"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 3
+                }
+              ]
+            },
+            {
+              "homeAway": "away",
+              "team": {
+                "name": "OFK Malzenice"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 3
+                }
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "source": "app",

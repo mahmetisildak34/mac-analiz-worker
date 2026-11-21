@@ -271,7 +271,11 @@
       "provider_group": "API-Football",
       "status": "source_review",
       "score": "1-2",
-      "source_urls": [],
+      "source_urls": [
+        "https://sportscore.com/football/match/birkenhead-united-vs-eastern-suburbs-afc/vjxm8ghkv87er6o/",
+        "https://www.nzfootball.co.nz/newsarticle/172120?newsfeedId=1275538",
+        "https://www.footballinfo.net/Fixtures/Details/1639055"
+      ],
       "research_date": "2026-11-21",
       "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
       "statistics_sha256": null,
@@ -280,7 +284,52 @@
       "transfer_ready": false,
       "provider_event_id": "1639055",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota"
+      "statistics_availability": "partial",
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "vjxm8ghkv87er6o",
+        "source_url": "https://sportscore.com/football/match/birkenhead-united-vs-eastern-suburbs-afc/vjxm8ghkv87er6o/",
+        "source_sha256": "74be449edcaf06306d0b836d11a3dea4494e11033a28d4339df4df2a075a62e3",
+        "kickoff": "2026-11-15T03:00:00+00:00",
+        "source_competition": "New Zealand Football Championship",
+        "coverage": 2,
+        "statistics": {
+          "teams": [
+            {
+              "homeAway": "home",
+              "team": {
+                "name": "Birkenhead United"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 8
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 5
+                }
+              ]
+            },
+            {
+              "homeAway": "away",
+              "team": {
+                "name": "Eastern Suburbs AFC"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 3
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 3
+                }
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "fixture_id": "1649519",

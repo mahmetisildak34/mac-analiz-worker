@@ -793,8 +793,57 @@
       "provider_event_id": "1562701",
       "score": "1-1",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "statistics_availability": "partial",
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "source_urls": [
+        "https://sportscore.com/football/match/bohemians1905-b-vs-fk-kraluv-dvur/2y8m4zh59ex3ql0/",
+        "https://www.kfis.cz/vyhledavani/zapasy/datum/15.11.2026/kategorie/dospeli"
+      ],
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "2y8m4zh59ex3ql0",
+        "source_url": "https://sportscore.com/football/match/bohemians1905-b-vs-fk-kraluv-dvur/2y8m4zh59ex3ql0/",
+        "source_sha256": "694cb52da451432bc44bcf770d4bcae97aa764b80b4cffd44f3ed603575fef08",
+        "kickoff": "2026-11-15T09:15:00+00:00",
+        "source_competition": "Czech Third League",
+        "coverage": 2,
+        "statistics": {
+          "teams": [
+            {
+              "homeAway": "home",
+              "team": {
+                "name": "Bohemians1905 B"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 4
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 2
+                }
+              ]
+            },
+            {
+              "homeAway": "away",
+              "team": {
+                "name": "FK Kraluv Dvur"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 5
+                },
+                {
+                  "name": "yellowCards",
+                  "value": 3
+                }
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "source": "app",
@@ -814,8 +863,49 @@
       "provider_event_id": "1562826",
       "score": "1-0",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota",
-      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota."
+      "statistics_availability": "partial",
+      "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
+      "source_urls": [
+        "https://sportscore.com/football/match/teplice-b-vs-hradec-kralove-b/k82rekhg4jeyrep/",
+        "https://www.kfis.cz/vyhledavani/zapasy/datum/15.11.2026/kategorie/dospeli"
+      ],
+      "alternate_statistic_evidence": {
+        "provider": "SportScore",
+        "provider_event_id": "k82rekhg4jeyrep",
+        "source_url": "https://sportscore.com/football/match/teplice-b-vs-hradec-kralove-b/k82rekhg4jeyrep/",
+        "source_sha256": "17ff22719b1b1481f865442acaefc67836da9e6edefe6d089601b1b1662ace85",
+        "kickoff": "2026-11-15T09:15:00+00:00",
+        "source_competition": "Czech Third League",
+        "coverage": 1,
+        "statistics": {
+          "teams": [
+            {
+              "homeAway": "home",
+              "team": {
+                "name": "Teplice B"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "homeAway": "away",
+              "team": {
+                "name": "Hradec Kralove B"
+              },
+              "statistics": [
+                {
+                  "name": "wonCorners",
+                  "value": 3
+                }
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "source": "app",
