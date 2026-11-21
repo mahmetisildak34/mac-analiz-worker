@@ -12,9 +12,15 @@
     "unique_reliable_preview_matches": 44,
     "ambiguous_matches": 0,
     "unmatched_matches": 678,
-    "invalid_or_incomplete_statistics": 0,
     "known_team_id_conflicts": 0,
-    "transfers_performed": 0
+    "transfers_performed": 0,
+    "preview_valid_json": 2554,
+    "preview_invalid_json": 0,
+    "preview_two_team_structure": 2554,
+    "preview_nonempty_statistics_both_sides": 2540,
+    "preview_statistics_team_names_match_fixture": 2532,
+    "preview_duplicate_source_fixture_groups": 0,
+    "matched_candidate_invalid_or_incomplete_statistics": 0
   },
   "previous_count_explanation": {
     "earlier_715_query_cutoff": "kickoff < 2026-11-21",
