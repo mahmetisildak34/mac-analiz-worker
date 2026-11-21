@@ -155,12 +155,12 @@ async function enrichExactCrossSourceMatches(env) {
 
   // Use bounded keyset windows. JSON completeness is checked in JS only after
   // selecting at most 120 ESPN rows, avoiding an unbounded JSON predicate scan.
-  const sourceSql = "SELECT source, fixture_id, kickoff, country, league_name, home_team, away_team, home_goals, away_goals, statistics_json FROM matches WHERE source != 'ESPN' AND statistics_json IS NOT NULL AND TRIM(statistics_json) NOT IN ('', 'null')" +
+  const sourceSql = "SELECT source, fixture_id, kickoff, country, league_id, league_name, home_team, away_team, home_goals, away_goals, statistics_json FROM matches WHERE lower(source) != 'espn' AND NOT (source = 'app' AND fixture_id LIKE 'espn-%') AND statistics_json IS NOT NULL AND TRIM(statistics_json) NOT IN ('', 'null')" +
     (sourceCursor ? " AND (kickoff > ? OR (kickoff = ? AND (fixture_id > ? OR (fixture_id = ? AND source > ?))))" : "") +
     " ORDER BY kickoff ASC, fixture_id ASC, source ASC LIMIT 240";
-  const missingSql = "SELECT source, fixture_id, kickoff, country, league_name, home_team, away_team, home_goals, away_goals, statistics_json FROM matches WHERE source = 'ESPN'" +
-    (missingCursor ? " AND (kickoff > ? OR (kickoff = ? AND fixture_id > ?))" : "") +
-    " ORDER BY kickoff ASC, fixture_id ASC LIMIT 120";
+  const missingSql = "SELECT source, fixture_id, kickoff, country, league_id, league_name, home_team, away_team, home_goals, away_goals, statistics_json FROM matches WHERE (source IN ('ESPN','espn') OR (source = 'app' AND fixture_id LIKE 'espn-%')) AND (statistics_json IS NULL OR TRIM(statistics_json) IN ('','{}','[]','null'))" +
+    (missingCursor ? " AND (kickoff > ? OR (kickoff = ? AND (fixture_id > ? OR (fixture_id = ? AND source > ?))))" : "") +
+    " ORDER BY kickoff ASC, fixture_id ASC, source ASC LIMIT 120";
   const [sourceResult, missingResult] = await Promise.all([
     sourceState.complete ? Promise.resolve({ results: [] }) :
       (sourceCursor
@@ -168,7 +168,7 @@ async function enrichExactCrossSourceMatches(env) {
         : env.DB.prepare(sourceSql).all()),
     missingState.complete ? Promise.resolve({ results: [] }) :
       (missingCursor
-        ? env.DB.prepare(missingSql).bind(missingCursor.kickoff, missingCursor.kickoff, missingCursor.fixtureId).all()
+        ? env.DB.prepare(missingSql).bind(missingCursor.kickoff, missingCursor.kickoff, missingCursor.fixtureId, missingCursor.fixtureId, missingCursor.source || "").all()
         : env.DB.prepare(missingSql).all())
   ]);
   const sourceRows = Array.isArray(sourceResult?.results) ? sourceResult.results : [];
@@ -186,7 +186,7 @@ async function enrichExactCrossSourceMatches(env) {
     missingLastKickoff: scannedMissingRows[scannedMissingRows.length - 1]?.kickoff || null
   };
   for (const row of sourceRows) {
-    if (row.source === "ESPN" || !row.statistics_json) continue;
+    if (String(row.source || "").toLowerCase() === "espn" || (row.source === "app" && String(row.fixture_id || "").startsWith("espn-")) || !row.statistics_json) continue;
     sourcePayloadDiagnostics.nonEmptyPayloads++;
     let parsed;
     try { parsed = typeof row.statistics_json === "string" ? JSON.parse(row.statistics_json) : row.statistics_json; }
@@ -242,21 +242,28 @@ async function enrichExactCrossSourceMatches(env) {
   // Count every non-empty source payload here. The normalizer itself classifies
   // accepted vs rejected rows; pre-filtering by the legacy teams/response schema
   // hid all home/away object payloads and left both counters misleadingly at 0.
-  const source = sourceRows.filter(row => row.source !== "ESPN" && row.statistics_json && row.statistics_json !== "null");
+  const source = sourceRows.filter(row => String(row.source || "").toLowerCase() !== "espn" && !(row.source === "app" && String(row.fixture_id || "").startsWith("espn-")) && row.statistics_json && row.statistics_json !== "null");
 
-  const missing = scannedMissingRows.filter(row => {
-    const value = row.statistics_json;
-    if (!value || value === "null") return true;
-    try {
-      const parsed = JSON.parse(value);
-      const teams = Array.isArray(parsed?.teams) ? parsed.teams : [];
-      return teams.length < 2 || !teams[0]?.statistics?.length || !teams[1]?.statistics?.length;
-    } catch (_) { return true; }
-  });
+  const missing = scannedMissingRows; // strict empty-only SQL: never replace partial or populated statistics;
+
 
   const normalizeMatchTeam = value => normalizeTeamName(value);
-  const normalizeLeague = value => String(value || "").normalize("NFD").toLowerCase()
-    .replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
+  const LEAGUE_ALIASES = {
+    "uefa champions league":"uefa champions league", "champions league uefa":"uefa champions league",
+    "uefa europa league":"uefa europa league", "europa league uefa":"uefa europa league",
+    "uefa conference league":"uefa conference league", "uefa europa conference league":"uefa conference league",
+    "coupe de france":"coupe de france", "french cup":"coupe de france", "france cup":"coupe de france",
+    "uefa european u21 championship qualification":"uefa u21 championship qualification",
+    "uefa u21 championship qualification":"uefa u21 championship qualification",
+    "international friendly":"international friendly", "international friendlies":"international friendly",
+    "copa del rey":"copa del rey", "spanish cup":"copa del rey",
+    "esp 2":"segunda division spain", "segunda division":"segunda division spain", "laliga 2":"segunda division spain"
+  };
+  const normalizeLeague = value => {
+    const normalized = String(value || "").normalize("NFD").toLowerCase()
+      .replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
+    return LEAGUE_ALIASES[normalized] || normalized;
+  };
   const matchKey = row => normalizeMatchTeam(row.home_team) + "|" + normalizeMatchTeam(row.away_team);
   const normalizeCrossSourceStatistics = (value, homeName, awayName) => {
     try {
@@ -281,7 +288,7 @@ async function enrichExactCrossSourceMatches(env) {
         const away = named.find(entry => entry.statistics.length &&
           (entry.side === "away" || entry.side === "a" || (!entry.side && entry.name === normalizedAway)));
         const reversedSides = home?.name === normalizedAway || away?.name === normalizedHome;
-        if (home && away && home.item !== away.item && !reversedSides) {
+        if (home && away && home.item !== away.item && !reversedSides && home.name === normalizedHome && away.name === normalizedAway) {
           return { teams: [{ ...home.item, homeAway: "home" }, { ...away.item, homeAway: "away" }], summaryAvailable: true, source: "cross-source" };
         }
       }
@@ -312,7 +319,7 @@ async function enrichExactCrossSourceMatches(env) {
     const time = Date.parse(row.kickoff || "");
     if (!key || key === "|" || !Number.isFinite(time)) continue;
     const list = statsIndex.get(key) || [];
-    list.push({ source: row.source, fixtureId: row.fixture_id, time,
+    list.push({ source: row.source, fixtureId: row.fixture_id, time, leagueId: String(row.league_id || ""),
       country: normalizeLeague(row.country), league: normalizeLeague(row.league_name),
       homeGoals: row.home_goals, awayGoals: row.away_goals, statistics: JSON.stringify(normalizedStatistics) });
     statsIndex.set(key, list);
@@ -336,7 +343,9 @@ async function enrichExactCrossSourceMatches(env) {
     const safeCandidates = sameScore.map(candidate => ({
       ...candidate, delta: Math.abs(candidate.time - time),
       sameCountry: !normalizeLeague(row.country) || !candidate.country || normalizeLeague(row.country) === candidate.country,
-      sameLeague: !normalizeLeague(row.league_name) || !candidate.league || normalizeLeague(row.league_name) === candidate.league
+      sameLeague: (row.league_id && candidate.leagueId && String(row.league_id) === candidate.leagueId) ||
+        ((!normalizeLeague(row.league_name) || !candidate.league || normalizeLeague(row.league_name) === candidate.league) &&
+        (!normalizeLeague(row.country) || !candidate.country || normalizeLeague(row.country) === candidate.country))
     })).filter(candidate => candidate.delta <= 6 * 60 * 60 * 1000 && candidate.sameCountry && candidate.sameLeague)
       .sort((a, b) => a.delta - b.delta);
     if (!safeCandidates.length) continue;
@@ -364,7 +373,8 @@ async function enrichExactCrossSourceMatches(env) {
     } : sourceCursor, complete: sourceDone },
     missing: { cursor: scannedMissingRows.length ? {
       kickoff: scannedMissingRows[scannedMissingRows.length - 1].kickoff,
-      fixtureId: scannedMissingRows[scannedMissingRows.length - 1].fixture_id
+      fixtureId: scannedMissingRows[scannedMissingRows.length - 1].fixture_id,
+      source: scannedMissingRows[scannedMissingRows.length - 1].source
     } : missingCursor, complete: missingDone }
   };
   await env.MAM_KV.put(cursorKey, JSON.stringify(nextCursors));
