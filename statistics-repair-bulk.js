@@ -73,6 +73,35 @@ export function classifyStatisticsPayload(raw) {
   return complete ? "full" : "partial";
 }
 
+const PROVIDER_PRIORITY = ["API-Football","ESPN","UEFA","SportScore","Football-Data"];
+export function buildStatisticsProviderBatches(candidates, requestedBatchSize = 25) {
+  if (!Array.isArray(candidates)) throw new TypeError("candidate list must be an array");
+  if (!Number.isSafeInteger(requestedBatchSize) || requestedBatchSize < 1) throw new RangeError("batch size must be a positive integer");
+  const batchSize = Math.min(25, requestedBatchSize);
+  const pending = candidates.filter(item => !["full-source-payload-verified","partial-source-payload-verified","ambiguous"].includes(item.statistics_status));
+  const seen = new Set();
+  for (const item of pending) {
+    const key = String(item.source || "") + "|" + String(item.fixture_id || "");
+    if (!item.source || !item.fixture_id || seen.has(key)) throw new Error("candidate source/fixture identity missing or duplicated");
+    seen.add(key);
+  }
+  const providers = [...PROVIDER_PRIORITY, ...new Set(pending.map(item => item.provider_group).filter(p => !PROVIDER_PRIORITY.includes(p)))];
+  const batches = [];
+  for (const provider of providers) {
+    const rows = pending.filter(item => item.provider_group === provider);
+    for (let offset = 0; offset < rows.length; offset += batchSize) {
+      const chunk = rows.slice(offset, offset + batchSize);
+      batches.push({
+        provider_group: provider,
+        batch_number: Math.floor(offset / batchSize) + 1,
+        count: chunk.length,
+        candidates: chunk.map(item => ({ source: item.source, fixture_id: item.fixture_id }))
+      });
+    }
+  }
+  return { batch_size: batchSize, candidate_count: pending.length, batch_count: batches.length, batches };
+}
+
 export function utcDay(value) {
   const d = new Date(value);
   return Number.isNaN(d.getTime()) ? "" : d.toISOString().slice(0, 10);
