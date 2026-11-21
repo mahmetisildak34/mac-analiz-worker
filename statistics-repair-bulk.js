@@ -41,9 +41,9 @@ export function normalizeLeague(value) {
 export function sameCompetition(a, b) {
   if (!a || !b) return true;
   const aId = String(a.league_id ?? "").trim(), bId = String(b.league_id ?? "").trim();
-  if (aId && bId && aId === bId) return true;
+  if (aId && bId && aId === bId && String(a.source || "").toLowerCase() === String(b.source || "").toLowerCase()) return true;
   const aLeague = normalizeLeague(a.league_name), bLeague = normalizeLeague(b.league_name);
-  if (!aLeague || !bLeague) return true;
+  if (!aLeague || !bLeague) return !(aId && bId && aId !== bId);
   const aCountry = String(a.country || "").trim().toLowerCase();
   const bCountry = String(b.country || "").trim().toLowerCase();
   const countryCompatible = !aCountry || !bCountry || aCountry === bCountry;
@@ -80,6 +80,14 @@ function idsCompatible(a, b) {
 }
 function numericSuffix(value) {
   return String(value || "").match(/(\d+)$/)?.[1] || "";
+}
+function fixtureNamespace(source, fixtureId) {
+  const id = String(fixtureId || "").toLowerCase();
+  const src = String(source || "").toLowerCase();
+  if (id.startsWith("espn-") || src === "espn") return "espn";
+  if (/^[1-9]\d*$/.test(id) && src === "app") return "api-football-app";
+  if (id.startsWith("sportscore-") || src.includes("sportscore")) return "sportscore";
+  return src || id.split("-")[0] || "unknown";
 }
 function sameTuple(a, b) {
   return utcDay(a.kickoff) !== "" &&
@@ -137,14 +145,17 @@ export async function planStatisticsRepairTarget(previewDb, target) {
     idsCompatible(target.home_team_id, row.home_team_id) &&
     idsCompatible(target.away_team_id, row.away_team_id));
   const targetSuffix = numericSuffix(target.fixture_id);
-  const suffixMatches = targetSuffix ? compatible.filter(row => numericSuffix(row.fixture_id) === targetSuffix) : [];
-  const selected = suffixMatches.length === 1 ? suffixMatches :
-    compatible.length === 1 && (!targetSuffix || !numericSuffix(compatible[0].fixture_id)) ? compatible : [];
+  const sameNamespace = compatible.filter(row =>
+    fixtureNamespace(target.source, target.fixture_id) === fixtureNamespace(row.source, row.fixture_id));
+  const suffixMatches = targetSuffix ? sameNamespace.filter(row => numericSuffix(row.fixture_id) === targetSuffix) : [];
+  const selected = sameNamespace.length > 0
+    ? (suffixMatches.length === 1 ? suffixMatches : sameNamespace.length === 1 && (!targetSuffix || !numericSuffix(sameNamespace[0].fixture_id)) ? sameNamespace : [])
+    : (compatible.length === 1 ? compatible : []);
   if (selected.length !== 1) {
     if (tupleMatches.length > 1 || compatible.length > 1) return { state: "ambiguous", reason: "multiple-preview-fixtures" };
     if (tupleMatches.length === 1 && compatible.length === 0) return { state: "rejected", reason: "known-team-id-conflict" };
-    if (compatible.length === 1 && targetSuffix && numericSuffix(compatible[0].fixture_id) &&
-        numericSuffix(compatible[0].fixture_id) !== targetSuffix) return { state: "rejected", reason: "fixture-id-suffix-conflict" };
+    if (sameNamespace.length === 1 && targetSuffix && numericSuffix(sameNamespace[0].fixture_id) &&
+        numericSuffix(sameNamespace[0].fixture_id) !== targetSuffix) return { state: "rejected", reason: "fixture-id-suffix-conflict" };
     return { state: "unmatched" };
   }
   const preview = selected[0];
