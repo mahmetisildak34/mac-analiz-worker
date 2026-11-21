@@ -92,11 +92,15 @@
       "league": "League Cup",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "1-5",
+      "source_urls": [
+        "https://www.sofascore.com/football/match/kowloon-city-kitchee-sc/ZTqsIRuc",
+        "https://stadiro.com/matches/hong-kong/league-cup/2026-11-14/kowloon-city-v-kitchee/",
+        "https://scoremondo.com/en/match/kowloon-city-kitchee-sc-31543750"
+      ],
+      "status": "source_review",
+      "reason": "14 Nov 2026 07:00 UTC, Kowloon City home Kitchee away, Hong Kong League Cup FT 1-5. Sofascore and Stadiro corroborate score/identity. ScoreMondo reports 1/1 on-target and 0/6 corners but no complete reliable seven metrics for both teams. Source review.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -124,11 +128,14 @@
       "league": "Liga Panameña de Fútbol",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "1-2",
+      "source_urls": [
+        "https://lpf.com.pa/clubes/club-deportivo-universitario/resultados/",
+        "https://lpf.com.pa/calendario-lpf-tigo-apertura-2026/"
+      ],
+      "status": "source_review",
+      "reason": "Official LPF 14 Nov 2026 16:00 Panama local, Deportivo Universitario home Herrera away, LPF Apertura round 16 FT 1-2. Official match result confirmed; seven match statistics not available in checked official results. Source review.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -140,11 +147,14 @@
       "league": "Liga Panameña de Fútbol",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "1-1",
+      "source_urls": [
+        "https://lpf.com.pa/calendario-lpf-tigo-apertura-2026/",
+        "https://www.academiadeapuestaslatam.com/stats/competition/panama/525/w3JnZMey4ZVxv/all-games"
+      ],
+      "status": "source_review",
+      "reason": "Official LPF round 16, 14 Nov 2026 16:00 Panama local, San Francisco home Veraguas away FT 1-1. Full seven team metrics not independently established; source review.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -156,11 +166,14 @@
       "league": "Liga Panameña de Fútbol",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "0-3",
+      "source_urls": [
+        "https://lpf.com.pa/calendario-lpf-tigo-apertura-2026/",
+        "https://www.academiadeapuestaslatam.com/stats/competition/panama/525/w3JnZMey4ZVxv/all-games"
+      ],
+      "status": "source_review",
+      "reason": "Official LPF 14 Nov 2026 16:00 Panama local, Unión Coclé home Independiente de La Chorrera away FT 0-3. Full seven event statistics unavailable in checked official result; source review.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -268,11 +281,15 @@
       "league": "Copa Paraguay",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "1-1 (penalties 5-4)",
+      "source_urls": [
+        "https://www.apf.org.py/noticias/recoleta-fc-primer-finalista-de-la-copa-de-todos",
+        "https://www.sofascore.com/football/match/recoleta-fc-libertad/WucsVbrc",
+        "https://www.deportesonline.com/ver_futbol_online/paraguay-copa/deportes-recoleta-libertad_4188607/"
+      ],
+      "status": "source_review",
+      "reason": "Official APF confirms 14 Nov 2026 Recoleta home Libertad away Copa Paraguay semifinal 1-1 after normal time, penalties 5-4; DeportesOnline incorrectly shows 2-1. The APF official result resolves score, but full seven match statistics not verified. Source review, no JSON.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -300,11 +317,15 @@
       "league": "Copa De La Liga",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "3-0",
+      "source_urls": [
+        "https://www.campeonatochileno.cl/match/coquimbo-unido-ohiggins-2026-11-14/",
+        "https://campeonatochileno.cl/wp-content/uploads/2026/11/Informe-Arbitro-COPA-DE-LA-LIGA-COQUIMBO-UNIDO-OHIGGINS.pdf",
+        "https://www.cooperativa.cl/noticias/deportes/futbol/copa-de-la-liga/marcador-virtual-coquimbo-unido-vs-o-higgins/2026-11-14/114626.html"
+      ],
+      "status": "source_review",
+      "reason": "Official ANFP confirms 14 Nov 2026 18:30 Chile local, Coquimbo Unido home O'Higgins away Copa de la Liga final FT 3-0; referee report includes match events/cards, but official accessible page lacks all seven comparable metrics for both teams. Source review.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -380,11 +401,15 @@
       "league": "CONCACAF Nations League",
       "provider_group": "API-Football",
       "provider_event_id": null,
-      "score": null,
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Plan inventory only; fixture identity and all seven statistics require independent match-level verification. Not yet individually researched.",
-      "research_date": null,
+      "score": "0-6",
+      "source_urls": [
+        "https://www.ussoccer.com/stories/2026/11/usmnt-vs-haiti-match-recap-highlights-concacaf-nations-league-miami-florida",
+        "https://www.concacaf.com/competitions/nations-league/matches/50691fb4fc6140dfb26ed7e240467e27/haiti-vs-united-states/events",
+        "https://www.tntsports.co.uk/football/concacaf-nations-league/2026-2027/haiti-usa_mtc21924201/live.shtml"
+      ],
+      "status": "source_review",
+      "reason": "Official US Soccer and CONCACAF confirm 14 Nov 2026 Haiti designated home, USA away, CONCACAF Nations League quarterfinal 0-6 at neutral Nu Stadium Miami; TNT reports possession 29/71, corners 1/6, on-target 2/11 but full seven comparable metrics including fouls and cards not established from one originating provider. Source review.",
+      "research_date": "2026-11-21",
       "statistics_sha256": null
     },
     {
@@ -423,8 +448,8 @@
   "counts": {
     "full_verified": 0,
     "blocked": 0,
-    "source_review": 3,
-    "pending": 22
+    "source_review": 10,
+    "pending": 15
   },
   "transfer_ready": 0
 }
