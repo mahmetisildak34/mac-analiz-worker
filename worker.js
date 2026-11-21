@@ -257,6 +257,12 @@ async function enrichExactCrossSourceMatches(env) {
     "uefa u21 championship qualification":"uefa u21 championship qualification",
     "international friendly":"international friendly", "international friendlies":"international friendly",
     "copa del rey":"copa del rey", "spanish cup":"copa del rey",
+  "premier league":"premier league england", "english premier league":"premier league england", "eng 1":"premier league england",
+  "la liga":"la liga spain", "spanish la liga":"la liga spain", "esp 1":"la liga spain",
+  "bundesliga":"bundesliga germany", "ger 1":"bundesliga germany",
+  "serie a":"serie a italy", "ita 1":"serie a italy",
+  "ligue 1":"ligue 1 france", "fra 1":"ligue 1 france",
+  "super lig":"super lig turkey", "turkish super lig":"super lig turkey", "tur 1":"super lig turkey",
     "esp 2":"segunda division spain", "segunda division":"segunda division spain", "laliga 2":"segunda division spain"
   };
   const normalizeLeague = value => {
