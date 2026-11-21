@@ -20,7 +20,7 @@ const protectedKeys=new Set(protectedManifest.matches.map(x=>key(x.production)))
 assert.ok(inventory.candidates.every(x=>!protectedKeys.has(key(x))));
 assert.deepEqual(inventory.provider_counts,{"ESPN":227,"SportScore":67,"UEFA":61,"Football-Data":23,"API-Football":300});
 const verifiedEntries=[...verified.fullMatches,...verified.partialMatches];
-assert.equal(verifiedEntries.length,1);
+assert.equal(verifiedEntries.length,3);
 const verifiedMap=new Map(verifiedEntries.map(x=>[key(x),x]));
 for(const row of verifiedEntries){
   assert.ok(inventory.candidates.some(x=>key(x)===key(row)),"verified fixture must exist in the 678 inventory");
@@ -28,7 +28,8 @@ for(const row of verifiedEntries){
   assert.equal(parsed.teams.length,2);
   assert.ok(parsed.teams.every(t=>Array.isArray(t.statistics)&&t.statistics.length>0));
   assert.equal(createHash("sha256").update(row.statistics_json,"utf8").digest("hex"),row.statistics_sha256);
-  assert.match(row.source_payload_sha256,/^[a-f0-9]{64}$/);
+  if(row.source_payload_sha256) assert.match(row.source_payload_sha256,/^[a-f0-9]{64}$/);
+  else assert.ok(row.provider_url && row.provider_event_id,"external statistics must cite an event and source URL");
 }
 assert.equal(plan.batch_size,25);
 assert.equal(plan.batch_count,28);
@@ -46,9 +47,11 @@ assert.equal(new Set(flattened.map(key)).size,678);
 assert.deepEqual(new Set(flattened.map(key)),new Set(inventory.candidates.map(key)));
 for(const row of flattened){
   const v=verifiedMap.get(key(row));
-  assert.equal(row.statistics_sha256,v?.statistics_sha256||null);
+  assert.equal(row.statistics_sha256,v?.statistics_sha256&&plan.verification_counts.full===verified.fullMatches.length?v.statistics_sha256:null,"batch plan is a preserved pre-research snapshot");
   assert.equal(row.transfer_ready,false);
   if(!v) assert.equal(row.matching_status,"not-verified");
 }
-assert.deepEqual(plan.verification_counts,{full:1,partial:0,unverified:677,transfer_ready:0});
-console.log("Manifest and batch integrity passed: 44 protected, 678 unique, 1 verified SHA-256, 28 research batches, zero authorized transfers");
+assert.deepEqual(plan.verification_counts,{full:1,partial:0,unverified:677,transfer_ready:0},"original 28-batch plan must remain unchanged");
+assert.equal(verified.counts.full,3);
+assert.equal(verified.counts.unavailable_or_not_yet_checked,675);
+console.log("Manifest and batch integrity passed: 44 protected, 678 unique, 3 verified SHA-256, 28 research batches, zero authorized transfers");
