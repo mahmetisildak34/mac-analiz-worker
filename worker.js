@@ -2337,8 +2337,52 @@ export default {
           try { statistics = row.statistics_json ? JSON.parse(row.statistics_json) : null; } catch (_) {}
           try { raw = row.raw_json ? JSON.parse(row.raw_json) : null; } catch (_) {}
           const halftime = raw?.score?.halftime || raw?.score?.halfTime || null;
+          // Only original provider-shaped payloads can attest identity/score.
+          // Reconstructed mamSource/fixture/goals wrappers are NOT independent evidence.
+          const sameDate = (x,y) => Number.isFinite(Date.parse(x)) && Date.parse(x) === Date.parse(y);
+          const sameName = (x,y) => typeof x === "string" && typeof y === "string" &&
+            normalizeTeamName(x) === normalizeTeamName(y) && normalizeTeamName(x).length > 0;
+          const validGoal = v => (typeof v === "number" || typeof v === "string" && v.trim() !== "") &&
+            Number.isSafeInteger(Number(v)) && Number(v) >= 0 && Number(v) <= 30;
+          let identityVerified = false, scoreVerified = false;
+          let proofType = "unknown";
+          if (row.source === "app" && raw?.fixture?.timestamp != null &&
+              raw?.fixture?.id != null && raw?.teams?.home?.name && raw?.teams?.away?.name) {
+            identityVerified = String(raw.fixture.id) === String(row.fixture_id) &&
+              sameDate(raw.fixture.date,row.kickoff) &&
+              sameName(raw.teams.home.name,row.home_team) &&
+              sameName(raw.teams.away.name,row.away_team);
+            if (identityVerified) {
+              proofType = "archived_api_football_provider_payload";
+              scoreVerified = validGoal(raw?.goals?.home) && validGoal(raw?.goals?.away) &&
+                validGoal(row.home_goals) && validGoal(row.away_goals) &&
+                Number(raw.goals.home) === Number(row.home_goals) &&
+                Number(raw.goals.away) === Number(row.away_goals);
+            }
+          } else if (row.source === "ESPN" && raw?.id != null &&
+                     Array.isArray(raw?.competitions?.[0]?.competitors)) {
+            const competitors = raw.competitions[0].competitors;
+            const home = competitors.find(c => c?.homeAway === "home");
+            const away = competitors.find(c => c?.homeAway === "away");
+            identityVerified = String(row.fixture_id).startsWith("espn-") &&
+              String(row.fixture_id).endsWith("-"+String(raw.id)) &&
+              sameDate(raw.date,row.kickoff) &&
+              sameName(home?.team?.displayName,row.home_team) &&
+              sameName(away?.team?.displayName,row.away_team);
+            if (identityVerified) {
+              proofType = "archived_espn_provider_payload";
+              scoreVerified = validGoal(home?.score) && validGoal(away?.score) &&
+                validGoal(row.home_goals) && validGoal(row.away_goals) &&
+                Number(home.score) === Number(row.home_goals) &&
+                Number(away.score) === Number(row.away_goals);
+            }
+          }
           return {
             source: row.source || "app",
+            mamSource: row.source || "app",
+            identity_verified: identityVerified,
+            score_verified: scoreVerified,
+            verification_evidence: proofType,
             fixture: { id: row.fixture_id, date: row.kickoff, status: { short: row.status || "FT" } },
             league: { id: String(row.league_id), name: row.league_name || "", country: canonicalLeagueCountry(row.source, row.league_id, row.league_name, row.country) },
             teams: {
