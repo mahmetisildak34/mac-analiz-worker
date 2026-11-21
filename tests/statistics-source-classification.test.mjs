@@ -1,0 +1,48 @@
+import assert from "node:assert/strict";
+import {
+  normalizeTeam, normalizeLeague, sameCompetition, classifyStatisticsPayload
+} from "../statistics-repair-bulk.js";
+
+assert.equal(normalizeTeam("Man Utd"), "manchester united");
+assert.equal(normalizeTeam("Manchester United FC"), "manchester united");
+assert.equal(normalizeTeam("Inter"), "inter milan");
+assert.equal(normalizeTeam("Inter Milan"), "inter milan");
+assert.equal(normalizeTeam("Amed SFK"), "amedspor");
+assert.equal(normalizeTeam("Erzurum BB"), "erzurumspor");
+
+assert.equal(normalizeLeague("UEFA Champions League"), "uefa champions league");
+assert.equal(normalizeLeague("Champions League UEFA"), "uefa champions league");
+assert.equal(normalizeLeague("French Cup"), "coupe de france");
+assert.equal(normalizeLeague("Coupe de France"), "coupe de france");
+assert.equal(normalizeLeague("International Friendlies"), "international friendly");
+
+assert.equal(sameCompetition(
+  {league_id:"101",league_name:"UEFA Champions League",country:"Europe"},
+  {league_id:"999",league_name:"Champions League UEFA",country:"Europe"}
+), true);
+assert.equal(sameCompetition(
+  {league_id:"101",league_name:"UEFA Champions League",country:"Europe"},
+  {league_id:"999",league_name:"AFC Champions League",country:"Asia"}
+), false);
+assert.equal(sameCompetition(
+  {league_id:"101",league_name:"UEFA Champions League",country:"Europe"},
+  {league_id:"101",league_name:"Different Provider Label",country:"Europe"}
+), true);
+
+const full = {teams:[
+  {team:"Home",statistics:[
+    {name:"totalShots",value:10},{name:"shotsOnTarget",value:4},{name:"possessionPct",value:55},
+    {name:"wonCorners",value:5},{name:"foulsCommitted",value:11},{name:"yellowCards",value:2},{name:"redCards",value:0}
+  ]},
+  {team:"Away",statistics:[
+    {team:"Away",name:"totalShots",value:8},{name:"shotsOnTarget",value:3},{name:"possessionPct",value:45},
+    {name:"wonCorners",value:4},{name:"foulsCommitted",value:9},{name:"yellowCards",value:1},{name:"redCards",value:0}
+  ]}
+]};
+assert.equal(classifyStatisticsPayload(JSON.stringify(full)), "full");
+const partial = structuredClone(full);
+partial.teams[0].statistics = partial.teams[0].statistics.slice(0,4);
+assert.equal(classifyStatisticsPayload(JSON.stringify(partial)), "partial");
+assert.equal(classifyStatisticsPayload('{"teams":['), "invalid");
+assert.equal(classifyStatisticsPayload('{"teams":[{"statistics":[]},{"statistics":[{"name":"shots"}]}]}'), "invalid");
+console.log("Source matching: aliases, competition context, and full/partial/invalid payload classification passed");
