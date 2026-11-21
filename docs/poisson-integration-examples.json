@@ -757,7 +757,9 @@
     "required": [
       "league_average_home_goals",
       "league_average_away_goals"
-    ]
+    ],
+    "home_samples": null,
+    "away_samples": null
   },
   "insufficient": {
     "available": false,

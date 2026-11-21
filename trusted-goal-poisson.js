@@ -19,7 +19,8 @@ export function predictTrustedGoals(matches, {
     as_of:Number.isFinite(cutoff)?new Date(cutoff).toISOString():null };
   const counts = { total: Array.isArray(matches) ? matches.length : 0, used: 0, excluded: 0, reasons: {} };
   const exclude = reason => { counts.excluded++; counts.reasons[reason] = (counts.reasons[reason] || 0) + 1; };
-  const unavailable = (reason, extra = {}) => ({ available:false, reason, ...metadata, ...counts, ...extra });
+  const unavailable = (reason, extra = {}) => ({ available:false, reason, ...metadata, ...counts,
+    home_samples:null, away_samples:null, ...extra });
   if (!Array.isArray(matches) || !home_team || !away_team || !Number.isFinite(cutoff) ||
       !Number.isSafeInteger(min_matches) || min_matches < 1 ||
       !Number.isSafeInteger(max_matches) || max_matches < min_matches || max_matches > 10 ||
@@ -36,7 +37,9 @@ export function predictTrustedGoals(matches, {
     if (!match || match.identity_verified !== true) { exclude("identity_not_verified"); continue; }
     if (match.score_verified !== true) { exclude("score_not_verified"); continue; }
     const status = String(match.status ?? "").toUpperCase();
-    if (status ? !finishedStatuses.has(status) : match.completed !== true) { exclude("not_confirmed_finished"); continue; }
+    if (match.completed === false || (status ? !finishedStatuses.has(status) : match.completed !== true)) {
+      exclude("not_confirmed_finished"); continue;
+    }
     if (league_id != null && String(match.league_id) !== String(league_id)) { exclude("league_mismatch"); continue; }
     if (!match.source || match.fixture_id == null) { exclude("missing_source_identity"); continue; }
     const timestamp = Date.parse(match.kickoff || "");

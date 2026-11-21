@@ -48,6 +48,14 @@ test("half-time predictions require verified half-time goals and ignore full-tim
   assert.equal(predictTrustedHalfTime(matches,cfg).reason,"insufficient_verified_venue_sample");
   assert.equal(predictTrustedHalfTime(half,options).reason,"missing_league_averages");
 });
+test("contradictory completion claims do not enter either period",()=>{
+  const contradicted=matches.map(m=>({...m,status:"FT",completed:false}));
+  const result=predictTrustedGoals(contradicted,options);
+  assert.equal(result.reason,"insufficient_verified_venue_sample");
+  assert.equal(result.reasons.not_confirmed_finished,contradicted.length);
+  assert.equal(result.home_samples,0);
+  assert.equal(result.away_samples,0);
+});
 test("blocks fewer than five verified venue fixtures", () => {
   assert.equal(predictTrustedGoals(matches.slice(0, 8), options).reason, "insufficient_verified_venue_sample");
 });

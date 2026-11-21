@@ -67,3 +67,29 @@ Worker arşiv uç noktası hâlâ `GET /api/archive/matches`. Bu sürüm bağım
 İlk yarı girdisi aynı kimlik ve zaman alanlarına ek olarak `halftime_home_goals`, `halftime_away_goals` ve `halftime_score_verified` taşır. İlk yarı seçeneklerinde `league_average_home_half_goals` ve `league_average_away_half_goals` zorunludur. Arşivde `halftime_score_verified === true` ise `score.halftime.home` ve `.away` değerlerini eşleyin. Worker bu bayrağı yalnızca tanıdığı özgün sağlayıcı biçiminde, doğrulanmış maç sonu kaydıyla tutarlı bir devre skoru varsa etkinleştirir. Eksik, null veya doğrulanmamış devre alanını sıfıra çevirmeyin. Maç sonu golleri ilk yarı hesabında kullanılmaz.
 
 [Maç sonu, ilk yarı ve hata örnekleri](poisson-integration-examples.json) · [Tarihsel pazar testi](poisson-market-benchmark.json) · [Ek Süper Lig holdout testi](poisson-turkey-holdout.json)
+
+## Ağ erişimi olmadan entegrasyon testi
+
+`trusted-goal-poisson.js` standart bir JavaScript ES modülü. Harici paket, HTTP çağrısı, Cloudflare binding’i veya token gerektirmez. `archive-espn-example.json` yerel Worker tarafından oluşturulan arşiv yanıtıdır. `poisson-integration-examples.json` gerçek geçmiş maç verilerinden oluşturulan tahminleri ve kontrollü hata yanıtlarını içerir.
+
+```js
+import { createOfflineAnalysisFixtureClient } from "./offline-analysis-fixture-client.js";
+import examples from "./poisson-integration-examples.json" with { type: "json" };
+import archive from "./archive-espn-example.json" with { type: "json" };
+
+const client = createOfflineAnalysisFixtureClient(examples, archive);
+const history = await client.getArchive();
+const full = await client.getAnalysis("full_time");
+const half = await client.getAnalysis("first_half");
+const missing = await client.getAnalysis("missing_data");
+const tooFew = await client.getAnalysis("insufficient");
+const retry = await client.getAnalysis("api_error");
+```
+
+JSON modülü desteklenmeyen test ortamında aynı iki dosyayı test yükleyicisiyle ayrıştırıp fabrikaya nesne olarak verin. Çevrimdışı istemci her çağrıda ayrı bir kopya döndürür. `getAnalysis` senaryoları test yardımcısıdır. Canlı arşiv endpoint’i `GET /api/archive/matches`.
+
+Tahmin çağrısında `available === false` iken `probabilities` bulunmaz. Örneklem oluşturulmadan durulan yanıtlarda `home_samples` ve `away_samples` değeri `null` olur. Örneklem yetersizse bulunan gerçek sayılar döner. `completed: false` ile bitmiş durum etiketi çelişen maçlar örnekleme alınmaz.
+
+[Tüm pazarlar için lig sıklığı, basit lig Poisson ve saha Poisson karşılaştırması](poisson-market-baselines.json). Aynı maçlar üzerinden Brier, log loss ve kalibrasyon hatası karşılaştırılır. Marjinal gol dağılımları ve kesin skor değerlendirmesi de rapordadır.
+
+Deneysel karma modelin lig ve dönem bazındaki ağırlığı Ocak–Haziran 2025 doğrulamasında seçilir. Temmuz 2025 sonrası test maçları ağırlık seçiminde kullanılmaz. İlk yarıda saha Poisson modelinin 1X2 log loss değeri 1,2316, lig sıklığının 1,0895 ve karma modelin 1,0865. Karma modelin kalibrasyon hatası 0,0322, lig sıklığının 0,0117. Sonuçlar karma modeli varsayılan tahmin yoluna geçirmeden kaydedildi.
