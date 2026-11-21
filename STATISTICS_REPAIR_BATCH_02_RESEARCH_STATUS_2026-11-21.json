@@ -251,12 +251,17 @@
       "league": "Liga Panameña de Fútbol",
       "home": "Sporting San Miguelito",
       "away": "CD Arabe Unido",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://www.apwin.com/match/sporting-san-miguelito-arabe-unido/vkeqDy/",
+        "https://scores24.live/en/soccer/m-08-11-2026-af-sporting-san-miguelito-arabe-unido",
+        "https://footystats.org/panama/af-sporting-san-miguelito-vs-cd-arabe-unido-h2h-stats"
+      ],
+      "status": "source_review",
+      "reason": "13 Nov 2026 20:30 Panama local / 14 Nov 01:30 UTC, Sporting San Miguelito home, Árabe Unido away, LPF FT 0-1. APWin and Scores24 both show shots 7/5, on target 1/4, possession 61/39, corners 2/2, fouls 6/15, yellows 0/1, reds 0/0. FootyStats Spanish page has shots 8/6 while English page 7/5; provider lineage and conflicting shots need resolution before full verification.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "0-1"
     },
     {
       "fixture_id": "1583808",
@@ -265,12 +270,16 @@
       "league": "Liga Panameña de Fútbol",
       "home": "Tauro FC",
       "away": "Alianza FC",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://footystats.org/panama/alianza-fc-panama-vs-tauro-fc-h2h-stats",
+        "https://rojadirectaa.app/football/matches/2609644/tauro-vs-alianza"
+      ],
+      "status": "blocked",
+      "reason": "13 Nov 2026 local / 14 Nov 01:30 UTC, Tauro home, Alianza away, LPF FT 3-2. Sources agree shots 9/8, on-target 6/4, possession 50/50, corners 7/5, yellow 2/2; fouls FootyStats 14/10 vs Rojadirecta 14/9. Cross-provider conflict unresolved; blocked; no JSON.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "3-2"
     },
     {
       "fixture_id": "1583809",
@@ -279,12 +288,17 @@
       "league": "Liga Panameña de Fútbol",
       "home": "UMECIT",
       "away": "Plaza Amador",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://www.apwin.com/match/plaza-amador-umecit/vjBUgg/",
+        "https://futbollibrehd.app/football/matches/2609646/umecit-vs-plaza-amador/stats",
+        "https://www.sofascore.com/football/match/umecit-cd-plaza-amador/gBrbsCIbd"
+      ],
+      "status": "source_review",
+      "reason": "13 Nov 2026 local / 14 Nov 01:30 UTC, UMECIT home Plaza Amador away, LPF FT 2-4. Seven metrics in FutbolLibre: shots 5/13, on-target 2/7, possession 50/50, corners 8/6, fouls 13/9, yellow 3/1, red 1/0. APWin confirms six metrics, Sofascore match and red-card event. FutbolLibre is a streaming/mirror site and primary stat provenance unverified; source_review only, no JSON.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "2-4"
     },
     {
       "fixture_id": "1636033",
@@ -293,12 +307,16 @@
       "league": "Primera Premier",
       "home": "Tigres de Alica",
       "away": "Jaguares de Chiapas",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://ntv.com.mx/2026/11/13/empate-entre-felinos-tigres-de-alica-1-1-jaguares-de-chiapas/",
+        "https://footballfinder.app/matches/tigres-de-alica-vs-jaguares-de-chiapas-2026-11-14-estadio-arena-cora"
+      ],
+      "status": "source_review",
+      "reason": "13 Nov 2026 local, Tigres de Álica home Jaguares de Chiapas away, Primera Premier FT 1-1 confirmed by local news and match page. No reliable full seven-statistics event source located in this pass. No invented zero values.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "1-1"
     },
     {
       "fixture_id": "1636034",
@@ -307,12 +325,15 @@
       "league": "Primera Premier",
       "home": "Reboceros La Piedad",
       "away": "Racing de Veracruz",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://futbollibrehd.app/football/matches/2664551/reboceros-de-la-piedad-vs-racing-de-veracruz"
+      ],
+      "status": "source_review",
+      "reason": "13 Nov 2026 local / 14 Nov 02:00 UTC, Reboceros de La Piedad home Racing de Veracruz away, Primera Premier FT 0-2. Streaming site shows possession 49/51, shots 11/9, on-target 3/6, corners 6/5, fouls 0/0, yellow 4/4, red 0/0. Zero fouls highly suspect as missing-data placeholder; source not authoritative. No JSON.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "0-2"
     },
     {
       "fixture_id": "1644692",
@@ -321,12 +342,16 @@
       "league": "CONCACAF Nations League",
       "home": "Guatemala",
       "away": "Canada",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://www.concacaf.com/competitions/nations-league/matches/fdb7cd37212e4909bb0e50c7e65f6815/guatemala-vs-canada",
+        "https://www.canadasoccer.com/match/6753/"
+      ],
+      "status": "source_review",
+      "reason": "13 Nov 2026 21:00 EST / 14 Nov 02:00 UTC, Guatemala home Canada away, CONCACAF Nations League quarterfinal FT 2-3. Official CONCACAF match shows possession 42/58, shots on goal 4/7, fouls 11/12, yellow 3/2, red 0/0; total shots and corners not confirmed from official source. Do not fill missing fields from different provider.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "2-3"
     },
     {
       "fixture_id": "1640363",
@@ -335,12 +360,17 @@
       "league": "Australian Championship",
       "home": "South Hobart",
       "away": "Wollongong Wolves",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://www.flashscore.co.uk/match/football/south-hobart-zVNlGXqa/wollongong-4ORPPwPl/",
+        "https://scoremondo.com/en/match/south-hobart-fc-wollongong-wolves-fc-31410883",
+        "https://www.fotmob.com/en-GB/matches/wollongong-wolves-vs-south-hobart/o6w4lzj"
+      ],
+      "status": "blocked",
+      "reason": "14 Nov 2026 04:00 UTC South Hobart home Wollongong Wolves away Australian Championship FT 1-4. Flashscore 14/16 total shots and 7/9 on-target; ScoreMondo 6/5 on-target and 2/8 corners. Inconsistent event statistics; blocked pending canonical source.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "1-4"
     },
     {
       "fixture_id": "1640364",
@@ -349,12 +379,17 @@
       "league": "Australian Championship",
       "home": "Sydney United",
       "away": "South Melbourne",
-      "source_urls": [],
-      "status": "pending",
-      "reason": "Not yet individually researched; no verified score, primary event ID, or complete seven-statistics source. Do not classify as blocked.",
-      "research_date": null,
+      "source_urls": [
+        "https://www.flashscore.co.uk/match/football/south-melbourne-6ciKPSEO/sydney-utd-2RROTa1R/",
+        "https://scoremondo.com/en/match/sydney-united-58-fc-south-melbourne-fc-31410882",
+        "https://www.scorebat.com/south-melbourne-vs-sydney-united-live-stream/"
+      ],
+      "status": "blocked",
+      "reason": "14 Nov 2026 04:00 UTC Sydney United home South Melbourne away Australian Championship FT 1-0. Flashscore 11/13 shots, 8/5 on-target, 47/53 possession; ScoreMondo 7/9 shots, 5/2 on-target; ScoreBat 11/13 shots, 8/5 on-target, 50/50 possession. Serious provider conflict; blocked.",
+      "research_date": "2026-11-21",
       "provider_event_id": null,
-      "statistics_sha256": null
+      "statistics_sha256": null,
+      "score": "1-0"
     },
     {
       "fixture_id": "1555801",
@@ -499,9 +534,9 @@
   ],
   "counts": {
     "full_verified": 0,
-    "blocked": 1,
-    "source_review": 6,
-    "pending": 18
+    "blocked": 4,
+    "source_review": 11,
+    "pending": 10
   },
   "transfer_ready": 0,
   "research_date": "2026-11-21"
