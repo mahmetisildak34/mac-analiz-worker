@@ -6,9 +6,9 @@
   "branch": "feature/bulk-statistics-repair-hardening",
   "policy": "Read-only research. No transfer authorized.",
   "counts": {
-    "full_verified": 1,
+    "full_verified": 6,
     "blocked": 0,
-    "source_review": 24,
+    "source_review": 19,
     "pending": 0
   },
   "rows": [
@@ -583,8 +583,8 @@
       "away": "South Africa",
       "league": "FIFA World Cup qualification (CAF)",
       "provider_group": "SportScore",
-      "status": "source_review",
-      "statistics_sha256": null,
+      "status": "full_verified",
+      "statistics_sha256": "f0db5e2aca67de999b88755f5c312785de4da3ae3d683b431bb17373b16334b0",
       "research_date": "2026-11-21",
       "identity_verified": true,
       "score_verified": true,
@@ -593,9 +593,12 @@
       "provider_event_id": "6ypq3nh3527ymd7",
       "source_urls": [
         "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-10-10&status=finished&limit=1000",
-        "https://sportscore.com/football/match/zimbabwe-vs-south-africa/6ypq3nh3527ymd7/"
+        "https://sportscore.com/football/match/zimbabwe-vs-south-africa/6ypq3nh3527ymd7/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.worldq.caf/summary?event=687189",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687189/competitions/687189/competitors/4214/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687189/competitions/687189/competitors/467/statistics"
       ],
-      "statistics_availability": "partial",
+      "statistics_availability": "full",
       "partial_statistics": {
         "teams": [
           {
@@ -639,7 +642,15 @@
         ]
       },
       "source_payload_sha256": "707c2ca411d25b445ec69d5570aa3fc39e0c6ea1df946bbec4bde453b9319c6d",
-      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+      "reason": "Original ESPN event and seven complete metrics agree with UTC, ordered teams, final score and previously recorded partial values.",
+      "cross_provider_source": {
+        "provider": "ESPN",
+        "event_id": "687189",
+        "source_urls": [
+          "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687189/competitions/687189/competitors/4214/statistics",
+          "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687189/competitions/687189/competitors/467/statistics"
+        ]
+      }
     },
     {
       "source": "app",
@@ -1040,8 +1051,8 @@
       "away": "Zimbabwe",
       "league": "International Friendly",
       "provider_group": "SportScore",
-      "status": "source_review",
-      "statistics_sha256": null,
+      "status": "full_verified",
+      "statistics_sha256": "4cdba634606ede8eb05999097b6483ae10c43e7c0fc18e80999bc6a0100f7624",
       "research_date": "2026-11-21",
       "identity_verified": true,
       "score_verified": true,
@@ -1050,9 +1061,12 @@
       "provider_event_id": "6ypq3nhvnzjlmd7",
       "source_urls": [
         "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-11-17&status=finished&limit=1000",
-        "https://sportscore.com/football/match/zimbabwe-vs-qatar/6ypq3nhvnzjlmd7/"
+        "https://sportscore.com/football/match/zimbabwe-vs-qatar/6ypq3nhvnzjlmd7/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=760915",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/760915/competitions/760915/competitors/4398/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/760915/competitions/760915/competitors/4214/statistics"
       ],
-      "statistics_availability": "partial",
+      "statistics_availability": "full",
       "partial_statistics": {
         "teams": [
           {
@@ -1088,7 +1102,15 @@
         ]
       },
       "source_payload_sha256": "429c53f4da5e63c3895911fd56c0aff1e3594d31399143534a30fab61d1750a7",
-      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+      "reason": "Original ESPN event and seven complete metrics agree with UTC, ordered teams, final score and previously recorded partial values.",
+      "cross_provider_source": {
+        "provider": "ESPN",
+        "event_id": "760915",
+        "source_urls": [
+          "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/760915/competitions/760915/competitors/4398/statistics",
+          "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/760915/competitions/760915/competitors/4214/statistics"
+        ]
+      }
     },
     {
       "source": "app",
@@ -1249,8 +1271,8 @@
       "away": "Zimbabwe",
       "league": "CAF Africa Cup of Nations",
       "provider_group": "SportScore",
-      "status": "source_review",
-      "statistics_sha256": null,
+      "status": "full_verified",
+      "statistics_sha256": "49def68f243a0d805884c708c0cfb9807dd3f44177fb6702c6ea7cfe0f7ea308",
       "research_date": "2026-11-21",
       "identity_verified": true,
       "score_verified": true,
@@ -1259,9 +1281,10 @@
       "provider_event_id": "1l4rjnh95pg4m7v",
       "source_urls": [
         "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-12-22&status=finished&limit=1000",
-        "https://sportscore.com/football/match/egypt-vs-zimbabwe/1l4rjnh95pg4m7v/"
+        "https://sportscore.com/football/match/egypt-vs-zimbabwe/1l4rjnh95pg4m7v/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732135"
       ],
-      "statistics_availability": "partial",
+      "statistics_availability": "full",
       "partial_statistics": {
         "teams": [
           {
@@ -1297,7 +1320,14 @@
         ]
       },
       "source_payload_sha256": "83a24c9abaebc762c45cb8b0d048dc4719a065db0086d520a9c61e0249c8323d",
-      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+      "reason": "Original ESPN event and seven complete metrics agree with UTC, ordered teams, final score and previously recorded partial values.",
+      "cross_provider_source": {
+        "provider": "ESPN",
+        "event_id": "732135",
+        "source_urls": [
+          "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732135"
+        ]
+      }
     },
     {
       "source": "app",
@@ -1308,8 +1338,8 @@
       "away": "Zimbabwe",
       "league": "CAF Africa Cup of Nations",
       "provider_group": "SportScore",
-      "status": "source_review",
-      "statistics_sha256": null,
+      "status": "full_verified",
+      "statistics_sha256": "a1cd910f943b55f678a2a48b0eab63a20ca9df68f19deca991a5cdf010ba7036",
       "research_date": "2026-11-21",
       "identity_verified": true,
       "score_verified": true,
@@ -1318,9 +1348,10 @@
       "provider_event_id": "8yomo4h1xj6kq0j",
       "source_urls": [
         "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-12-26&status=finished&limit=1000",
-        "https://sportscore.com/football/match/zimbabwe-vs-angola/8yomo4h1xj6kq0j/"
+        "https://sportscore.com/football/match/zimbabwe-vs-angola/8yomo4h1xj6kq0j/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732145"
       ],
-      "statistics_availability": "partial",
+      "statistics_availability": "full",
       "partial_statistics": {
         "teams": [
           {
@@ -1356,7 +1387,14 @@
         ]
       },
       "source_payload_sha256": "f302acf4e49f73977aa6e973e30500dbe1bd53aaff7774a6523f17dc0928337b",
-      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+      "reason": "Original ESPN event and seven complete metrics agree with UTC, ordered teams, final score and previously recorded partial values.",
+      "cross_provider_source": {
+        "provider": "ESPN",
+        "event_id": "732145",
+        "source_urls": [
+          "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732145"
+        ]
+      }
     },
     {
       "source": "app",
@@ -1367,8 +1405,8 @@
       "away": "South Africa",
       "league": "CAF Africa Cup of Nations",
       "provider_group": "SportScore",
-      "status": "source_review",
-      "statistics_sha256": null,
+      "status": "full_verified",
+      "statistics_sha256": "b3368a6138ef1e754f83fdc6535788534bf1a238418ea915631bef5fae935c22",
       "research_date": "2026-11-21",
       "identity_verified": true,
       "score_verified": true,
@@ -1377,9 +1415,10 @@
       "provider_event_id": "ednm9whwxlp5ryo",
       "source_urls": [
         "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-12-29&status=finished&limit=1000",
-        "https://sportscore.com/football/match/zimbabwe-vs-south-africa/ednm9whwxlp5ryo/"
+        "https://sportscore.com/football/match/zimbabwe-vs-south-africa/ednm9whwxlp5ryo/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732159"
       ],
-      "statistics_availability": "partial",
+      "statistics_availability": "full",
       "partial_statistics": {
         "teams": [
           {
@@ -1415,7 +1454,14 @@
         ]
       },
       "source_payload_sha256": "eb5069b91f95de918f1aeb25ce325a2db2e2f80357467be25404b8d3b1234e02",
-      "reason": "Original fixture feed verifies the result; statistics require a matching match page. Ambiguous pairs of zero values were excluded."
+      "reason": "Original ESPN event and seven complete metrics agree with UTC, ordered teams, final score and previously recorded partial values.",
+      "cross_provider_source": {
+        "provider": "ESPN",
+        "event_id": "732159",
+        "source_urls": [
+          "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732159"
+        ]
+      }
     },
     {
       "source": "app",

@@ -1,0 +1,5404 @@
+{
+  "date": "2026-11-21",
+  "partial_metric_audit": [
+    {
+      "source": "app",
+      "fixture_id": "1636038",
+      "match": "Los Cabos United — Chapulineros",
+      "source_urls": [
+        "https://sportscore.com/football/match/chapulineros-vs-los-cabos-united/dn1m1ghl5jvkmoe/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 5,
+          "yellowCards": 2
+        },
+        "away": {
+          "wonCorners": 1,
+          "yellowCards": 3
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "1586133",
+      "match": "New Zealand — India",
+      "source_urls": [
+        "https://sportscore.com/football/match/new-zealand-vs-india/8yomo4hyex2yq0j/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 10,
+          "yellowCards": 1
+        },
+        "away": {
+          "wonCorners": 1,
+          "yellowCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "1555804",
+      "match": "Kagoshima United — Gainare Tottori",
+      "source_urls": [
+        "https://sportscore.com/football/match/gainare-tottori-vs-kagoshima-united/zp5rzghgeglyq82/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 7,
+          "yellowCards": 3
+        },
+        "away": {
+          "wonCorners": 7,
+          "yellowCards": 0
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "1640367",
+      "match": "Sutherland Sharks — Canberra FC",
+      "source_urls": [
+        "https://sportscore.com/football/match/canberra-fc-vs-sutherland-sharks/318q66h8z9j5qo9/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 2,
+          "yellowCards": 0
+        },
+        "away": {
+          "wonCorners": 5,
+          "yellowCards": 3
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "1606762",
+      "match": "Vegalta Sendai — Blaublitz Akita",
+      "source_urls": [
+        "https://sportscore.com/football/match/blaublitz-akita-vs-vegalta-sendai/y0or5jh8d8glqwz/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 7,
+          "yellowCards": 0
+        },
+        "away": {
+          "wonCorners": 1,
+          "yellowCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "1555805",
+      "match": "Kamatamare Sanuki — Renofa Yamaguchi",
+      "source_urls": [
+        "https://sportscore.com/football/match/kamatamare-sanuki-vs-renofa-yamaguchi/4wyrn4h61632q86/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 6,
+          "yellowCards": 1
+        },
+        "away": {
+          "wonCorners": 4,
+          "yellowCards": 3
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "1555810",
+      "match": "Tochigi SC — Nara Club",
+      "source_urls": [
+        "https://sportscore.com/football/match/tochigi-sc-vs-nara-club/6ypq3nhvdvjpmd7/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 8,
+          "yellowCards": 1
+        },
+        "away": {
+          "wonCorners": 5,
+          "yellowCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "1606765",
+      "match": "Kataller Toyama — Tokushima Vortis",
+      "source_urls": [
+        "https://sportscore.com/football/match/kataller-toyama-vs-tokushima-vortis/vjxm8gheoep8r6o/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 8,
+          "yellowCards": 0
+        },
+        "away": {
+          "wonCorners": 5,
+          "yellowCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "1648034",
+      "match": "Machida Zelvia — Vissel Kobe",
+      "source_urls": [
+        "https://sportscore.com/football/match/machida-zelvia-vs-vissel-kobe/pxwrxlhlg5vdryk/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 8,
+          "yellowCards": 2
+        },
+        "away": {
+          "wonCorners": 2,
+          "yellowCards": 3
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "1641935",
+      "match": "Namtha United — Salavan United",
+      "source_urls": [
+        "https://sportscore.com/football/match/salavan-united-vs-namtha-united/318q66h8op8oqo9/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 2,
+          "yellowCards": 1
+        },
+        "away": {
+          "wonCorners": 8,
+          "yellowCards": 2
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "1648037",
+      "match": "Kashiwa Reysol — Kawasaki Frontale",
+      "source_urls": [
+        "https://sportscore.com/football/match/kashiwa-reysol-vs-kawasaki-frontale/8yomo4hy73zdq0j/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 4,
+          "yellowCards": 0
+        },
+        "away": {
+          "wonCorners": 3,
+          "yellowCards": 4
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "1649549",
+      "match": "Brazil U20 — Peru U20",
+      "source_urls": [
+        "https://sportscore.com/football/match/brazil-u20-vs-peru-u20/2y8m4zhv3vd9ql0/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 5,
+          "yellowCards": 0
+        },
+        "away": {
+          "wonCorners": 1,
+          "yellowCards": 4
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "1649033",
+      "match": "Martinique — Aruba",
+      "source_urls": [
+        "https://sportscore.com/football/match/martinique-vs-aruba/23xmvkhy3zgxqg8/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 8,
+          "yellowCards": 2,
+          "redCards": 1
+        },
+        "away": {
+          "wonCorners": 1,
+          "yellowCards": 3,
+          "redCards": 0
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "1649034",
+      "match": "Trinidad and Tobago — Antigua and Barbuda",
+      "source_urls": [
+        "https://sportscore.com/football/match/trinidad-and-tobago-vs-antigua-and-barbuda/zp5rzgh3je22q82/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 11,
+          "yellowCards": 0
+        },
+        "away": {
+          "wonCorners": 4,
+          "yellowCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "1644694",
+      "match": "Canada — Guatemala",
+      "source_urls": [
+        "https://sportscore.com/football/match/canada-vs-guatemala/jw2r09h5l6eprz8/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 10,
+          "yellowCards": 0
+        },
+        "away": {
+          "wonCorners": 0,
+          "yellowCards": 4
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2024-09-10T17:30:00+00:00-Montenegro U21-Switzerland U21",
+      "match": "Montenegro U21 — Switzerland U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2024-09-10&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-switzerland-u21/y39mp1h0nvowmoj/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=665068"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 5,
+          "yellowCards": 1
+        },
+        "away": {
+          "wonCorners": 2,
+          "yellowCards": 3
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2024-10-11T14:00:00+00:00-Montenegro U21-Romania U21",
+      "match": "Montenegro U21 — Romania U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2024-10-11&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-romania-u21/k82rekh04zexrep/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=665095"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 2,
+          "yellowCards": 2
+        },
+        "away": {
+          "wonCorners": 2,
+          "yellowCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2024-10-15T16:00:00+00:00-Finland U21-Montenegro U21",
+      "match": "Finland U21 — Montenegro U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2024-10-15&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-finland-u21/4wyrn4honzw6q86/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=665112"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 6,
+          "yellowCards": 3
+        },
+        "away": {
+          "wonCorners": 2,
+          "yellowCards": 3
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-03-25T13:00:00+00:00-Moldova U21-Kosovo U21",
+      "match": "Moldova U21 — Kosovo U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-03-25&status=finished&limit=1000",
+        "https://sportscore.com/football/match/moldova-u21-vs-kosovo-u21/dn1m1gh26lk9moe/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 10,
+          "yellowCards": 2
+        },
+        "away": {
+          "wonCorners": 5,
+          "yellowCards": 2
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-03-25T14:00:00+00:00-Bosnia and Herzegovina U21-Montenegro U21",
+      "match": "Bosnia and Herzegovina U21 — Montenegro U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-03-25&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-bosnia-herzegovina-u21/6ypq3nh3xv4dmd7/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 6,
+          "yellowCards": 4
+        },
+        "away": {
+          "wonCorners": 5,
+          "yellowCards": 4
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-05-28T17:00:00+00:00-Kosovo U21-North Macedonia U21",
+      "match": "Kosovo U21 — North Macedonia U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-05-28&status=finished&limit=1000",
+        "https://sportscore.com/football/match/north-macedonia-u21-vs-kosovo-u21/4wyrn4h68xjeq86/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 7,
+          "yellowCards": 0
+        },
+        "away": {
+          "wonCorners": 1,
+          "yellowCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-06-10T13:00:00+00:00-Mozambique-Zimbabwe",
+      "match": "Mozambique — Zimbabwe",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-06-10&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-mozambique/1l4rjnh96g73m7v/"
+      ],
+      "existing": {
+        "home": {
+          "yellowCards": 2
+        },
+        "away": {
+          "yellowCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-06-10T16:00:00+00:00-Niger-Zimbabwe",
+      "match": "Niger — Zimbabwe",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-06-10&status=finished&limit=1000",
+        "https://sportscore.com/football/match/niger-vs-zimbabwe/3glrw7hn1k4pqdy/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 4,
+          "yellowCards": 0
+        },
+        "away": {
+          "wonCorners": 3,
+          "yellowCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-09-05T15:30:00+00:00-Romania U21-Kosovo U21",
+      "match": "Romania U21 — Kosovo U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-09-05&status=finished&limit=1000",
+        "https://sportscore.com/football/match/romania-u21-vs-kosovo-u21/y39mp1h63ez5moj/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732369"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 7,
+          "yellowCards": 2
+        },
+        "away": {
+          "wonCorners": 4,
+          "yellowCards": 2
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-09-05T16:00:00+00:00-Benin-Zimbabwe",
+      "match": "Benin — Zimbabwe",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-09-05&status=finished&limit=1000",
+        "https://sportscore.com/football/match/benin-vs-zimbabwe/x7lm7phzol34m2w/"
+      ],
+      "existing": {
+        "home": {
+          "yellowCards": 2
+        },
+        "away": {
+          "yellowCards": 3
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-09-09T13:00:00+00:00-Zimbabwe-Rwanda",
+      "match": "Zimbabwe — Rwanda",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-09-09&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-rwanda/y0or5jhn4vngqwz/"
+      ],
+      "existing": {
+        "home": {
+          "yellowCards": 1
+        },
+        "away": {
+          "yellowCards": 4
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-09-09T17:00:00+00:00-Kosovo U21-Spain U21",
+      "match": "Kosovo U21 — Spain U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-09-09&status=finished&limit=1000",
+        "https://sportscore.com/football/match/spain-u21-vs-kosovo-u21/k82rekhgvjwyrep/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732385"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 2,
+          "yellowCards": 2
+        },
+        "away": {
+          "wonCorners": 8,
+          "yellowCards": 2
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-09-09T18:00:00+00:00-Montenegro U21-Sweden U21",
+      "match": "Montenegro U21 — Sweden U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-09-09&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-sweden-u21/y0or5jh8lwd3qwz/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732389"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 5,
+          "yellowCards": 3,
+          "redCards": 0
+        },
+        "away": {
+          "wonCorners": 9,
+          "yellowCards": 3,
+          "redCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-10-10T16:00:00+00:00-Poland U21-Montenegro U21",
+      "match": "Poland U21 — Montenegro U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-10-10&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-poland-u21/zp5rzghgjde2q82/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732406"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 2,
+          "yellowCards": 1,
+          "redCards": 0
+        },
+        "away": {
+          "wonCorners": 2,
+          "yellowCards": 3,
+          "redCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-10-10T16:00:00+00:00-Zimbabwe-South Africa",
+      "match": "Zimbabwe — South Africa",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-10-10&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-south-africa/6ypq3nh3527ymd7/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 4,
+          "yellowCards": 2,
+          "redCards": 1
+        },
+        "away": {
+          "wonCorners": 14,
+          "yellowCards": 0,
+          "redCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-10-13T16:00:00+00:00-Lesotho-Zimbabwe",
+      "match": "Lesotho — Zimbabwe",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-10-13&status=finished&limit=1000",
+        "https://sportscore.com/football/match/lesotho-vs-zimbabwe/n54qllh7el7dqvy/"
+      ],
+      "existing": {
+        "home": {
+          "yellowCards": 2
+        },
+        "away": {
+          "yellowCards": 3
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "wonCorners",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-10-14T16:00:00+00:00-Kosovo U21-San Marino U21",
+      "match": "Kosovo U21 — San Marino U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-10-14&status=finished&limit=1000",
+        "https://sportscore.com/football/match/san-marino-u21-vs-kosovo-u21/jw2r09hklg27rz8/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732477"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 10,
+          "yellowCards": 0,
+          "redCards": 1
+        },
+        "away": {
+          "wonCorners": 4,
+          "yellowCards": 5,
+          "redCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-10-14T16:00:00+00:00-Montenegro U21-North Macedonia U21",
+      "match": "Montenegro U21 — North Macedonia U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-10-14&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-north-macedonia-u21/4jwq2ghn45dpm0v/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732478"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 7,
+          "yellowCards": 3
+        },
+        "away": {
+          "wonCorners": 2,
+          "yellowCards": 2
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-13T16:30:00+00:00-Algeria-Zimbabwe",
+      "match": "Algeria — Zimbabwe",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-11-13&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-algeria/y39mp1h6w7dnmoj/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 3
+        },
+        "away": {
+          "wonCorners": 2
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-14T11:00:00+00:00-Armenia U21-Montenegro U21",
+      "match": "Armenia U21 — Montenegro U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-11-14&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-armenia-u21/y39mp1h63e8zmoj/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732492"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 4,
+          "yellowCards": 2
+        },
+        "away": {
+          "wonCorners": 1,
+          "yellowCards": 2
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-14T17:00:00+00:00-Cyprus U21-Kosovo U21",
+      "match": "Cyprus U21 — Kosovo U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-11-14&status=finished&limit=1000",
+        "https://sportscore.com/football/match/kosovo-u21-vs-cyprus-u21/2y8m4zh53e6wql0/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732489"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 3,
+          "yellowCards": 4
+        },
+        "away": {
+          "wonCorners": 2,
+          "yellowCards": 2
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-17T16:30:00+00:00-Qatar-Zimbabwe",
+      "match": "Qatar — Zimbabwe",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-11-17&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-qatar/6ypq3nhvnzjlmd7/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 6,
+          "yellowCards": 0
+        },
+        "away": {
+          "wonCorners": 6,
+          "yellowCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-18T16:30:00+00:00-Finland U21-Kosovo U21",
+      "match": "Finland U21 — Kosovo U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-11-18&status=finished&limit=1000",
+        "https://sportscore.com/football/match/kosovo-u21-vs-finland-u21/8yomo4h17633q0j/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732508"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 6,
+          "yellowCards": 2
+        },
+        "away": {
+          "wonCorners": 2,
+          "yellowCards": 2
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-22T20:00:00+00:00-Egypt-Zimbabwe",
+      "match": "Egypt — Zimbabwe",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-12-22&status=finished&limit=1000",
+        "https://sportscore.com/football/match/egypt-vs-zimbabwe/1l4rjnh95pg4m7v/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 8,
+          "yellowCards": 2
+        },
+        "away": {
+          "wonCorners": 3,
+          "yellowCards": 2
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-26T12:30:00+00:00-Angola-Zimbabwe",
+      "match": "Angola — Zimbabwe",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-12-26&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-angola/8yomo4h1xj6kq0j/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 5,
+          "yellowCards": 3
+        },
+        "away": {
+          "wonCorners": 6,
+          "yellowCards": 4
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-29T16:00:00+00:00-Zimbabwe-South Africa",
+      "match": "Zimbabwe — South Africa",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-12-29&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-south-africa/ednm9whwxlp5ryo/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 3,
+          "yellowCards": 1
+        },
+        "away": {
+          "wonCorners": 3,
+          "yellowCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-03-31T12:00:00+00:00-Montenegro U21-Poland U21",
+      "match": "Montenegro U21 — Poland U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-03-31&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-poland-u21/2y8m4zh53edkql0/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732556"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 2,
+          "yellowCards": 5,
+          "redCards": 1
+        },
+        "away": {
+          "wonCorners": 2,
+          "yellowCards": 4,
+          "redCards": 0
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-03-31T16:00:00+00:00-Zimbabwe-Zambia U23",
+      "match": "Zimbabwe — Zambia U23",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-03-31&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zambia-u23-vs-zimbabwe/4wyrn4h6w0w9q86/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 4
+        },
+        "away": {
+          "wonCorners": 2
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "yellowCards",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-05-26T18:30:00+00:00-Nigeria-Zimbabwe",
+      "match": "Nigeria — Zimbabwe",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-05-26&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-nigeria/dn1m1ghlg9lxmoe/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 0,
+          "yellowCards": 3
+        },
+        "away": {
+          "wonCorners": 5,
+          "yellowCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-06-03T17:00:00+00:00-Turkiye U21-Kosovo U21",
+      "match": "Turkiye U21 — Kosovo U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-06-03&status=finished&limit=1000",
+        "https://sportscore.com/football/match/turkiye-u21-vs-kosovo-u21/vjxm8ghe7y0nr6o/"
+      ],
+      "existing": {
+        "home": {
+          "totalShots": 11,
+          "shotsOnTarget": 7,
+          "possessionPct": 55,
+          "wonCorners": 8,
+          "yellowCards": 1
+        },
+        "away": {
+          "totalShots": 11,
+          "shotsOnTarget": 7,
+          "possessionPct": 45,
+          "wonCorners": 2,
+          "yellowCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-06-05T15:00:00+00:00-Montenegro U21-Cyprus U21",
+      "match": "Montenegro U21 — Cyprus U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-06-05&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-cyprus-u21/4jwq2ghndo64m0v/"
+      ],
+      "existing": {
+        "home": {
+          "totalShots": 8,
+          "shotsOnTarget": 3,
+          "possessionPct": 56,
+          "wonCorners": 1,
+          "yellowCards": 0
+        },
+        "away": {
+          "totalShots": 5,
+          "shotsOnTarget": 3,
+          "possessionPct": 44,
+          "wonCorners": 0,
+          "yellowCards": 2
+        }
+      },
+      "missing": {
+        "home": [
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-09-24T18:30:00+00:00-San Marino U21-Kosovo U21",
+      "match": "San Marino U21 — Kosovo U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-09-24&status=finished&limit=1000",
+        "https://sportscore.com/football/match/san-marino-u21-vs-kosovo-u21/y0or5jh8lwn7qwz/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732413"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 1,
+          "yellowCards": 2
+        },
+        "away": {
+          "wonCorners": 8,
+          "yellowCards": 1
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-09-28T16:00:00+00:00-Zimbabwe-Democratic Republic of the Congo",
+      "match": "Zimbabwe — Democratic Republic of the Congo",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-09-28&status=finished&limit=1000",
+        "https://sportscore.com/football/match/zimbabwe-vs-democratic-republic-of-the-congo/1l4rjnh9v7kom7v/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 6,
+          "yellowCards": 0
+        },
+        "away": {
+          "wonCorners": 1,
+          "yellowCards": 2
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-09-30T17:00:00+00:00-Kosovo U21-Cyprus U21",
+      "match": "Kosovo U21 — Cyprus U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-09-30&status=finished&limit=1000",
+        "https://sportscore.com/football/match/kosovo-u21-vs-cyprus-u21/23xmvkh63l63qg8/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732436"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 2,
+          "yellowCards": 3,
+          "redCards": 0
+        },
+        "away": {
+          "wonCorners": 5,
+          "yellowCards": 2,
+          "redCards": 2
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-10-01T16:00:00+00:00-North Macedonia U21-Montenegro U21",
+      "match": "North Macedonia U21 — Montenegro U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-10-01&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-north-macedonia-u21/3glrw7hnwg5wqdy/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732440"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 4,
+          "yellowCards": 1
+        },
+        "away": {
+          "wonCorners": 6,
+          "yellowCards": 2
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-10-05T14:30:00+00:00-Montenegro U21-Armenia U21",
+      "match": "Montenegro U21 — Armenia U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-10-05&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-armenia-u21/vjxm8ghe476gr6o/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732448"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 7,
+          "yellowCards": 3
+        },
+        "away": {
+          "wonCorners": 6,
+          "yellowCards": 2
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-10-06T17:00:00+00:00-Kosovo U21-Finland U21",
+      "match": "Kosovo U21 — Finland U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-10-06&status=finished&limit=1000",
+        "https://sportscore.com/football/match/kosovo-u21-vs-finland-u21/ednm9whwkpwgryo/",
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.euro_u21_qual/summary?event=732347"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 4,
+          "yellowCards": 3
+        },
+        "away": {
+          "wonCorners": 4,
+          "yellowCards": 3
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted",
+          "redCards"
+        ]
+      }
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-11-13T13:00:00+00:00-Montenegro U21-Bosnia and Herzegovina U21",
+      "match": "Montenegro U21 — Bosnia and Herzegovina U21",
+      "source_urls": [
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-13&status=finished&limit=1000",
+        "https://sportscore.com/football/match/montenegro-u21-vs-bosnia-herzegovina-u21/k82rekh2ve77rep/"
+      ],
+      "existing": {
+        "home": {
+          "wonCorners": 4,
+          "yellowCards": 3,
+          "redCards": 1
+        },
+        "away": {
+          "wonCorners": 1,
+          "yellowCards": 3,
+          "redCards": 0
+        }
+      },
+      "missing": {
+        "home": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ],
+        "away": [
+          "totalShots",
+          "shotsOnTarget",
+          "possessionPct",
+          "foulsCommitted"
+        ]
+      }
+    }
+  ],
+  "prior_open_20": [
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-03-25T13:00:00+00:00-Moldova U21-Kosovo U21",
+      "league": "fifa.friendly_u21",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly_u21/scoreboard?dates=20250325",
+      "status": "no_exact_match"
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-03-25T14:00:00+00:00-Bosnia and Herzegovina U21-Montenegro U21",
+      "league": "fifa.friendly_u21",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly_u21/scoreboard?dates=20250325",
+      "status": "no_exact_match"
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-05-28T17:00:00+00:00-Kosovo U21-North Macedonia U21",
+      "league": "fifa.friendly_u21",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly_u21/scoreboard?dates=20250528",
+      "status": "no_exact_match"
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-06-10T13:00:00+00:00-Mozambique-Zimbabwe",
+      "league": "caf.cosafa",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.cosafa/scoreboard?dates=20250610",
+      "status": "no_complete_plausible_metrics",
+      "event_id": "736451",
+      "summary_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.cosafa/summary?event=736451",
+      "core_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/caf.cosafa/events/736451/competitions/736451/competitors/8939/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/caf.cosafa/events/736451/competitions/736451/competitors/4214/statistics"
+      ]
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-06-10T16:00:00+00:00-Niger-Zimbabwe",
+      "league": "fifa.friendly",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/scoreboard?dates=20250610",
+      "status": "no_complete_plausible_metrics",
+      "event_id": "736121",
+      "summary_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=736121",
+      "core_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/736121/competitions/736121/competitors/8937/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/736121/competitions/736121/competitors/4214/statistics"
+      ]
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-09-05T16:00:00+00:00-Benin-Zimbabwe",
+      "league": "fifa.worldq.caf",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.worldq.caf/scoreboard?dates=20250905",
+      "status": "no_complete_plausible_metrics",
+      "event_id": "687195",
+      "summary_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.worldq.caf/summary?event=687195",
+      "core_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687195/competitions/687195/competitors/2844/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687195/competitions/687195/competitors/4214/statistics"
+      ]
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-09-09T13:00:00+00:00-Zimbabwe-Rwanda",
+      "league": "fifa.worldq.caf",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.worldq.caf/scoreboard?dates=20250909",
+      "status": "no_complete_plausible_metrics",
+      "event_id": "687199",
+      "summary_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.worldq.caf/summary?event=687199",
+      "core_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687199/competitions/687199/competitors/4214/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687199/competitions/687199/competitors/2851/statistics"
+      ]
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-10-10T16:00:00+00:00-Zimbabwe-South Africa",
+      "league": "fifa.worldq.caf",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.worldq.caf/scoreboard?dates=20251010",
+      "status": "promoted_full",
+      "event_id": "687189",
+      "summary_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.worldq.caf/summary?event=687189",
+      "core_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687189/competitions/687189/competitors/4214/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687189/competitions/687189/competitors/467/statistics"
+      ]
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-10-13T16:00:00+00:00-Lesotho-Zimbabwe",
+      "league": "fifa.worldq.caf",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.worldq.caf/scoreboard?dates=20251013",
+      "status": "no_complete_plausible_metrics",
+      "event_id": "687200",
+      "summary_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.worldq.caf/summary?event=687200",
+      "core_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687200/competitions/687200/competitors/6640/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687200/competitions/687200/competitors/4214/statistics"
+      ]
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-13T16:30:00+00:00-Algeria-Zimbabwe",
+      "league": "fifa.friendly",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/scoreboard?dates=20251113",
+      "status": "prior_provider_metric_conflict",
+      "event_id": "760378",
+      "summary_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=760378",
+      "core_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/760378/competitions/760378/competitors/624/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/760378/competitions/760378/competitors/4214/statistics"
+      ]
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-17T16:30:00+00:00-Qatar-Zimbabwe",
+      "league": "fifa.friendly",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/scoreboard?dates=20251117",
+      "status": "promoted_full",
+      "event_id": "760915",
+      "summary_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=760915",
+      "core_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/760915/competitions/760915/competitors/4398/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/760915/competitions/760915/competitors/4214/statistics"
+      ]
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-22T20:00:00+00:00-Egypt-Zimbabwe",
+      "league": "caf.nations",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/scoreboard?dates=20251222",
+      "status": "promoted_full",
+      "event_id": "732135",
+      "summary_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732135",
+      "core_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/caf.nations/events/732135/competitions/732135/competitors/2620/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/caf.nations/events/732135/competitions/732135/competitors/4214/statistics"
+      ]
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-26T12:30:00+00:00-Angola-Zimbabwe",
+      "league": "caf.nations",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/scoreboard?dates=20251226",
+      "status": "promoted_full",
+      "event_id": "732145",
+      "summary_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732145",
+      "core_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/caf.nations/events/732145/competitions/732145/competitors/653/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/caf.nations/events/732145/competitions/732145/competitors/4214/statistics"
+      ]
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-29T16:00:00+00:00-Zimbabwe-South Africa",
+      "league": "caf.nations",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/scoreboard?dates=20251229",
+      "status": "promoted_full",
+      "event_id": "732159",
+      "summary_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732159",
+      "core_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/caf.nations/events/732159/competitions/732159/competitors/4214/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/caf.nations/events/732159/competitions/732159/competitors/467/statistics"
+      ]
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-03-31T16:00:00+00:00-Zimbabwe-Zambia U23",
+      "league": "fifa.friendly",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/scoreboard?dates=20260331",
+      "status": "no_exact_match"
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-05-26T18:30:00+00:00-Nigeria-Zimbabwe",
+      "league": "fifa.friendly",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/scoreboard?dates=20260526",
+      "status": "no_complete_plausible_metrics",
+      "event_id": "401867936",
+      "summary_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=401867936",
+      "core_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/401867936/competitions/401867936/competitors/657/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/401867936/competitions/401867936/competitors/4214/statistics"
+      ]
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-06-03T17:00:00+00:00-Turkiye U21-Kosovo U21",
+      "league": "fifa.friendly_u21",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly_u21/scoreboard?dates=20260603",
+      "status": "no_exact_match"
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-06-05T15:00:00+00:00-Montenegro U21-Cyprus U21",
+      "league": "fifa.friendly_u21",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly_u21/scoreboard?dates=20260605",
+      "status": "no_exact_match"
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-09-28T16:00:00+00:00-Zimbabwe-Democratic Republic of the Congo",
+      "league": "caf.nations",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/scoreboard?dates=20260928",
+      "status": "no_exact_match"
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2026-11-13T13:00:00+00:00-Montenegro U21-Bosnia and Herzegovina U21",
+      "league": "fifa.friendly_u21",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly_u21/scoreboard?dates=20261113",
+      "status": "no_exact_match"
+    }
+  ],
+  "name_variants_174": [
+    {
+      "id": "1648348",
+      "day": "2026-11-15",
+      "competition": "Liga de Ascenso",
+      "target": {
+        "home": "Municipal Grecia",
+        "away": "Cariari Pococi",
+        "utc": "2026-11-15T04:00:00+03:00",
+        "score": [
+          2,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1600662",
+      "day": "2026-11-15",
+      "competition": "Primera Division",
+      "target": {
+        "home": "Alianza",
+        "away": "FAS",
+        "utc": "2026-11-15T05:00:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1639054",
+      "day": "2026-11-15",
+      "competition": "National League - National",
+      "target": {
+        "home": "Auckland United",
+        "away": "Miramar",
+        "utc": "2026-11-15T05:00:00+03:00",
+        "score": [
+          1,
+          3
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1639055",
+      "day": "2026-11-15",
+      "competition": "National League - National",
+      "target": {
+        "home": "Birkenhead United",
+        "away": "Eastern Suburbs",
+        "utc": "2026-11-15T06:00:00+03:00",
+        "score": [
+          1,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "variant_candidate",
+      "candidates": [
+        {
+          "source_url": "https://sportscore.com/football/match/birkenhead-united-vs-eastern-suburbs-afc/vjxm8ghkv87er6o/",
+          "provider_event_id": "vjxm8ghkv87er6o",
+          "utc": "2026-11-15T03:00:00+00:00",
+          "score": [
+            "1",
+            "2"
+          ],
+          "home": "Birkenhead United",
+          "away": "Eastern Suburbs AFC",
+          "competition": "New Zealand Football Championship",
+          "name_scores": [
+            1,
+            1
+          ],
+          "detail_http": "200",
+          "state": "requires_competition_and_team_alias_review"
+        }
+      ]
+    },
+    {
+      "id": "1649519",
+      "day": "2026-11-15",
+      "competition": "Liga de Expansión MX",
+      "target": {
+        "home": "CA La Paz",
+        "away": "Piratas",
+        "utc": "2026-11-15T06:00:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1649468",
+      "day": "2026-11-15",
+      "competition": "Liga MX Femenil",
+      "target": {
+        "home": "Guadalajara W",
+        "away": "Juárez W",
+        "utc": "2026-11-15T06:06:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1560975",
+      "day": "2026-11-15",
+      "competition": "WE League",
+      "target": {
+        "home": "Omiya Ardija Ventus W",
+        "away": "Vegalta Sendai W",
+        "utc": "2026-11-15T07:00:00+03:00",
+        "score": [
+          1,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1606761",
+      "day": "2026-11-15",
+      "competition": "J2 League",
+      "target": {
+        "home": "Consadole Sapporo",
+        "away": "Sagan Tosu",
+        "utc": "2026-11-15T07:00:00+03:00",
+        "score": [
+          1,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1606763",
+      "day": "2026-11-15",
+      "competition": "J2 League",
+      "target": {
+        "home": "Vanraure Hachinohe",
+        "away": "Iwaki",
+        "utc": "2026-11-15T07:00:00+03:00",
+        "score": [
+          2,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "variant_candidate",
+      "candidates": [
+        {
+          "source_url": "https://sportscore.com/football/match/vanraure-hachinohe-fc-vs-iwaki-fc/dj2ryohl3lnwq1z/",
+          "provider_event_id": "dj2ryohl3lnwq1z",
+          "utc": "2026-11-15T04:00:00+00:00",
+          "score": [
+            "2",
+            "2"
+          ],
+          "home": "Vanraure Hachinohe FC",
+          "away": "Iwaki FC",
+          "competition": "Japanese J2 League",
+          "name_scores": [
+            1,
+            1
+          ],
+          "detail_http": "200",
+          "state": "requires_competition_and_team_alias_review"
+        }
+      ]
+    },
+    {
+      "id": "1640366",
+      "day": "2026-11-15",
+      "competition": "Australian Championship",
+      "target": {
+        "home": "Broadmeadow Magic",
+        "away": "Avondale",
+        "utc": "2026-11-15T07:00:00+03:00",
+        "score": [
+          2,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1647997",
+      "day": "2026-11-15",
+      "competition": "Coupe de France",
+      "target": {
+        "home": "Tefana",
+        "away": "Thionville Lusitanos",
+        "utc": "2026-11-15T07:00:00+03:00",
+        "score": [
+          0,
+          4
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1555806",
+      "day": "2026-11-15",
+      "competition": "J3 League",
+      "target": {
+        "home": "Kanazawa",
+        "away": "Roasso Kumamoto",
+        "utc": "2026-11-15T08:00:00+03:00",
+        "score": [
+          3,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1555807",
+      "day": "2026-11-15",
+      "competition": "J3 League",
+      "target": {
+        "home": "Parceiro Nagano",
+        "away": "Ehime FC",
+        "utc": "2026-11-15T08:00:00+03:00",
+        "score": [
+          1,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1606764",
+      "day": "2026-11-15",
+      "competition": "J2 League",
+      "target": {
+        "home": "Imabari",
+        "away": "Jubilo Iwata",
+        "utc": "2026-11-15T08:00:00+03:00",
+        "score": [
+          0,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "variant_candidate",
+      "candidates": [
+        {
+          "source_url": "https://sportscore.com/football/match/fc-imabari-vs-jubilo-iwata/x7lm7phjdjwgm2w/",
+          "provider_event_id": "x7lm7phjdjwgm2w",
+          "utc": "2026-11-15T05:00:00+00:00",
+          "score": [
+            "0",
+            "2"
+          ],
+          "home": "FC Imabari",
+          "away": "Jubilo Iwata",
+          "competition": "Japanese J2 League",
+          "name_scores": [
+            1,
+            1
+          ],
+          "detail_http": "200",
+          "state": "requires_competition_and_team_alias_review"
+        }
+      ]
+    },
+    {
+      "id": "1650045",
+      "day": "2026-11-15",
+      "competition": "WK-League",
+      "target": {
+        "home": "Gyeongju W",
+        "away": "Suwon FMC W",
+        "utc": "2026-11-15T08:00:00+03:00",
+        "score": [
+          0,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1648035",
+      "day": "2026-11-15",
+      "competition": "J-League Cup",
+      "target": {
+        "home": "Cerezo Osaka",
+        "away": "Urawa",
+        "utc": "2026-11-15T09:00:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1648036",
+      "day": "2026-11-15",
+      "competition": "J-League Cup",
+      "target": {
+        "home": "Kashima",
+        "away": "Yokohama F. Marinos",
+        "utc": "2026-11-15T09:00:00+03:00",
+        "score": [
+          3,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1555809",
+      "day": "2026-11-15",
+      "competition": "J3 League",
+      "target": {
+        "home": "FC Ryukyu",
+        "away": "Kochi United",
+        "utc": "2026-11-15T10:00:00+03:00",
+        "score": [
+          1,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1644248",
+      "day": "2026-11-15",
+      "competition": "League Cup",
+      "target": {
+        "home": "Eastern District",
+        "away": "Eastern",
+        "utc": "2026-11-15T10:00:00+03:00",
+        "score": [
+          1,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "variant_candidate",
+      "candidates": [
+        {
+          "source_url": "https://sportscore.com/football/match/eastern-district-vs-eastern-football-club/8yomo4hyejylq0j/",
+          "provider_event_id": "8yomo4hyejylq0j",
+          "utc": "2026-11-15T07:00:00+00:00",
+          "score": [
+            "1",
+            "0"
+          ],
+          "home": "Eastern District",
+          "away": "Eastern SC",
+          "competition": "Chinese Hong Kong League Cup",
+          "name_scores": [
+            1,
+            1
+          ],
+          "detail_http": "200",
+          "state": "requires_competition_and_team_alias_review"
+        }
+      ]
+    },
+    {
+      "id": "1649562",
+      "day": "2026-11-15",
+      "competition": "League One",
+      "target": {
+        "home": "Guizhou Zhucheng",
+        "away": "Heilongjiang Lava Spring",
+        "utc": "2026-11-15T10:00:00+03:00",
+        "score": [
+          3,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1560974",
+      "day": "2026-11-15",
+      "competition": "WE League",
+      "target": {
+        "home": "INAC Kobe Leonessa W",
+        "away": "Cerezo Osaka W",
+        "utc": "2026-11-15T11:00:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1640881",
+      "day": "2026-11-15",
+      "competition": "Diski Challenge",
+      "target": {
+        "home": "Sekhukhune United U23",
+        "away": "Stellenbosch U23",
+        "utc": "2026-11-15T11:00:00+03:00",
+        "score": [
+          1,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1641933",
+      "day": "2026-11-15",
+      "competition": "Lao League",
+      "target": {
+        "home": "Lao Toyota",
+        "away": "Ezra",
+        "utc": "2026-11-15T11:00:00+03:00",
+        "score": [
+          1,
+          5
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1641934",
+      "day": "2026-11-15",
+      "competition": "Lao League",
+      "target": {
+        "home": "Lao Army",
+        "away": "Master 7",
+        "utc": "2026-11-15T11:00:00+03:00",
+        "score": [
+          0,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1641936",
+      "day": "2026-11-15",
+      "competition": "Lao League",
+      "target": {
+        "home": "Oudomxay Entremets",
+        "away": "Viengchanh",
+        "utc": "2026-11-15T11:00:00+03:00",
+        "score": [
+          0,
+          3
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1641937",
+      "day": "2026-11-15",
+      "competition": "Lao League",
+      "target": {
+        "home": "Savannakhet",
+        "away": "Champasak United",
+        "utc": "2026-11-15T11:00:00+03:00",
+        "score": [
+          1,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "variant_candidate",
+      "candidates": [
+        {
+          "source_url": "https://sportscore.com/football/match/champasak-united-vs-savannakhet/jw2r09h5lv5wrz8/",
+          "provider_event_id": "jw2r09h5lv5wrz8",
+          "utc": "2026-11-15T08:00:00+00:00",
+          "score": [
+            "1",
+            "2"
+          ],
+          "home": "Savannakhet",
+          "away": "Champasak United",
+          "competition": "Laos Premier League",
+          "name_scores": [
+            1,
+            1
+          ],
+          "detail_http": "200",
+          "state": "requires_competition_and_team_alias_review"
+        },
+        {
+          "source_url": "https://sportscore.com/football/match/team-vjxm8ghxy04r6od-vs-savannakhet/l7oqdehjnkj1r51/",
+          "provider_event_id": "l7oqdehjnkj1r51",
+          "utc": "2026-11-15T08:00:00+00:00",
+          "score": [
+            "1",
+            "2"
+          ],
+          "home": "Savannakhet",
+          "away": "Champasak United",
+          "competition": "Laos Premier League",
+          "name_scores": [
+            1,
+            1
+          ],
+          "detail_http": "200",
+          "state": "requires_competition_and_team_alias_review"
+        }
+      ]
+    },
+    {
+      "id": "1555808",
+      "day": "2026-11-15",
+      "competition": "J3 League",
+      "target": {
+        "home": "Biwako Shiga",
+        "away": "Osaka",
+        "utc": "2026-11-15T12:00:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1581974",
+      "day": "2026-11-15",
+      "competition": "Persha Liga",
+      "target": {
+        "home": "SK Poltava",
+        "away": "Ahrobiznes Volochysk",
+        "utc": "2026-11-15T12:00:00+03:00",
+        "score": [
+          1,
+          4
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1623522",
+      "day": "2026-11-15",
+      "competition": "Liga 1 Feminin",
+      "target": {
+        "home": "FC Rapid Bucuresti W",
+        "away": "Gloria Bistrița-Năsăud W",
+        "utc": "2026-11-15T12:00:00+03:00",
+        "score": [
+          0,
+          5
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1562699",
+      "day": "2026-11-15",
+      "competition": "3. liga - CFL A",
+      "target": {
+        "home": "Admira Praha",
+        "away": "Slavia III",
+        "utc": "2026-11-15T12:15:00+03:00",
+        "score": [
+          3,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1562701",
+      "day": "2026-11-15",
+      "competition": "3. liga - CFL A",
+      "target": {
+        "home": "Bohemians 1905 II",
+        "away": "Králův Dvůr",
+        "utc": "2026-11-15T12:15:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "variant_candidate",
+      "candidates": [
+        {
+          "source_url": "https://sportscore.com/football/match/bohemians1905-b-vs-fk-kraluv-dvur/2y8m4zh59ex3ql0/",
+          "provider_event_id": "2y8m4zh59ex3ql0",
+          "utc": "2026-11-15T09:15:00+00:00",
+          "score": [
+            "1",
+            "1"
+          ],
+          "home": "Bohemians1905 B",
+          "away": "FK Kraluv Dvur",
+          "competition": "Czech Third League",
+          "name_scores": [
+            0.8666666666666667,
+            1
+          ],
+          "detail_http": "200",
+          "state": "requires_competition_and_team_alias_review"
+        }
+      ]
+    },
+    {
+      "id": "1562826",
+      "day": "2026-11-15",
+      "competition": "3. liga - CFL B",
+      "target": {
+        "home": "Teplice II",
+        "away": "Hradec Králové II",
+        "utc": "2026-11-15T12:15:00+03:00",
+        "score": [
+          1,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "variant_candidate",
+      "candidates": [
+        {
+          "source_url": "https://sportscore.com/football/match/teplice-b-vs-hradec-kralove-b/k82rekhg4jeyrep/",
+          "provider_event_id": "k82rekhg4jeyrep",
+          "utc": "2026-11-15T09:15:00+00:00",
+          "score": [
+            "1",
+            "0"
+          ],
+          "home": "Teplice B",
+          "away": "Hradec Kralove B",
+          "competition": "Czech Third League",
+          "name_scores": [
+            0.7777777777777778,
+            0.8666666666666667
+          ],
+          "detail_http": "200",
+          "state": "requires_competition_and_team_alias_review"
+        }
+      ]
+    },
+    {
+      "id": "1578007",
+      "day": "2026-11-15",
+      "competition": "3. liga - MSFL",
+      "target": {
+        "home": "Havířov",
+        "away": "Blansko",
+        "utc": "2026-11-15T12:15:00+03:00",
+        "score": [
+          2,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1561203",
+      "day": "2026-11-15",
+      "competition": "2. liga",
+      "target": {
+        "home": "Slovan Bratislava II",
+        "away": "Malženice",
+        "utc": "2026-11-15T12:30:00+03:00",
+        "score": [
+          2,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "variant_candidate",
+      "candidates": [
+        {
+          "source_url": "https://sportscore.com/football/match/slovan-bratislava-b-vs-ofk-malzenice/l5ergph41e2xr8k/",
+          "provider_event_id": "l5ergph41e2xr8k",
+          "utc": "2026-11-15T09:30:00+00:00",
+          "score": [
+            "2",
+            "0"
+          ],
+          "home": "Slovan Bratislava B",
+          "away": "OFK Malzenice",
+          "competition": "Slovak 2.Liga",
+          "name_scores": [
+            0.8888888888888888,
+            0.75
+          ],
+          "detail_http": "200",
+          "state": "requires_competition_and_team_alias_review"
+        }
+      ]
+    },
+    {
+      "id": "1561204",
+      "day": "2026-11-15",
+      "competition": "2. liga",
+      "target": {
+        "home": "Žilina II",
+        "away": "Inter Bratislava",
+        "utc": "2026-11-15T12:30:00+03:00",
+        "score": [
+          0,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1566419",
+      "day": "2026-11-15",
+      "competition": "Oberliga - Hamburg",
+      "target": {
+        "home": "HEBC",
+        "away": "Paloma",
+        "utc": "2026-11-15T12:45:00+03:00",
+        "score": [
+          0,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1574650",
+      "day": "2026-11-15",
+      "competition": "Frauenliga",
+      "target": {
+        "home": "Rheindorf Altach W",
+        "away": "SK Rapid W",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          2,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1577594",
+      "day": "2026-11-15",
+      "competition": "First League",
+      "target": {
+        "home": "Chelyabinsk",
+        "away": "Veles",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          4,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "variant_candidate",
+      "candidates": [
+        {
+          "source_url": "https://sportscore.com/football/match/fk-chelyabinsk-vs-veles/y39mp1h6g34zmoj/",
+          "provider_event_id": "y39mp1h6g34zmoj",
+          "utc": "2026-11-15T10:00:00+00:00",
+          "score": [
+            "4",
+            "2"
+          ],
+          "home": "FK Chelyabinsk",
+          "away": "Veles",
+          "competition": "Russian First League",
+          "name_scores": [
+            1,
+            1
+          ],
+          "detail_http": "200",
+          "state": "requires_competition_and_team_alias_review"
+        }
+      ]
+    },
+    {
+      "id": "1583903",
+      "day": "2026-11-15",
+      "competition": "Second League A - Division A Gold",
+      "target": {
+        "home": "Alaniya Vladikavkaz",
+        "away": "Rodina Moskva II",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          4,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "variant_candidate",
+      "candidates": [
+        {
+          "source_url": "https://sportscore.com/football/match/rodina-moskva-ii-vs-alania-vladikavkaz/1l4rjnh9odlem7v/",
+          "provider_event_id": "1l4rjnh9odlem7v",
+          "utc": "2026-11-15T10:00:00+00:00",
+          "score": [
+            "4",
+            "1"
+          ],
+          "home": "Alania Vladikavkaz",
+          "away": "Rodina Moskva II",
+          "competition": "RUS D3A",
+          "name_scores": [
+            0.9444444444444444,
+            1
+          ],
+          "detail_http": "200",
+          "state": "requires_competition_and_team_alias_review"
+        }
+      ]
+    },
+    {
+      "id": "1583904",
+      "day": "2026-11-15",
+      "competition": "Second League A - Division A Gold",
+      "target": {
+        "home": "Dinamo Bryansk",
+        "away": "Mashuk-KMV",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1583905",
+      "day": "2026-11-15",
+      "competition": "Second League A - Division A Gold",
+      "target": {
+        "home": "Kaluga",
+        "away": "FK Sokol Saratov",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          1,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "variant_candidate",
+      "candidates": [
+        {
+          "source_url": "https://sportscore.com/football/match/sokol-saratov-vs-fk-kaluga/zp5rzghgvdwxq82/",
+          "provider_event_id": "zp5rzghgvdwxq82",
+          "utc": "2026-11-15T10:00:00+00:00",
+          "score": [
+            "1",
+            "2"
+          ],
+          "home": "FK Kaluga",
+          "away": "Sokol Saratov",
+          "competition": "RUS D3A",
+          "name_scores": [
+            1,
+            1
+          ],
+          "detail_http": "200",
+          "state": "requires_competition_and_team_alias_review"
+        }
+      ]
+    },
+    {
+      "id": "1583906",
+      "day": "2026-11-15",
+      "competition": "Second League A - Division A Gold",
+      "target": {
+        "home": "Novosibirsk",
+        "away": "Dinamo Vladivostok",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          0,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1583907",
+      "day": "2026-11-15",
+      "competition": "Second League A - Division A Gold",
+      "target": {
+        "home": "Volgar Astrakhan",
+        "away": "Dinamo Kirov",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          0,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1590468",
+      "day": "2026-11-15",
+      "competition": "3. Lig - Group 1",
+      "target": {
+        "home": "Amasyaspor 1968",
+        "away": "Zonguldak Kömürspor",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1590470",
+      "day": "2026-11-15",
+      "competition": "3. Lig - Group 1",
+      "target": {
+        "home": "Kartal Bulvarspor",
+        "away": "Küçükçekmece Sinopspor",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          2,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1590473",
+      "day": "2026-11-15",
+      "competition": "3. Lig - Group 1",
+      "target": {
+        "home": "Karadeniz Ereğli BSK",
+        "away": "Pazarspor",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          2,
+          4
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1590474",
+      "day": "2026-11-15",
+      "competition": "3. Lig - Group 1",
+      "target": {
+        "home": "Orduspor 1967",
+        "away": "Beykoz Anadolu",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          3,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1590774",
+      "day": "2026-11-15",
+      "competition": "3. Lig - Group 2",
+      "target": {
+        "home": "Akşehirspor",
+        "away": "Kepezspor",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          1,
+          3
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1590775",
+      "day": "2026-11-15",
+      "competition": "3. Lig - Group 2",
+      "target": {
+        "home": "Alanya 1221 FK",
+        "away": "Denizli İYG",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          2,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1590779",
+      "day": "2026-11-15",
+      "competition": "3. Lig - Group 2",
+      "target": {
+        "home": "Nilüfer Belediye",
+        "away": "Bigaspor",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          2,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1590781",
+      "day": "2026-11-15",
+      "competition": "3. Lig - Group 2",
+      "target": {
+        "home": "Etimesgut SK",
+        "away": "Gaziemirspor",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          5,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1591081",
+      "day": "2026-11-15",
+      "competition": "3. Lig - Group 3",
+      "target": {
+        "home": "Diyarbekirspor",
+        "away": "Silifke Belediyespor",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          3,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "variant_candidate",
+      "candidates": [
+        {
+          "source_url": "https://sportscore.com/football/match/silifke-belediyespor-vs-diyarbakirspor/318q66hxye20qo9/",
+          "provider_event_id": "318q66hxye20qo9",
+          "utc": "2026-11-15T10:00:00+00:00",
+          "score": [
+            "3",
+            "1"
+          ],
+          "home": "Diyarbakirspor",
+          "away": "Silifke Belediyespor",
+          "competition": "Turkish Third League",
+          "name_scores": [
+            0.9285714285714286,
+            1
+          ],
+          "detail_http": "200",
+          "state": "requires_competition_and_team_alias_review"
+        }
+      ]
+    },
+    {
+      "id": "1591082",
+      "day": "2026-11-15",
+      "competition": "3. Lig - Group 3",
+      "target": {
+        "home": "Talasgücü Belediyespor",
+        "away": "Kırşehir Belediyespor",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          3,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1591083",
+      "day": "2026-11-15",
+      "competition": "3. Lig - Group 3",
+      "target": {
+        "home": "Karaköprü Belediyespor",
+        "away": "Ağrı 1970",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          4,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1591084",
+      "day": "2026-11-15",
+      "competition": "3. Lig - Group 3",
+      "target": {
+        "home": "Kırıkkale Büyük Anadolu",
+        "away": "Bitlis Özgüzelderespor",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          3,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1591086",
+      "day": "2026-11-15",
+      "competition": "3. Lig - Group 3",
+      "target": {
+        "home": "Mazıdağı Fosfatspor",
+        "away": "Niğde Belediyesispor",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          2,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "variant_candidate",
+      "candidates": [
+        {
+          "source_url": "https://sportscore.com/football/match/mazidagi-fosfatspo-vs-nigde-belediyesispor/jw2r09hkyz91rz8/",
+          "provider_event_id": "jw2r09hkyz91rz8",
+          "utc": "2026-11-15T10:00:00+00:00",
+          "score": [
+            "2",
+            "0"
+          ],
+          "home": "Mazidagi Fosfatspo",
+          "away": "Nigde Belediyesispor",
+          "competition": "Turkish Third League",
+          "name_scores": [
+            0.8235294117647058,
+            1
+          ],
+          "detail_http": "200",
+          "state": "requires_competition_and_team_alias_review"
+        }
+      ]
+    },
+    {
+      "id": "1593959",
+      "day": "2026-11-15",
+      "competition": "NB III - Northeast",
+      "target": {
+        "home": "Diósgyőr II",
+        "away": "Nyiregyhaza II",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          1,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1594196",
+      "day": "2026-11-15",
+      "competition": "NB III - Northwest",
+      "target": {
+        "home": "Puskás II",
+        "away": "Bicskei",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1594681",
+      "day": "2026-11-15",
+      "competition": "NB III - Southwest",
+      "target": {
+        "home": "Paksi SE II",
+        "away": "Majosi",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1604305",
+      "day": "2026-11-15",
+      "competition": "Oberliga - Bremen",
+      "target": {
+        "home": "Geestemünde",
+        "away": "Aumund-Vegesack",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          1,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "variant_candidate",
+      "candidates": [
+        {
+          "source_url": "https://sportscore.com/football/match/esc-geestemunde-vs-aumund-vegesack/dj2ryoh7k72yq1z/",
+          "provider_event_id": "dj2ryoh7k72yq1z",
+          "utc": "2026-11-15T10:00:00+00:00",
+          "score": [
+            "1",
+            "0"
+          ],
+          "home": "ESC Geestemunde",
+          "away": "Aumund-Vegesack",
+          "competition": "German Bundesliga 5",
+          "name_scores": [
+            0.7857142857142857,
+            1
+          ],
+          "detail_http": "200",
+          "state": "requires_competition_and_team_alias_review"
+        }
+      ]
+    },
+    {
+      "id": "1620422",
+      "day": "2026-11-15",
+      "competition": "Gamma Ethniki - Group 5",
+      "target": {
+        "home": "Karystos",
+        "away": "Katsantonis Agrafon",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          2,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1644249",
+      "day": "2026-11-15",
+      "competition": "League Cup",
+      "target": {
+        "home": "Warriors",
+        "away": "Wofoo Tai Po",
+        "utc": "2026-11-15T13:00:00+03:00",
+        "score": [
+          2,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1572734",
+      "day": "2026-11-15",
+      "competition": "Segunda División RFEF - Group 3",
+      "target": {
+        "home": "Cieza",
+        "away": "Peña Deportiva",
+        "utc": "2026-11-15T13:30:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1572735",
+      "day": "2026-11-15",
+      "competition": "Segunda División RFEF - Group 3",
+      "target": {
+        "home": "Deportiva Minera",
+        "away": "Poblense",
+        "utc": "2026-11-15T13:30:00+03:00",
+        "score": [
+          2,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1572736",
+      "day": "2026-11-15",
+      "competition": "Segunda División RFEF - Group 3",
+      "target": {
+        "home": "Elche II",
+        "away": "Atlético Baleares",
+        "utc": "2026-11-15T13:30:00+03:00",
+        "score": [
+          1,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1572738",
+      "day": "2026-11-15",
+      "competition": "Segunda División RFEF - Group 3",
+      "target": {
+        "home": "Lorca Deportiva",
+        "away": "Mallorca II",
+        "utc": "2026-11-15T13:30:00+03:00",
+        "score": [
+          2,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1582160",
+      "day": "2026-11-15",
+      "competition": "Kvindeliga",
+      "target": {
+        "home": "ASA Aarhus W",
+        "away": "Brøndby W",
+        "utc": "2026-11-15T13:30:00+03:00",
+        "score": [
+          0,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1614325",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 6",
+      "target": {
+        "home": "Levante II",
+        "away": "Eldense B",
+        "utc": "2026-11-15T13:30:00+03:00",
+        "score": [
+          2,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1614629",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 7",
+      "target": {
+        "home": "Torrejón",
+        "away": "Rayo Vallecano II",
+        "utc": "2026-11-15T13:30:00+03:00",
+        "score": [
+          0,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "variant_candidate",
+      "candidates": [
+        {
+          "source_url": "https://sportscore.com/football/match/ad-torrejon-cf-vs-rayo-vallecano-b/23xmvkh674n2qg8/",
+          "provider_event_id": "23xmvkh674n2qg8",
+          "utc": "2026-11-15T10:30:00+00:00",
+          "score": [
+            "0",
+            "1"
+          ],
+          "home": "AD Torrejon CF",
+          "away": "Rayo Vallecano B",
+          "competition": "Spanish Tercera División RFEF",
+          "name_scores": [
+            0.8,
+            0.8666666666666667
+          ],
+          "detail_http": "200",
+          "state": "requires_competition_and_team_alias_review"
+        }
+      ]
+    },
+    {
+      "id": "1614632",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 7",
+      "target": {
+        "home": "Parla Escuela",
+        "away": "Pozuelo Alarcón",
+        "utc": "2026-11-15T13:30:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "variant_candidate",
+      "candidates": [
+        {
+          "source_url": "https://sportscore.com/football/match/cp-parla-escuela-vs-cf-pozuelo-alarcon/4jwq2ghnl73jm0v/",
+          "provider_event_id": "4jwq2ghnl73jm0v",
+          "utc": "2026-11-15T10:30:00+00:00",
+          "score": [
+            "1",
+            "1"
+          ],
+          "home": "CP Parla Escuela",
+          "away": "CF Pozuelo Alarcon",
+          "competition": "Spanish Tercera División RFEF",
+          "name_scores": [
+            0.8571428571428572,
+            1
+          ],
+          "detail_http": "200",
+          "state": "requires_competition_and_team_alias_review"
+        }
+      ]
+    },
+    {
+      "id": "1614636",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 7",
+      "target": {
+        "home": "Villanueva Pardillo",
+        "away": "Real Aranjuez",
+        "utc": "2026-11-15T13:30:00+03:00",
+        "score": [
+          0,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1617388",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 16",
+      "target": {
+        "home": "Casalarreina",
+        "away": "Vianés",
+        "utc": "2026-11-15T13:30:00+03:00",
+        "score": [
+          1,
+          3
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1636984",
+      "day": "2026-11-15",
+      "competition": "Super League 2",
+      "target": {
+        "home": "Apollon Pontou",
+        "away": "Kallithea",
+        "utc": "2026-11-15T13:30:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1646626",
+      "day": "2026-11-15",
+      "competition": "I-League",
+      "target": {
+        "home": "Dempo",
+        "away": "Chanmari",
+        "utc": "2026-11-15T13:30:00+03:00",
+        "score": [
+          1,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1614025",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 5",
+      "target": {
+        "home": "Tona",
+        "away": "Vilassar Mar",
+        "utc": "2026-11-15T13:45:00+03:00",
+        "score": [
+          2,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1614630",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 7",
+      "target": {
+        "home": "Móstoles",
+        "away": "Trival Valderas",
+        "utc": "2026-11-15T13:45:00+03:00",
+        "score": [
+          2,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1629120",
+      "day": "2026-11-15",
+      "competition": "FKF Premier League",
+      "target": {
+        "home": "Kenya Police",
+        "away": "Posta Rangers FC",
+        "utc": "2026-11-15T13:45:00+03:00",
+        "score": [
+          2,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1534506",
+      "day": "2026-11-15",
+      "competition": "1. Division",
+      "target": {
+        "home": "BATE II",
+        "away": "Osipovichy",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          0,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1534508",
+      "day": "2026-11-15",
+      "competition": "1. Division",
+      "target": {
+        "home": "Gomel II",
+        "away": "Smorgon",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          4,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1534510",
+      "day": "2026-11-15",
+      "competition": "1. Division",
+      "target": {
+        "home": "Molodechno-DYuSSh 4",
+        "away": "Bumprom",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          2,
+          3
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1534511",
+      "day": "2026-11-15",
+      "competition": "1. Division",
+      "target": {
+        "home": "Orsha",
+        "away": "Volna",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1534513",
+      "day": "2026-11-15",
+      "competition": "1. Division",
+      "target": {
+        "home": "Uni Minsk",
+        "away": "Minsk II",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          4,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1566422",
+      "day": "2026-11-15",
+      "competition": "Oberliga - Hamburg",
+      "target": {
+        "home": "Pinneberg",
+        "away": "Buchholz",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          5,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1568240",
+      "day": "2026-11-15",
+      "competition": "III Liga - Group 4",
+      "target": {
+        "home": "KS Wieczysta Krakow II",
+        "away": "Hetman Zamosc",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          3
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1568559",
+      "day": "2026-11-15",
+      "competition": "III Liga - Group 3",
+      "target": {
+        "home": "Sparta Katowice",
+        "away": "Odra Bytom Odrzański",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1569176",
+      "day": "2026-11-15",
+      "competition": "III Liga - Group 1",
+      "target": {
+        "home": "Lechia T. Mazowiecki",
+        "away": "Pelikan Łowicz",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          3,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1570828",
+      "day": "2026-11-15",
+      "competition": "Primera División RFEF - Group 1",
+      "target": {
+        "home": "Extremadura 1924",
+        "away": "Pontevedra",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          2,
+          3
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1571207",
+      "day": "2026-11-15",
+      "competition": "Primera División RFEF - Group 2",
+      "target": {
+        "home": "Atlético Madrid II",
+        "away": "Teruel",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1571215",
+      "day": "2026-11-15",
+      "competition": "Primera División RFEF - Group 2",
+      "target": {
+        "home": "Ibiza",
+        "away": "FC Cartagena",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          0,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1572426",
+      "day": "2026-11-15",
+      "competition": "Segunda División RFEF - Group 2",
+      "target": {
+        "home": "Barbastro",
+        "away": "Arnedo",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          2,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1572429",
+      "day": "2026-11-15",
+      "competition": "Segunda División RFEF - Group 2",
+      "target": {
+        "home": "Náxara",
+        "away": "Manresa",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          0,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1572434",
+      "day": "2026-11-15",
+      "competition": "Segunda División RFEF - Group 2",
+      "target": {
+        "home": "UD Logroñés II",
+        "away": "Peña Sport",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          2,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1573038",
+      "day": "2026-11-15",
+      "competition": "Segunda División RFEF - Group 4",
+      "target": {
+        "home": "Puente Genil",
+        "away": "Atlético Central",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          2,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1573045",
+      "day": "2026-11-15",
+      "competition": "Segunda División RFEF - Group 4",
+      "target": {
+        "home": "Tenerife II",
+        "away": "Linares Deportivo",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1573349",
+      "day": "2026-11-15",
+      "competition": "Segunda División RFEF - Group 5",
+      "target": {
+        "home": "RSD Alcalá",
+        "away": "A Madrid III",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          2,
+          5
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1573351",
+      "day": "2026-11-15",
+      "competition": "Segunda División RFEF - Group 5",
+      "target": {
+        "home": "SS Reyes",
+        "away": "Real Madrid III",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          0,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1573352",
+      "day": "2026-11-15",
+      "competition": "Segunda División RFEF - Group 5",
+      "target": {
+        "home": "Real Valladolid II",
+        "away": "Numancia",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1573643",
+      "day": "2026-11-15",
+      "competition": "Primera División Femenina",
+      "target": {
+        "home": "Madrid CFF W",
+        "away": "Edf Logrono W",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          2,
+          3
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1573645",
+      "day": "2026-11-15",
+      "competition": "Primera División Femenina",
+      "target": {
+        "home": "Real Sociedad W",
+        "away": "Athletic Club W",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          4
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1576530",
+      "day": "2026-11-15",
+      "competition": "Segunda Liga",
+      "target": {
+        "home": "Amarante",
+        "away": "Felgueiras 1932",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1576537",
+      "day": "2026-11-15",
+      "competition": "Segunda Liga",
+      "target": {
+        "home": "Tondela",
+        "away": "Farense",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          2,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1599287",
+      "day": "2026-11-15",
+      "competition": "Central Youth League",
+      "target": {
+        "home": "Zagłębie Lubin U19",
+        "away": "Miedź Legnica U19",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          4
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1612795",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 1",
+      "target": {
+        "home": "Arenteiro",
+        "away": "Villalbés",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          0,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1612797",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 1",
+      "target": {
+        "home": "Celta de Vigo III",
+        "away": "Viveiro",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          2,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1613099",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 2",
+      "target": {
+        "home": "Avilés Stadium",
+        "away": "San Martín",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1613101",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 2",
+      "target": {
+        "home": "Covadonga",
+        "away": "Astur",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          3,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1613102",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 2",
+      "target": {
+        "home": "Sporting Gijón II",
+        "away": "Gijón Industrial",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          5,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1613104",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 2",
+      "target": {
+        "home": "Lealtad",
+        "away": "Mosconia",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1613106",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 2",
+      "target": {
+        "home": "Llanes",
+        "away": "Ceares",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          3,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1613107",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 2",
+      "target": {
+        "home": "Praviano",
+        "away": "Condal",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          3,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1613713",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 4",
+      "target": {
+        "home": "Aurrerá Vitoria",
+        "away": "Beasain",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          0,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1614018",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 5",
+      "target": {
+        "home": "Cerdanyola del Vallès",
+        "away": "San Cristóbal",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          2,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1614019",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 5",
+      "target": {
+        "home": "Vilanova",
+        "away": "Montañesa",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          0,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1614021",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 5",
+      "target": {
+        "home": "L'Hospitalet",
+        "away": "Europa II",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1614022",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 5",
+      "target": {
+        "home": "Mollerussa",
+        "away": "Grama",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          0,
+          3
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1614024",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 5",
+      "target": {
+        "home": "Pobla Mafumet",
+        "away": "San Juan Atletico de Montcada",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          2,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1614631",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 7",
+      "target": {
+        "home": "Colonia Moscardó",
+        "away": "Galapagar",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1614637",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 7",
+      "target": {
+        "home": "Unión Adarve",
+        "away": "Las Rozas",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          0,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1614936",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 8",
+      "target": {
+        "home": "Calasanz de Soria",
+        "away": "Almazán",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          0,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1615241",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 9",
+      "target": {
+        "home": "Almería II",
+        "away": "Melilla",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          0,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1615244",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 9",
+      "target": {
+        "home": "Cantoria",
+        "away": "Mancha Real",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          0,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1615247",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 9",
+      "target": {
+        "home": "Granada II",
+        "away": "Marbelli",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1615249",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 9",
+      "target": {
+        "home": "UD San Pedro",
+        "away": "Huétor Vega",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          3,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1615547",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 10",
+      "target": {
+        "home": "Atlético Onubense",
+        "away": "Chiclana",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          0,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1615549",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 10",
+      "target": {
+        "home": "Utrera",
+        "away": "Bollullos",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          3,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1615551",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 10",
+      "target": {
+        "home": "Córdoba II",
+        "away": "Ceuta II",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          2,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1615552",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 10",
+      "target": {
+        "home": "Dos Hermanas",
+        "away": "San Roque Lepe",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1615554",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 10",
+      "target": {
+        "home": "Pozoblanco",
+        "away": "Betis C",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1615555",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 10",
+      "target": {
+        "home": "Tomares",
+        "away": "Egabrense",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          3
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1615860",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 11",
+      "target": {
+        "home": "Ibiza Islas Pitiusas",
+        "away": "Mercadal",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1616778",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 14",
+      "target": {
+        "home": "Villafranca",
+        "away": "Quintana",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1616779",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 14",
+      "target": {
+        "home": "Villanovense",
+        "away": "Santa Amalia",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1617385",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 16",
+      "target": {
+        "home": "Anguiano",
+        "away": "Comillas",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          4,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1617691",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 17",
+      "target": {
+        "home": "Binéfar",
+        "away": "Épila",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          0,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1617694",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 17",
+      "target": {
+        "home": "Huesca II",
+        "away": "Brea",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          3,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1617697",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 17",
+      "target": {
+        "home": "Real Zaragoza II",
+        "away": "Cuarte",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          0,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1617995",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 18",
+      "target": {
+        "home": "Almansa",
+        "away": "Torrijos",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1623523",
+      "day": "2026-11-15",
+      "competition": "Liga 1 Feminin",
+      "target": {
+        "home": "SSU Poli Timişoara W",
+        "away": "Csikszereda MC W",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1640882",
+      "day": "2026-11-15",
+      "competition": "Diski Challenge",
+      "target": {
+        "home": "Durban City U23",
+        "away": "Golden Arrows U23",
+        "utc": "2026-11-15T14:00:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1572122",
+      "day": "2026-11-15",
+      "competition": "Segunda División RFEF - Group 1",
+      "target": {
+        "home": "Basconia",
+        "away": "Deportivo Alavés II",
+        "utc": "2026-11-15T14:15:00+03:00",
+        "score": [
+          0,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1615245",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 9",
+      "target": {
+        "home": "Alhaurino",
+        "away": "Torre del Mar",
+        "utc": "2026-11-15T14:15:00+03:00",
+        "score": [
+          3,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1571620",
+      "day": "2026-11-15",
+      "competition": "Second League",
+      "target": {
+        "home": "Dobrudzha",
+        "away": "Etar Veliko Tarnovo",
+        "utc": "2026-11-15T14:30:00+03:00",
+        "score": [
+          2,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1573040",
+      "day": "2026-11-15",
+      "competition": "Segunda División RFEF - Group 4",
+      "target": {
+        "home": "Las Palmas II",
+        "away": "Ciudad de Lucena",
+        "utc": "2026-11-15T14:30:00+03:00",
+        "score": [
+          4,
+          3
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1577600",
+      "day": "2026-11-15",
+      "competition": "First League",
+      "target": {
+        "home": "FC UFA",
+        "away": "Spartak Kostroma",
+        "utc": "2026-11-15T14:30:00+03:00",
+        "score": [
+          3,
+          3
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1601289",
+      "day": "2026-11-15",
+      "competition": "Serie A Women",
+      "target": {
+        "home": "Sassuolo W",
+        "away": "Ternana W",
+        "utc": "2026-11-15T14:30:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1608367",
+      "day": "2026-11-15",
+      "competition": "Serie C - Girone A",
+      "target": {
+        "home": "Novara",
+        "away": "Lecco",
+        "utc": "2026-11-15T14:30:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1609127",
+      "day": "2026-11-15",
+      "competition": "Serie C - Girone C",
+      "target": {
+        "home": "Giugliano",
+        "away": "Savoia",
+        "utc": "2026-11-15T14:30:00+03:00",
+        "score": [
+          2,
+          3
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1612800",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 1",
+      "target": {
+        "home": "Silva",
+        "away": "Alondras",
+        "utc": "2026-11-15T14:30:00+03:00",
+        "score": [
+          2,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1614020",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 5",
+      "target": {
+        "home": "Cornellà",
+        "away": "L'Escala",
+        "utc": "2026-11-15T14:30:00+03:00",
+        "score": [
+          3,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1615242",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 9",
+      "target": {
+        "home": "Atletico de Marbella",
+        "away": "Malaga City",
+        "utc": "2026-11-15T14:30:00+03:00",
+        "score": [
+          0,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1615246",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 9",
+      "target": {
+        "home": "Churriana Vega",
+        "away": "Motril",
+        "utc": "2026-11-15T14:30:00+03:00",
+        "score": [
+          0,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1616771",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 14",
+      "target": {
+        "home": "Azuaga",
+        "away": "Puebla Calzada",
+        "utc": "2026-11-15T14:30:00+03:00",
+        "score": [
+          1,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1616772",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 14",
+      "target": {
+        "home": "Cabeza Buey",
+        "away": "Castuera",
+        "utc": "2026-11-15T14:30:00+03:00",
+        "score": [
+          0,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1616775",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 14",
+      "target": {
+        "home": "Jerez",
+        "away": "Moralo",
+        "utc": "2026-11-15T14:30:00+03:00",
+        "score": [
+          2,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1616777",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 14",
+      "target": {
+        "home": "Montijo",
+        "away": "Plasencia",
+        "utc": "2026-11-15T14:30:00+03:00",
+        "score": [
+          0,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1618001",
+      "day": "2026-11-15",
+      "competition": "Tercera División RFEF - Group 18",
+      "target": {
+        "home": "San Clemente",
+        "away": "Illescas",
+        "utc": "2026-11-15T14:30:00+03:00",
+        "score": [
+          2,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1554224",
+      "day": "2026-11-15",
+      "competition": "Prva Liga",
+      "target": {
+        "home": "OFK Vršac",
+        "away": "Javor",
+        "utc": "2026-11-15T15:00:00+03:00",
+        "score": [
+          1,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1559002",
+      "day": "2026-11-15",
+      "competition": "2. SNL",
+      "target": {
+        "home": "Primorje",
+        "away": "Jesenice",
+        "utc": "2026-11-15T15:00:00+03:00",
+        "score": [
+          4,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1568560",
+      "day": "2026-11-15",
+      "competition": "III Liga - Group 3",
+      "target": {
+        "home": "Stal Brzeg",
+        "away": "Zaglebie Sosnowiec",
+        "utc": "2026-11-15T15:00:00+03:00",
+        "score": [
+          1,
+          3
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1573044",
+      "day": "2026-11-15",
+      "competition": "Segunda División RFEF - Group 4",
+      "target": {
+        "home": "Tamaraceite",
+        "away": "Marbella",
+        "utc": "2026-11-15T15:00:00+03:00",
+        "score": [
+          0,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1575847",
+      "day": "2026-11-15",
+      "competition": "2. Division",
+      "target": {
+        "home": "Naestved",
+        "away": "FA 2000",
+        "utc": "2026-11-15T15:00:00+03:00",
+        "score": [
+          3,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1581972",
+      "day": "2026-11-15",
+      "competition": "Persha Liga",
+      "target": {
+        "home": "Nyva Ternopil",
+        "away": "Oleksandria",
+        "utc": "2026-11-15T15:00:00+03:00",
+        "score": [
+          0,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1582161",
+      "day": "2026-11-15",
+      "competition": "Kvindeliga",
+      "target": {
+        "home": "FC Copenhagen W",
+        "away": "Midtjylland W",
+        "utc": "2026-11-15T15:00:00+03:00",
+        "score": [
+          0,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1590469",
+      "day": "2026-11-15",
+      "competition": "3. Lig - Group 1",
+      "target": {
+        "home": "Beykoz İshaklıspor",
+        "away": "Karabük İdman Yurdu",
+        "utc": "2026-11-15T15:00:00+03:00",
+        "score": [
+          0,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1590472",
+      "day": "2026-11-15",
+      "competition": "3. Lig - Group 1",
+      "target": {
+        "home": "Gölcükspor",
+        "away": "Tokat Bld Plevnespor",
+        "utc": "2026-11-15T15:00:00+03:00",
+        "score": [
+          3,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-15&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1646438",
+      "day": "2026-11-16",
+      "competition": "Kings Cup",
+      "target": {
+        "home": "Dibrados FC",
+        "away": "Fluxo",
+        "utc": "2026-11-17T00:00:00+03:00",
+        "score": [
+          6,
+          8
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-16&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1646440",
+      "day": "2026-11-16",
+      "competition": "Kings Cup",
+      "target": {
+        "home": "Furia",
+        "away": "Funkbol",
+        "utc": "2026-11-17T01:00:00+03:00",
+        "score": [
+          4,
+          5
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-16&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1646441",
+      "day": "2026-11-16",
+      "competition": "Kings Cup",
+      "target": {
+        "home": "G3X",
+        "away": "Capim",
+        "utc": "2026-11-17T02:00:00+03:00",
+        "score": [
+          2,
+          5
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-16&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1649063",
+      "day": "2026-11-16",
+      "competition": "Primera División",
+      "target": {
+        "home": "Wanderers",
+        "away": "Juventud",
+        "utc": "2026-11-17T02:00:00+03:00",
+        "score": [
+          2,
+          1
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-16&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1646421",
+      "day": "2026-11-17",
+      "competition": "Kings Cup",
+      "target": {
+        "home": "Dendele",
+        "away": "Loud",
+        "utc": "2026-11-17T03:00:00+03:00",
+        "score": [
+          3,
+          4
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-17&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1647127",
+      "day": "2026-11-17",
+      "competition": "Division di Honor",
+      "target": {
+        "home": "Nacional",
+        "away": "La Fama",
+        "utc": "2026-11-17T03:30:00+03:00",
+        "score": [
+          1,
+          6
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-17&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1648349",
+      "day": "2026-11-17",
+      "competition": "Liga de Ascenso",
+      "target": {
+        "home": "Pitbulls Santa Barbara FC",
+        "away": "Rosario",
+        "utc": "2026-11-17T04:00:00+03:00",
+        "score": [
+          2,
+          0
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-17&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1649528",
+      "day": "2026-11-17",
+      "competition": "USL Championship",
+      "target": {
+        "home": "New Mexico United",
+        "away": "Sacramento Republic",
+        "utc": "2026-11-17T05:00:00+03:00",
+        "score": [
+          1,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-17&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    },
+    {
+      "id": "1636040",
+      "day": "2026-11-17",
+      "competition": "Primera Premier",
+      "target": {
+        "home": "Irapuato",
+        "away": "Celaya",
+        "utc": "2026-11-17T05:05:00+03:00",
+        "score": [
+          1,
+          2
+        ]
+      },
+      "index_url": "https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-11-17&status=finished&limit=1000",
+      "status": "no_match_in_bounded_index",
+      "candidates": []
+    }
+  ],
+  "promoted": [
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-10-10T16:00:00+00:00-Zimbabwe-South Africa",
+      "event_id": "687189",
+      "source_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687189/competitions/687189/competitors/4214/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687189/competitions/687189/competitors/467/statistics"
+      ]
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-17T16:30:00+00:00-Qatar-Zimbabwe",
+      "event_id": "760915",
+      "source_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/760915/competitions/760915/competitors/4398/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/760915/competitions/760915/competitors/4214/statistics"
+      ]
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-22T20:00:00+00:00-Egypt-Zimbabwe",
+      "event_id": "732135",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732135"
+      ]
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-26T12:30:00+00:00-Angola-Zimbabwe",
+      "event_id": "732145",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732145"
+      ]
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-29T16:00:00+00:00-Zimbabwe-South Africa",
+      "event_id": "732159",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732159"
+      ]
+    }
+  ],
+  "live_writes": 0
+}

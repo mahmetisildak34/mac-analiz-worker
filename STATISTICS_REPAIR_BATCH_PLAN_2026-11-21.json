@@ -9879,9 +9879,9 @@
     "pending": 0,
     "identity_verified_explicit": 488,
     "score_verified_explicit": 485,
-    "partial_statistics_verified": 53,
+    "partial_statistics_verified": 48,
     "partial_alternate_unverified": 4,
-    "full_statistics_manifest": 69,
+    "full_statistics_manifest": 74,
     "unavailable_in_checked_source": 151,
     "source_unreachable": 1,
     "source_not_queried_quota": 179,
@@ -10050,12 +10050,12 @@
       "UEFA|conference-league 2026|unknown|unconfirmed": 6,
       "SportScore|UEFA European U21 Championship qualification|unknown|partial": 18,
       "SportScore|International Friendly|unknown|event_not_confirmed": 7,
-      "SportScore|International Friendly|unknown|partial": 11,
+      "SportScore|International Friendly|unknown|partial": 10,
       "SportScore|International Friendly|unknown|source_unreachable": 1,
       "SportScore|CAF South Africa Confederations Cup|unknown|event_not_confirmed": 1,
       "SportScore|CAF South Africa Confederations Cup|unknown|partial": 1,
-      "SportScore|FIFA World Cup qualification (CAF)|unknown|partial": 4,
-      "SportScore|CAF Africa Cup of Nations|unknown|partial": 4,
+      "SportScore|FIFA World Cup qualification (CAF)|unknown|partial": 3,
+      "SportScore|CAF Africa Cup of Nations|unknown|partial": 1,
       "SportScore|European Mediterranean Football Games|unknown|unavailable_in_checked_source": 2,
       "SportScore|European Mediterranean Football Games|unknown|event_not_confirmed": 1,
       "SportScore|Spanish Segunda División RFEF|unknown|event_not_confirmed": 6,
@@ -10074,7 +10074,10 @@
       "API-Football|J-League Cup|unknown|partial": 2,
       "API-Football|Lao League|unknown|partial": 1,
       "API-Football|CONCACAF Nations League|unknown|partial": 3,
-      "SportScore|UEFA European U21 Championship qualification|unknown|full": 1
+      "SportScore|UEFA European U21 Championship qualification|unknown|full": 1,
+      "SportScore|FIFA World Cup qualification (CAF)|unknown|full": 1,
+      "SportScore|International Friendly|unknown|full": 1,
+      "SportScore|CAF Africa Cup of Nations|unknown|full": 3
     }
   }
 }

@@ -1,8 +1,8 @@
 {
   "date": "2026-11-21",
-  "total": 69,
+  "total": 74,
   "live_apply_approved": false,
-  "data_eligible": 37,
+  "data_eligible": 42,
   "rows": [
     {
       "source": "ESPN",
@@ -1797,6 +1797,131 @@
       "statistics_sha256": "99e77ea55034261c853e1c900c986636e5c69e863cfcd2b81ff6b48daa34633f",
       "provider_url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.euro_u21_qual/events/732514/competitions/732514/competitors/20931/statistics",
       "current_archive_updated_at": "2026-11-16 08:43:38",
+      "revalidated_source_snapshot": true,
+      "strict_metrics": "verified_full",
+      "reasons": [],
+      "candidate_data_eligible": true,
+      "live_apply_approved": false
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-10-10T16:00:00+00:00-Zimbabwe-South Africa",
+      "provider": "ESPN",
+      "provider_event_id": "687189",
+      "kickoff": "2025-10-10T16:00:00+00:00",
+      "home": {
+        "id": "4214",
+        "name": "Zimbabwe",
+        "goals": 0
+      },
+      "away": {
+        "id": "467",
+        "name": "South Africa",
+        "goals": 0
+      },
+      "statistics_sha256": "f0db5e2aca67de999b88755f5c312785de4da3ae3d683b431bb17373b16334b0",
+      "provider_url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687189/competitions/687189/competitors/4214/statistics",
+      "current_archive_updated_at": "2026-11-16 15:23:59",
+      "revalidated_source_snapshot": true,
+      "strict_metrics": "verified_full",
+      "reasons": [],
+      "candidate_data_eligible": true,
+      "live_apply_approved": false
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-17T16:30:00+00:00-Qatar-Zimbabwe",
+      "provider": "ESPN",
+      "provider_event_id": "760915",
+      "kickoff": "2025-11-17T16:30:00+00:00",
+      "home": {
+        "id": "4398",
+        "name": "Qatar",
+        "goals": 1
+      },
+      "away": {
+        "id": "4214",
+        "name": "Zimbabwe",
+        "goals": 2
+      },
+      "statistics_sha256": "4cdba634606ede8eb05999097b6483ae10c43e7c0fc18e80999bc6a0100f7624",
+      "provider_url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/760915/competitions/760915/competitors/4398/statistics",
+      "current_archive_updated_at": "2026-11-16 15:23:59",
+      "revalidated_source_snapshot": true,
+      "strict_metrics": "verified_full",
+      "reasons": [],
+      "candidate_data_eligible": true,
+      "live_apply_approved": false
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-22T20:00:00+00:00-Egypt-Zimbabwe",
+      "provider": "ESPN",
+      "provider_event_id": "732135",
+      "kickoff": "2025-12-22T20:00:00+00:00",
+      "home": {
+        "id": "2620",
+        "name": "Egypt",
+        "goals": 2
+      },
+      "away": {
+        "id": "4214",
+        "name": "Zimbabwe",
+        "goals": 1
+      },
+      "statistics_sha256": "49def68f243a0d805884c708c0cfb9807dd3f44177fb6702c6ea7cfe0f7ea308",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732135",
+      "current_archive_updated_at": "2026-11-16 15:23:59",
+      "revalidated_source_snapshot": true,
+      "strict_metrics": "verified_full",
+      "reasons": [],
+      "candidate_data_eligible": true,
+      "live_apply_approved": false
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-26T12:30:00+00:00-Angola-Zimbabwe",
+      "provider": "ESPN",
+      "provider_event_id": "732145",
+      "kickoff": "2025-12-26T12:30:00+00:00",
+      "home": {
+        "id": "653",
+        "name": "Angola",
+        "goals": 1
+      },
+      "away": {
+        "id": "4214",
+        "name": "Zimbabwe",
+        "goals": 1
+      },
+      "statistics_sha256": "a1cd910f943b55f678a2a48b0eab63a20ca9df68f19deca991a5cdf010ba7036",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732145",
+      "current_archive_updated_at": "2026-11-16 15:23:59",
+      "revalidated_source_snapshot": true,
+      "strict_metrics": "verified_full",
+      "reasons": [],
+      "candidate_data_eligible": true,
+      "live_apply_approved": false
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-29T16:00:00+00:00-Zimbabwe-South Africa",
+      "provider": "ESPN",
+      "provider_event_id": "732159",
+      "kickoff": "2025-12-29T16:00:00+00:00",
+      "home": {
+        "id": "4214",
+        "name": "Zimbabwe",
+        "goals": 2
+      },
+      "away": {
+        "id": "467",
+        "name": "South Africa",
+        "goals": 3
+      },
+      "statistics_sha256": "b3368a6138ef1e754f83fdc6535788534bf1a238418ea915631bef5fae935c22",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732159",
+      "current_archive_updated_at": "2026-11-16 15:23:59",
       "revalidated_source_snapshot": true,
       "strict_metrics": "verified_full",
       "reasons": [],

@@ -6,10 +6,10 @@
   "protected_existing_manifest": "STATISTICS_REPAIR_INVENTORY_2026-11-21.json",
   "candidate_inventory": "STATISTICS_REPAIR_CANDIDATE_INVENTORY_2026-11-21.json",
   "counts": {
-    "full": 69,
+    "full": 74,
     "partial": 0,
     "ambiguous": 0,
-    "unavailable_or_not_yet_checked": 609,
+    "unavailable_or_not_yet_checked": 604,
     "pending_source_provenance_review": 1
   },
   "policy": {
@@ -2383,6 +2383,205 @@
       "statistics_class": "full",
       "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"20931\",\"name\":\"Montenegro U21\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayName\":\"Fouls Committed\",\"shortDisplayName\":\"FC\",\"description\":\"The number of fouls comitted by a player or team.\",\"abbreviation\":\"FC\",\"value\":16,\"displayValue\":\"16\"},{\"name\":\"redCards\",\"displayName\":\"Red Cards\",\"shortDisplayName\":\"RC\",\"description\":\"The number of red cards that have been issued.\",\"abbreviation\":\"RC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"wonCorners\",\"displayName\":\"Corners Won\",\"shortDisplayName\":\"CW\",\"description\":\"The number of corners won.\",\"abbreviation\":\"CW\",\"value\":3,\"displayValue\":\"3\"},{\"name\":\"yellowCards\",\"displayName\":\"Yellow Cards\",\"shortDisplayName\":\"YC\",\"description\":\"The number of yellow cards accumulated.\",\"abbreviation\":\"YC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"possessionPct\",\"displayName\":\"Possession Percentage\",\"shortDisplayName\":\"PP\",\"description\":\"The percentage of the game this team had possession\",\"abbreviation\":\"PP\",\"value\":43.7,\"displayValue\":\"43.7\"},{\"name\":\"shotsOnTarget\",\"displayName\":\"Shots On Goal\",\"shortDisplayName\":\"SOG\",\"description\":\"The number of shots that are on goal.\",\"abbreviation\":\"SOG\",\"value\":3,\"displayValue\":\"3\"},{\"name\":\"totalShots\",\"displayName\":\"Shots\",\"shortDisplayName\":\"SHOT\",\"description\":\"The number of shots attempted.\",\"abbreviation\":\"SHOT\",\"value\":6,\"displayValue\":\"6\"}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"10343\",\"name\":\"Italy U21\"},\"statistics\":[{\"name\":\"foulsCommitted\",\"displayName\":\"Fouls Committed\",\"shortDisplayName\":\"FC\",\"description\":\"The number of fouls comitted by a player or team.\",\"abbreviation\":\"FC\",\"value\":16,\"displayValue\":\"16\"},{\"name\":\"redCards\",\"displayName\":\"Red Cards\",\"shortDisplayName\":\"RC\",\"description\":\"The number of red cards that have been issued.\",\"abbreviation\":\"RC\",\"value\":0,\"displayValue\":\"0\"},{\"name\":\"wonCorners\",\"displayName\":\"Corners Won\",\"shortDisplayName\":\"CW\",\"description\":\"The number of corners won.\",\"abbreviation\":\"CW\",\"value\":6,\"displayValue\":\"6\"},{\"name\":\"yellowCards\",\"displayName\":\"Yellow Cards\",\"shortDisplayName\":\"YC\",\"description\":\"The number of yellow cards accumulated.\",\"abbreviation\":\"YC\",\"value\":2,\"displayValue\":\"2\"},{\"name\":\"possessionPct\",\"displayName\":\"Possession Percentage\",\"shortDisplayName\":\"PP\",\"description\":\"The percentage of the game this team had possession\",\"abbreviation\":\"PP\",\"value\":56.3,\"displayValue\":\"56.3\"},{\"name\":\"shotsOnTarget\",\"displayName\":\"Shots On Goal\",\"shortDisplayName\":\"SOG\",\"description\":\"The number of shots that are on goal.\",\"abbreviation\":\"SOG\",\"value\":6,\"displayValue\":\"6\"},{\"name\":\"totalShots\",\"displayName\":\"Shots\",\"shortDisplayName\":\"SHOT\",\"description\":\"The number of shots attempted.\",\"abbreviation\":\"SHOT\",\"value\":22,\"displayValue\":\"22\"}]}]}",
       "statistics_sha256": "99e77ea55034261c853e1c900c986636e5c69e863cfcd2b81ff6b48daa34633f",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      },
+      "transfer_ready": false
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-10-10T16:00:00+00:00-Zimbabwe-South Africa",
+      "kickoff": "2025-10-10T16:00:00+00:00",
+      "status": "FT",
+      "league": {
+        "id": "fifa.worldq.caf",
+        "name": "FIFA World Cup qualification (CAF)"
+      },
+      "home": {
+        "id": "4214",
+        "name": "Zimbabwe",
+        "goals": 0
+      },
+      "away": {
+        "id": "467",
+        "name": "South Africa",
+        "goals": 0
+      },
+      "provider": "ESPN",
+      "provider_event_id": "687189",
+      "provider_url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687189/competitions/687189/competitors/4214/statistics",
+      "source_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687189/competitions/687189/competitors/4214/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.worldq.caf/events/687189/competitions/687189/competitors/467/statistics"
+      ],
+      "source_payload_hashes": [
+        "ba5ed0bdd7bdfdb0633218755203d37ebf0d576256fa87ce1b715a47e7a20204",
+        "e6a42f8fc27c554b3539242e670f274e7d9176f4679aebd088e9359c0e952c85"
+      ],
+      "source_payload_sha256": "d9313b158104ab0c57c297705c9cb918549d9440e2c149a62b35d0451a6f68f6",
+      "statistics_class": "full",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"4214\",\"name\":\"Zimbabwe\"},\"statistics\":[{\"name\":\"totalShots\",\"value\":6},{\"name\":\"shotsOnTarget\",\"value\":2},{\"name\":\"possessionPct\",\"value\":30},{\"name\":\"wonCorners\",\"value\":4},{\"name\":\"foulsCommitted\",\"value\":16},{\"name\":\"yellowCards\",\"value\":2},{\"name\":\"redCards\",\"value\":1}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"467\",\"name\":\"South Africa\"},\"statistics\":[{\"name\":\"totalShots\",\"value\":24},{\"name\":\"shotsOnTarget\",\"value\":3},{\"name\":\"possessionPct\",\"value\":70},{\"name\":\"wonCorners\",\"value\":14},{\"name\":\"foulsCommitted\",\"value\":16},{\"name\":\"yellowCards\",\"value\":0},{\"name\":\"redCards\",\"value\":1}]}]}",
+      "statistics_sha256": "f0db5e2aca67de999b88755f5c312785de4da3ae3d683b431bb17373b16334b0",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      },
+      "transfer_ready": false
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-11-17T16:30:00+00:00-Qatar-Zimbabwe",
+      "kickoff": "2025-11-17T16:30:00+00:00",
+      "status": "FT",
+      "league": {
+        "id": "fifa.friendly",
+        "name": "International Friendly"
+      },
+      "home": {
+        "id": "4398",
+        "name": "Qatar",
+        "goals": 1
+      },
+      "away": {
+        "id": "4214",
+        "name": "Zimbabwe",
+        "goals": 2
+      },
+      "provider": "ESPN",
+      "provider_event_id": "760915",
+      "provider_url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/760915/competitions/760915/competitors/4398/statistics",
+      "source_urls": [
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/760915/competitions/760915/competitors/4398/statistics",
+        "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/760915/competitions/760915/competitors/4214/statistics"
+      ],
+      "source_payload_hashes": [
+        "0d32cd9b9d4839c3f9e3d8366cdb2cdc6ef92c9ee9165af6c19b5f44bbde0614",
+        "3be7d30b57fba1a04c128115979912291eb8691ee69e2410f78dbf6c5e5ac98a"
+      ],
+      "source_payload_sha256": "8992e82c2b356038541fed3d43c3728900e0bf6127ccff15a5a3accc31874a9f",
+      "statistics_class": "full",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"4398\",\"name\":\"Qatar\"},\"statistics\":[{\"name\":\"totalShots\",\"value\":8},{\"name\":\"shotsOnTarget\",\"value\":5},{\"name\":\"possessionPct\",\"value\":69.2},{\"name\":\"wonCorners\",\"value\":6},{\"name\":\"foulsCommitted\",\"value\":15},{\"name\":\"yellowCards\",\"value\":0},{\"name\":\"redCards\",\"value\":0}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"4214\",\"name\":\"Zimbabwe\"},\"statistics\":[{\"name\":\"totalShots\",\"value\":7},{\"name\":\"shotsOnTarget\",\"value\":3},{\"name\":\"possessionPct\",\"value\":30.8},{\"name\":\"wonCorners\",\"value\":6},{\"name\":\"foulsCommitted\",\"value\":10},{\"name\":\"yellowCards\",\"value\":1},{\"name\":\"redCards\",\"value\":0}]}]}",
+      "statistics_sha256": "4cdba634606ede8eb05999097b6483ae10c43e7c0fc18e80999bc6a0100f7624",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      },
+      "transfer_ready": false
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-22T20:00:00+00:00-Egypt-Zimbabwe",
+      "kickoff": "2025-12-22T20:00:00+00:00",
+      "status": "FT",
+      "league": {
+        "id": "caf.nations",
+        "name": "CAF Africa Cup of Nations"
+      },
+      "home": {
+        "id": "2620",
+        "name": "Egypt",
+        "goals": 2
+      },
+      "away": {
+        "id": "4214",
+        "name": "Zimbabwe",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "provider_event_id": "732135",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732135",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732135"
+      ],
+      "source_payload_hashes": [
+        "167615b50df5d722096177a660955f6e24f9cf5b6ccd8bca2d756c6f0c9b9e14"
+      ],
+      "source_payload_sha256": "9d155c49452f0eb0cb2ca4ae75f994f46120ca9003d41164eae301450d9f47ea",
+      "statistics_class": "full",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"2620\",\"name\":\"Egypt\"},\"statistics\":[{\"name\":\"totalShots\",\"value\":35},{\"name\":\"shotsOnTarget\",\"value\":11},{\"name\":\"possessionPct\",\"value\":77.5},{\"name\":\"wonCorners\",\"value\":8},{\"name\":\"foulsCommitted\",\"value\":13},{\"name\":\"yellowCards\",\"value\":2},{\"name\":\"redCards\",\"value\":0}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"4214\",\"name\":\"Zimbabwe\"},\"statistics\":[{\"name\":\"totalShots\",\"value\":8},{\"name\":\"shotsOnTarget\",\"value\":3},{\"name\":\"possessionPct\",\"value\":22.5},{\"name\":\"wonCorners\",\"value\":3},{\"name\":\"foulsCommitted\",\"value\":15},{\"name\":\"yellowCards\",\"value\":2},{\"name\":\"redCards\",\"value\":0}]}]}",
+      "statistics_sha256": "49def68f243a0d805884c708c0cfb9807dd3f44177fb6702c6ea7cfe0f7ea308",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      },
+      "transfer_ready": false
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-26T12:30:00+00:00-Angola-Zimbabwe",
+      "kickoff": "2025-12-26T12:30:00+00:00",
+      "status": "FT",
+      "league": {
+        "id": "caf.nations",
+        "name": "CAF Africa Cup of Nations"
+      },
+      "home": {
+        "id": "653",
+        "name": "Angola",
+        "goals": 1
+      },
+      "away": {
+        "id": "4214",
+        "name": "Zimbabwe",
+        "goals": 1
+      },
+      "provider": "ESPN",
+      "provider_event_id": "732145",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732145",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732145"
+      ],
+      "source_payload_hashes": [
+        "b9c00039498613437b5d49c22a8e705d3cf7130f18afd73bc4782bb91938544a"
+      ],
+      "source_payload_sha256": "bb1603234cc1b2bec77d74a3a2277c95ffb45ae4bbaf94362cbe73b9d45bd35b",
+      "statistics_class": "full",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"653\",\"name\":\"Angola\"},\"statistics\":[{\"name\":\"totalShots\",\"value\":15},{\"name\":\"shotsOnTarget\",\"value\":6},{\"name\":\"possessionPct\",\"value\":62.8},{\"name\":\"wonCorners\",\"value\":5},{\"name\":\"foulsCommitted\",\"value\":17},{\"name\":\"yellowCards\",\"value\":3},{\"name\":\"redCards\",\"value\":0}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"4214\",\"name\":\"Zimbabwe\"},\"statistics\":[{\"name\":\"totalShots\",\"value\":17},{\"name\":\"shotsOnTarget\",\"value\":4},{\"name\":\"possessionPct\",\"value\":37.2},{\"name\":\"wonCorners\",\"value\":6},{\"name\":\"foulsCommitted\",\"value\":24},{\"name\":\"yellowCards\",\"value\":4},{\"name\":\"redCards\",\"value\":0}]}]}",
+      "statistics_sha256": "a1cd910f943b55f678a2a48b0eab63a20ca9df68f19deca991a5cdf010ba7036",
+      "verification": {
+        "identity": true,
+        "score": true,
+        "all_required_metrics": true
+      },
+      "transfer_ready": false
+    },
+    {
+      "source": "app",
+      "fixture_id": "sportscore-2025-12-29T16:00:00+00:00-Zimbabwe-South Africa",
+      "kickoff": "2025-12-29T16:00:00+00:00",
+      "status": "FT",
+      "league": {
+        "id": "caf.nations",
+        "name": "CAF Africa Cup of Nations"
+      },
+      "home": {
+        "id": "4214",
+        "name": "Zimbabwe",
+        "goals": 2
+      },
+      "away": {
+        "id": "467",
+        "name": "South Africa",
+        "goals": 3
+      },
+      "provider": "ESPN",
+      "provider_event_id": "732159",
+      "provider_url": "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732159",
+      "source_urls": [
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations/summary?event=732159"
+      ],
+      "source_payload_hashes": [
+        "2599594bd0fd48c250cab53d8b7418e2158f2a31ea06fc7700c0e781b752149c"
+      ],
+      "source_payload_sha256": "655b42869625fbc72103fb0ad248bf012c8b184bc300b6cc6964133aec8afa23",
+      "statistics_class": "full",
+      "statistics_json": "{\"teams\":[{\"homeAway\":\"home\",\"team\":{\"id\":\"4214\",\"name\":\"Zimbabwe\"},\"statistics\":[{\"name\":\"totalShots\",\"value\":10},{\"name\":\"shotsOnTarget\",\"value\":3},{\"name\":\"possessionPct\",\"value\":34},{\"name\":\"wonCorners\",\"value\":3},{\"name\":\"foulsCommitted\",\"value\":14},{\"name\":\"yellowCards\",\"value\":1},{\"name\":\"redCards\",\"value\":0}]},{\"homeAway\":\"away\",\"team\":{\"id\":\"467\",\"name\":\"South Africa\"},\"statistics\":[{\"name\":\"totalShots\",\"value\":16},{\"name\":\"shotsOnTarget\",\"value\":9},{\"name\":\"possessionPct\",\"value\":66},{\"name\":\"wonCorners\",\"value\":3},{\"name\":\"foulsCommitted\",\"value\":11},{\"name\":\"yellowCards\",\"value\":1},{\"name\":\"redCards\",\"value\":0}]}]}",
+      "statistics_sha256": "b3368a6138ef1e754f83fdc6535788534bf1a238418ea915631bef5fae935c22",
       "verification": {
         "identity": true,
         "score": true,
