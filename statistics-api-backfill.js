@@ -72,7 +72,10 @@ export async function fetchVerifiedFixtureStatistics(env,fixture,request=fetch) 
   const body=await response.json().catch(()=>null);
   if(!body||!Array.isArray(body.response)||body.response.length!==2||!body.response.every(x=>x.team?.id&&Array.isArray(x.statistics)))
     return {state:"unusable"};
-  // This module returns verified candidate data; caller must additionally verify home/away team IDs
-  // against the fixture before performing a conditional, empty-only D1 UPDATE.
-  return {state:"candidate",statistics:body.response,quotaReserved:true};
+  const homeId=String(fixture.home_team_id),awayId=String(fixture.away_team_id);
+  const home=body.response.find(x=>String(x.team.id)===homeId);
+  const away=body.response.find(x=>String(x.team.id)===awayId);
+  if(!home||!away||home===away||!home.statistics.length||!away.statistics.length) return {state:"unusable"};
+  // Return provider results in the fixture's validated home/away order.
+  return {state:"candidate",statistics:[home,away],quotaReserved:true};
 }
