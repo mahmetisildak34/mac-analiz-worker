@@ -20,6 +20,8 @@ on:
       - "tests/espn-core-statistics-fallback.test.mjs"
       - "tests/summary-statistics-overwrite-guard.test.mjs"
       - "tests/team-name-aliases.test.mjs"
+      - "tests/statistics-manifest-batch-integrity.test.mjs"
+      - "STATISTICS_REPAIR_*_2026-11-21.json"
       - ".github/workflows/bulk-statistics-repair-safety.yml"
   pull_request:
     branches:
@@ -80,6 +82,8 @@ jobs:
           node tests/espn-summary-source-alias.test.mjs
           node tests/espn-core-statistics-fallback.test.mjs
           node tests/summary-statistics-overwrite-guard.test.mjs
+      - name: Verify protected manifest and 28 research batches
+        run: node tests/statistics-manifest-batch-integrity.test.mjs
       - name: Run cross-source matching tests
         run: |
           node tests/cross-source-enrichment.test.mjs
