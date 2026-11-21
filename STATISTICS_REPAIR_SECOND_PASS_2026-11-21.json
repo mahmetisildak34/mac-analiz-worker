@@ -1,0 +1,511 @@
+{
+  "date": "2026-11-21",
+  "category_counts": {
+    "unavailable_in_checked_source": 150,
+    "source_unreachable": 1,
+    "event_not_confirmed": 24,
+    "partial": 39,
+    "source_not_queried_quota": 194
+  },
+  "unique_category_rows": 408,
+  "related_archive_rows": 18,
+  "category_rows_also_related": 0,
+  "category_rows_also_in_full_manifest": 1,
+  "source_pass": {
+    "espn_core": [
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-esp.copa_del_rey-401918510",
+        "provider_event_id": "401918510",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "133836",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918510/competitions/401918510/competitors/133836/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "133847",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918510/competitions/401918510/competitors/133847/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-esp.copa_del_rey-401918748",
+        "provider_event_id": "401918748",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "133838",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918748/competitions/401918748/competitors/133838/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "20776",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918748/competitions/401918748/competitors/20776/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-esp.copa_del_rey-401918751",
+        "provider_event_id": "401918751",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "22372",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918751/competitions/401918751/competitors/22372/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "131403",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918751/competitions/401918751/competitors/131403/statistics",
+            "result": "connection_timeout"
+          }
+        ]
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-esp.copa_del_rey-401918752",
+        "provider_event_id": "401918752",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "18334",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918752/competitions/401918752/competitors/18334/statistics",
+            "result": "connection_timeout"
+          },
+          {
+            "side": "away",
+            "team_id": "133840",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918752/competitions/401918752/competitors/133840/statistics",
+            "result": "connection_timeout"
+          }
+        ]
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-esp.copa_del_rey-401918753",
+        "provider_event_id": "401918753",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "133850",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918753/competitions/401918753/competitors/133850/statistics",
+            "result": "connection_timeout"
+          },
+          {
+            "side": "away",
+            "team_id": "133842",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918753/competitions/401918753/competitors/133842/statistics",
+            "result": "connection_timeout"
+          }
+        ]
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-esp.copa_del_rey-401918757",
+        "provider_event_id": "401918757",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "133843",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918757/competitions/401918757/competitors/133843/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "133841",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918757/competitions/401918757/competitors/133841/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-esp.copa_del_rey-401918758",
+        "provider_event_id": "401918758",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "133833",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918758/competitions/401918758/competitors/133833/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "133831",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918758/competitions/401918758/competitors/133831/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-esp.copa_del_rey-401918759",
+        "provider_event_id": "401918759",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "131419",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918759/competitions/401918759/competitors/131419/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "133832",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918759/competitions/401918759/competitors/133832/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-esp.copa_del_rey-401918760",
+        "provider_event_id": "401918760",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "133851",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918760/competitions/401918760/competitors/133851/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "133844",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918760/competitions/401918760/competitors/133844/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-esp.copa_del_rey-401918761",
+        "provider_event_id": "401918761",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "133846",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918761/competitions/401918761/competitors/133846/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "131412",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.copa_del_rey/events/401918761/competitions/401918761/competitors/131412/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "app",
+        "fixture_id": "espn-fifa.friendly-401930237",
+        "provider_event_id": "401930237",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "2405",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/401930237/competitions/401930237/competitors/2405/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "6014",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/401930237/competitions/401930237/competitors/6014/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "app",
+        "fixture_id": "espn-fifa.friendly-401930242",
+        "provider_event_id": "401930242",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "6724",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/401930242/competitions/401930242/competitors/6724/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "7349",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fifa.friendly/events/401930242/competitions/401930242/competitors/7349/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-fra.coupe_de_france-401932737",
+        "provider_event_id": "401932737",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "134127",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932737/competitions/401932737/competitors/134127/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "134135",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932737/competitions/401932737/competitors/134135/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-fra.coupe_de_france-401932738",
+        "provider_event_id": "401932738",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "134134",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932738/competitions/401932738/competitors/134134/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "134063",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932738/competitions/401932738/competitors/134063/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "app",
+        "fixture_id": "espn-fra.coupe_de_france-401932739",
+        "provider_event_id": "401932739",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "134081",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932739/competitions/401932739/competitors/134081/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "134089",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932739/competitions/401932739/competitors/134089/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-fra.coupe_de_france-401932740",
+        "provider_event_id": "401932740",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "134150",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932740/competitions/401932740/competitors/134150/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "22138",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932740/competitions/401932740/competitors/22138/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "app",
+        "fixture_id": "espn-fra.coupe_de_france-401932741",
+        "provider_event_id": "401932741",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "134133",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932741/competitions/401932741/competitors/134133/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "19388",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932741/competitions/401932741/competitors/19388/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "app",
+        "fixture_id": "espn-fra.coupe_de_france-401932755",
+        "provider_event_id": "401932755",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "134102",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932755/competitions/401932755/competitors/134102/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "134098",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932755/competitions/401932755/competitors/134098/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "app",
+        "fixture_id": "espn-fra.coupe_de_france-401932756",
+        "provider_event_id": "401932756",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "134112",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932756/competitions/401932756/competitors/134112/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "134145",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932756/competitions/401932756/competitors/134145/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-fra.coupe_de_france-401932757",
+        "provider_event_id": "401932757",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "134088",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932757/competitions/401932757/competitors/134088/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "18901",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932757/competitions/401932757/competitors/18901/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-fra.coupe_de_france-401932758",
+        "provider_event_id": "401932758",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "134152",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932758/competitions/401932758/competitors/134152/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "134121",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932758/competitions/401932758/competitors/134121/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "app",
+        "fixture_id": "espn-fra.coupe_de_france-401932759",
+        "provider_event_id": "401932759",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "134078",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932759/competitions/401932759/competitors/134078/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "3200",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932759/competitions/401932759/competitors/3200/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-fra.coupe_de_france-401932760",
+        "provider_event_id": "401932760",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "14381",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932760/competitions/401932760/competitors/14381/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "134067",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932760/competitions/401932760/competitors/134067/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "ESPN",
+        "fixture_id": "espn-fra.coupe_de_france-401932765",
+        "provider_event_id": "401932765",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "10232",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932765/competitions/401932765/competitors/10232/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "134087",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932765/competitions/401932765/competitors/134087/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      },
+      {
+        "source": "app",
+        "fixture_id": "espn-fra.coupe_de_france-401932766",
+        "provider_event_id": "401932766",
+        "checks": [
+          {
+            "side": "home",
+            "team_id": "134094",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932766/competitions/401932766/competitors/134094/statistics",
+            "result": "no_statistics_resource"
+          },
+          {
+            "side": "away",
+            "team_id": "134092",
+            "url": "https://sports.core.api.espn.com/v2/sports/soccer/leagues/fra.coupe_de_france/events/401932766/competitions/401932766/competitors/134092/statistics",
+            "result": "no_statistics_resource"
+          }
+        ]
+      }
+    ],
+    "tff_u21": {
+      "fixture_id": "sportscore-2025-06-05T17:00:00+00:00-Turkiye U21-Montenegro U21",
+      "list_http": 200,
+      "detail_http": 503,
+      "source_urls": [
+        "https://www.tff.org/default.aspx?ftxtID=47791&pageID=284",
+        "https://sportscore.com/football/match/montenegro-u21-vs-turkiye-u21/zp5rzghgj9d3q82/"
+      ]
+    },
+    "municipal_grecia": {
+      "fixture_id": "1648348",
+      "source_urls": [
+        "https://www.sofascore.com/es/football/match/ad-cariari-pococi-municipal-grecia/CIecsBWec"
+      ],
+      "result": "score corroborated; no seven-metric data"
+    }
+  },
+  "full_statistics_added": 0,
+  "production_writes": 0
+}

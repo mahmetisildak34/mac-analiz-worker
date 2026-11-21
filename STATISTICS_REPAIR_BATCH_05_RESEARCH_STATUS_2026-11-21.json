@@ -113,7 +113,9 @@
       "provider_group": "API-Football",
       "status": "source_review",
       "score": "2-1",
-      "source_urls": [],
+      "source_urls": [
+        "https://www.sofascore.com/es/football/match/ad-cariari-pococi-municipal-grecia/CIecsBWec"
+      ],
       "research_date": "2026-11-21",
       "reason": "Archived fixture proof inspected. Original archive payload has no match-statistics collection. Provider statistics endpoint was excluded to preserve quota.",
       "statistics_sha256": null,
@@ -122,7 +124,11 @@
       "transfer_ready": false,
       "provider_event_id": "1648348",
       "verification_evidence": "archived_api_football_provider_payload",
-      "statistics_availability": "source_not_queried_quota"
+      "statistics_availability": "source_not_queried_quota",
+      "alternate_evidence": {
+        "state": "score_corroborated",
+        "reason": "Public quarter-final report corroborates teams and score; seven metrics were not found on the public match page."
+      }
     },
     {
       "fixture_id": "1600660",

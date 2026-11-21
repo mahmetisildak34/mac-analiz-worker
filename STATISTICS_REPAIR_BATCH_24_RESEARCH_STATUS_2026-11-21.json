@@ -1274,13 +1274,18 @@
       "status": "source_review",
       "statistics_sha256": null,
       "research_date": "2026-11-21",
-      "identity_verified": false,
-      "score_verified": false,
+      "identity_verified": true,
+      "score_verified": true,
       "transfer_ready": false,
       "source_urls": [
-        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-06-05&status=finished&limit=1000"
+        "https://sportscore.com/api/v1/fixtures/?sport=football&date=2025-06-05&status=finished&limit=1000",
+        "https://www.tff.org/default.aspx?ftxtID=47791&pageID=284",
+        "https://sportscore.com/football/match/montenegro-u21-vs-turkiye-u21/zp5rzghgj9d3q82/"
       ],
-      "statistics_availability": "source_unreachable"
+      "statistics_availability": "source_unreachable",
+      "score": "1-1",
+      "provider_event_id": "zp5rzghgj9d3q82",
+      "reason": "Original dated SportScore list and TFF report corroborate the teams, time, competition and final score. Source list HTTP 200; detailed statistics page HTTP 503."
     },
     {
       "source": "app",
