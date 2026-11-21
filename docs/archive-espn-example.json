@@ -1,0 +1,56 @@
+{
+  "ok": true,
+  "leagueId": "39",
+  "count": 1,
+  "data_quality_counts": {
+    "verified_full": 0,
+    "partial": 0,
+    "provenance_review": 0,
+    "missing": 1,
+    "conflicting": 0
+  },
+  "rawCount": 1,
+  "teamFilterApplied": false,
+  "response": [
+    {
+      "source": "ESPN",
+      "mamSource": "ESPN",
+      "identity_verified": true,
+      "score_verified": true,
+      "verification_evidence": "archived_espn_provider_payload",
+      "fixture": {
+        "id": "espn-eng.1-401878758",
+        "date": "2026-11-07T12:30Z",
+        "status": {
+          "short": "FT"
+        }
+      },
+      "league": {
+        "id": "39",
+        "name": "Premier League",
+        "country": "England"
+      },
+      "teams": {
+        "home": {
+          "id": "357",
+          "name": "Leeds United"
+        },
+        "away": {
+          "id": "367",
+          "name": "Tottenham Hotspur"
+        }
+      },
+      "goals": {
+        "home": 1,
+        "away": 0
+      },
+      "score": null,
+      "statistics": null,
+      "data_quality": {
+        "status": "missing",
+        "structural_complete": false,
+        "reason": "two_teams_required"
+      }
+    }
+  ]
+}

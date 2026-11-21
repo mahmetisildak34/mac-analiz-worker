@@ -131,6 +131,14 @@ test("rejects malformed input", () => {
   assert.equal(predictTrustedGoals(null, options).reason, "invalid_request");
   assert.equal(predictTrustedGoals(matches, {...options, max_matches:11}).reason, "invalid_request");
 });
+test("excludes later fixtures and fixtures at the exact prediction cutoff", () => {
+  const original = predictTrustedGoals(matches, options);
+  const cutoff = row("cutoff","Espanyol","Visitor",9,0,12,{kickoff:options.as_of});
+  const later = row("later","Host","Athletic Club",0,9,12,{kickoff:"2026-11-22T00:00:00Z"});
+  const result = predictTrustedGoals([...matches,cutoff,later],options);
+  assert.deepEqual(result.probabilities,original.probabilities);
+  assert.equal(result.reasons.invalid_or_future_date,2);
+});
 test("predicts from 74 archived ESPN matches and rejects mirrored or conflicting evidence", () => {
   const archive = JSON.parse(readFileSync(new URL("./fixtures/espn-premier-league-2025-26.json", import.meta.url), "utf8"));
   assert.equal(archive.matches.length, 74);

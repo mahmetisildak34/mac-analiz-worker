@@ -46,6 +46,9 @@ jobs:
       - name: Run trusted goal Poisson tests
         run: node tests/trusted-goal-poisson.test.mjs
 
+      - name: Verify archive evidence and Poisson integration
+        run: node tests/archive-evidence-integration.test.mjs
+
       - name: Verify isolated Cloudflare read-only bindings
         run: node tests/statistics-cloudflare-readonly.test.mjs
 
