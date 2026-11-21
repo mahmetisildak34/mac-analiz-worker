@@ -7,8 +7,8 @@
     {
       "fixture_id": "1600658",
       "match": "Águila — Municipal Limeño",
-      "status": "awaiting_individual_source_verification",
-      "reason": null,
+      "status": "blocked",
+      "reason": "provider-statistics-conflict: Águila–Municipal Limeño (2026-11-12): Gioscore 48/52 possession and 13/5 shots vs APWin 49/51 possession and 13/5 shots vs FutbolLibre 49/51 and 15/6 shots. Sources: https://gioscore.com/football/match/aguila-municipal-limeno/19768416 ; https://www.apwin.com/match/aguila-municipal-limeno/tXWPHI/ ; https://futbollibrehd.app/football/matches/2633726/aguila-vs-municipal-limeno/stats. No canonical provider chosen; do not synthesize.",
       "statistics_sha256": null
     },
     {
@@ -21,8 +21,8 @@
     {
       "fixture_id": "1520977",
       "match": "Ponte Preta — Operario-PR",
-      "status": "awaiting_individual_source_verification",
-      "reason": null,
+      "status": "blocked",
+      "reason": "provider-statistics-conflict: Ponte Preta–Operário-PR (2026-11-12): Globo 41/59 possession and 8/8 shots vs Flashscore 48/52 and 9/8, while ESPN mirror reports 8/8 shots. Sources: https://ge.globo.com/sp/campinas-e-regiao/futebol/brasileirao-serie-b/jogo/12-11-2026/ponte-preta-operario-pr.ghtml ; https://www.flashscore.com/match/football/operario-pr-CW8Nm1GL/ponte-preta-WlHjRvDk/ ; https://newsespn.pages.dev/soccer/team-stats/_/gameId/401860434. No mixed-provider JSON.",
       "statistics_sha256": null
     },
     {
@@ -182,13 +182,14 @@
   ],
   "counts": {
     "full_verified": 6,
-    "blocked": 4,
-    "pending": 15
+    "blocked": 6,
+    "pending": 13
   },
   "transfer_ready": 0,
   "next_batch": {
     "number": 2,
     "first_fixture_id": "1647363",
     "status": "research_started_full_verified"
-  }
+  },
+  "research_notes": "2026-11-21: two further conflicts reviewed with public sources; 13 pending remain. No Production/Preview D1 writes or API-Football calls."
 }
