@@ -1276,9 +1276,11 @@ async function buildPriorityLeagueStatus(env) {
     ok: true,
     generatedAt: new Date().toISOString(),
     scope: "ten-priority-leagues",
-    verificationLevel: "per-team-recent-10-coverage",
+    verificationLevel: "per-team-recent-10-legacy-payload-presence",
+    statisticsCoverageSemantics: "legacy_nonempty_arrays_not_verified_full",
+    verifiedFullCountsAvailable: false,
     leagues: Array.isArray(result?.results) ? result.results : [],
-    note: "Recent-10 coverage is measured per team from archived completed fixtures. Statistics are counted only when both teams have non-empty statistics arrays in the stored teams payload. This does not independently prove historical fixture completeness beyond the available archive or live-score accuracy."
+    note: "Legacy statistics counts measure nonempty arrays, NOT seven valid metrics or verified source provenance. Use the bounded /api/archive/matches data_quality_counts for structural statuses; no verified_full can be inferred from these SQL aggregates."
   };
 }
 
