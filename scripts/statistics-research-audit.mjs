@@ -27,7 +27,9 @@ for(const x of entries){
  const sha=createHash("sha256").update(x.statistics_json,"utf8").digest("hex");
  if(sha!==x.statistics_sha256)fail("SHA-256 mismatch "+k);
 }
-if(manifest.counts.full!==manifest.fullMatches.length)fail("Manifest full count mismatch");
+const fullMarked=manifest.fullMatches.filter(x=>x.statistics_class==="full").length;
+const reviewMarked=manifest.fullMatches.filter(x=>x.statistics_class==="pending_source_provenance_review").length;
+if(manifest.counts.full!==fullMarked||manifest.counts.pending_source_provenance_review!==reviewMarked)fail("Manifest full/review counts mismatch");
 const states=new Map(),batchReports=[];
 const valid=new Set(["full_verified","blocked","source_review","pending"]);
 for(const batch of plan.batches){
@@ -51,5 +53,5 @@ for(const batch of plan.batches){
 const queue=planRows.filter(x=>!states.has(key(x))||states.get(key(x)).status==="pending").map(x=>({batch:x.batch_number,row:x.row_number,source:x.source,fixture_id:x.fixture_id,home:x.home_team,away:x.away_team,kickoff:x.kickoff}));
 const counts={full_verified:0,blocked:0,source_review:0,pending:queue.length};
 for(const x of states.values())if(x.status!=="pending")counts[x.status]++;
-const report={schema_version:1,plan_rows:planRows.length,unique_namespaced_fixtures:namespaceKeys.size,unique_raw_fixture_ids:rawIds.size,repeated_raw_fixture_ids:repeated.length,extra_raw_id_occurrences:planRows.length-rawIds.size,raw_id_collisions:repeated.map(([fixture_id,rows])=>({fixture_id,identities:rows.map(x=>({source:x.source,batch:x.batch_number,home:x.home_team,away:x.away_team,kickoff:x.kickoff}))})),protected_inventory_count:protectedInventory.matches.length,manifest_json_count:entries.length,manifest_sha256_checked:entries.length,manifest_full_marked:manifest.fullMatches.length,manifest_transfer_ready_confirmed:0,counts,batches:batchReports,next_pending:queue[0]||null,pending_queue:queue,warning:"Read-only report. A repeated raw ID across sources is NOT a duplicate fixture without provider-specific match identity verification. Research and transfer require external evidence."};
+const report={schema_version:1,plan_rows:planRows.length,unique_namespaced_fixtures:namespaceKeys.size,unique_raw_fixture_ids:rawIds.size,repeated_raw_fixture_ids:repeated.length,extra_raw_id_occurrences:planRows.length-rawIds.size,raw_id_collisions:repeated.map(([fixture_id,rows])=>({fixture_id,identities:rows.map(x=>({source:x.source,batch:x.batch_number,home:x.home_team,away:x.away_team,kickoff:x.kickoff}))})),protected_inventory_count:protectedInventory.matches.length,manifest_json_count:entries.length,manifest_sha256_checked:entries.length,manifest_full_marked:fullMarked,manifest_source_review_marked:reviewMarked,manifest_transfer_ready_confirmed:0,counts,batches:batchReports,next_pending:queue[0]||null,pending_queue:queue,warning:"Read-only report. A repeated raw ID across sources is NOT a duplicate fixture without provider-specific match identity verification. Research and transfer require external evidence."};
 process.stdout.write(JSON.stringify(report,null,2)+"\n");
