@@ -4,14 +4,16 @@ import { createHash } from "node:crypto";
 import { predictTrustedGoals } from "../trusted-goal-poisson.js";
 
 const directory=process.argv[2];
+const period=process.argv.includes("--half")?"ht":"ft";
+const extended=process.argv.includes("--extended");
 const turkeyEarly=process.argv.includes("--turkey-early");
 const leagues=turkeyEarly?["tr.1"]:["tr.1","en.1","es.1","de.1","it.1","fr.1"];
 const trainingEnd=turkeyEarly?"2024-11-01":"2025-01-01";
 const testStart=turkeyEarly?"2025-01-01":"2025-07-01";
 const testEnd=turkeyEarly?"2025-07-01":"9999-01-01";
-const seasons=["2024-25","2025-26"];
+const seasons=extended?["2023-24","2024-25","2025-26","2026-27"]:["2024-25","2025-26"];
 const cap=15;
-const models=["frequency","current","window5","window10","window15","window20","recency","shrinkage","opponent","dixon_coles","elo","calibrated"];
+const models=["frequency","current","window5","window10","window15","window20","recency","shrinkage","opponent","dixon_coles","elo","dynamic_home","league_mix","calibrated"];
 const probabilities=(lambda)=>{
   const values=[Math.exp(-lambda)];
   for(let i=1;i<=cap;i++)values.push(values.at(-1)*lambda/i);
@@ -76,10 +78,15 @@ function simulate(rows,start){
   const get=team=>ratings.get(team)??1500;
   for(const day of [...new Set(rows.map(r=>r.kickoff))].sort()){
     const played=rows.filter(r=>r.kickoff===day);
-    const counts=[1,1,1];
-    prior.forEach(p=>counts[Math.sign(p.away_goals-p.home_goals)+1]++);
+    const scoreCounts=Array((cap+1)**2).fill(0.001);
+    prior.forEach(row=>{
+      if(row.home_goals<=cap&&row.away_goals<=cap)scoreCounts[row.home_goals*(cap+1)+row.away_goals]++;
+    });
+    const empirical=renormalize(scoreCounts);
     if(day>=start&&prior.length){
       const leagueHome=average(prior,"home_goals",()=>1), leagueAway=average(prior,"away_goals",()=>1);
+      const recent=prior.slice(-80);
+      const recentHome=average(recent,"home_goals",()=>1), recentAway=average(recent,"away_goals",()=>1);
       for(const target of played){
         const {home_team,away_team}=target;
         const current=predictTrustedGoals(prior,{home_team,away_team,as_of:day,max_matches:10,
@@ -98,7 +105,7 @@ function simulate(rows,start){
           return [estimate(h,"home_goals",leagueHome)*estimate(a,"home_goals",leagueHome)/leagueHome,
             estimate(a,"away_goals",leagueAway)*estimate(h,"away_goals",leagueAway)/leagueAway];
         };
-        const map={frequency:{outcome:renormalize(counts)}};
+        const map={frequency:summary(empirical)};
         if(current.available){
           const g=distribution(current.lambda_home,current.lambda_away,0,10);
           if(g)map.current={...summary(g),outcome:["home_win","draw","away_win"].map(k=>current.probabilities[k]),
@@ -112,10 +119,14 @@ function simulate(rows,start){
         add("opponent",venue(20,()=>1,6,true));
         add("dixon_coles",shrink,-0.06);
         if(shrink){
+          if(leagueHome>0&&leagueAway>0&&recentHome>0&&recentAway>0){
+            const shift=Math.min(1.25,Math.max(0.8,Math.sqrt(recentHome*leagueAway/(recentAway*leagueHome))));
+            add("dynamic_home",[shrink[0]*shift,shrink[1]/shift]);
+          }
           const adjust=Math.exp(Math.max(-0.35,Math.min(0.35,(get(home_team)-get(away_team))/1800)));
           add("elo",[shrink[0]*adjust,shrink[1]/adjust]);
         }
-        results.push({target,map});
+        results.push({target,map,homeVenueMatches:h.length,awayVenueMatches:a.length});
       }
     }
     const delta=new Map();
@@ -132,14 +143,17 @@ function simulate(rows,start){
 }
 const reports=leagues.map(league=>{
   const hashes={};
-  const matches=seasons.flatMap(season=>{
-    const raw=fs.readFileSync(directory+"/"+season+"/"+league+".json");
+  const leagueSeasons=extended&&league==="tr.1"?["2018-19","2019-20","2020-21",...seasons]:seasons;
+  const matches=leagueSeasons.flatMap(season=>{
+    const file=directory+"/"+season+"/"+league+".json";
+    if(extended&&!fs.existsSync(file))return [];
+    const raw=fs.readFileSync(file);
     hashes[season]=createHash("sha256").update(raw).digest("hex");
-    return JSON.parse(raw).matches.filter(m=>Array.isArray(m.score?.ft)).map(m=>{
+    return JSON.parse(raw).matches.filter(m=>Array.isArray(m.score?.[period])).map(m=>{
       assert(/^\d{4}-\d{2}-\d{2}$/.test(m.date)&&m.team1&&m.team2&&m.team1!==m.team2&&
-        m.score.ft.length===2&&m.score.ft.every(g=>Number.isSafeInteger(g)&&g>=0));
+        m.score[period].length===2&&m.score[period].every(g=>Number.isSafeInteger(g)&&g>=0));
       return {source:"openfootball",fixture_id:[league,m.date,m.team1,m.team2].join("|"),
-        kickoff:m.date,home_team:m.team1,away_team:m.team2,home_goals:m.score.ft[0],away_goals:m.score.ft[1],
+        kickoff:m.date,home_team:m.team1,away_team:m.team2,home_goals:m.score[period][0],away_goals:m.score[period][1],
         identity_verified:true,score_verified:true,completed:true};
     });
   });
@@ -151,14 +165,24 @@ const reports=leagues.map(league=>{
     target:r.target,prediction:summary(temperature(r.map.shrinkage.values,t))
   }))).logLoss]);
   choices.sort((a,b)=>a[1]-b[1]);
+  assert(validation.length>0,"Validation data missing for "+league);
   const [t]=choices[0];
+  const mix=(r,weight)=>summary(r.map.shrinkage.values.map((p,i)=>p*weight+r.map.frequency.values[i]*(1-weight)));
+  const mixChoices=[0,0.25,0.5,0.75,1].map(weight=>[weight,measures(validation.map(r=>({
+    target:r.target,prediction:mix(r,weight)
+  }))).logLoss]).sort((a,b)=>a[1]-b[1]);
+  const [mixWeight]=mixChoices[0];
   const test=simulate(matches.filter(r=>r.kickoff<testEnd),testStart);
-  for(const r of test)if(r.map.shrinkage)r.map.calibrated=summary(temperature(r.map.shrinkage.values,t));
+  for(const r of test)if(r.map.shrinkage){
+    r.map.calibrated=summary(temperature(r.map.shrinkage.values,t));
+    r.map.league_mix=mix(r,mixWeight);
+  }
   const comparison=test.filter(r=>models.every(model=>r.map[model]));
-  return {league,hashes,training,validation:validation.length,temperature:t,testFixtures:test.length,comparisonFixtures:comparison.length,
+  return {league,hashes,training,validation:validation.length,temperature:t,mixWeight,testFixtures:test.length,comparisonFixtures:comparison.length,
+    belowVenueMinimum:test.filter(r=>r.homeVenueMatches<5||r.awayVenueMatches<5).length,
     results:Object.fromEntries(models.map(model=>[model,{coverage:test.filter(r=>r.map[model]).length/test.length,
       ...measures(comparison.map(r=>({target:r.target,prediction:r.map[model]})))}]))};
 });
-console.log(JSON.stringify({source:"https://github.com/openfootball/football.json",split:{
+console.log(JSON.stringify({source:"https://github.com/openfootball/football.json",period,split:{
   training_before:trainingEnd,validation_from:trainingEnd,test_from:testStart,test_before:testEnd
 },reports},null,2));

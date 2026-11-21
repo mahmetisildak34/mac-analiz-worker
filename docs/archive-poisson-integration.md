@@ -93,3 +93,36 @@ Tahmin çağrısında `available === false` iken `probabilities` bulunmaz. Örne
 [Tüm pazarlar için lig sıklığı, basit lig Poisson ve saha Poisson karşılaştırması](poisson-market-baselines.json). Aynı maçlar üzerinden Brier, log loss ve kalibrasyon hatası karşılaştırılır. Marjinal gol dağılımları ve kesin skor değerlendirmesi de rapordadır.
 
 Deneysel karma modelin lig ve dönem bazındaki ağırlığı Ocak–Haziran 2025 doğrulamasında seçilir. Temmuz 2025 sonrası test maçları ağırlık seçiminde kullanılmaz. İlk yarıda saha Poisson modelinin 1X2 log loss değeri 1,2316, lig sıklığının 1,0895 ve karma modelin 1,0865. Karma modelin kalibrasyon hatası 0,0322, lig sıklığının 0,0117. Sonuçlar karma modeli varsayılan tahmin yoluna geçirmeden kaydedildi.
+
+## Kanki için sabit dosyalar ve bütünlük kontrolü
+
+| Dosya | SHA-256 |
+| --- | --- |
+| [trusted-goal-poisson.js](https://github.com/mahmetisildak34/mac-analiz-worker/blob/85c5d1f50a5210893c9acc961897e589e6a5383f/trusted-goal-poisson.js) | `6bb7fa0d684f470516b17876697f5f1a2e1cc4a10f6c3f9132a04e1540c10a95` |
+| [offline-analysis-fixture-client.js](https://github.com/mahmetisildak34/mac-analiz-worker/blob/85c5d1f50a5210893c9acc961897e589e6a5383f/docs/offline-analysis-fixture-client.js) | `da2c2ba77b7fe7b01e2508900c6696f324d07bfb1515aeebea1d4cd7c56298a5` |
+| [archive-espn-example.json](https://github.com/mahmetisildak34/mac-analiz-worker/blob/85c5d1f50a5210893c9acc961897e589e6a5383f/docs/archive-espn-example.json) | `db7a6362c8461d7a23d008cb4906f32fe69fadc711c58214cc9cf4294a86006a` |
+| [poisson-integration-examples.json](https://github.com/mahmetisildak34/mac-analiz-worker/blob/85c5d1f50a5210893c9acc961897e589e6a5383f/docs/poisson-integration-examples.json) | `f4c8eebb17f82497495dad0e64c96d7dd96e6f68a21625d446bf61932d520d80` |
+| [offline-analysis-fixture-client.test.mjs](https://github.com/mahmetisildak34/mac-analiz-worker/blob/85c5d1f50a5210893c9acc961897e589e6a5383f/tests/offline-analysis-fixture-client.test.mjs) | `5d942e3e5965499548c1ff3c4c2c73c146a8ff3adfd8463b7bd65de8cf395d58` |
+
+Modülü çağırırken arşivden eşlenen kayıtları ve aynı döneme ait lig ortalamalarını verin.
+
+```js
+import { predictTrustedGoals, predictTrustedHalfTime } from "../trusted-goal-poisson.js";
+
+const full = predictTrustedGoals(verifiedHistory, {
+  ...fixtureOptions,
+  league_average_home_goals: leagueMeans.fullTime.home,
+  league_average_away_goals: leagueMeans.fullTime.away,
+});
+const half = predictTrustedHalfTime(verifiedHistory, {
+  ...fixtureOptions,
+  league_average_home_half_goals: leagueMeans.firstHalf.home,
+  league_average_away_half_goals: leagueMeans.firstHalf.away,
+});
+```
+
+`fixtureOptions` hedef takım adlarını, tahmin sınırı `as_of` değerini ve varsa lig ve takım kimliklerini içermelidir. Olasılıkları ekranda göstermek için 100 ile çarpın. Yüzdenin yanında tahmin dönemi ve kalibrasyon durumunu, ayrıntılarda ise iki saha örneklemini gösterin. Çifte şans değerleri 1X için ev galibiyeti + beraberlik, X2 için beraberlik + deplasman galibiyeti, 12 için iki galibiyetin toplamıdır. Bu üç olay örtüştüğü için üç sayının ortak toplamı %100 değildir.
+
+HTTP 503 halinde arşiv bağlantı hatasını gösterin ve varsa `retryable` alanını kullanın. Kullanılabilir son tahmin yoksa olasılıkları gizleyin. Test istemcisi bu durumu `api_error` senaryosunda HTTP durum koduyla sağlar.
+
+Deponun kökünde `node --test tests/offline-analysis-fixture-client.test.mjs tests/trusted-goal-poisson.test.mjs` çalıştırın. Test, kontrollü yanıtlar için ağ erişimini kapatır.

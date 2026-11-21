@@ -6,6 +6,9 @@ const directory=process.argv[2], limit=10, size=limit+1, testStart="2025-07-01";
 const thresholds=[0,1,2,3,4];
 const markets={
   result:{choices:3,label:(h,a)=>Math.sign(a-h)+1},
+  home_or_draw:{choices:2,label:(h,a)=>Number(h>=a)},
+  away_or_draw:{choices:2,label:(h,a)=>Number(a>=h)},
+  home_or_away:{choices:2,label:(h,a)=>Number(h!==a)},
   btts:{choices:2,label:(h,a)=>Number(h>0&&a>0)},
   ...Object.fromEntries(thresholds.map(t=>["over_"+(t+0.5),{choices:2,label:(h,a)=>Number(h+a>t)}])),
   score:{choices:size*size+1,label:(h,a)=>h>limit||a>limit?size*size:h*size+a},
