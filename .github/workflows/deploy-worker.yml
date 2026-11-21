@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "worker.js"
+      - "statistics-repair.js"
       - "wrangler.jsonc"
       - "package.json"
       - "tests/**/*.mjs"
@@ -37,6 +38,9 @@ jobs:
 
       - name: Validate Worker JavaScript syntax
         run: node --check worker.js
+
+      - name: Run statistics repair safety test
+        run: node tests/statistics-repair-safety.test.mjs
 
       - name: Run archive upsert regression test
         run: node tests/archive-upsert-guard.test.mjs
