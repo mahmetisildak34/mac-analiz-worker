@@ -34,3 +34,20 @@ test('isolated repair refuses stale row before write',async()=>{
  assert.equal((await persistIsolatedVerifiedStatistics({ISOLATED_STATISTICS_REPAIR_ENABLED:'true',TEST_WRITE_DB:db},fixture,fixtureResponse,statisticsResponse)).state,'stale_or_conflicting');
  assert.equal(writes,0);
 });
+
+test('app source without original API-Sports fixture identity is rejected',()=>{
+ const f={...fixture,source:'app'};
+ assert.equal(deriveVerifiedApiSportsEvidence(f,fixtureResponse,statisticsResponse).reason,'app_provider_identity_unproven');
+});
+test('app source with original matching provider fixture identity can be assessed',()=>{
+ const f={...fixture,source:'app',raw_json:JSON.stringify({fixture:{id:123},teams:{home:{id:10},away:{id:20}},league:{logo:'https://media.api-sports.io/football/leagues/39.png'}})};
+ assert.equal(deriveVerifiedApiSportsEvidence(f,fixtureResponse,statisticsResponse).state,'verified');
+});
+test('atomic write checks home and away names to block concurrent identity changes',async()=>{
+ let sqlText='',binds=[];
+ const db={prepare(sql){if(sql.startsWith('UPDATE'))sqlText=sql;return {bind(...v){if(sql.startsWith('UPDATE'))binds=v;return this},async first(){return {...fixture,statistics_json:null}},async run(){return {meta:{changes:0}}}}}};
+ const result=await persistIsolatedVerifiedStatistics({ISOLATED_STATISTICS_REPAIR_ENABLED:'true',TEST_WRITE_DB:db},fixture,fixtureResponse,statisticsResponse);
+ assert.equal(result.state,'not_written');
+ assert.match(sqlText,/home_team=\? AND away_team=\?/);
+ assert.ok(binds.includes('Home')&&binds.includes('Away'));
+});
