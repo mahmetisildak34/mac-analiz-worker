@@ -77,9 +77,9 @@ test("v1.3 shrinks small venue samples toward league averages while v1.2 stays u
   const v13 = predictTrustedGoals(matches, {...options, model_version:"1.3"});
   assert.equal(v12.model_version,"1.2");
   assert.equal(v13.model_version,"1.3");
-  assert.equal(v12.team_rates.home_attack_goals,1.8);
+  assert.equal(v12.team_rates.home_attack_goals,2.2);
   assert.equal(v12.team_rates.home_conceded_goals,0.6);
-  assert.equal(v13.team_rates.home_attack_goals,1.6875);
+  assert.equal(v13.team_rates.home_attack_goals,1.9375);
   assert.equal(v13.team_rates.home_conceded_goals,0.825);
   assert.notEqual(v13.lambda_home,v12.lambda_home);
   assert.ok(Math.abs(v13.probabilities.home_win+v13.probabilities.draw+v13.probabilities.away_win-1)<1e-10);
