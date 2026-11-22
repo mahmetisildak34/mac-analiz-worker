@@ -40,11 +40,12 @@ function verify(candidate, cutoff, aliases) {
 
   const match = event.competitions?.[0];
   const status = event.status?.type ?? match?.status?.type;
-  if (event.competitions?.length !== 1 || match.competitors?.length !== 2 ||
+  if (!Array.isArray(event.competitions) || event.competitions.length !== 1 ||
+      !Array.isArray(match?.competitors) || match.competitors.length !== 2 ||
       status?.completed !== true || status.state !== "post" ||
       !["STATUS_FULL_TIME", "STATUS_FINAL", "STATUS_FINAL_AET", "STATUS_FINAL_PEN"].includes(status.name)) return null;
-  const home = match.competitors.find(side => side.homeAway === "home");
-  const away = match.competitors.find(side => side.homeAway === "away");
+  const home = match.competitors.find(side => side?.homeAway === "home");
+  const away = match.competitors.find(side => side?.homeAway === "away");
   const homeId = home?.team?.id;
   const awayId = away?.team?.id;
   if (!numericId(homeId) || !numericId(awayId) || String(homeId) === String(awayId)) return null;

@@ -57,8 +57,13 @@ test("score, calendar, identity, URL and completed status disagreements fail clo
   const wrongDate = fixture();
   wrongDate.espn.event.date = "2026-11-31T20:00Z";
   wrongDate.uefa.day = "2026-11-31";
-  const result = run([wrongScore, wrongDay, wrongTeams, wrongLeague, unfinished, future, wrongDate]);
-  assert.equal(result.rejected.length, 7);
+  const malformedMatch = fixture();
+  malformedMatch.espn.event.competitions = [null];
+  const malformedSide = fixture();
+  malformedSide.espn.event.competitions[0].competitors[0] = null;
+  const result = run([wrongScore, wrongDay, wrongTeams, wrongLeague, unfinished, future, wrongDate,
+    malformedMatch, malformedSide]);
+  assert.equal(result.rejected.length, 9);
   assert.equal(result.staged.length, 0);
 });
 
