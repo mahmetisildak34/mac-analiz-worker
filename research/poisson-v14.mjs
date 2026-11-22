@@ -1,20 +1,88 @@
 // Experimental only: no production integration.
-export function scoreGrid(home, away, rho=0) {
- if (![home,away,rho].every(Number.isFinite)||home<=0||away<=0||home>20||away>20) throw new RangeError('Invalid rates');
- if (rho<Math.max(-1/home,-1/away)||rho>Math.min(1,1/(home*away))) throw new RangeError('Invalid rho');
- const pmf=l=>{const p=[Math.exp(-l)];for(let i=1;i<=100;i++)p.push(p[i-1]*l/i);return p};
- const h=pmf(home),a=pmf(away);
- let win=0,draw=0,loss=0,btts=0,over15=0,over25=0,over35=0,total=0;
- for(let i=0;i<h.length;i++)for(let j=0;j<a.length;j++){
- const tau=i===0&&j===0?1-home*away*rho:i===0&&j===1?1+home*rho:i===1&&j===0?1+away*rho:i===1&&j===1?1-rho:1;
- const p=h[i]*a[j]*tau;total+=p;
- if(i>j)win+=p;else if(i===j)draw+=p;else loss+=p;
- if(i&&j)btts+=p;
-   if(i+j>=2)over15+=p;
-   if(i+j>=3)over25+=p;
-   if(i+j>=4)over35+=p;
- }
- return {home:win/total,draw:draw/total,away:loss/total,btts:btts/total,over15:over15/total,over25:over25/total,over35:over35/total};
+function validRates(home, away) {
+  return [home, away].every(rate => Number.isFinite(rate) && rate > 0 && rate <= 20);
+}
+
+function correction(home, away, homeGoals, awayGoals) {
+  if (homeGoals === 0 && awayGoals === 0) return -home * away;
+  if (homeGoals === 0 && awayGoals === 1) return home;
+  if (homeGoals === 1 && awayGoals === 0) return away;
+  if (homeGoals === 1 && awayGoals === 1) return -1;
+  return 0;
+}
+
+function poisson(rate, maxGoals) {
+  const probabilities = [Math.exp(-rate)];
+  for (let goal = 1; goal <= maxGoals; goal++) {
+    probabilities.push(probabilities[goal - 1] * rate / goal);
+  }
+  return probabilities;
+}
+
+export function scoreGrid(home, away, rho = 0) {
+  if (!validRates(home, away)) throw new RangeError('Invalid rates');
+  if (!Number.isFinite(rho) || rho < Math.max(-1 / home, -1 / away) ||
+      rho > Math.min(1, 1 / (home * away))) throw new RangeError('Invalid rho');
+
+  const homeGoals = poisson(home, 100);
+  const awayGoals = poisson(away, 100);
+  const markets = { home: 0, draw: 0, away: 0, btts: 0, over15: 0, over25: 0, over35: 0 };
+  let total = 0;
+  for (let i = 0; i < homeGoals.length; i++) {
+    for (let j = 0; j < awayGoals.length; j++) {
+      const p = homeGoals[i] * awayGoals[j] * (1 + rho * correction(home, away, i, j));
+      total += p;
+      markets[i > j ? 'home' : i === j ? 'draw' : 'away'] += p;
+      if (i > 0 && j > 0) markets.btts += p;
+      if (i + j >= 2) markets.over15 += p;
+      if (i + j >= 3) markets.over25 += p;
+      if (i + j >= 4) markets.over35 += p;
+    }
+  }
+  for (const key of Object.keys(markets)) markets[key] /= total;
+  return markets;
+}
+
+export function exactScoreProbability(home, away, rho, homeGoals, awayGoals) {
+  if (![homeGoals, awayGoals].every(value => Number.isSafeInteger(value) && value >= 0)) return null;
+  if (!validRates(home, away) || !Number.isFinite(rho) ||
+      rho < Math.max(-1 / home, -1 / away) || rho > Math.min(1, 1 / (home * away))) {
+    throw new RangeError('Invalid model parameters');
+  }
+  // Above 100 goals the probability mass is negligible for the supported rates.
+  if (homeGoals > 100 || awayGoals > 100) return 0;
+  return poisson(home, homeGoals)[homeGoals] * poisson(away, awayGoals)[awayGoals] *
+    (1 + rho * correction(home, away, homeGoals, awayGoals));
+}
+
+// Fit on out-of-sample training predictions produced before each training kickoff.
+export function fitRho(training, asOf) {
+  const cutoff = Date.parse(asOf);
+  if (!Number.isFinite(cutoff) || !Array.isArray(training)) return null;
+
+  const seen = new Set();
+  const coefficients = [];
+  for (const row of training) {
+    if (!(Date.parse(row?.kickoff) < cutoff) || !row.fixtureId || seen.has(row.fixtureId) ||
+        !validRates(row.home, row.away) ||
+        ![row.homeGoals, row.awayGoals].every(value => Number.isSafeInteger(value) && value >= 0)) {
+      return null;
+    }
+    seen.add(row.fixtureId);
+    coefficients.push(correction(row.home, row.away, row.homeGoals, row.awayGoals));
+  }
+  if (coefficients.filter(coefficient => coefficient !== 0).length < 20) return null;
+
+  // A common interval keeps each low-score multiplier positive at all supported rates.
+  let lower = -0.0499;
+  let upper = 0.00249;
+  for (let i = 0; i < 48; i++) {
+    const rho = (lower + upper) / 2;
+    const slope = coefficients.reduce((sum, value) => sum + value / (1 + rho * value), 0);
+    if (slope > 0) lower = rho;
+    else upper = rho;
+  }
+  return (lower + upper) / 2;
 }
 
 // Input is a single league's verified archive in the trusted-goal model format.

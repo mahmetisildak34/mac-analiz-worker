@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {estimateRates, scoreGrid} from './poisson-v14.mjs';
+import {estimateRates, exactScoreProbability, fitRho, scoreGrid} from './poisson-v14.mjs';
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-10);
 test('normalization and range',()=>{for(const h of [.1,.5,1,2,4,20])for(const a of [.1,.5,1,2,4,20])for(const r of [0,-.04,.002]){const p=scoreGrid(h,a,r);near(p.home+p.draw+p.away,1);for(const x of Object.values(p))assert.ok(x>=0&&x<=1+1e-12);}});
 test('symmetry',()=>{const p=scoreGrid(1.7,.8,-.1),q=scoreGrid(.8,1.7,-.1);near(p.home,q.away);near(p.draw,q.draw);});
@@ -43,4 +43,23 @@ test('weak and missing period evidence returns no prediction', () => {
 test('goal total markets are nested', () => {
   const p = scoreGrid(1.7, 0.8, -0.1);
   assert.ok(p.over15 > p.over25 && p.over25 > p.over35);
+});
+
+test('correct-score mass reproduces the draw market', () => {
+  const home = 1.7, away = 0.8, rho = -0.04;
+  const draw = Array.from({ length: 40 }, (_, goals) =>
+    exactScoreProbability(home, away, rho, goals, goals)).reduce((sum, p) => sum + p, 0);
+  near(draw, scoreGrid(home, away, rho).draw);
+  assert.equal(exactScoreProbability(home, away, rho, null, 0), null);
+});
+
+test('rho fitting requires distinct training fixtures strictly before the test cutoff', () => {
+  const training = archive.map((row, i) => ({
+    kickoff: row.kickoff, fixtureId: String(i),
+    home: 1.4, away: 0.9, homeGoals: 0, awayGoals: 0
+  }));
+  assert.ok(fitRho(training, target.kickoff) < 0);
+  assert.equal(fitRho(training.slice(0, 10), target.kickoff), null);
+  assert.equal(fitRho([...training, training[0]], target.kickoff), null);
+  assert.equal(fitRho(training, archive.at(-1).kickoff), null);
 });
