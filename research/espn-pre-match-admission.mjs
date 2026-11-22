@@ -21,15 +21,15 @@ export function admitEspnScoreboard(payload,{leagueId,capturedAt,now=new Date().
   if(!Number.isFinite(utc(kickoff))){reject('invalid_kickoff');continue;}
   summary.validKickoff++;
   const status=event?.status?.type;
-  if(status?.state!=='pre'||status?.completed===true||status?.name==='STATUS_POSTPONED'||status?.name==='STATUS_CANCELED'){reject('not_scheduled');continue;}
+  if(status?.state!=='pre'||status?.completed===true||/POSTPON|CANCEL|ABANDON|SUSPEND|DELAY|INTERRUPT/i.test(String(status?.name??''))){reject('not_scheduled');continue;}
   if(utc(kickoff)<=utc(now)||utc(kickoff)<=utc(capturedAt)){reject('already_started');continue;}
   if(!Array.isArray(competitors)||competitors.length!==2){reject('invalid_competitors');continue;}
   const home=competitors.find(x=>x.homeAway==='home'),away=competitors.find(x=>x.homeAway==='away');
   const homeTeamId=String(home?.team?.id??''),awayTeamId=String(away?.team?.id??'');
   if(!id(homeTeamId)||!id(awayTeamId)||homeTeamId===awayTeamId){reject('invalid_team_identity');continue;}
-  const providerLeague=payload?.leagues?.[0]?.slug;
-  // League identifiers are supplied explicitly; do not infer a league from a fixture ID.
-  if(typeof providerLeague==='string'&&providerLeague!==leagueId){reject('league_mismatch');continue;}
+  const providerLeagues=payload?.leagues;
+  // Never accept a scoreboard that explicitly identifies a different league.
+  if(Array.isArray(providerLeagues)&&providerLeagues.some(x=>typeof x?.slug==='string'&&x.slug!==leagueId)){reject('league_mismatch');continue;}
   summary.eligible++;
   summary.accepted.push({fixtureId,leagueId,homeTeamId,awayTeamId,kickoff,provider:'ESPN',
    providerEvidenceId:'espn:'+leagueId+':'+fixtureId,providerPayloadSha256:hash(event),capturedAt});
