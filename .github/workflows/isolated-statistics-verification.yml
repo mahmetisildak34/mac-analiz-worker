@@ -22,4 +22,4 @@ jobs:
           node --check statistics-data-quality.js
           node --check isolated-provider-fetch.js
       - name: Run offline isolated repair and audit regressions
-        run: node --test research/statistics-gap-readonly-audit.test.mjs tests/verified-statistics-candidate.test.mjs tests/isolated-verified-statistics-repair.test.mjs tests/isolated-provider-fetch.test.mjs
+        run: node --experimental-sqlite --test research/statistics-gap-readonly-audit.test.mjs tests/verified-statistics-candidate.test.mjs tests/isolated-verified-statistics-repair.test.mjs tests/isolated-provider-fetch.test.mjs tests/isolated-statistics-sqlite-acceptance.test.mjs
