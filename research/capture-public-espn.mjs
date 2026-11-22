@@ -4,7 +4,7 @@ import {mkdir,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {resolve} from 'node:path';
 import {admitEspnScoreboard} from './espn-pre-match-admission.mjs';
-const leagues=['tur.1','eng.1','esp.1','ita.1','ger.1','fra.1'];
+const leagues=["eng.1","tur.1","esp.1","ger.1","ita.1","fra.1","uefa.champions","uefa.europa","ned.1","por.1","uefa.europa.conf","eng.2","eng.fa","eng.league_cup","esp.2","esp.copa_del_rey","ger.2","ger.dfb_pokal","ita.2","ita.coppa_italia","fra.2","fra.coupe_de_france","bel.1","tur.2","sco.1","usa.1","bra.1","arg.1","mex.1","jpn.1","aus.1","chn.1","fifa.world","uefa.euro","uefa.nations","caf.nations","fifa.cwc","ksa.1"];
 const sha=x=>createHash('sha256').update(x).digest('hex');
 export async function capturePublicEspn({fetcher=fetch,outDir='espn-captures',now=()=>new Date().toISOString()}={}){
  await mkdir(outDir,{recursive:true});
