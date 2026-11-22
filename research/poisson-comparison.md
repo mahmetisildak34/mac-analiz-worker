@@ -35,3 +35,32 @@ The venue-count reliability thresholds did not validate. For full time, the
 higher-coverage group had higher test log loss than the lower-coverage group.
 For half time the calibration data did not identify three supported bands.
 Keep reliability labels out of the application until richer evidence supports them.
+
+## Reproduced paired holdout summary
+
+The pinned OpenFootball snapshot was re-imported in GitHub Actions and the comparison
+was rerun from source. The workflow validated 12 input-file SHA-256 records, six
+leagues, and 889 common held-out matches for each period and each model.
+
+| Period | Model | Matches | 1X2 Brier | 1X2 log loss | Top-label ECE | Accuracy |
+|---|---:|---:|---:|---:|---:|---:|
+| Full time | v1.2 | 889 | 0.623704 | 1.050174 | 0.092305 | 0.503937 |
+| Full time | v1.3 | 889 | 0.609782 | 1.021638 | 0.045452 | 0.500562 |
+| Full time | v1.4 | 889 | 0.600068 | 1.004716 | 0.013430 | 0.517435 |
+| Half time | v1.2 | 889 | 0.689829 | 1.275484 | 0.123717 | 0.398200 |
+| Half time | v1.3 | 889 | 0.670609 | 1.119035 | 0.095279 | 0.386952 |
+| Half time | v1.4 | 889 | 0.654555 | 1.084690 | 0.047410 | 0.401575 |
+
+v1.2 remains the default. v1.3 is an experimental three-match league-average
+shrinkage prior for venue samples. v1.4 uses recency-weighted venue rates, five
+league-average pseudo-matches and a Dixon–Coles low-score correction fitted on
+earlier fixtures. The test period is shared, but the selected window and
+half-life are fitted independently by league and period using the preceding
+tuning window.
+
+These results support further evaluation of v1.4, not automatic promotion.
+The sample is a pinned public archive validated for source format and internal
+consistency; individual rows were not independently verified against a second
+provider. Venue-count reliability remains unvalidated, so the application must
+not present confidence labels derived from these bands. This comparison does
+not replace the separate 24-fixture point-in-time ESPN v1.2 evidence set.
