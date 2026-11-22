@@ -11,6 +11,22 @@ test('accepts only ESPN pre-kickoff fixtures with distinct team identity and sou
  assert.match(r.accepted[0].providerPayloadSha256,/^[a-f0-9]{64}$/);
  assert.equal('models' in r.accepted[0],false);
 });
+
+test('accepts valid ESPN UTC kickoff timestamps with minute precision without inventing a time',()=>{
+ const fixture={...event('minute-precision'),date:'2026-11-23T12:00Z'};
+ const r=admitEspnScoreboard(payload([fixture]),{leagueId:'tur.1',capturedAt,now:capturedAt});
+ assert.equal(r.validKickoff,1);
+ assert.equal(r.eligible,1);
+ assert.equal(r.accepted[0].kickoff,'2026-11-23T12:00Z');
+});
+
+test('rejects impossible calendar dates and malformed UTC timestamps',()=>{
+ for(const date of ['2026-02-30T12:00Z','2026-11-23T25:00Z','2026-11-23T12:00','2026-11-23T12:00:00+00:00']){
+  const r=admitEspnScoreboard(payload([{...event('bad-'+date),date}]),{leagueId:'tur.1',capturedAt,now:capturedAt});
+  assert.equal(r.validKickoff,0,date);
+  assert.equal(r.rejected.invalid_kickoff,1,date);
+ }
+});
 test('rejects post-match, duplicate, wrong league, bad kickoff, teams and late capture',()=>{
  const badDate={...event('2'),date:'2026-13-40T18:00:00Z'};
  const finished={...event('3'),status:{type:{state:'post',completed:true}}};
