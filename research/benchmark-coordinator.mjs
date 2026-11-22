@@ -6,6 +6,11 @@ import {fetchVerifiedWithFallback} from './verified-source-fallback.mjs';
 const runs=Number(process.env.BENCH_RUNS??1000);
 if(!Number.isInteger(runs)||runs<1||runs>100000)throw new RangeError('BENCH_RUNS must be 1..100000');
 const time=async fn=>{global.gc?.();const start=performance.now(),heapStart=process.memoryUsage().heapUsed;const result=await fn();return {elapsedMs:Number((performance.now()-start).toFixed(3)),heapDeltaBytes:process.memoryUsage().heapUsed-heapStart,...result};};
+const baseline=await time(async()=>{
+ let loads=0;
+ await Promise.all(Array.from({length:runs},async()=>{loads++;return {ok:true};}));
+ return {loads};
+});
 const coalesced=await time(async()=>{
  let loads=0;const c=createRequestCoordinator();
  await Promise.all(Array.from({length:runs},()=>c.run('same',async()=>{loads++;return {ok:true};},{ttlMs:0,limit:1})));
@@ -26,4 +31,4 @@ const fallback=await time(async()=>{
  }
  return {primary,secondary};
 });
-console.log(JSON.stringify({benchmark:'offline_coordinator',runs,node:process.version,gcEnabled:typeof global.gc==='function',coalesced,cached,fallback},null,2));
+console.log(JSON.stringify({benchmark:'offline_coordinator',runs,node:process.version,gcEnabled:typeof global.gc==='function',baseline,coalesced,cached,fallback,comparisonNote:'Baseline executes trivial local promises without coordinator; not an equivalent provider workload and not a speedup claim'},null,2));
