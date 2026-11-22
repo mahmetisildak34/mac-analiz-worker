@@ -14,3 +14,15 @@ test('redirected provider URL blocks isolated write',async()=>{const db=mockDb()
 
 test('two provider calls each consume atomic shared quota reservation',async()=>{const db=mockDb();let n=0;const r=await fetchAndRepairIsolatedApiSports(env(db),fixture,async url=>({ok:true,url,json:async()=>structuredClone(responses[n++])}));assert.equal(r.state,'saved');assert.equal(db.getQuota(),2)});
 test('quota reservation failure makes zero provider requests',async()=>{let calls=0;const db={prepare(){throw Error('quota table unavailable')}};const r=await fetchAndRepairIsolatedApiSports(env(db),fixture,async()=>{calls++});assert.equal(r.state,'quota_unavailable');assert.equal(calls,0)});
+
+test('second reservation waits for rate slot without extra provider calls',async()=>{
+ const db=mockDb(),original=db.prepare.bind(db);let reservations=0,waits=0,calls=0;
+ db.prepare=sql=>{const stmt=original(sql);if(sql.startsWith('UPDATE mam_api_quota_guard')){const first=stmt.first.bind(stmt);stmt.first=async()=>{reservations++;if(reservations===2)return null;return first()};}return stmt};
+ const result=await fetchAndRepairIsolatedApiSports(env(db),fixture,async url=>({ok:true,url,json:async()=>structuredClone(responses[calls++])}),async ms=>{assert.equal(ms,8100);waits++});
+ assert.equal(result.state,'saved');assert.equal(waits,1);assert.equal(calls,2);assert.equal(reservations,3);
+});
+test('lookalike provider hostname is rejected',async()=>{
+ const db=mockDb();
+ const result=await fetchAndRepairIsolatedApiSports(env(db),fixture,async()=>({ok:true,url:'https://v3.football.api-sports.io.evil.example/fixtures?id=123'}));
+ assert.equal(result.state,'provider_unavailable');assert.equal(db.getRow().statistics_json,null);
+});
