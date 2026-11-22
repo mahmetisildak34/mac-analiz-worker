@@ -25,3 +25,22 @@ test("backtest drops duplicates, missing league and unverified outcomes", () => 
   assert.equal(result.valid.models["1.2"].full_time.samples, 0);
   assert.equal(result.valid.models["1.3"].half_time.log_loss, null);
 });
+
+test("evaluates goal markets separately and labels predictions from limited team samples", () => {
+  const rows = Array.from({length: 36}, (_, index) => ({
+    ...match,
+    fixture: {...match.fixture, id: String(index), date: new Date(Date.UTC(2025, 7, index + 1)).toISOString()},
+    teams: index % 2
+      ? {home: {name: "Home"}, away: {name: "Away Opponent " + index}}
+      : {home: {name: "Home Opponent " + index}, away: {name: "Away"}},
+    score: {halftime: {home: 1, away: 1}}
+  }));
+  const result = evaluateArchive([...rows, match], 5).test;
+  for (const model of Object.values(result.models)) {
+    assert.equal(model.full_time.samples, 1);
+    assert.equal(model.full_time.limited_sample_matches, 1);
+    assert.ok(Number.isFinite(model.full_time.binary_markets.btts_yes.log_loss));
+    assert.ok(Number.isFinite(model.full_time.binary_markets.over_2_5.brier));
+    assert.equal(model.half_time.samples, 0);
+  }
+});

@@ -5,18 +5,22 @@ import { analyzeArchiveResponse } from "../archive-poisson-client.js";
 const versions = ["1.2", "1.3"];
 const outcomes = ["home_win", "draw", "away_win"];
 const dayMs = 24 * 60 * 60 * 1000;
-const markets = [...outcomes, "btts_yes", "over_2_5"];
+const binaryMarkets = ["btts_yes", "over_2_5"];
+const markets = [...outcomes, ...binaryMarkets];
 
 function scorecard() {
   return {
-    samples: 0, brier: 0, logLoss: 0,
+    samples: 0, brier: 0, logLoss: 0, limitedSample: 0,
+    binary: Object.fromEntries(binaryMarkets.map(market => [market, {brier: 0, logLoss: 0}])),
     bins: Object.fromEntries(markets.map(market => [
       market, Array.from({length: 10}, () => ({n: 0, forecast: 0, observed: 0}))
     ]))
   };
 }
 
-function record(card, p, {home, away}) {
+function record(card, prediction, {home, away}) {
+  const p = prediction.probabilities;
+  if (prediction.data_quality?.reliability === "limited_sample") card.limitedSample++;
   const outcome = home > away ? "home_win" : home < away ? "away_win" : "draw";
   card.samples++;
   card.logLoss -= Math.log(Math.max(1e-15, p[outcome]));
@@ -24,6 +28,11 @@ function record(card, p, {home, away}) {
   for (const market of markets) {
     const hit = market === "btts_yes" ? home > 0 && away > 0 :
       market === "over_2_5" ? home + away >= 3 : market === outcome;
+    const binary = card.binary[market];
+    if (binary) {
+      binary.brier += (p[market] - Number(hit)) ** 2;
+      binary.logLoss -= Math.log(Math.max(1e-15, hit ? p[market] : 1 - p[market]));
+    }
     const bin = card.bins[market][Math.min(9, Math.floor(p[market] * 10))];
     bin.n++;
     bin.forecast += p[market];
@@ -35,6 +44,11 @@ function summarize(card) {
   const n = card.samples;
   return {
     samples: n, brier: n ? card.brier / n : null, log_loss: n ? card.logLoss / n : null,
+    limited_sample_matches: card.limitedSample,
+    binary_markets: Object.fromEntries(binaryMarkets.map(market => [market, {
+      brier: n ? card.binary[market].brier / n : null,
+      log_loss: n ? card.binary[market].logLoss / n : null
+    }])),
     expected_calibration_error: Object.fromEntries(markets.map(market => [
       market, n ? card.bins[market].reduce((sum, bin) => sum + Math.abs(bin.forecast - bin.observed), 0) / n : null
     ]))
@@ -79,7 +93,7 @@ export function evaluateArchive(rows, maxMatches) {
         if (!actual || !["home","away"].every(side =>
           Number.isInteger(actual[side]) && actual[side] >= 0 && actual[side] <= match.goals[side]
         ) || !predictions.every(result => result[period].available)) continue;
-        versions.forEach((version, index) => record(cards[version][period], predictions[index][period].probabilities, actual));
+        versions.forEach((version, index) => record(cards[version][period], predictions[index][period], actual));
       }
     }
     results[leagueId] = {

@@ -12,41 +12,9 @@ jobs:
   audit:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
       - name: Audit D1 archive against ESPN team directories and upcoming fixtures
-        run: |
-          node --input-type=module <<'NODE'
-          const endpoint = "https://odd-sunset-6c83.m-ahmetisildak34.workers.dev/api/archive/quality-check?limit=20000";
-          const response = await fetch(endpoint, { headers: { "Accept": "application/json" } });
-          const raw = await response.text();
-          if (!response.ok) throw new Error("Coverage audit HTTP " + response.status + ": " + raw.slice(0, 1200));
-          const report = JSON.parse(raw);
-          let syncStatus = null;
-          try {
-            const syncResponse = await fetch("https://odd-sunset-6c83.m-ahmetisildak34.workers.dev/api/archive/sync-status", { headers: { "Accept": "application/json" } });
-            if (syncResponse.ok) syncStatus = await syncResponse.json();
-          } catch (_) {}
-          const leagues = Array.isArray(report.priorityLeagueCoverage) ? report.priorityLeagueCoverage : [];
-          const incomplete = leagues.filter(league =>
-            !league.directoryVerified ||
-            Number(league.teamsBelow10 || 0) > 0 ||
-            (Array.isArray(league.missingUpcomingInD1) && league.missingUpcomingInD1.length > 0) ||
-            (Array.isArray(league.d1UpcomingNotInProvider) && league.d1UpcomingNotInProvider.length > 0)
-          );
-          console.log("PRIORITY_LEAGUE_AUDIT=" + JSON.stringify({
-            ranAt: new Date().toISOString(),
-            totalRecords: report.totalRecords,
-            checked: report.checked,
-            truncated: report.truncated,
-            invalidRecordCount: report.invalidRecordCount,
-            completedWithoutScoreCount: report.completedWithoutScoreCount,
-            invalidScoreCount: report.invalidScoreCount,
-            syncStatus,
-            leagues,
-            directoryErrors: report.priorityLeagueDirectoryErrors,
-            incompleteLeagueCount: incomplete.length
-          }, null, 2));
-          if (incomplete.length) {
-            console.error("Coverage audit found incomplete priority leagues.");
-            process.exitCode = 1;
-          }
-          NODE
+        run: node scripts/priority-league-audit.mjs
