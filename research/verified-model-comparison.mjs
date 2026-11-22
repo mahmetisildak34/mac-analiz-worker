@@ -10,10 +10,10 @@ export function compareVerifiedPredictions(pairs,{minSamples=30}={}){
    typeof pair.fixtureId!=='string'||!pair.fixtureId||typeof pair.leagueId!=='string'||!pair.leagueId||
    typeof pair.predictionEvidenceSha256!=='string'||!/^[a-f0-9]{64}$/.test(pair.predictionEvidenceSha256)||
    !Number.isSafeInteger(pair.homeGoals)||pair.homeGoals<0||!Number.isSafeInteger(pair.awayGoals)||pair.awayGoals<0||
-   typeof pair.date!=='string'||!/^\\d{4}-\\d{2}-\\d{2}T/.test(pair.date)||!Number.isFinite(Date.parse(pair.date))||
+   typeof pair.date!=='string'||!/^\d{4}-\d{2}-\d{2}T/.test(pair.date)||!Number.isFinite(Date.parse(pair.date))||
    !pair.models||!versions.every(v=>pair.models[v]))throw new Error('Unverified or incomplete model pair');
-  if(seen.has(pair.leagueId+'\\u0000'+pair.fixtureId))throw new Error('Duplicate fixture in comparison');
-  seen.add(pair.leagueId+'\\u0000'+pair.fixtureId);
+  if(seen.has(pair.leagueId+'\u0000'+pair.fixtureId))throw new Error('Duplicate fixture in comparison');
+  seen.add(pair.leagueId+'\u0000'+pair.fixtureId);
   const result=outcome(pair),row={};
   for(const version of versions){
    const p=pair.models[version];
