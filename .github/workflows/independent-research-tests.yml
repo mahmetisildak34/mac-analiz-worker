@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - feature/independent-calibration-20261122
+      - feature/independent-calibration-isolation-fix-20261122
+  pull_request:
+    branches:
+      - feature/independent-calibration-20261122
   workflow_dispatch:
 permissions:
   contents: read
