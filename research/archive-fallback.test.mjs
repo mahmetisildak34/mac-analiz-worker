@@ -9,12 +9,12 @@ const metadata = {
   sourceUrl: 'https://raw.githubusercontent.com/openfootball/football.json/master/2015-16/en.1.json'
 };
 const original = {
-  date: '2015-08-08', team1: 'Manchester United', team2: 'Tottenham Hotspur',
+  date: '2015-08-08', time: '12:45', team1: 'Manchester United', team2: 'Tottenham Hotspur',
   score: { ht: [1, 0], ft: [1, 0] }
 };
 const [alternative] = normalizeOpenFootball({ matches: [original] }, metadata).results;
 const fixture = {
-  ...metadata, status: 'FT', date: original.date,
+  ...metadata, status: 'FT', date: original.date, localTime: original.time,
   home: 'Man United', away: 'Tottenham Hotspur'
 };
 const request = {
@@ -32,6 +32,7 @@ test('falls back only with explicit alias and matching historical venue identiti
 
 test('blocks multiple matches and flags score conflicts', () => {
   assert.equal(resolveArchiveScore({ ...request, alternatives: [alternative, alternative] }).state, 'ambiguous');
+  assert.equal(resolveArchiveScore({ ...request, fixture: { ...fixture, localTime: '15:00' } }).state, 'time-conflict');
   const primary = { state: 'ok', fullTime: [0, 0] };
   assert.deepEqual(resolveArchiveScore({ ...request, primary }), { state: 'conflict', primary, alternative });
   assert.equal(resolveArchiveScore({ ...request, primary: { state: 'unauthorized' } }).state, 'unavailable');

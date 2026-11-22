@@ -3,8 +3,10 @@
 export function resolveArchiveScore({ fixture, primary, alternatives, aliases = new Map() }) {
   const name = value => typeof value === 'string' ? value.normalize('NFC').trim().toLowerCase() : '';
   const canonical = value => aliases.get(name(value)) ?? name(value);
+  const validTime = value => typeof value === 'string' && /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value);
   if (fixture?.status !== 'FT' || !fixture.competition || !fixture.season ||
       typeof fixture.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(fixture.date) ||
+      (fixture.localTime != null && !validTime(fixture.localTime)) ||
       !canonical(fixture.home) || !canonical(fixture.away) ||
       canonical(fixture.home) === canonical(fixture.away)) return { state: 'unsupported' };
 
@@ -17,6 +19,9 @@ export function resolveArchiveScore({ fixture, primary, alternatives, aliases = 
     canonical(row.away) === canonical(fixture.away) && valid(row.fullTime));
   if (matches.length > 1) return { state: 'ambiguous' };
   const alternative = matches[0];
+  if (alternative && fixture.localTime != null && alternative.localTime !== fixture.localTime) {
+    return { state: 'time-conflict', alternative };
+  }
   if (primary?.state === 'ok' && valid(primary.fullTime)) {
     if (alternative && primary.fullTime.some((goal, i) => goal !== alternative.fullTime[i])) {
       return { state: 'conflict', primary, alternative };
