@@ -1,0 +1,34 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {admitEspnScoreboard,reportLeagueAdmissions} from './espn-pre-match-admission.mjs';
+const kickoff='2026-12-01T18:00:00Z',capturedAt='2026-11-22T10:00:00Z';
+const event=(id='123')=>({id,date:kickoff,status:{type:{state:'pre',completed:false,name:'STATUS_SCHEDULED'}},competitions:[{competitors:[{homeAway:'home',team:{id:'1'}},{homeAway:'away',team:{id:'2'}}]}]});
+const payload=(events,slug='tur.1')=>({leagues:[{slug}],events});
+test('accepts only ESPN pre-kickoff fixtures with distinct team identity and source hash',()=>{
+ const r=admitEspnScoreboard(payload([event()]),{leagueId:'tur.1',capturedAt,now:capturedAt});
+ assert.equal(r.inspected,1);assert.equal(r.validKickoff,1);assert.equal(r.eligible,1);
+ assert.equal(r.accepted[0].provider,'ESPN');
+ assert.match(r.accepted[0].providerPayloadSha256,/^[a-f0-9]{64}$/);
+ assert.equal('models' in r.accepted[0],false);
+});
+test('rejects post-match, duplicate, wrong league, bad kickoff, teams and late capture',()=>{
+ const badDate={...event('2'),date:'2026-13-40T18:00:00Z'};
+ const finished={...event('3'),status:{type:{state:'post',completed:true}}};
+ const badTeams={...event('4'),competitions:[{competitors:[{homeAway:'home',team:{id:'1'}},{homeAway:'away',team:{id:'1'}}]}]};
+ const r=admitEspnScoreboard(payload([event(),event(),badDate,finished,badTeams]),{leagueId:'tur.1',capturedAt,now:capturedAt});
+ assert.equal(r.inspected,5);assert.equal(r.eligible,1);assert.equal(r.validKickoff,4);
+ assert.equal(r.rejected.missing_or_duplicate_fixture,1);
+ assert.equal(r.rejected.invalid_kickoff,1);
+ assert.equal(r.rejected.not_scheduled,1);
+ assert.equal(r.rejected.invalid_team_identity,1);
+ assert.equal(admitEspnScoreboard(payload([event()],'eng.1'),{leagueId:'tur.1',capturedAt,now:capturedAt}).eligible,0);
+ assert.equal(admitEspnScoreboard(payload([event()]),{leagueId:'tur.1',capturedAt:kickoff,now:kickoff}).eligible,0);
+});
+test('league admission report never mistakes fixture discovery for real model predictions',()=>{
+ const r=reportLeagueAdmissions([{leagueId:'tur.1',capturedAt,payload:payload([event()])},{leagueId:'eng.1',capturedAt,payload:payload([event('9')],'eng.1')}],{now:capturedAt});
+ assert.equal(r.leagues['tur.1'].eligible,1);
+ assert.equal(r.leagues['eng.1'].eligible,1);
+ assert.equal(r.realPredictionCount,0);
+ assert.equal(r.modelComparison.status,'insufficient_verified_pre_match_predictions');
+ assert.throws(()=>reportLeagueAdmissions([{leagueId:'tur.1',capturedAt,payload:payload([])},{leagueId:'tur.1',capturedAt,payload:payload([])}],{now:capturedAt}),/Duplicate/);
+});
