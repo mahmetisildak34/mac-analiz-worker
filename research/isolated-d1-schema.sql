@@ -24,3 +24,15 @@ CREATE TRIGGER IF NOT EXISTS isolated_results_no_update
  BEFORE UPDATE ON isolated_verified_results BEGIN SELECT RAISE(ABORT,'immutable result'); END;
 CREATE TRIGGER IF NOT EXISTS isolated_results_no_delete
  BEFORE DELETE ON isolated_verified_results BEGIN SELECT RAISE(ABORT,'immutable result'); END;
+
+-- Separate append-only supplementary predictions; cannot overwrite 1X2 or final scores.
+CREATE TABLE IF NOT EXISTS isolated_market_evidence (
+ fixture_id TEXT PRIMARY KEY NOT NULL REFERENCES isolated_prediction_evidence(fixture_id),
+ recorded_at TEXT NOT NULL,
+ sha256 TEXT NOT NULL CHECK(length(sha256)=64),
+ payload_json TEXT NOT NULL CHECK(json_valid(payload_json))
+);
+CREATE TRIGGER IF NOT EXISTS isolated_markets_no_update
+ BEFORE UPDATE ON isolated_market_evidence BEGIN SELECT RAISE(ABORT,'immutable market evidence'); END;
+CREATE TRIGGER IF NOT EXISTS isolated_markets_no_delete
+ BEFORE DELETE ON isolated_market_evidence BEGIN SELECT RAISE(ABORT,'immutable market evidence'); END;
