@@ -20,18 +20,20 @@ export function createRequestCoordinator({now=()=>Date.now(),maxEntries=256}={})
  }
  async function run(key,load,{ttlMs=0,provider='default',limit=Infinity,windowMs=60000}={}){
   if(typeof key!=='string'||!key||typeof load!=='function'||!Number.isFinite(ttlMs)||ttlMs<0)throw new RangeError('Invalid request');
-  const cached=getCached(key);
+  if(typeof provider!=='string'||!provider.trim())throw new RangeError('Invalid provider');
+  const requestKey=JSON.stringify([provider,key]);
+  const cached=getCached(requestKey);
   if(cached!==undefined)return cached;
-  if(pending.has(key))return pending.get(key);
+  if(pending.has(requestKey))return pending.get(requestKey);
   if(limit!==Infinity&&!reserve(provider,limit,windowMs))throw new Error('Provider quota exhausted');
   const task=Promise.resolve().then(load).then(value=>{
    if(ttlMs>0&&value!==undefined){
-    cache.delete(key);cache.set(key,{value,expiresAt:now()+ttlMs});
+    cache.delete(requestKey);cache.set(requestKey,{value,expiresAt:now()+ttlMs});
     while(cache.size>maxEntries)cache.delete(cache.keys().next().value);
    }
    return value;
-  }).finally(()=>pending.delete(key));
-  pending.set(key,task);
+  }).finally(()=>pending.delete(requestKey));
+  pending.set(requestKey,task);
   return task;
  }
  return {run,clear:()=>cache.clear(),stats:()=>({pending:pending.size,cached:cache.size,providers:usage.size})};
