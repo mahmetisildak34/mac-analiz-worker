@@ -21,8 +21,8 @@ test('accepts valid ESPN UTC kickoff timestamps with minute precision without in
 });
 
 test('rejects impossible calendar dates and malformed UTC timestamps',()=>{
- for(const date of ['2026-02-30T12:00Z','2026-11-23T25:00Z','2026-11-23T12:00','2026-11-23T12:00:00+00:00']){
-  const r=admitEspnScoreboard(payload([{...event('bad-'+date),date}]),{leagueId:'tur.1',capturedAt,now:capturedAt});
+ for(const [index,date] of ['2026-02-30T12:00Z','2026-11-23T25:00Z','2026-11-23T12:00','2026-11-23T12:00:00+00:00'].entries()){
+  const r=admitEspnScoreboard(payload([{...event('bad-'+index),date}]),{leagueId:'tur.1',capturedAt,now:capturedAt});
   assert.equal(r.validKickoff,0,date);
   assert.equal(r.rejected.invalid_kickoff,1,date);
  }
