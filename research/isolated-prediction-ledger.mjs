@@ -31,3 +31,25 @@ export function createPredictionLedger({now=()=>new Date().toISOString()}={}){
  function verify(record){if(!record||typeof record!=='object')return false;const {sha256,...payload}=record;return typeof sha256==='string'&&sha256===digest(payload);}
  return {append,get,list,verify,size:()=>entries.size};
 }
+
+/**
+ * Join an immutable pre-kickoff prediction with a separately verified final result.
+ * Fail closed on missing source identity, mismatched teams or invalid ledger digest.
+ * The result must be independently verified; the ledger never infers a final score.
+ */
+export function pairPredictionWithVerifiedResult(ledger,fixtureId,result){
+ const saved=ledger.get(fixtureId);
+ if(!saved||!ledger.verify(saved))throw new Error('Missing or invalid prediction evidence');
+ if(!result||result.identity_verified!==true||result.score_verified!==true||
+    result.fixtureId!==saved.fixtureId||result.leagueId!==saved.leagueId||
+    result.homeTeamId!==saved.homeTeamId||result.awayTeamId!==saved.awayTeamId||
+    result.date!==saved.kickoff||
+    !Number.isInteger(result.homeGoals)||result.homeGoals<0||
+    !Number.isInteger(result.awayGoals)||result.awayGoals<0)
+  throw new Error('Unverified or mismatched final result');
+ return {fixtureId:saved.fixtureId,date:saved.kickoff,leagueId:saved.leagueId,
+  identity_verified:true,score_verified:true,homeGoals:result.homeGoals,
+  awayGoals:result.awayGoals,models:structuredClone(saved.models),
+  predictionEvidenceSha256:saved.sha256,featureSnapshotId:saved.featureSnapshotId,
+  sourceEvidenceId:saved.sourceEvidenceId};
+}
