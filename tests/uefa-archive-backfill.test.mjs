@@ -4,7 +4,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
-import { stageUefaBackfill } from "../research/uefa-archive-backfill.mjs";
+import { stageUefaBackfill, verifyUefaSnapshot } from "../research/uefa-archive-backfill.mjs";
 
 function fixture() {
   return {
@@ -145,4 +145,25 @@ test("legacy UEFA Europa Conference League match URLs verify only Conference Lea
   candidate.slug = "uefa.europa.conf";
   candidate.espn.url = candidate.espn.url.replace("uefa.champions", candidate.slug);
   assert.equal(run([candidate]).staged.length, 1);
+});
+
+test("saved snapshot is verified read-only and changed quarantine evidence is detected", () => {
+  const directory = mkdtempSync(join(tmpdir(), "uefa-verify-"));
+  const path = join(directory, "evidence.sqlite");
+  try {
+    const result = stageUefaBackfill({
+      candidates: [fixture(), null], archive: [], before: "2026-11-22T00:00:00Z",
+      aliases: { stuttgart: "VfB Stuttgart" },
+    }, path);
+    assert.deepEqual(verifyUefaSnapshot(path), result.manifest);
+    const db = new DatabaseSync(path);
+    try {
+      db.exec("UPDATE quarantine SET evidence = '[]'");
+    } finally {
+      db.close();
+    }
+    assert.throws(() => verifyUefaSnapshot(path), /does not match its manifest/);
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
 });

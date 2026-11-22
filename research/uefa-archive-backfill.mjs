@@ -20,6 +20,32 @@ const normalizeTeam = (value, aliases) => {
   return Object.hasOwn(aliases, key) ? name(aliases[key]) : key;
 };
 
+function readSnapshot(database) {
+  const staged = database.prepare("SELECT * FROM staged ORDER BY kickoff, fixture_id").all();
+  const withheld = database.prepare("SELECT * FROM quarantine ORDER BY reason, evidence").all();
+  const sha256 = createHash("sha256").update(JSON.stringify({ staged, withheld })).digest("hex");
+  return { staged, withheld, sha256 };
+}
+
+export function verifyUefaSnapshot(sqlitePath) {
+  const database = new DatabaseSync(sqlitePath, { readOnly: true });
+  try {
+    const [result, ...rest] = database.prepare("PRAGMA integrity_check").all();
+    if (rest.length || result?.integrity_check !== "ok") throw new Error("SQLite integrity check failed");
+    const manifests = database.prepare("SELECT value FROM manifest").all();
+    if (manifests.length !== 1) throw new Error("Expected exactly one snapshot manifest");
+    const manifest = JSON.parse(manifests[0].value);
+    const { staged, withheld, sha256 } = readSnapshot(database);
+    if (manifest?.sha256 !== sha256 || manifest.staged !== staged.length ||
+        manifest.quarantined !== withheld.length || !Number.isFinite(Date.parse(manifest.cutoff))) {
+      throw new Error("Snapshot does not match its manifest");
+    }
+    return manifest;
+  } finally {
+    database.close();
+  }
+}
+
 function verify(candidate, cutoff, aliases) {
   const { slug, espn, uefa } = candidate ?? {};
   const [leagueId, uefaPath] = competitions.get(slug) ?? [];
@@ -140,11 +166,10 @@ export function stageUefaBackfill({ candidates, archive, before, aliases = {} },
           row.homeName, row.awayName, row.homeGoals, row.awayGoals, row.espnUrl, row.uefaUrl, row.evidence, row.status);
       }
     }
-    const staged = database.prepare("SELECT * FROM staged ORDER BY kickoff, fixture_id").all();
-    const withheld = database.prepare("SELECT * FROM quarantine ORDER BY reason, evidence").all();
+    const { staged, withheld, sha256 } = readSnapshot(database);
     const manifest = {
       cutoff: new Date(cutoff).toISOString(), staged: staged.length, quarantined: withheld.length,
-      sha256: createHash("sha256").update(JSON.stringify({ staged, withheld })).digest("hex"),
+      sha256,
     };
     database.prepare("INSERT INTO manifest VALUES (?)").run(JSON.stringify(manifest));
     database.exec("COMMIT");
@@ -158,7 +183,11 @@ export function stageUefaBackfill({ candidates, archive, before, aliases = {} },
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const input = process.argv[2];
-  if (!input) throw new Error("Usage: node research/uefa-archive-backfill.mjs <evidence.json> [new-local.sqlite]");
-  const result = stageUefaBackfill(JSON.parse(await readFile(input, "utf8")), process.argv[3]);
+  const target = process.argv[3];
+  if (!input || (input === "--verify" && !target)) {
+    throw new Error("Usage: node research/uefa-archive-backfill.mjs <evidence.json> [new-local.sqlite] | --verify <local.sqlite>");
+  }
+  const result = input === "--verify" ? verifyUefaSnapshot(target)
+    : stageUefaBackfill(JSON.parse(await readFile(input, "utf8")), target);
   process.stdout.write(JSON.stringify(result) + "\n");
 }
