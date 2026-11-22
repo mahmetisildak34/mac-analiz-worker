@@ -58,3 +58,13 @@ test('pre-state alone cannot override final or unknown provider status',()=>{
   assert.equal(admitEspnScoreboard(payload([fixture]),{leagueId:'tur.1',capturedAt,now:capturedAt}).eligible,1,name);
  }
 });
+
+test('ESPN fixture admission fails closed when completed flag is missing or malformed',()=>{
+ for(const completed of [undefined,null,'false',0,true]){
+  const fixture={...event('flag'+String(completed)),status:{type:{state:'pre',name:'STATUS_SCHEDULED',completed}}};
+  const result=admitEspnScoreboard(payload([fixture]),{leagueId:'tur.1',capturedAt,now:capturedAt});
+  assert.equal(result.eligible,0,String(completed));
+  assert.equal(result.rejected.not_scheduled,1,String(completed));
+ }
+ assert.equal(admitEspnScoreboard(payload([event('valid')]),{leagueId:'tur.1',capturedAt,now:capturedAt}).eligible,1);
+});
