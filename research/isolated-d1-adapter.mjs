@@ -16,10 +16,10 @@ export function createIsolatedD1Store({db,now=()=>new Date().toISOString()}={}){
  const statement=(sql,...values)=>db.prepare(sql).bind(...values);
  async function read(id){
   if(typeof id!=='string'||!id)throw new TypeError('Fixture identity required');
-  const row=await statement('SELECT payload_json,sha256 FROM isolated_prediction_evidence WHERE fixture_id=?',id).first();
+  const row=await statement('SELECT fixture_id,league_id,kickoff,recorded_at,payload_json,sha256 FROM isolated_prediction_evidence WHERE fixture_id=?',id).first();
   if(!row)return null;
   const saved=parse(row.payload_json,row.sha256);
-  if(saved.fixtureId!==id||!versions.every(v=>saved.models?.[v]?.predictedAt===saved.recordedAt))
+  if(saved.fixtureId!==id||row.fixture_id!==id||row.league_id!==saved.leagueId||row.kickoff!==saved.kickoff||row.recorded_at!==saved.recordedAt||!versions.every(v=>saved.models?.[v]?.predictedAt===saved.recordedAt))
    throw new Error('Stored prediction provenance mismatch');
   return structuredClone(saved);
  }
@@ -52,16 +52,16 @@ export function createIsolatedD1Store({db,now=()=>new Date().toISOString()}={}){
   return structuredClone(record);
  }
  async function readVerifiedResult(id){
-  const row=await statement('SELECT payload_json,sha256 FROM isolated_verified_results WHERE fixture_id=?',id).first();
+  const row=await statement('SELECT fixture_id,verified_at,evidence_id,payload_json,sha256 FROM isolated_verified_results WHERE fixture_id=?',id).first();
   if(!row)return null;
   const saved=parse(row.payload_json,row.sha256);
-  if(saved.fixtureId!==id)throw new Error('Stored result identity mismatch');
+  if(saved.fixtureId!==id||row.fixture_id!==id||row.verified_at!==saved.verifiedAt||row.evidence_id!==saved.evidenceId)throw new Error('Stored result identity mismatch');
   return structuredClone(saved);
  }
  async function pair(id){
   const [prediction,result]=await Promise.all([read(id),readVerifiedResult(id)]);
   if(!prediction||!result)throw new Error('Missing prediction or verified result');
-  if(result.predictionEvidenceSha256!==prediction.sha256)throw new Error('Prediction evidence link mismatch');
+  if(result.predictionEvidenceSha256!==prediction.sha256||Date.parse(result.verifiedAt)<Date.parse(prediction.kickoff))throw new Error('Prediction evidence link mismatch');
   return pairPredictionWithVerifiedResult({
    get:key=>key===id?prediction:null,
    verify:record=>record.sha256===hash((({sha256,...payload})=>payload)(record))
