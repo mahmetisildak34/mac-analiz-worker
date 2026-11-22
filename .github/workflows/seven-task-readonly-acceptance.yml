@@ -1,0 +1,39 @@
+name: Seven-task isolated read-only acceptance
+on:
+  pull_request:
+    paths:
+      - 'research/seven-task-acceptance.test.mjs'
+      - 'research/verified-league-calibration.mjs'
+      - 'research/request-coordinator.mjs'
+      - 'research/fixture-read-check-executor.mjs'
+      - 'research/fixture-check-planner.mjs'
+      - '.github/workflows/seven-task-readonly-acceptance.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  safety-and-model-acceptance:
+    if: github.event_name != 'pull_request' || github.head_ref == 'fix/seven-task-offline-acceptance-20261122'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate Worker modules without deployment
+        run: |
+          node --check worker.js
+          node --check research/verified-league-calibration.mjs
+          node --check research/fixture-read-check-executor.mjs
+          node --check research/request-coordinator.mjs
+      - name: Run isolated safety, Poisson and request tests
+        run: node --experimental-sqlite --test research/*.test.mjs
+      - name: Run existing offline Worker regression tests
+        run: node --test tests/*.test.mjs
+      - name: Repeat protected isolated statistics and D1 acceptance regressions
+        run: node --experimental-sqlite --test research/statistics-gap-readonly-audit.test.mjs tests/verified-statistics-candidate.test.mjs tests/isolated-verified-statistics-repair.test.mjs tests/isolated-provider-fetch.test.mjs tests/isolated-statistics-sqlite-acceptance.test.mjs
+      - name: Measure offline fan-in, cache, and fallback
+        env:
+          BENCH_RUNS: '200'
+        run: node --expose-gc research/benchmark-coordinator.mjs
