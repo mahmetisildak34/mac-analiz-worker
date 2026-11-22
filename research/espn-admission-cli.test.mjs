@@ -21,6 +21,14 @@ test('offline capture manifest admits two leagues but never invents predictions'
   assert.equal(report.evidence[0].leagueId,'tur.1');
   assert.match(report.evidence[0].scoreboardSha256,/^[a-f0-9]{64}$/);
   assert.notEqual(report.evidence[0].scoreboardSha256,report.evidence[1].scoreboardSha256);
+  manifest.leagues[0].expectedSha256=report.evidence[0].scoreboardSha256;
+  await writeFile(join(dir,'manifest.json'),JSON.stringify(manifest));
+  assert.equal((await inspectCapturedScoreboards(join(dir,'manifest.json'),{now:capturedAt})).leagues['tur.1'].eligible,1);
+  manifest.leagues[0].expectedSha256='0'.repeat(64);
+  await writeFile(join(dir,'manifest.json'),JSON.stringify(manifest));
+  await assert.rejects(inspectCapturedScoreboards(join(dir,'manifest.json'),{now:capturedAt}),/digest mismatch/);
+  delete manifest.leagues[0].expectedSha256;
+  await writeFile(join(dir,'manifest.json'),JSON.stringify(manifest));
   assert.equal(report.modelComparison.status,'insufficient_verified_pre_match_predictions');
   await writeFile(join(dir,'eng.json'),JSON.stringify({leagues:[{slug:'eng.1'}],events:[fixture('100')]}));
   await assert.rejects(inspectCapturedScoreboards(join(dir,'manifest.json'),{now:capturedAt}),/Cross-league fixture identity collision/);
