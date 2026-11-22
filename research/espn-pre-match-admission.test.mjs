@@ -68,3 +68,14 @@ test('ESPN fixture admission fails closed when completed flag is missing or malf
  }
  assert.equal(admitEspnScoreboard(payload([event('valid')]),{leagueId:'tur.1',capturedAt,now:capturedAt}).eligible,1);
 });
+
+test('league admission rejects one ESPN fixture identity claimed by two leagues',()=>{
+ const inputs=[{leagueId:'tur.1',capturedAt,payload:payload([event('shared')],'tur.1')},
+ {leagueId:'eng.1',capturedAt,payload:payload([event('shared')],'eng.1')}];
+ assert.throws(()=>reportLeagueAdmissions(inputs,{now:capturedAt}),/Cross-league fixture identity collision/);
+ inputs[1].payload=payload([event('distinct')],'eng.1');
+ const report=reportLeagueAdmissions(inputs,{now:capturedAt});
+ assert.equal(report.leagues['tur.1'].eligible,1);
+ assert.equal(report.leagues['eng.1'].eligible,1);
+ assert.equal(report.realPredictionCount,0);
+});
