@@ -2,6 +2,7 @@
 // SQL schema: isolated-d1-schema.sql. All writes use INSERT (no UPSERT/REPLACE).
 import {createHash} from 'node:crypto';
 import {createPredictionLedger,pairPredictionWithVerifiedResult} from './isolated-prediction-ledger.mjs';
+import {sealMarketEvidence} from './supplementary-market-evidence.mjs';
 const hash=x=>createHash('sha256').update(JSON.stringify(x)).digest('hex');
 const versions=['v1.2','v1.3','v1.4'];
 const parse=(json,expectedHash)=>{
@@ -67,5 +68,36 @@ export function createIsolatedD1Store({db,now=()=>new Date().toISOString()}={}){
    verify:record=>record.sha256===hash((({sha256,...payload})=>payload)(record))
   },id,result);
  }
- return {append,read,saveVerifiedResult,readVerifiedResult,pair};
+ async function appendMarkets(input){
+  const prediction=await read(input?.fixtureId);
+  if(!prediction)throw new Error('Missing prediction evidence');
+  const market=sealMarketEvidence(input);
+  if(market.fixtureId!==prediction.fixtureId||market.leagueId!==prediction.leagueId||
+   market.kickoff!==prediction.kickoff||market.recordedAt!==prediction.recordedAt||
+   market.featureSnapshotId!==prediction.featureSnapshotId||
+   market.featureAvailableAt!==prediction.featureAvailableAt||
+   market.sourceEvidenceId!==prediction.sourceEvidenceId||
+   !versions.every(v=>market.models[v].codeVersion===prediction.models[v].codeVersion))
+   throw new Error('Supplementary market provenance mismatch');
+  try{
+   await statement('INSERT INTO isolated_market_evidence (fixture_id,recorded_at,sha256,payload_json) VALUES (?,?,?,?)',
+    market.fixtureId,market.recordedAt,market.sha256,JSON.stringify(market)).run();
+  }catch(e){if(/UNIQUE|PRIMARY KEY|constraint failed/i.test(String(e)))throw new Error('Immutable market evidence already exists');throw e;}
+  return structuredClone(market);
+ }
+ async function readMarkets(id){
+  const row=await statement('SELECT fixture_id,recorded_at,sha256,payload_json FROM isolated_market_evidence WHERE fixture_id=?',id).first();
+  if(!row)return null;
+  const market=parse(row.payload_json,row.sha256);
+  if(row.fixture_id!==id||market.fixtureId!==id||row.recorded_at!==market.recordedAt)
+   throw new Error('Stored market provenance mismatch');
+  const prediction=await read(id);
+  if(!prediction||market.kickoff!==prediction.kickoff||market.leagueId!==prediction.leagueId||
+   market.featureSnapshotId!==prediction.featureSnapshotId||market.featureAvailableAt!==prediction.featureAvailableAt||
+   market.sourceEvidenceId!==prediction.sourceEvidenceId||
+   !versions.every(v=>market.models?.[v]?.codeVersion===prediction.models[v].codeVersion))
+   throw new Error('Stored market prediction link mismatch');
+  return structuredClone(market);
+ }
+ return {append,read,saveVerifiedResult,readVerifiedResult,pair,appendMarkets,readMarkets};
 }
