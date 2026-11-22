@@ -2,12 +2,12 @@
 // Never claims a prediction is historical merely because a fixture is final.
 const MODELS=['v1.2','v1.3','v1.4'];
 function parseUnambiguousTimestamp(value){
- if(typeof value!=='string'||!/^\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])T(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d{1,3})?(?:Z|[+-](?:0\\d|1[0-4]):[0-5]\\d)$/.test(value))return NaN;
- // Date.parse normalizes impossible calendar days; reject those before accepting evidence.
+ if(typeof value!=='string'||!/^\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d{1,3})?(?:Z|[+-](?:0\d|1[0-4]):[0-5]\d)$/.test(value))return NaN;
+ // Reject normalized impossible dates, missing timezone offsets and non-standard +14 offsets.
  const day=value.slice(0,10),calendar=new Date(day+'T00:00:00Z');
  if(!Number.isFinite(calendar.getTime())||calendar.toISOString().slice(0,10)!==day)return NaN;
  const offset=value.slice(-6);
- if(offset[0]!=='Z'&&offset.slice(1,3)==='14'&&offset.slice(4)!=='00')return NaN;
+ if(value.endsWith('Z')===false&&offset.slice(1,3)==='14'&&offset.slice(4)!=='00')return NaN;
  return Date.parse(value);
 }
 export function auditPredictionProvenance(records,{requireAllModels=true}={}){
