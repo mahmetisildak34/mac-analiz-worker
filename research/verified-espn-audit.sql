@@ -13,6 +13,10 @@ WHERE lower(source) = 'espn'
   AND fixture_id LIKE 'espn-%-' || CAST(json_extract(raw_json,'$.id') AS TEXT)
   AND CAST(json_extract(raw_json,'$.id') AS TEXT) =
       substr(fixture_id, length(fixture_id) - length(CAST(json_extract(raw_json,'$.id') AS TEXT)) + 1)
+  AND json_type(raw_json,'$.competitions[0].competitors[0].score') IN ('text','integer')
+  AND json_type(raw_json,'$.competitions[0].competitors[1].score') IN ('text','integer')
+  AND trim(CAST(json_extract(raw_json,'$.competitions[0].competitors[0].score') AS TEXT)) GLOB '[0-9]*'
+  AND trim(CAST(json_extract(raw_json,'$.competitions[0].competitors[1].score') AS TEXT)) GLOB '[0-9]*'
   AND CAST(json_extract(raw_json,'$.competitions[0].competitors[0].score') AS INTEGER) >= 0
   AND CAST(json_extract(raw_json,'$.competitions[0].competitors[1].score') AS INTEGER) >= 0
   AND home_goals = CAST(json_extract(raw_json,'$.competitions[0].competitors[0].score') AS INTEGER)
