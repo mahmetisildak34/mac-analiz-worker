@@ -20,3 +20,18 @@ test('comparison refuses duplicates, unverified results and late predictions',()
  assert.throws(()=>compareVerifiedPredictions([{...pair,models:{...pair.models,'v1.2':p(.7,.2,.2)}}]),/Invalid/);
  assert.equal(compareVerifiedPredictions([]).totalVerifiedPairs,0);
 });
+
+test('same provider fixture identifier in distinct leagues is not a duplicate',()=>{
+ const result=compareVerifiedPredictions([pair,{...pair,leagueId:'eng.1'}],{minSamples:2});
+ assert.equal(result.totalVerifiedPairs,2);
+ assert.equal(result.leagues['tur.1'].sampleSize,1);
+ assert.equal(result.leagues['eng.1'].sampleSize,1);
+});
+test('invalid kickoff and unsafe result goals cannot enter evaluation',()=>{
+ for(const date of [undefined,'not-a-date','2026-11-21']){
+  assert.throws(()=>compareVerifiedPredictions([{...pair,date}]),/Unverified/);
+ }
+ for(const goals of [-1,1.5,Number.MAX_SAFE_INTEGER+1]){
+  assert.throws(()=>compareVerifiedPredictions([{...pair,homeGoals:goals}]),/Unverified/);
+ }
+});
