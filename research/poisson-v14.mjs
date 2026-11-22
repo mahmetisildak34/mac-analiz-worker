@@ -122,7 +122,8 @@ export function estimateRates(rows, target, { window = 10, halfLifeDays = 90, pe
   if (homeAverage <= 0 || awayAverage <= 0) return null;
 
   function strength(team, side, other, scoringAverage, concedingAverage) {
-    const sample = history.filter(row => row[side + '_team'] === team).slice(0, window);
+    const venueHistory = history.filter(row => row[side + '_team'] === team);
+    const sample = venueHistory.slice(0, window);
     if (sample.length < 3) return null;
     let weight = 0;
     let scored = 0;
@@ -136,6 +137,7 @@ export function estimateRates(rows, target, { window = 10, halfLifeDays = 90, pe
     // Five league-average pseudo-matches shrink weak venue samples toward the baseline.
     return {
       count: sample.length,
+      total: venueHistory.length,
       attack: (scored / scoringAverage + 5) / (weight + 5),
       defense: (conceded / concedingAverage + 5) / (weight + 5)
     };
@@ -148,7 +150,9 @@ export function estimateRates(rows, target, { window = 10, halfLifeDays = 90, pe
     home: Math.min(20, homeAverage * home.attack * away.defense),
     away: Math.min(20, awayAverage * away.attack * home.defense),
     homeSample: home.count,
+    homeVenueHistory: home.total,
     awaySample: away.count,
+    awayVenueHistory: away.total,
     leagueSample: history.length,
     excludedConflicts: conflicts.size
   };

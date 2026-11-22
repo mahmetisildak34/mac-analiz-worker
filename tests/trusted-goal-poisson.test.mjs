@@ -93,3 +93,15 @@ test("rejects malformed input", () => {
   assert.equal(predictTrustedGoals(null, options).reason, "invalid_request");
   assert.equal(predictTrustedGoals(matches, {...options, max_matches:11}).reason, "invalid_request");
 });
+
+test("v1.3 is opt-in and shrinks venue rates toward verified league averages", () => {
+  const baseline = predictTrustedGoals(matches, options);
+  const explicitBaseline = predictTrustedGoals(matches, {...options, model_version:"1.2"});
+  const experiment = predictTrustedGoals(matches, {...options, model_version:"1.3"});
+  assert.deepEqual(baseline, explicitBaseline);
+  assert.equal(experiment.available, true);
+  assert.deepEqual(experiment.used_fixtures, baseline.used_fixtures);
+  assert.notDeepEqual(experiment.probabilities, baseline.probabilities);
+  assert.ok(Math.abs(experiment.team_rates.home_attack_goals - 1.5) < Math.abs(baseline.team_rates.home_attack_goals - 1.5));
+  assert.equal(predictTrustedGoals(matches, {...options, model_version:"unknown"}).reason,"invalid_request");
+});
