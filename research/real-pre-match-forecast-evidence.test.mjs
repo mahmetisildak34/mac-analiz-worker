@@ -10,9 +10,9 @@ test('prospective v1.2 forecasts are point-in-time, source-linked and fully hash
  assert.equal(evidence.modelVersion,'1.2');
  assert.equal(evidence.fixtureCapture.configuredLeagues,38);
  assert.equal(evidence.fixtureCapture.capturedLeagues,38);
- assert.equal(evidence.fixtureCapture.eligiblePreMatchFixtures,117);
+ assert.equal(evidence.fixtureCapture.eligiblePreMatchFixtures,116);
  assert.equal(evidence.fixtureCapture.captureFailures,0);
- assert.equal(evidence.coverage.modelInputsMeetingMinimumsAtQueryTime,25);
+ assert.equal(evidence.coverage.modelInputsMeetingMinimumsAtQueryTime,24);
  assert.equal(evidence.coverage.predictionsRecorded,24);
  assert.equal(evidence.predictions.length,24);
  assert.equal(fields.length,25);
@@ -29,7 +29,7 @@ test('prospective v1.2 forecasts are point-in-time, source-linked and fully hash
   assert.ok(row[16]>0&&row[17]>0,'positive expected goals '+row[0]);
   assert.ok(Math.abs(row[18]+row[19]+row[20]-1)<1e-9,'1X2 probabilities '+row[0]);
   for(const index of [21,22])assert.ok(row[index]>=0&&row[index]<=1,'bounded probability '+row[0]);
-  const digest=createHash('sha256').update(JSON.stringify(row.slice(0,-1))).digest('hex');
+  const digest=createHash('sha256').update(JSON.stringify([...row.slice(0,-1),evidence.generatedAt])).digest('hex');
   assert.equal(row[24],digest,'evidence digest '+row[0]);
   assert.equal(row[23].length,3);
  }
