@@ -45,7 +45,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: espn-statistics-evidence-\${{ github.run_id }}
+          name: espn-statistics-evidence
           path: espn-statistics-capture/
           retention-days: 7
           if-no-files-found: error
