@@ -99,5 +99,27 @@ export function createIsolatedD1Store({db,now=()=>new Date().toISOString()}={}){
    throw new Error('Stored market prediction link mismatch');
   return structuredClone(market);
  }
- return {append,read,saveVerifiedResult,readVerifiedResult,pair,appendMarkets,readMarkets};
+ // D1 batch is transactional: both INSERTs commit together or both roll back.
+ // Refuse adapters without batch rather than pretending two independent writes are atomic.
+ async function appendAtomic(input,markets){
+  if(typeof db.batch!=='function')throw new Error('Transactional D1 batch capability required');
+  const recordedAt=now();
+  const prediction=createPredictionLedger({now:()=>recordedAt}).append(input);
+  const market=sealMarketEvidence({...markets,fixtureId:prediction.fixtureId,leagueId:prediction.leagueId,
+   kickoff:prediction.kickoff,recordedAt:prediction.recordedAt,
+   featureAvailableAt:prediction.featureAvailableAt,featureSnapshotId:prediction.featureSnapshotId,
+   sourceEvidenceId:prediction.sourceEvidenceId});
+  if(!versions.every(v=>market.models[v].codeVersion===prediction.models[v].codeVersion))
+   throw new Error('Supplementary market provenance mismatch');
+  const statements=[
+   statement('INSERT INTO isolated_prediction_evidence (fixture_id,league_id,kickoff,recorded_at,sha256,payload_json) VALUES (?,?,?,?,?,?)',
+    prediction.fixtureId,prediction.leagueId,prediction.kickoff,prediction.recordedAt,prediction.sha256,JSON.stringify(prediction)),
+   statement('INSERT INTO isolated_market_evidence (fixture_id,recorded_at,sha256,payload_json) VALUES (?,?,?,?)',
+    market.fixtureId,market.recordedAt,market.sha256,JSON.stringify(market))
+  ];
+  try{await db.batch(statements);}
+  catch(e){if(/UNIQUE|PRIMARY KEY|constraint failed/i.test(String(e)))throw new Error('Immutable prediction already exists');throw e;}
+  return {prediction:structuredClone(prediction),markets:structuredClone(market)};
+ }
+ return {append,read,saveVerifiedResult,readVerifiedResult,pair,appendMarkets,readMarkets,appendAtomic};
 }
