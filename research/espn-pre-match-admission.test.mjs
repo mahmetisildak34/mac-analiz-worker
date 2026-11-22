@@ -32,3 +32,16 @@ test('league admission report never mistakes fixture discovery for real model pr
  assert.equal(r.modelComparison.status,'insufficient_verified_pre_match_predictions');
  assert.throws(()=>reportLeagueAdmissions([{leagueId:'tur.1',capturedAt,payload:payload([])},{leagueId:'tur.1',capturedAt,payload:payload([])}],{now:capturedAt}),/Duplicate/);
 });
+
+test('rejects interrupted pre-state ESPN fixtures and conflicting league metadata',()=>{
+ for(const name of ['STATUS_POSTPONED','STATUS_CANCELED','STATUS_CANCELLED','STATUS_ABANDONED','STATUS_SUSPENDED','STATUS_DELAYED','STATUS_INTERRUPTED']){
+  const interrupted={...event('i'+name),status:{type:{state:'pre',completed:false,name}}};
+  const result=admitEspnScoreboard(payload([interrupted]),{leagueId:'tur.1',capturedAt,now:capturedAt});
+  assert.equal(result.eligible,0,name);
+  assert.equal(result.rejected.not_scheduled,1,name);
+ }
+ const conflicting={leagues:[{slug:'tur.1'},{slug:'eng.1'}],events:[event()]};
+ const result=admitEspnScoreboard(conflicting,{leagueId:'tur.1',capturedAt,now:capturedAt});
+ assert.equal(result.eligible,0);
+ assert.equal(result.rejected.league_mismatch,1);
+});
