@@ -1,0 +1,24 @@
+name: Isolated statistics verification (offline)
+on:
+  push:
+    branches:
+      - fix/verified-statistics-gap-audit-20261122
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check isolated repair syntax
+        run: |
+          node --check verified-statistics-candidate.js
+          node --check isolated-verified-statistics-repair.js
+          node --check statistics-data-quality.js
+      - name: Run offline isolated repair and audit regressions
+        run: node --test research/statistics-gap-readonly-audit.test.mjs tests/verified-statistics-candidate.test.mjs tests/isolated-verified-statistics-repair.test.mjs
