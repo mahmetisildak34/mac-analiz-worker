@@ -12,9 +12,11 @@ jobs:
   audit:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Audit D1 archive against ESPN team directories and upcoming fixtures
         run: |
           node --input-type=module <<'NODE'
+          import { evaluatePriorityLeagueCoverage } from './scripts/priority-league-audit.mjs';
           const endpoint = "https://odd-sunset-6c83.m-ahmetisildak34.workers.dev/api/archive/quality-check?limit=20000";
           const response = await fetch(endpoint, { headers: { "Accept": "application/json" } });
           const raw = await response.text();
@@ -26,12 +28,7 @@ jobs:
             if (syncResponse.ok) syncStatus = await syncResponse.json();
           } catch (_) {}
           const leagues = Array.isArray(report.priorityLeagueCoverage) ? report.priorityLeagueCoverage : [];
-          const incomplete = leagues.filter(league =>
-            !league.directoryVerified ||
-            Number(league.teamsBelow10 || 0) > 0 ||
-            (Array.isArray(league.missingUpcomingInD1) && league.missingUpcomingInD1.length > 0) ||
-            (Array.isArray(league.d1UpcomingNotInProvider) && league.d1UpcomingNotInProvider.length > 0)
-          );
+          const { errors, incomplete } = evaluatePriorityLeagueCoverage(report);
           console.log("PRIORITY_LEAGUE_AUDIT=" + JSON.stringify({
             ranAt: new Date().toISOString(),
             totalRecords: report.totalRecords,
@@ -43,10 +40,12 @@ jobs:
             syncStatus,
             leagues,
             directoryErrors: report.priorityLeagueDirectoryErrors,
+            incompleteLeagueIds: incomplete,
+            validationErrors: errors,
             incompleteLeagueCount: incomplete.length
           }, null, 2));
-          if (incomplete.length) {
-            console.error("Coverage audit found incomplete priority leagues.");
+          if (errors.length || incomplete.length) {
+            console.error("Coverage audit failed", { errors, incomplete });
             process.exitCode = 1;
           }
           NODE
