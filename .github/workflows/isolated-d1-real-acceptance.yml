@@ -1,0 +1,51 @@
+name: Isolated D1 real write-read acceptance
+on:
+  push:
+    branches: [fix/verified-statistics-gap-audit-20261122]
+    paths: ['.github/workflows/isolated-d1-real-acceptance.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-d1-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_ISOLATED_D1_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: '640bfb6a538ee57864281941b14dbc55'
+      D1_DATABASE_ID: 'fb9b42cc-8d96-4911-b193-0983527ee593'
+    steps:
+      - name: Validate isolated-only credentials
+        run: test -n "$CLOUDFLARE_API_TOKEN"
+      - name: Execute isolated write-read-idempotency-cleanup acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,os,urllib.request,urllib.error
+          url=f"https://api.cloudflare.com/client/v4/accounts/{os.environ['CLOUDFLARE_ACCOUNT_ID']}/d1/database/{os.environ['D1_DATABASE_ID']}/query"
+          def sql(q):
+              data=json.dumps({'sql':q}).encode()
+              req=urllib.request.Request(url,data=data,headers={'Authorization':'Bearer '+os.environ['CLOUDFLARE_API_TOKEN'],'Content-Type':'application/json'})
+              try:
+                  with urllib.request.urlopen(req,timeout=20) as r: response=json.load(r)
+              except urllib.error.HTTPError as e:
+                  response=json.load(e)
+              if not response.get('success'):
+                  raise RuntimeError('Isolated D1 operation denied: '+str([x.get('code') for x in response.get('errors',[])]))
+              return response['result'][0].get('results',[])
+          table='mam_isolated_write_permission_probe'
+          sql('CREATE TABLE IF NOT EXISTS '+table+' (id INTEGER PRIMARY KEY)')
+          marker=920261122
+          try:
+              sql(f'INSERT OR IGNORE INTO {table}(id) VALUES ({marker})')
+              rows=sql(f'SELECT id FROM {table} WHERE id={marker}')
+              assert len(rows)==1 and rows[0]['id']==marker,'isolated D1 read-after-write mismatch'
+              sql(f'INSERT OR IGNORE INTO {table}(id) VALUES ({marker})')
+              assert len(sql(f'SELECT id FROM {table} WHERE id={marker}'))==1,'idempotency failed'
+              print('Isolated D1 real write, read-after-write and idempotency: PASS')
+          finally:
+              sql(f'DELETE FROM {table} WHERE id={marker}')
+              assert not sql(f'SELECT id FROM {table} WHERE id={marker}'),'cleanup failed'
+              print('Isolated D1 test row cleanup: PASS')
+          PY
