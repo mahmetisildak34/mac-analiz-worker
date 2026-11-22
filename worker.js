@@ -1,6 +1,7 @@
 import {assessStatistics} from "./statistics-data-quality.js";
 import { runStatisticsRepair } from "./statistics-repair.js";
 import { runStatisticsApiCron } from "./statistics-api-cron.js";
+import { coalesceResponse } from "./upstream-coalescer.js";
 // Deployment refresh: publish the reviewed Worker configuration and cache policy.
 // Audit trigger: deploy this verified revision so the post-deploy archive audit runs.
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
@@ -2853,6 +2854,7 @@ export default {
         cache = null;
       }
 
+      return await coalesceResponse(cacheKey.url, async () => {
       // Shared server-side guard: protect the single API-Football key across
       // every visitor/device. Cache hits return above and do not consume quota.
       const isPrimaryFootballApi = !isFootballStatus && !isESPN && !isFixtureDownload && !isSportScore && !isFootballData;
@@ -3016,6 +3018,7 @@ export default {
       }
 
       return response;
+      }, cors);
     } catch (error) {
       return new Response(JSON.stringify({
         error: "Worker request failed",
