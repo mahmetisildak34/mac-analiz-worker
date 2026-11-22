@@ -7,6 +7,7 @@ import {readFile} from 'node:fs/promises';
 import {pathToFileURL} from 'node:url';
 import {comparePairedModels} from './calibration-metrics.mjs';
 import {evaluateChronologicalHoldout} from './chronological-holdout.mjs';
+import {auditPredictionProvenance} from './prediction-provenance.mjs';
 const names=['v1.2','v1.3','v1.4'];
 export function prepareVerifiedPairs(records){
  if(!Array.isArray(records))throw new TypeError('Expected an array');
@@ -19,16 +20,17 @@ export function prepareVerifiedPairs(records){
  }
  return {rows,excluded};
 }
-export function backtest(records){
- const {rows,excluded}=prepareVerifiedPairs(records);
- if(!rows.length)return {status:'insufficient_verified_data',verifiedPairedMatches:0,excluded,comparison:null};
- return {status:'evaluated',verifiedPairedMatches:rows.length,excluded,comparison:comparePairedModels(rows,names),chronologicalHoldout:evaluateChronologicalHoldout(rows)};
+export function backtest(records,{requireProvenance=false}={}){
+ const provenance=requireProvenance?auditPredictionProvenance(records):null;
+ const {rows,excluded}=prepareVerifiedPairs(provenance?provenance.accepted:records);
+ if(!rows.length)return {status:'insufficient_verified_data',verifiedPairedMatches:0,excluded:excluded+(provenance?.rejectedCount??0),provenanceRejected:provenance?.rejectedCount??0,comparison:null};
+ return {status:'evaluated',verifiedPairedMatches:rows.length,excluded:excluded+(provenance?.rejectedCount??0),provenanceRejected:provenance?.rejectedCount??0,comparison:comparePairedModels(rows,names),chronologicalHoldout:evaluateChronologicalHoldout(rows)};
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
  const file=process.argv[2];
  if(!file){console.error('Provide a local verified predictions JSON file');process.exitCode=2;}
  else try{
-  const result=backtest(JSON.parse(await readFile(file,'utf8')));
+  const result=backtest(JSON.parse(await readFile(file,'utf8')),{requireProvenance:true});
   console.log(JSON.stringify(result,null,2));
   if(result.status!=='evaluated')process.exitCode=2;
  }catch(error){console.error(error.message);process.exitCode=1;}
