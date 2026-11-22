@@ -1,0 +1,22 @@
+name: Poisson v1.4 research
+on:
+  push:
+    branches: [research/poisson-v14-independent]
+    paths:
+      - 'research/**'
+      - '.github/workflows/poisson-v14-research.yml'
+permissions:
+  contents: read
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check research/poisson-v14.mjs
+      - run: node --test research/*.test.mjs
