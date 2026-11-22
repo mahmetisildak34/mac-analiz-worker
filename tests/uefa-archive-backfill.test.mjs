@@ -136,3 +136,13 @@ test("SQLite snapshot commits rows, quarantine and manifest and refuses to overw
     rmSync(directory, { recursive: true, force: true });
   }
 });
+
+test("legacy UEFA Europa Conference League match URLs verify only Conference League evidence", () => {
+  const candidate = fixture();
+  const legacy = "https://www.uefa.com/uefaeuropaconferenceleague/match/2049614--galatasaray-vs-stuttgart/";
+  candidate.uefa.url = legacy;
+  assert.equal(run([candidate]).staged.length, 0);
+  candidate.slug = "uefa.europa.conf";
+  candidate.espn.url = candidate.espn.url.replace("uefa.champions", candidate.slug);
+  assert.equal(run([candidate]).staged.length, 1);
+});

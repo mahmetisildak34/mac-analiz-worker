@@ -38,7 +38,9 @@ function verify(candidate, cutoff, aliases) {
 
   const expectedEspn = "https://site.api.espn.com/apis/site/v2/sports/soccer/" + slug +
     "/scoreboard?dates=" + day.slice(0, 7).replace("-", "") + "&limit=500";
-  const expectedUefa = new RegExp("^https://www\\.uefa\\.com/" + uefaPath + "/match/" +
+  // UEFA used Europa Conference League in canonical links before the 2024/25 rename.
+  const officialPath = slug === "uefa.europa.conf" ? "uefa(?:europa)?conferenceleague" : uefaPath;
+  const expectedUefa = new RegExp("^https://www\\.uefa\\.com/" + officialPath + "/match/" +
     uefa.id + "(?:--(?:[a-z0-9-]|%[0-9A-Fa-f]{2})+)?/$");
   if (espn.url !== expectedEspn || typeof uefa.url !== "string" || !expectedUefa.test(uefa.url)) return null;
 
