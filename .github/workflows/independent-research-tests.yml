@@ -34,6 +34,10 @@ jobs:
         run: node --experimental-sqlite --test research/calibration-metrics.test.mjs research/verified-source-fallback.test.mjs research/request-coordinator.test.mjs research/run-paired-backtest.test.mjs research/chronological-holdout.test.mjs research/league-backtest.test.mjs research/verified-espn-audit.test.mjs research/poisson-v14.test.mjs research/prediction-provenance.test.mjs research/isolated-prediction-ledger.test.mjs research/concurrent-safety.test.mjs research/isolated-prediction-store.test.mjs research/replay-isolated-predictions.test.mjs research/isolated-d1-adapter.test.mjs research/evidence-reliability.test.mjs research/supplementary-market-evidence.test.mjs research/espn-pre-match-admission.test.mjs research/espn-admission-cli.test.mjs research/independent-espn-final.test.mjs research/verified-model-comparison.test.mjs research/verified-league-calibration.test.mjs research/capture-public-espn.test.mjs research/real-pre-match-forecast-evidence.test.mjs
       - name: Benchmark offline request coordination
         run: node --expose-gc research/benchmark-coordinator.mjs
+      - name: Validate Worker module syntax
+        run: |
+          node --check worker.js
+          node --check upstream-coalescer.js
       - name: Run offline Worker regression tests (no production bindings)
         run: node --test tests/*.test.mjs
       - name: Capture public ESPN scoreboards for all configured leagues (read-only)
