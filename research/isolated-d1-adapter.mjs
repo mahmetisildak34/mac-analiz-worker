@@ -32,7 +32,7 @@ export function createIsolatedD1Store({db,now=()=>new Date().toISOString()}={}){
   return structuredClone(saved);
  }
  async function saveVerifiedResult(id,result,{verifiedAt=now(),evidenceId}={}){
-  if(typeof evidenceId!=='string'||!evidenceId.trim()||typeof verifiedAt!=='string'||!/^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d{1,3})?Z$/.test(verifiedAt)||!Number.isFinite(Date.parse(verifiedAt)))
+  if(typeof evidenceId!=='string'||!evidenceId.trim()||typeof verifiedAt!=='string'||!/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,3})?Z$/.test(verifiedAt)||!Number.isFinite(Date.parse(verifiedAt)))
    throw new Error('Verified result provenance required');
   const saved=await read(id);
   if(!saved)throw new Error('Missing prediction evidence');
