@@ -6,7 +6,7 @@ import {fileURLToPath} from 'node:url';
 import {createIsolatedD1Store} from './isolated-d1-adapter.mjs';
 const schema=await readFile(fileURLToPath(new URL('./isolated-d1-schema.sql',import.meta.url)),'utf8');
 const dbFactory=()=>{const raw=new DatabaseSync(':memory:');raw.exec('PRAGMA foreign_keys=ON');raw.exec(schema);
- return {raw,db:{prepare:sql=>({bind(...args){const stmt=raw.prepare(sql);return {first:async()=>stmt.get(...args)??null,run:async()=>stmt.run(...args)};}})}};};
+ return {raw,db:{prepare:sql=>({bind(...args){const stmt=raw.prepare(sql);return {first:async()=>stmt.get(...args)??null,run:async()=>stmt.run(...args)};}}),batch:async statements=>{raw.exec('BEGIN IMMEDIATE');try{const results=[];for(const stmt of statements)results.push(await stmt.run());raw.exec('COMMIT');return results;}catch(e){raw.exec('ROLLBACK');throw e;}}}};};
 const models=()=>Object.fromEntries(['v1.2','v1.3','v1.4'].map(v=>[v,{home:.5,draw:.3,away:.2,codeVersion:'commit-'+v}]));
 const prediction=()=>({fixtureId:'espn-1',leagueId:'tur.1',homeTeamId:'home',awayTeamId:'away',
  kickoff:'2026-11-23T15:00:00Z',featureSnapshotId:'snapshot-1',featureAvailableAt:'2026-11-22T10:00:00Z',
@@ -146,5 +146,51 @@ test('market JSON and indexed-column corruption fail closed',async()=>{
   await assert.rejects(store.readMarkets('espn-1'),/provenance mismatch/);
   raw.exec("UPDATE isolated_market_evidence SET payload_json='{}'");
   await assert.rejects(store.readMarkets('espn-1'),/integrity mismatch/);
+ }finally{raw.close();}
+});
+
+test('atomic D1-compatible batch stores three model predictions and market evidence together',async()=>{
+ const {raw,db}=dbFactory();
+ try{
+  const store=createIsolatedD1Store({db,now:early});
+  const saved=await store.appendAtomic(prediction(),marketInput());
+  assert.equal(saved.prediction.models['v1.2'].codeVersion,'commit-v1.2');
+  assert.equal(saved.markets.models['v1.4'].codeVersion,'commit-v1.4');
+  assert.equal(raw.prepare('SELECT count(*) AS n FROM isolated_prediction_evidence').get().n,1);
+  assert.equal(raw.prepare('SELECT count(*) AS n FROM isolated_market_evidence').get().n,1);
+  await assert.rejects(store.appendAtomic(prediction(),marketInput()),/already exists/);
+  assert.equal(raw.prepare('SELECT count(*) AS n FROM isolated_prediction_evidence').get().n,1);
+ }finally{raw.close();}
+});
+test('atomic batch rolls back both tables when second insert fails',async()=>{
+ const {raw,db}=dbFactory();
+ try{
+  raw.exec(`CREATE TRIGGER fail_market_insert BEFORE INSERT ON isolated_market_evidence BEGIN SELECT RAISE(ABORT,'simulated market failure'); END;`);
+  const store=createIsolatedD1Store({db,now:early});
+  await assert.rejects(store.appendAtomic(prediction(),marketInput()),/simulated market failure/);
+  assert.equal(raw.prepare('SELECT count(*) AS n FROM isolated_prediction_evidence').get().n,0);
+  assert.equal(raw.prepare('SELECT count(*) AS n FROM isolated_market_evidence').get().n,0);
+ }finally{raw.close();}
+});
+test('24 atomic concurrent writers admit exactly one and no partial rows',async()=>{
+ const {raw,db}=dbFactory();
+ try{
+  const writers=Array.from({length:24},()=>createIsolatedD1Store({db,now:early}));
+  const outcomes=await Promise.allSettled(writers.map(w=>w.appendAtomic(prediction(),marketInput())));
+  assert.equal(outcomes.filter(x=>x.status==='fulfilled').length,1);
+  assert.equal(outcomes.filter(x=>x.status==='rejected').length,23);
+  assert.equal(raw.prepare('SELECT count(*) AS n FROM isolated_prediction_evidence').get().n,1);
+  assert.equal(raw.prepare('SELECT count(*) AS n FROM isolated_market_evidence').get().n,1);
+ }finally{raw.close();}
+});
+test('atomic API refuses nontransactional adapters and mismatched model evidence',async()=>{
+ const {raw,db}=dbFactory();
+ try{
+  const store=createIsolatedD1Store({db:{prepare:db.prepare},now:early});
+  await assert.rejects(store.appendAtomic(prediction(),marketInput()),/Transactional/);
+  const good=createIsolatedD1Store({db,now:early});
+  const mismatch=marketInput();mismatch.models['v1.4'].codeVersion='wrong';
+  await assert.rejects(good.appendAtomic(prediction(),mismatch),/provenance mismatch/);
+  assert.equal(raw.prepare('SELECT count(*) AS n FROM isolated_prediction_evidence').get().n,0);
  }finally{raw.close();}
 });
