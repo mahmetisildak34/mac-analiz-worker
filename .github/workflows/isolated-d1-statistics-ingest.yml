@@ -1,0 +1,48 @@
+name: Ingest verified ESPN statistics into isolated D1 only
+on:
+  push:
+    branches: [fix/verified-statistics-gap-audit-20261122]
+    paths:
+      - 'research/ingest-espn-statistics-d1.mjs'
+      - 'research/ingest-espn-statistics-d1.test.mjs'
+      - '.github/workflows/isolated-d1-statistics-ingest.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  ingest-isolated-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CLOUDFLARE_ISOLATED_D1_TOKEN: \${{ secrets.CLOUDFLARE_ISOLATED_D1_TOKEN }}
+      GH_TOKEN: \${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/verified-statistics-gap-audit-20261122
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate ingestion safety tests
+        run: node --test research/ingest-espn-statistics-d1.test.mjs
+      - name: Wait for latest read-only ESPN capture artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_ISOLATED_D1_TOKEN"
+          for attempt in $(seq 1 30); do
+            run_id=$(gh run list --repo mahmetisildak34/mac-analiz-worker --workflow "ESPN completed match statistics evidence capture" --branch fix/verified-statistics-gap-audit-20261122 --json databaseId,status,conclusion --jq '[.[] | select(.status=="completed" and .conclusion=="success")][0].databaseId // empty')
+            if [ -n "$run_id" ]; then
+              mkdir -p .espn-evidence
+              gh run download "$run_id" --repo mahmetisildak34/mac-analiz-worker --name espn-statistics-evidence --dir .espn-evidence
+              test -s .espn-evidence/verified-provider-statistics.json
+              echo "Using completed read-only ESPN capture run $run_id"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "No successful ESPN evidence artifact became available" >&2
+          exit 1
+      - name: Validate, insert and read back only into isolated D1
+        run: node research/ingest-espn-statistics-d1.mjs .espn-evidence/verified-provider-statistics.json --apply
