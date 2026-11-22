@@ -13,8 +13,8 @@ test('rate estimation is venue-specific, time-decayed and excludes future matche
  const history=[];
  for(let i=0;i<10;i++){
   const day=String(i+1).padStart(2,'0');
-  history.push({fixture_id:'h'+i,kickoff:'2025-01-'+day+'T12:00:00Z',home_team:'A',away_team:'X'+i,home_goals:2,away_goals:1,completed:true});
-  history.push({fixture_id:'a'+i,kickoff:'2025-01-'+day+'T12:00:00Z',home_team:'Y'+i,away_team:'B',home_goals:1,away_goals:2,completed:true});
+  history.push({fixture_id:'h'+i,kickoff:'2025-01-'+day+'T12:00:00Z',home_team:'A',away_team:'X'+i,home_goals:2,away_goals:1,status:"FT",identity_verified:true,score_verified:true,completed:true});
+  history.push({fixture_id:'a'+i,kickoff:'2025-01-'+day+'T12:00:00Z',home_team:'Y'+i,away_team:'B',home_goals:1,away_goals:2,status:"FT",identity_verified:true,score_verified:true,completed:true});
   history.push({fixture_id:'l'+i,kickoff:'2025-01-'+day+'T12:00:00Z',home_team:'L'+i,away_team:'M'+i,home_goals:2,away_goals:1,completed:true});
  }
  history.push({fixture_id:'future',kickoff:'2025-02-02T12:00:00Z',home_team:'A',away_team:'B',home_goals:10,away_goals:0,completed:true});
