@@ -21,5 +21,7 @@ jobs:
           node --check isolated-verified-statistics-repair.js
           node --check statistics-data-quality.js
           node --check isolated-provider-fetch.js
+      - name: Run complete offline Worker regression suite
+        run: node --experimental-sqlite --test tests/*.test.mjs
       - name: Run offline isolated repair and audit regressions
         run: node --experimental-sqlite --test research/statistics-gap-readonly-audit.test.mjs tests/verified-statistics-candidate.test.mjs tests/isolated-verified-statistics-repair.test.mjs tests/isolated-provider-fetch.test.mjs tests/isolated-statistics-sqlite-acceptance.test.mjs
