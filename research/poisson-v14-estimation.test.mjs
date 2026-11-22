@@ -21,8 +21,8 @@ test('rate estimation is venue-specific, time-decayed and excludes future matche
  const target={kickoff:'2025-02-01T12:00:00Z',home_team:'A',away_team:'B'};
  const rates=estimateRates(history,target,{window:5,halfLifeDays:90});
  assert.ok(rates);
- assert.equal(rates.homeVenueHistory,5);
- assert.equal(rates.awayVenueHistory,5);
+ assert.equal(rates.homeSample,5);
+ assert.equal(rates.awaySample,5);
  assert.ok(rates.home>0&&rates.away>0);
  assert.deepEqual(estimateRates(history,{...target,kickoff:'2024-01-01T00:00:00Z'}),null);
 });
