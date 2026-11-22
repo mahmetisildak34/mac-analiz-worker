@@ -3,12 +3,10 @@
 // Never use fixture/verification flags supplied by an untrusted caller as source proof.
 import { persistIsolatedVerifiedStatistics } from './isolated-verified-statistics-repair.js';
 import { reserveApiBackfillCall } from './statistics-api-backfill.js';
+import { isolatedProviderReadiness } from './isolated-provider-readiness.js';
 const origin='https://v3.football.api-sports.io';
 export async function fetchAndRepairIsolatedApiSports(env, fixture, request=fetch, wait=ms=>new Promise(resolve=>setTimeout(resolve,ms))) {
-  if(env?.ISOLATED_STATISTICS_REPAIR_ENABLED!=='true' || env?.ISOLATED_PROVIDER_FETCH_ENABLED!=='true' ||
-    !env?.TEST_WRITE_DB || env.DB || env.PRODUCTION_READ_DB || env.PREVIEW_READ_DB ||
-    !env.API_FOOTBALL_KEY || env.API_FOOTBALL_QUOTA_VERIFIED!=='true' ||
-    !env.API_FOOTBALL_DAILY_LIMIT || !env.API_FOOTBALL_VERIFIED_LIMIT) return {state:'disabled'};
+  if(!isolatedProviderReadiness(env).ready) return {state:'disabled'};
   if(!/^[1-9]\d{0,11}$/.test(String(fixture?.fixture_id??''))) return {state:'rejected',reason:'invalid_provider_fixture_id'};
   const headers={'x-apisports-key':env.API_FOOTBALL_KEY};
   const paths=['/fixtures?id=','/fixtures/statistics?fixture='];
