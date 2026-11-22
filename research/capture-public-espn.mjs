@@ -3,23 +3,26 @@
 import {mkdir,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {resolve} from 'node:path';
+import {admitEspnScoreboard} from './espn-pre-match-admission.mjs';
 const leagues=['tur.1','eng.1','esp.1','ita.1','ger.1','fra.1'];
 const sha=x=>createHash('sha256').update(x).digest('hex');
 export async function capturePublicEspn({fetcher=fetch,outDir='espn-captures',now=()=>new Date().toISOString()}={}){
  await mkdir(outDir,{recursive:true});
- const report={capturedAt:now(),source:'ESPN public scoreboard read-only',leagues:{}};
+ const report={startedAt:now(),source:'ESPN public scoreboard read-only',leagues:{}};
  for(const league of leagues){
   const url='https://site.api.espn.com/apis/site/v2/sports/soccer/'+league+'/scoreboard?limit=500';
   try{
    const response=await fetcher(url,{headers:{accept:'application/json'},signal:AbortSignal.timeout(15000)});
    if(!response.ok)throw new Error('HTTP '+response.status);
    const raw=Buffer.from(await response.arrayBuffer());
+   const capturedAt=now();
    if(raw.length>5_000_000)throw new Error('Payload too large');
    const data=JSON.parse(raw.toString('utf8'));
    if(!Array.isArray(data.events))throw new Error('Missing events');
    const filename=league.replaceAll('.','-')+'.json';
    await writeFile(resolve(outDir,filename),raw,{flag:'wx'});
-   report.leagues[league]={status:'captured',events:data.events.length,sha256:sha(raw),file:filename};
+   const admission=admitEspnScoreboard(data,{leagueId:league,capturedAt,now:capturedAt});
+   report.leagues[league]={status:'captured',capturedAt,events:data.events.length,sha256:sha(raw),file:filename,eligible:admission.eligible,rejected:admission.rejected,accepted:admission.accepted};
   }catch(error){report.leagues[league]={status:'failed',reason:String(error.message).slice(0,150)};}
  }
  await writeFile(resolve(outDir,'manifest.json'),JSON.stringify(report,null,2)+'\n',{flag:'wx'});
