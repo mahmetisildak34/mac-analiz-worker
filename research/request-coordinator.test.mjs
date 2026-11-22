@@ -34,3 +34,18 @@ test('cache evicts oldest entry at capacity',async()=>{
  await c.run('b',()=>2,{ttlMs:1000});
  assert.equal(c.stats().cached,1);
 });
+
+test('identical fixture keys from different providers cannot share cached responses',async()=>{
+ const c=createRequestCoordinator();let calls=0;
+ const a=await c.run('fixture:1',()=>{calls++;return 'ESPN';},{provider:'espn',ttlMs:1000});
+ const b=await c.run('fixture:1',()=>{calls++;return 'Other';},{provider:'other',ttlMs:1000});
+ assert.equal(a,'ESPN');assert.equal(b,'Other');assert.equal(calls,2);
+});
+test('identical in-flight fixture keys across providers are independent',async()=>{
+ const c=createRequestCoordinator();let calls=0;
+ const [a,b]=await Promise.all([
+  c.run('same',()=>{calls++;return 'A';},{provider:'a'}),
+  c.run('same',()=>{calls++;return 'B';},{provider:'b'})
+ ]);
+ assert.deepEqual([a,b],['A','B']);assert.equal(calls,2);
+});
