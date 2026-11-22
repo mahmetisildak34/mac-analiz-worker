@@ -38,11 +38,16 @@ export function admitEspnScoreboard(payload,{leagueId,capturedAt,now=new Date().
 }
 export function reportLeagueAdmissions(inputs,{now=new Date().toISOString()}={}){
  if(!Array.isArray(inputs))throw new TypeError('League inputs required');
- const leagues={},seen=new Set();
+ const leagues={},seen=new Set(),fixtureLeagues=new Map();
  for(const input of inputs){
   if(seen.has(input?.leagueId))throw new Error('Duplicate league');
   seen.add(input.leagueId);
   const report=admitEspnScoreboard(input.payload,{leagueId:input.leagueId,capturedAt:input.capturedAt,now});
+  for(const fixture of report.accepted){
+   const previous=fixtureLeagues.get(fixture.fixtureId);
+   if(previous&&previous!==input.leagueId)throw new Error('Cross-league fixture identity collision');
+   fixtureLeagues.set(fixture.fixtureId,input.leagueId);
+  }
   leagues[input.leagueId]={inspected:report.inspected,validKickoff:report.validKickoff,
    eligible:report.eligible,recordedPreMatchPredictions:0,verifiedResultPairs:0,rejected:report.rejected};
  }
