@@ -49,5 +49,30 @@ export function classifyFixtureHealth(row,{nowMs=Date.now(),staleAfterMs=15*60*1
 export function summarizeFixtureHealth(rows,options={}){
  if(!Array.isArray(rows))throw new TypeError('Rows must be an array');
  const fixtures=rows.map(row=>classifyFixtureHealth(row,options));
+ // Report potential cross-source doubles, never delete or automatically merge rows.
+ // Exact league + team identities and nearby kickoff are required.
+ const normalize=value=>String(value??'').toLocaleLowerCase('tr-TR').normalize('NFD')
+  .replace(/[\\u0300-\\u036f]/g,'').replace(/ı/g,'i').replace(/[^a-z0-9]/g,'');
+ const seen=new Map();
+ rows.forEach((row,index)=>{
+  const league=String(row?.league_id??''),home=normalize(row?.home_team),away=normalize(row?.away_team);
+  const kickoff=asTime(row?.kickoff);
+  if(!league||home.length<4||away.length<4||kickoff===null)return;
+  const key=JSON.stringify([league,home,away]);
+  const previous=seen.get(key)||[];
+  const duplicates=previous.filter(item=>Math.abs(kickoff-item.kickoff)<=10*60*1000);
+  if(duplicates.length){
+   for(const matched of [...duplicates,{index}]){
+    const fixture=fixtures[matched.index];
+    if(!fixture.issues.includes('potential_cross_source_duplicate')){
+     fixture.issues.push('potential_cross_source_duplicate');
+     if(fixture.priority==='ok')fixture.priority='review';
+     fixture.requiresProviderCheck=true;
+    }
+   }
+  }
+  previous.push({index,kickoff});
+  seen.set(key,previous);
+ });
  return {total:fixtures.length,ok:fixtures.filter(x=>x.priority==='ok').length,review:fixtures.filter(x=>x.priority==='review').length,error:fixtures.filter(x=>x.priority==='error').length,fixtures};
 }
