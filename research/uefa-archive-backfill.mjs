@@ -1,5 +1,7 @@
 import { DatabaseSync } from "node:sqlite";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
+import { closeSync, openSync, unlinkSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
 const competitions = new Map([
@@ -25,10 +27,12 @@ function verify(candidate, cutoff, aliases) {
   if (!leagueId || !numericId(event?.id) || !numericId(uefa?.id)) return null;
 
   const kickoff = event.date;
+  const scheduled = uefa.status === "scheduled";
   const ms = Date.parse(kickoff);
   if (typeof kickoff !== "string" ||
       !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d{3})?)?Z$/.test(kickoff) ||
-      !Number.isFinite(ms) || ms >= cutoff) return null;
+      !Number.isFinite(ms) || (scheduled ? ms < cutoff : ms >= cutoff)) return null;
+  if (scheduled && Date.parse(uefa.kickoff) !== ms) return null;
   const day = kickoff.slice(0, 10);
   if (new Date(ms).toISOString().slice(0, 16) !== kickoff.slice(0, 16) || day !== uefa.day) return null;
 
@@ -41,8 +45,11 @@ function verify(candidate, cutoff, aliases) {
   const match = event.competitions?.[0];
   const status = event.status?.type ?? match?.status?.type;
   if (!Array.isArray(event.competitions) || event.competitions.length !== 1 ||
-      !Array.isArray(match?.competitors) || match.competitors.length !== 2 ||
-      status?.completed !== true || status.state !== "post" ||
+      !Array.isArray(match?.competitors) || match.competitors.length !== 2) return null;
+  if (scheduled) {
+    if (status?.completed !== false || status.state !== "pre" || status.name !== "STATUS_SCHEDULED" ||
+        uefa.homeGoals != null || uefa.awayGoals != null) return null;
+  } else if (status?.completed !== true || status.state !== "post" ||
       !["STATUS_FULL_TIME", "STATUS_FINAL", "STATUS_FINAL_AET", "STATUS_FINAL_PEN"].includes(status.name)) return null;
   const home = match.competitors.find(side => side?.homeAway === "home");
   const away = match.competitors.find(side => side?.homeAway === "away");
@@ -54,22 +61,23 @@ function verify(candidate, cutoff, aliases) {
   const awayName = away.team.displayName;
   const homeKey = normalizeTeam(homeName, aliases);
   const awayKey = normalizeTeam(awayName, aliases);
-  const homeGoals = score(home.score);
-  const awayGoals = score(away.score);
+  const homeGoals = scheduled ? null : score(home.score);
+  const awayGoals = scheduled ? null : score(away.score);
   if (!homeKey || !awayKey || homeKey === awayKey ||
       homeKey !== normalizeTeam(uefa.home, aliases) || awayKey !== normalizeTeam(uefa.away, aliases) ||
-      homeGoals === null || awayGoals === null ||
-      homeGoals !== score(uefa.homeGoals) || awayGoals !== score(uefa.awayGoals)) return null;
+      (!scheduled && (homeGoals === null || awayGoals === null ||
+        homeGoals !== score(uefa.homeGoals) || awayGoals !== score(uefa.awayGoals)))) return null;
 
   return {
     fixtureId: "espn-" + slug + "-" + event.id, leagueId, kickoff, homeName, awayName,
-    homeGoals, awayGoals, matchKey: [leagueId, day, homeKey, awayKey].join("|"),
+    homeGoals, awayGoals, status: scheduled ? "NS" : "FT",
+    matchKey: [leagueId, day, homeKey, awayKey].join("|"),
     uefaKey: [leagueId, uefa.id].join("|"), espnUrl: espn.url, uefaUrl: uefa.url,
     evidence: JSON.stringify({ espn: event, uefa }),
   };
 }
 
-export function stageUefaBackfill({ candidates, archive, before, aliases = {} }) {
+export function stageUefaBackfill({ candidates, archive, before, aliases = {} }, sqlitePath = ":memory:") {
   const cutoff = Date.parse(before);
   if (!Number.isFinite(cutoff)) throw new TypeError("A valid cutoff is required");
   const archivedIds = new Set();
@@ -84,20 +92,34 @@ export function stageUefaBackfill({ candidates, archive, before, aliases = {} })
     if (day && home && away) archivedKeys.add([row.leagueId, day, home, away].join("|"));
   }
 
-  const database = new DatabaseSync(":memory:");
+  if (sqlitePath !== ":memory:") closeSync(openSync(sqlitePath, "wx", 0o600));
+  let database;
+  let committed = false;
   try {
+    database = new DatabaseSync(sqlitePath);
     database.exec(`CREATE TABLE staged (
       fixture_id TEXT PRIMARY KEY, uefa_key TEXT UNIQUE, match_key TEXT UNIQUE,
       league_id TEXT, kickoff TEXT, home TEXT, away TEXT, home_goals INTEGER,
-      away_goals INTEGER, espn_url TEXT, uefa_url TEXT, evidence TEXT
-    )`);
-    const insert = database.prepare("INSERT INTO staged VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+      away_goals INTEGER, espn_url TEXT, uefa_url TEXT, evidence TEXT,
+      status TEXT NOT NULL CHECK (
+        (status = 'NS' AND home_goals IS NULL AND away_goals IS NULL) OR
+        (status = 'FT' AND home_goals IS NOT NULL AND away_goals IS NOT NULL)
+      )
+    );
+    CREATE TABLE quarantine (reason TEXT NOT NULL, evidence TEXT NOT NULL);
+    CREATE TABLE manifest (value TEXT NOT NULL)`);
+    const insert = database.prepare("INSERT INTO staged VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    const quarantine = database.prepare("INSERT INTO quarantine VALUES (?, ?)");
     const verified = [];
     const rejected = [];
+    database.exec("BEGIN");
     for (const candidate of candidates) {
       const row = verify(candidate, cutoff, aliases);
       if (row) verified.push(row);
-      else rejected.push(candidate?.espn?.event?.id ?? null);
+      else {
+        rejected.push(candidate?.espn?.event?.id ?? null);
+        quarantine.run("unverified_evidence", JSON.stringify(candidate ?? null));
+      }
     }
     const counts = new Map();
     for (const row of verified) {
@@ -105,27 +127,36 @@ export function stageUefaBackfill({ candidates, archive, before, aliases = {} })
     }
     const existing = [];
     const duplicate = [];
-    database.exec("BEGIN");
     for (const row of verified) {
       if ([row.fixtureId, row.uefaKey, row.matchKey].some(key => counts.get(key) !== 1)) {
         duplicate.push(row.fixtureId);
+        quarantine.run("duplicate_identity", row.evidence);
       } else if (archivedIds.has(row.fixtureId) || archivedUefaIds.has(row.uefaKey) || archivedKeys.has(row.matchKey)) {
         existing.push(row.fixtureId);
       } else {
         insert.run(row.fixtureId, row.uefaKey, row.matchKey, row.leagueId, row.kickoff,
-          row.homeName, row.awayName, row.homeGoals, row.awayGoals, row.espnUrl, row.uefaUrl, row.evidence);
+          row.homeName, row.awayName, row.homeGoals, row.awayGoals, row.espnUrl, row.uefaUrl, row.evidence, row.status);
       }
     }
+    const staged = database.prepare("SELECT * FROM staged ORDER BY kickoff, fixture_id").all();
+    const withheld = database.prepare("SELECT * FROM quarantine ORDER BY reason, evidence").all();
+    const manifest = {
+      cutoff: new Date(cutoff).toISOString(), staged: staged.length, quarantined: withheld.length,
+      sha256: createHash("sha256").update(JSON.stringify({ staged, withheld })).digest("hex"),
+    };
+    database.prepare("INSERT INTO manifest VALUES (?)").run(JSON.stringify(manifest));
     database.exec("COMMIT");
-    return { verified, rejected, duplicate, existing, staged: database.prepare("SELECT * FROM staged ORDER BY kickoff, fixture_id").all() };
+    committed = true;
+    return { verified, rejected, duplicate, existing, staged, manifest };
   } finally {
-    database.close();
+    database?.close();
+    if (!committed && sqlitePath !== ":memory:") unlinkSync(sqlitePath);
   }
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const input = process.argv[2];
-  if (!input) throw new Error("Usage: node research/uefa-archive-backfill.mjs <evidence.json>");
-  const result = stageUefaBackfill(JSON.parse(await readFile(input, "utf8")));
+  if (!input) throw new Error("Usage: node research/uefa-archive-backfill.mjs <evidence.json> [new-local.sqlite]");
+  const result = stageUefaBackfill(JSON.parse(await readFile(input, "utf8")), process.argv[3]);
   process.stdout.write(JSON.stringify(result) + "\n");
 }

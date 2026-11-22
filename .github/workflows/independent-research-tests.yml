@@ -4,6 +4,7 @@ on:
     branches:
       - feature/independent-calibration-20261122
       - feature/independent-calibration-isolation-fix-20261122
+      - feature/uefa-isolated-archive-acceptance-20261122
   pull_request:
     branches:
       - feature/independent-calibration-20261122

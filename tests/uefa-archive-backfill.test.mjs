@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { DatabaseSync } from "node:sqlite";
 import { stageUefaBackfill } from "../research/uefa-archive-backfill.mjs";
 
 function fixture() {
@@ -92,4 +96,43 @@ test("official match links support percent-encoded team names", () => {
   const candidate = fixture();
   candidate.uefa.url = "https://www.uefa.com/uefachampionsleague/match/2049614--galatasaray-vs-st%C3%BCttgart/";
   assert.equal(run([candidate]).staged.length, 1);
+});
+
+test("scheduled matches keep null scores and require both kickoff times to agree", () => {
+  const candidate = fixture();
+  candidate.espn.event.date = "2026-11-26T20:00Z";
+  candidate.espn.event.status.type = { name: "STATUS_SCHEDULED", completed: false, state: "pre" };
+  candidate.uefa = { ...candidate.uefa, status: "scheduled", day: "2026-11-26",
+    kickoff: "2026-11-26T21:00:00+01:00", homeGoals: null, awayGoals: null };
+  const [row] = run([candidate]).staged;
+  assert.deepEqual([row.status, row.home_goals, row.away_goals], ["NS", null, null]);
+  candidate.uefa.kickoff = "2026-11-26T22:00:00+01:00";
+  assert.equal(run([candidate]).rejected.length, 1);
+});
+
+test("SQLite snapshot commits rows, quarantine and manifest and refuses to overwrite", () => {
+  const directory = mkdtempSync(join(tmpdir(), "uefa-backfill-"));
+  const path = join(directory, "isolated.sqlite");
+  const candidate = fixture();
+  const disputed = fixture();
+  disputed.uefa.awayGoals = 5;
+  const input = { candidates: [candidate, disputed], archive: [],
+    before: "2026-11-22T00:00:00Z", aliases: { stuttgart: "VfB Stuttgart" } };
+  try {
+    const result = stageUefaBackfill(input, path);
+    assert.equal(result.manifest.staged, 1);
+    assert.equal(result.manifest.quarantined, 1);
+    assert.match(result.manifest.sha256, /^[a-f0-9]{64}$/);
+    assert.throws(() => stageUefaBackfill(input, path), { code: "EEXIST" });
+    const db = new DatabaseSync(path, { readOnly: true });
+    try {
+      assert.deepEqual(JSON.parse(db.prepare("SELECT value FROM manifest").get().value), result.manifest);
+      assert.equal(db.prepare("SELECT COUNT(*) AS n FROM staged").get().n, 1);
+      assert.equal(db.prepare("SELECT reason FROM quarantine").get().reason, "unverified_evidence");
+    } finally {
+      db.close();
+    }
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
 });
