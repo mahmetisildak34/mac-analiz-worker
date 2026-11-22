@@ -21,7 +21,14 @@ export function calibrateVerifiedLeagues(pairs,{minSamples=30,bins=10}={}){
   const models={};
   for(const version of versions){
    const metrics=evaluateCalibration(rows.map(r=>({outcome:r.outcome,probabilities:r.models[version]})),{bins});
-   models[version]={...metrics,reliability:metrics.reliability.map(b=>({...b,accuracy95CI:b.count?wilson(Math.round(b.accuracy*b.count),b.count):null}))};
+   models[version]={...metrics,reliability:metrics.reliability.map(b=>{
+    const accuracy95CI=b.count?wilson(Math.round(b.accuracy*b.count),b.count):null;
+    // Only flag statistical overconfidence when even the 95% upper bound
+    // is below the mean predicted confidence, with adequate bin support.
+    const overconfidenceStatus=b.count<minSamples?'insufficient_sample':
+      accuracy95CI.upper<b.confidence?'overconfident':'not_established';
+    return {...b,accuracy95CI,overconfidenceStatus};
+   })};
   }
   leagues[leagueId]={sampleSize:rows.length,status:rows.length>=minSamples?'descriptive_calibration':'insufficient_sample',models};
  }
