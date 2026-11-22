@@ -13,3 +13,20 @@ test("insufficient league baseline blocks predictions",()=>{const r=analyzeArchi
 test("HTTP 503 is surfaced without a prediction",async()=>{const r=await analyzeArchiveFetchResponse({status:503,ok:false,json:async()=>({})},opts);assert.equal(r.full_time.reason,"archive_http_error");assert.equal(r.full_time.http_status,503);});
 test("malformed JSON is surfaced without a prediction",async()=>{const r=await analyzeArchiveFetchResponse({status:200,ok:true,json:async()=>{throw Error("bad json");}},opts);assert.equal(r.full_time.reason,"invalid_archive_json");});
 test("successful HTTP response is parsed",async()=>{const r=await analyzeArchiveFetchResponse({status:200,ok:true,json:async()=>({ok:true,response:rows})},opts);assert.equal(r.full_time.available,true);});
+
+test("conflicting verified halftime scores exclude only the first-half fixture", () => {
+  const mirror = {...rows[0], source:"app", score:{halftime:{home:0,away:1}}};
+  for (const response of [[mirror,...rows],[...rows,mirror]]) {
+    const result = analyzeArchiveResponse({ok:true,response},opts);
+    assert.equal(result.league_averages.full_time.samples,70);
+    assert.equal(result.league_averages.half_time.samples,69);
+  }
+});
+
+test("an unverified copy cannot supply a first-half score", () => {
+  const unverified = {...rows[0], score_verified:false};
+  const response = [unverified,{...rows[0],score:null},...rows.slice(1)];
+  const result = analyzeArchiveResponse({ok:true,response},opts);
+  assert.equal(result.league_averages.full_time.samples,70);
+  assert.equal(result.league_averages.half_time.samples,69);
+});
