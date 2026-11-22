@@ -31,6 +31,6 @@ jobs:
           node --check statistics-api-cron.js
           node --check statistics-api-persistence.js
       - name: Run independent research tests
-        run: node --test research/calibration-metrics.test.mjs research/verified-source-fallback.test.mjs research/request-coordinator.test.mjs research/run-paired-backtest.test.mjs research/chronological-holdout.test.mjs research/league-backtest.test.mjs research/verified-espn-audit.test.mjs research/poisson-v14.test.mjs research/prediction-provenance.test.mjs research/isolated-prediction-ledger.test.mjs
+        run: node --test research/calibration-metrics.test.mjs research/verified-source-fallback.test.mjs research/request-coordinator.test.mjs research/run-paired-backtest.test.mjs research/chronological-holdout.test.mjs research/league-backtest.test.mjs research/verified-espn-audit.test.mjs research/poisson-v14.test.mjs research/prediction-provenance.test.mjs research/isolated-prediction-ledger.test.mjs research/concurrent-safety.test.mjs
       - name: Run offline Worker regression tests (no production bindings)
         run: node --test tests/*.test.mjs
