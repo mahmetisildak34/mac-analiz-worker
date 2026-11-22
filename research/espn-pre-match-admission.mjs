@@ -21,7 +21,7 @@ export function admitEspnScoreboard(payload,{leagueId,capturedAt,now=new Date().
   if(!Number.isFinite(utc(kickoff))){reject('invalid_kickoff');continue;}
   summary.validKickoff++;
   const status=event?.status?.type;
-  if(status?.state!=='pre'||status?.completed===true||!['STATUS_SCHEDULED','STATUS_NOT_STARTED','STATUS_PRE_GAME','STATUS_PREGAME'].includes(status?.name)){reject('not_scheduled');continue;}
+  if(status?.state!=='pre'||status?.completed!==false||!['STATUS_SCHEDULED','STATUS_NOT_STARTED','STATUS_PRE_GAME','STATUS_PREGAME'].includes(status?.name)){reject('not_scheduled');continue;}
   if(utc(kickoff)<=utc(now)||utc(kickoff)<=utc(capturedAt)){reject('already_started');continue;}
   if(!Array.isArray(competitors)||competitors.length!==2){reject('invalid_competitors');continue;}
   const home=competitors.find(x=>x.homeAway==='home'),away=competitors.find(x=>x.homeAway==='away');
