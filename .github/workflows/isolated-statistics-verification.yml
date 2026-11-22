@@ -21,6 +21,10 @@ jobs:
           node --check isolated-verified-statistics-repair.js
           node --check statistics-data-quality.js
           node --check isolated-provider-fetch.js
+      - name: Run all offline research regressions (Poisson, sources, concurrency)
+        run: node --experimental-sqlite --test research/*.test.mjs
+      - name: Benchmark offline request coordination
+        run: node --expose-gc research/benchmark-coordinator.mjs
       - name: Run complete offline Worker regression suite
         run: node --experimental-sqlite --test tests/*.test.mjs
       - name: Run offline isolated repair and audit regressions
