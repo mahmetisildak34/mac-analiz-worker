@@ -19,5 +19,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Check Worker module syntax (offline only)
+        run: |
+          node --check worker.js
+          node --check statistics-repair-bulk.js
+          node --check statistics-data-quality.js
+          node --check trusted-goal-poisson.js
+          node --check archive-poisson-client.js
+          node --check statistics-repair.js
+          node --check statistics-api-backfill.js
+          node --check statistics-api-cron.js
+          node --check statistics-api-persistence.js
       - name: Run independent research tests
         run: node --test research/calibration-metrics.test.mjs research/verified-source-fallback.test.mjs research/request-coordinator.test.mjs research/run-paired-backtest.test.mjs research/chronological-holdout.test.mjs research/league-backtest.test.mjs research/verified-espn-audit.test.mjs research/poisson-v14.test.mjs research/prediction-provenance.test.mjs
+      - name: Run offline Worker regression tests (no production bindings)
+        run: node --test tests/*.test.mjs
