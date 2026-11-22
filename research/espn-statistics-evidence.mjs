@@ -1,4 +1,5 @@
 // Validate completed ESPN scoreboard statistics without inventing missing fields.
+// Missing provider fields are rejected; every accepted record carries its raw SHA-256.
 import {createHash} from 'node:crypto';
 const hash=x=>createHash('sha256').update(x).digest('hex');
 const integer=v=>{if(typeof v!=='string'&&typeof v!=='number')return null;const n=Number(v);return Number.isSafeInteger(n)&&n>=0?n:null;};
