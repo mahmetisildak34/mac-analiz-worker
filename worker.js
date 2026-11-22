@@ -1,6 +1,7 @@
 import {assessStatistics} from "./statistics-data-quality.js";
 import { runStatisticsRepair } from "./statistics-repair.js";
 import { runStatisticsApiCron } from "./statistics-api-cron.js";
+import { coalesceResponse } from "./upstream-coalescer.js";
 // Deployment refresh: publish the reviewed Worker configuration and cache policy.
 // Audit trigger: deploy this verified revision so the post-deploy archive audit runs.
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
@@ -457,6 +458,49 @@ async function ensureArchiveIndexes(env) {
 // Historical matches are served read-only from existing KV data and the app's CSV/ESPN fallbacks.
 
 
+const ESPN_ARCHIVE_AUDIT_DAYS = 30;
+const ESPN_ARCHIVE_REPAIR_LOOKBACK_DAYS = 120;
+const ESPN_ARCHIVE_COVERAGE_SLUGS = new Set(["ger.1", "uefa.champions", "uefa.europa", "uefa.europa.conf"]);
+
+function prioritizeEspnArchiveJobs(state, now) {
+  const end = new Date(now);
+  end.setUTCDate(end.getUTCDate() + ESPN_ARCHIVE_AUDIT_DAYS);
+  const start = new Date(now);
+  start.setUTCDate(start.getUTCDate() - ESPN_ARCHIVE_REPAIR_LOOKBACK_DAYS);
+  const dateKey = date => date.toISOString().slice(0, 10).replace(/-/g, "");
+  const today = dateKey(now);
+  const cutoff = dateKey(end);
+  const earliest = dateKey(start);
+  const processed = state.jobs.slice(0, state.cursor);
+  const pending = state.jobs.slice(state.cursor);
+  const inRepairWindow = job => ESPN_ARCHIVE_COVERAGE_SLUGS.has(job.league?.[1]) &&
+    job.date >= earliest && job.date <= cutoff;
+  if (!state.priorityCoverageRepairQueued) {
+    // A completed cursor only certifies that a request was considered. Some
+    // matchdays were previously skipped after finding a single archived row.
+    const key = job => job.league[1] + "|" + job.date;
+    const queued = new Set(pending.filter(inRepairWindow).map(key));
+    for (const job of processed.filter(inRepairWindow)) {
+      if (queued.has(key(job))) continue;
+      pending.push({ ...job, attempts: 0 });
+      queued.add(key(job));
+    }
+    state.priorityCoverageRepairQueued = true;
+  }
+  const coverage = [];
+  const recent = [];
+  const backfill = [];
+  for (const job of pending) {
+    // Failed dates stay in the normal retry queue so one provider outage cannot
+    // consume the coverage allowance on every scheduled invocation.
+    if (job.attempts || !inRepairWindow(job)) backfill.push(job);
+    else if (job.date >= today) coverage.push(job);
+    else recent.push(job);
+  }
+  state.jobs = [...processed, ...coverage, ...recent, ...backfill];
+  return job => job.date >= today || inRepairWindow(job);
+}
+
 async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, maxRequests = 40) {
   if (!env.DB || !env.MAM_KV) return { saved: 0, failed: 0, complete: false, reason: "DB or MAM_KV binding missing" };
 
@@ -581,6 +625,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     state.version = 2;
   }
 
+  const shouldReconcile = prioritizeEspnArchiveJobs(state, new Date());
   // Historical fixture coverage is the active priority. While its queue is
   // pending, reserve the hourly ESPN request budget for scoreboard backfill.
   // Summary/statistics enrichment resumes automatically after this queue drains.
@@ -675,7 +720,8 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
   batch = state.jobs.slice(state.cursor, state.cursor + Math.max(1, scoreboardBatchLimit));
   const queueAfterDiscovery = summaryQueue.length;
 
-  // Skip scoreboard requests for league/date pairs already represented in D1.
+  // Skip historical scoreboard requests for league/date pairs represented in D1.
+  // A partial upcoming matchday must still be reconciled against the provider.
   // This is deliberately additive: the original job batch still advances the
   // durable cursor, while only dates with no ESPN rows consume provider calls.
   // Existing rows are never overwritten with empty statistics by this path.
@@ -688,6 +734,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
       const leagueId = String(job?.league?.[0] || "");
       const date = String(job?.date || "");
       if (!/^\d{8}$/.test(date) || !leagueId) continue;
+      if (shouldReconcile(job)) continue;
       const isoDate = date.slice(0, 4) + "-" + date.slice(4, 6) + "-" + date.slice(6, 8);
       const nextDate = new Date(isoDate + "T00:00:00.000Z");
       nextDate.setUTCDate(nextDate.getUTCDate() + 1);
@@ -702,7 +749,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
         String(row.league_id) + "|" + String(row.match_day || "").replace(/-/g, "")
       ));
       jobsToFetch = batch.filter(job =>
-        !existingDays.has(String(job.league?.[0] || "") + "|" + String(job.date || ""))
+        shouldReconcile(job) || !existingDays.has(String(job.league?.[0] || "") + "|" + String(job.date || ""))
       );
       skippedExistingDays = batch.length - jobsToFetch.length;
     }
@@ -1883,7 +1930,7 @@ export default {
           const auditStart = new Date();
           auditStart.setUTCHours(0,0,0,0);
           const auditEnd = new Date(auditStart);
-          auditEnd.setUTCDate(auditEnd.getUTCDate()+30);
+          auditEnd.setUTCDate(auditEnd.getUTCDate()+ESPN_ARCHIVE_AUDIT_DAYS);
           // ESPN retired date-range scoreboard queries (they now return HTTP 400).
           // Request calendar months separately, then filter the combined events to
           // the exact audit window. This keeps the audit to at most two calls/league.
@@ -1988,7 +2035,10 @@ export default {
             teamsBelow10:checkedTeams.length-ready,
             upcomingMatches:upcomingByLeague.get(leagueId) || 0,
             providerUpcomingMatches:Array.isArray(providerUpcoming)?providerUpcoming.length:null,
-            missingUpcomingInD1:missingUpcoming.slice(0,50).map(event=>({date:event.date,home:event.home,away:event.away})),
+            missingUpcomingInD1:missingUpcoming.slice(0,50).map(event=>({
+              date:event.date,home:event.home,away:event.away,espnEventId:event.id,
+              fixtureId:"espn-"+slug+"-"+event.id
+            })),
             d1UpcomingNotInProvider:extraUpcoming.slice(0,50),
             directoryVerified:Array.isArray(directory),
             missingTeams:checkedTeams.filter(team=>!team.ready).slice(0,100),
@@ -2853,6 +2903,7 @@ export default {
         cache = null;
       }
 
+      return await coalesceResponse(cacheKey.url, async () => {
       // Shared server-side guard: protect the single API-Football key across
       // every visitor/device. Cache hits return above and do not consume quota.
       const isPrimaryFootballApi = !isFootballStatus && !isESPN && !isFixtureDownload && !isSportScore && !isFootballData;
@@ -3016,6 +3067,7 @@ export default {
       }
 
       return response;
+      }, cors);
     } catch (error) {
       return new Response(JSON.stringify({
         error: "Worker request failed",

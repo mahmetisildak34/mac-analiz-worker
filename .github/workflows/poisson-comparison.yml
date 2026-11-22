@@ -1,0 +1,64 @@
+name: Reproducible six-league Poisson comparison
+on:
+  push:
+    branches:
+      - feature/independent-calibration-isolation-fix-20261122
+  pull_request:
+    branches:
+      - feature/independent-calibration-20261122
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: openfootball/football.json
+          ref: e6744429ee395bc86f247348c6184bb08d4eb361
+          path: football.json
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate model and source importer syntax
+        run: |
+          node --check trusted-goal-poisson.js
+          node --check research/poisson-v14.mjs
+          node --check research/import-openfootball.mjs
+          node --check research/compare-poisson.mjs
+      - name: Import pinned public archive with per-file SHA-256
+        run: node research/import-openfootball.mjs football.json HEAD > /tmp/mam-input.json
+      - name: Run leakage-resistant paired comparison
+        run: node research/compare-poisson.mjs /tmp/mam-input.json > /tmp/mam-report.json
+      - name: Validate same-sample model metrics and fail-closed reliability
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import {readFile} from 'node:fs/promises';
+          const report=JSON.parse(await readFile('/tmp/mam-report.json','utf8'));
+          assert.equal(Object.keys(report.sources).length,12);
+          for(const period of ['full','half']){
+            const models=report.aggregate[period].models;
+            assert.deepEqual(Object.keys(models).sort(),['1.2','1.3','1.4']);
+            assert.deepEqual(new Set(Object.values(models).map(x=>x.matches)),new Set([889]));
+            assert.ok(models['1.4'].brier<models['1.3'].brier);
+            assert.ok(models['1.3'].brier<models['1.2'].brier);
+            assert.ok(models['1.4'].logLoss<models['1.3'].logLoss);
+            assert.ok(models['1.3'].logLoss<models['1.2'].logLoss);
+            assert.equal(report.aggregate[period].reliability.validated,false);
+          }
+          assert.equal(Object.keys(report.leagues).length,6);
+          console.log('Paired v1.2/v1.3/v1.4 comparison: 889 common matches per period; reliability gate remains disabled.');
+          NODE
+      - name: Upload reproducible comparison report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: poisson-v12-v13-v14-six-league-comparison
+          path: /tmp/mam-report.json
+          if-no-files-found: warn
+          retention-days: 14

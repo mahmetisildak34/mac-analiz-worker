@@ -1,0 +1,28 @@
+name: Capture public ESPN fixture evidence
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */3 * * *'
+permissions:
+  contents: read
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/independent-calibration-isolation-fix-20261122
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Capture raw ESPN responses (read-only)
+        run: node research/capture-public-espn.mjs "espn-captures-$(date -u +%Y%m%dT%H%M%SZ)"
+      - name: Preserve raw capture and SHA-256 manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: espn-readonly-capture-${{ github.run_id }}
+          path: espn-captures-*/
+          retention-days: 30
+          if-no-files-found: error

@@ -15,3 +15,11 @@ Source: production Cloudflare D1 `mac-analiz-arsiv`, SELECT-only. No data was mo
 2. Run `research/run-paired-backtest.mjs` on an offline, evidence-backed JSON export.
 3. Report paired sample counts, exclusions, per-league scores and chronological holdout; no model promotion without evidence.
 4. Run GitHub Actions and verify all tests; keep Poisson v1.2 as default until proven otherwise.
+
+## Fresh SELECT-only recheck (2026-11-22)
+- Current D1 `matches`: **14,163** rows, of which **11,104** have `source = espn`.
+- The original source-confirmed final ESPN SQL audit was rerun unchanged. Counts remained **864 Serie A, 837 La Liga, 796 Premier League, 719 Süper Lig, 710 Primeira Liga, 683 Ligue 1, 658 Eredivisie, 635 Bundesliga, 451 Champions League, 450 Europa League**.
+- Source evidence audit is *not* a pre-kickoff prediction archive. The live SQLite catalog contains only `matches`, `mam_api_quota_guard`, and `_cf_KV` (no dedicated timestamped prediction table). `matches` columns are match identity, scores, provider payloads and `updated_at`, not a v1.2/v1.3/v1.4 prediction snapshot schema.
+- **Blocked ranking:** the verified final-score sample does not establish point-in-time v1.2/v1.3/v1.4 probabilities. A Brier/log-loss/ECE comparison from this alone would be a contaminated retrospective calculation. Keep v1.2 as default.
+- A defensible replay requires a time-versioned as-of feature snapshot available strictly before each kickoff, model code/version provenance, same paired fixtures for every version, and an untouched chronological holdout. The offline research comparator enforces timestamped per-model evidence and fails closed without it.
+- All Cloudflare operations above were read-only SELECT/schema inspection; no D1 rows changed and no provider quota used.

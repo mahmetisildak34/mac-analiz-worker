@@ -36,3 +36,13 @@ test('backtest fails closed when model prediction timestamps are absent or late'
  assert.equal(backtest([row]).provenanceRejected,1);
  assert.throws(()=>backtest([row],{requireProvenance:false}),/cannot be disabled/);
 });
+
+test('prepared predictions do not share mutable fixture model objects',()=>{
+ const fixture={fixtureId:'isolated',date:'2025-01-01T00:00:00Z',identity_verified:true,score_verified:true,homeGoals:1,awayGoals:0,models:structuredClone(models)};
+ const prepared=prepareVerifiedPairs([fixture]);
+ assert.notStrictEqual(prepared.rows[0].models,fixture.models);
+ assert.notStrictEqual(prepared.rows[0].models['v1.3'],fixture.models['v1.3']);
+ const original=prepared.rows[0].models['v1.3'].home;
+ fixture.models['v1.3'].home=0;
+ assert.equal(prepared.rows[0].models['v1.3'].home,original);
+});

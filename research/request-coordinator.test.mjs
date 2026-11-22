@@ -49,3 +49,27 @@ test('identical in-flight fixture keys across providers are independent',async()
  ]);
  assert.deepEqual([a,b],['A','B']);assert.equal(calls,2);
 });
+
+test('telemetry reports hits, coalescing, upstream failures, quota rejections and elapsed time',async()=>{
+ let time=100;
+ const c=createRequestCoordinator({now:()=>time});
+ let resolveFirst;
+ const first=c.run('shared',()=>new Promise(resolve=>{resolveFirst=resolve;}),{provider:'espn',limit:2,windowMs:100,ttlMs:50});
+ const second=c.run('shared',()=>99,{provider:'espn',limit:2,windowMs:100,ttlMs:50});
+ await Promise.resolve();
+ time=107;resolveFirst('ok');
+ assert.deepEqual(await Promise.all([first,second]),['ok','ok']);
+ assert.equal(await c.run('shared',()=>99,{provider:'espn',limit:2,windowMs:100,ttlMs:50}),'ok');
+ await assert.rejects(c.run('failure',()=>{time=115;throw new Error('offline');},{provider:'espn',limit:2,windowMs:100}));
+ await assert.rejects(c.run('overflow',()=>99,{provider:'espn',limit:2,windowMs:100}),/quota exhausted/);
+ const m=c.stats();
+ assert.equal(m.requests,5);
+ assert.equal(m.coalesced,1);
+ assert.equal(m.cacheHits,1);
+ assert.equal(m.upstreamCalls,2);
+ assert.equal(m.upstreamFailures,1);
+ assert.equal(m.quotaRejected,1);
+ assert.equal(m.cacheHitRate,.2);
+ assert.equal(m.upstreamLatencyMs,15);
+ assert.equal(m.meanUpstreamLatencyMs,7.5);
+});
