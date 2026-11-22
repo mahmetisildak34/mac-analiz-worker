@@ -44,9 +44,9 @@ test('80 concurrent ESPN requests to the same fixture use one upstream operation
 test('80 sequential repeat calls hit TTL cache without increasing provider usage',async()=>{
  let now=100,calls=0;
  const c=createRequestCoordinator({now:()=>now});
- for(let i=0;i<80;i++)await c.run('tur.1:401',()=>++calls,{provider:'ESPN',ttlMs:500,limit:1,windowMs:1000});
+ for(let i=0;i<80;i++)await c.run('tur.1:401',()=>++calls,{provider:'ESPN',ttlMs:500,limit:1,windowMs:500});
  assert.equal(calls,1);assert.equal(c.stats().cacheHits,79);
- now=600;assert.equal(await c.run('tur.1:401',()=>++calls,{provider:'ESPN',ttlMs:500,limit:1,windowMs:1000}),2);
+ now=600;assert.equal(await c.run('tur.1:401',()=>++calls,{provider:'ESPN',ttlMs:500,limit:1,windowMs:500}),2);
 });
 test('quota exhaustion never calls an extra upstream provider',async()=>{
  let calls=0;const c=createRequestCoordinator({now:()=>0});
