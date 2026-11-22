@@ -16,4 +16,4 @@ jobs:
         with:
           node-version: '22'
       - name: Run independent research tests
-        run: node --test research/calibration-metrics.test.mjs research/verified-source-fallback.test.mjs research/request-coordinator.test.mjs research/poisson-v14.test.mjs
+        run: node --test research/calibration-metrics.test.mjs research/verified-source-fallback.test.mjs research/request-coordinator.test.mjs research/run-paired-backtest.test.mjs research/poisson-v14.test.mjs
