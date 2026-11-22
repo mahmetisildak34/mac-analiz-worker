@@ -18,7 +18,9 @@ export async function fetchAndRepairIsolatedApiSports(env, fixture, request=fetc
     let reserved;
     try { reserved=await reserveApiBackfillCall(env.TEST_WRITE_DB,{...env,STATISTICS_API_BACKFILL_ENABLED:'true'}); }
     catch { return {state:'quota_unavailable'}; }
-    // The shared ledger enforces an 8-second slot. A second immediate request\n    // must wait before reserving; never retry budget exhaustion or missing state.\n    if(!reserved?.allowed && reserved?.reason==='shared-reservation-denied' && payloads.length===1) {\n      try { await wait(8100); reserved=await reserveApiBackfillCall(env.TEST_WRITE_DB,{...env,STATISTICS_API_BACKFILL_ENABLED:'true'}); }\n      catch { return {state:'quota_unavailable'}; }\n    }\n    if(!reserved?.allowed) return {state:'quota_blocked',reason:reserved?.reason||'reservation_denied'};
+    // The shared ledger enforces an 8-second slot. A second immediate request
+    // must wait before reserving; never retry budget exhaustion or missing state.
+    if(!reserved?.allowed && reserved?.reason==='shared-reservation-denied' && payloads.length===1) {\n      try { await wait(8100); reserved=await reserveApiBackfillCall(env.TEST_WRITE_DB,{...env,STATISTICS_API_BACKFILL_ENABLED:'true'}); }\n      catch { return {state:'quota_unavailable'}; }\n    }\n    if(!reserved?.allowed) return {state:'quota_blocked',reason:reserved?.reason||'reservation_denied'};
     let response;
     try {
       response=await request(origin+path+encodeURIComponent(fixture.fixture_id),{headers,redirect:'error',signal:AbortSignal.timeout(12000)});
