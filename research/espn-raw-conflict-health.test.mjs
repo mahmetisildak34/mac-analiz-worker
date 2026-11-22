@@ -84,3 +84,27 @@ test('duplicate audit never flags different opponents or distant kickoff',()=>{
  const result=summarizeFixtureHealth([a,b,c]);
  assert.ok(result.fixtures.every(f=>!f.issues.includes('potential_cross_source_duplicate')));
 });
+
+test('real production pattern: stale ESPN NS 0-0 vs app FT 2-1 is explicitly flagged',()=>{
+ const espn=match({league_id:'203',home_team:'Kasımpaşa',away_team:'Alanyaspor',status:'NS',home_goals:0,away_goals:0,raw_json:null});
+ const app={...espn,source:'app',status:'FT',home_goals:2,away_goals:1,fixture_id:'app-fixture',raw_json:null};
+ const report=summarizeFixtureHealth([espn,app],{nowMs:Date.parse('2026-11-22T20:00:00Z')});
+ assert.equal(report.total,2);
+ for(const fixture of report.fixtures){
+  assert.ok(fixture.issues.includes('cross_source_status_disagreement'));
+  assert.ok(fixture.issues.includes('cross_source_score_disagreement'));
+ }
+});
+test('same scores and status from distinct sources remain non-conflicting',()=>{
+ const a=match({league_id:'203',home_team:'Trabzonspor',away_team:'Eyüpspor',raw_json:null});
+ const b={...a,source:'app',fixture_id:'app-fixture'};
+ const report=summarizeFixtureHealth([a,b]);
+ assert.ok(report.fixtures.every(f=>!f.issues.includes('cross_source_status_disagreement')));
+ assert.ok(report.fixtures.every(f=>!f.issues.includes('cross_source_score_disagreement')));
+});
+test('missing score fields are not interpreted as zero in source comparison',()=>{
+ const a=match({league_id:'203',home_team:'Trabzonspor',away_team:'Eyüpspor',home_goals:0,away_goals:0,raw_json:null});
+ const b={...a,source:'TFF',home_goals:null,away_goals:null,fixture_id:'tff-id'};
+ const report=summarizeFixtureHealth([a,b]);
+ assert.ok(report.fixtures.every(f=>!f.issues.includes('cross_source_score_disagreement')));
+});
