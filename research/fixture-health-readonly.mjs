@@ -52,7 +52,7 @@ export function summarizeFixtureHealth(rows,options={}){
  // Report potential cross-source doubles, never delete or automatically merge rows.
  // Exact league + team identities and nearby kickoff are required.
  const normalize=value=>String(value??'').toLocaleLowerCase('tr-TR').normalize('NFD')
-  .replace(/[\\u0300-\\u036f]/g,'').replace(/ı/g,'i').replace(/[^a-z0-9]/g,'');
+  .replace(/\p{M}/gu,'').replace(/ı/g,'i').replace(/[^a-z0-9]/g,'');
  const seen=new Map();
  rows.forEach((row,index)=>{
   const league=String(row?.league_id??''),home=normalize(row?.home_team),away=normalize(row?.away_team);
