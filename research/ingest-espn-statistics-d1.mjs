@@ -9,9 +9,11 @@ export function validateEvidenceRow(row){
  if(sha(row.raw_json)!==row.raw_sha256||stats.rawSha256!==row.raw_sha256||stats.provider!=='ESPN'||stats.validation!=='completed_scoreboard_payload_structural_validation'||stats.independentCrossSourceVerification!==false)throw new Error('Raw evidence hash or validation provenance mismatch');
  if(row.fixture_id!=='espn-'+row.fixture_id.split('-')[1]+'-'+raw.id||raw.date!==row.kickoff)throw new Error('Fixture ID or kickoff does not match raw ESPN evidence');
  const comp=raw.competitions?.[0],teams=comp?.competitors,home=teams?.find(x=>x.homeAway==='home'),away=teams?.find(x=>x.homeAway==='away');
+ if(!Array.isArray(teams)||teams.length!==2||!Array.isArray(comp?.details))throw new Error('Missing or ambiguous competitor/card evidence');
  if(raw.status?.type?.state!=='post'||raw.status?.type?.completed!==true||!home||!away||Number(home.team.id)!==row.home_team_id||Number(away.team.id)!==row.away_team_id||home.team.displayName!==row.home_team||away.team.displayName!==row.away_team||Number(home.score)!==row.home_goals||Number(away.score)!==row.away_goals)throw new Error('Provider identity or score mismatch');
  for(const [side,team] of [['home',home],['away',away]]){
-  const actual=Object.fromEntries((team.statistics??[]).map(x=>[x.name,x.displayValue])),got=stats[side];
+  if(!Array.isArray(team.statistics)||new Set(team.statistics.map(x=>x.name)).size!==team.statistics.length)throw new Error('Missing or duplicate raw statistics: '+side);
+  const actual=Object.fromEntries(team.statistics.map(x=>[x.name,x.displayValue])),got=stats[side];
   for(const k of ['totalShots','shotsOnTarget','wonCorners','foulsCommitted'])if(Number(actual[k])!==got[k]||!Number.isSafeInteger(got[k])||got[k]<0)throw new Error('Statistic mismatch: '+side+'.'+k);
   if(Number(actual.possessionPct)!==got.possessionPct||!num(got.possessionPct)||got.possessionPct<0||got.possessionPct>100||got.shotsOnTarget>got.totalShots||Number(actual.totalGoals)!==Number(team.score))throw new Error('Statistic consistency mismatch: '+side);
  }
