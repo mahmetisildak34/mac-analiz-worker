@@ -3,7 +3,7 @@
 // independently timestamped feature/model evidence. A schedule is not a prediction.
 import {createHash} from 'node:crypto';
 const id=x=>typeof x==='string'&&/^[A-Za-z0-9_.:-]{1,128}$/.test(x);
-const utc=x=>typeof x==='string'&&/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,3})?Z$/.test(x)&&Number.isFinite(Date.parse(x))&&new Date(x).toISOString()===x.replace('.000Z','Z')?Date.parse(x):NaN;
+const utc=x=>typeof x==='string'&&/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,3})?Z$/.test(x)&&Number.isFinite(Date.parse(x))&&new Date(x).toISOString().replace('.000Z','Z')===x.replace('.000Z','Z')?Date.parse(x):NaN;
 const hash=x=>createHash('sha256').update(JSON.stringify(x)).digest('hex');
 export function admitEspnScoreboard(payload,{leagueId,capturedAt,now=new Date().toISOString()}={}){
  if(!id(leagueId)||!Number.isFinite(utc(capturedAt))||!Number.isFinite(utc(now))||utc(capturedAt)>utc(now))
