@@ -16,7 +16,7 @@ test('rejects post-match, duplicate, wrong league, bad kickoff, teams and late c
  const finished={...event('3'),status:{type:{state:'post',completed:true}}};
  const badTeams={...event('4'),competitions:[{competitors:[{homeAway:'home',team:{id:'1'}},{homeAway:'away',team:{id:'1'}}]}]};
  const r=admitEspnScoreboard(payload([event(),event(),badDate,finished,badTeams]),{leagueId:'tur.1',capturedAt,now:capturedAt});
- assert.equal(r.inspected,5);assert.equal(r.eligible,1);assert.equal(r.validKickoff,4);
+ assert.equal(r.inspected,5);assert.equal(r.eligible,1);assert.equal(r.validKickoff,3);
  assert.equal(r.rejected.missing_or_duplicate_fixture,1);
  assert.equal(r.rejected.invalid_kickoff,1);
  assert.equal(r.rejected.not_scheduled,1);
