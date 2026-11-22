@@ -2,11 +2,11 @@
 import {validateEvidenceRow} from './ingest-espn-statistics-d1.mjs';
 const ACCOUNT='640bfb6a538ee57864281941b14dbc55';
 const DATABASE='fb9b42cc-8d96-4911-b193-0983527ee593';
-const URL='https://api.cloudflare.com/client/v4/accounts/'+ACCOUNT+'/d1/database/'+DATABASE+'/query';
+const ENDPOINT='https://api.cloudflare.com/client/v4/accounts/'+ACCOUNT+'/d1/database/'+DATABASE+'/query';
 const SQL="SELECT source,fixture_id,kickoff,status,home_team_id,away_team_id,home_team,away_team,home_goals,away_goals,statistics_json,raw_json FROM matches WHERE source='ESPN' ORDER BY fixture_id LIMIT 500";
 export async function auditIsolatedEvidence({token,fetcher=fetch}={}){
  if(typeof token!=='string'||!token)throw new Error('Dedicated isolated D1 token required');
- const response=await fetcher(URL,{method:'POST',headers:{authorization:'Bearer '+token,'content-type':'application/json'},body:JSON.stringify({sql:SQL,params:[]})});
+ const response=await fetcher(ENDPOINT,{method:'POST',headers:{authorization:'Bearer '+token,'content-type':'application/json'},body:JSON.stringify({sql:SQL,params:[]})});
  const body=await response.json();
  if(!response.ok||!body.success||!Array.isArray(body.result?.[0]?.results))throw new Error('Isolated D1 read-only query failed');
  const rows=body.result[0].results,seen=new Set(),leagues={};
