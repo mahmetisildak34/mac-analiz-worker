@@ -62,6 +62,29 @@ export function summarizeFixtureHealth(rows,options={}){
   const previous=seen.get(key)||[];
   const duplicates=previous.filter(item=>Math.abs(kickoff-item.kickoff)<=10*60*1000);
   if(duplicates.length){
+   // Separate mismatched provider snapshots from mere repeated identities.
+   // Never interpret a scheduled 0-0 placeholder as an independently verified score.
+   const note=(item,issue)=>{
+    const health=fixtures[item];
+    if(!health.issues.includes(issue))health.issues.push(issue);
+    if(health.priority==='ok')health.priority='review';
+    health.requiresProviderCheck=true;
+   };
+   for(const previousRow of duplicates){
+    const other=rows[previousRow.index];
+    if(String(other.source??'').toLowerCase()===String(row.source??'').toLowerCase())continue;
+    const oldStatus=String(other.status??'').toUpperCase(),newStatus=String(row.status??'').toUpperCase();
+    if(oldStatus&&newStatus&&oldStatus!==newStatus){
+     note(previousRow.index,'cross_source_status_disagreement');
+     note(index,'cross_source_status_disagreement');
+    }
+    const scores=[other.home_goals,other.away_goals,row.home_goals,row.away_goals];
+    if(scores.every(x=>Number.isSafeInteger(x)&&x>=0)&&
+      (other.home_goals!==row.home_goals||other.away_goals!==row.away_goals)){
+     note(previousRow.index,'cross_source_score_disagreement');
+     note(index,'cross_source_score_disagreement');
+    }
+   }
    for(const matched of [...duplicates,{index}]){
     const fixture=fixtures[matched.index];
     if(!fixture.issues.includes('potential_cross_source_duplicate')){
