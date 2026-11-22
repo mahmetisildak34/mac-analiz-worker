@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {coalesceResponse} from "../upstream-coalescer.js";
+import {readFile} from "node:fs/promises";
+const workerSource=await readFile(new URL("../worker.js",import.meta.url),"utf8");
 
 test("identical concurrent requests share one upstream load and independent response bodies",async()=>{
  let calls=0;
@@ -43,4 +45,14 @@ test("non-success responses are shared but not retained after completion",async(
 test("invalid keys and non-Response loader values fail closed",async()=>{
  await assert.rejects(coalesceResponse("",async()=>new Response("x")),TypeError);
  await assert.rejects(coalesceResponse("bad",async()=>"not a response"),/must return a Response/);
+});
+
+
+test("Worker joins cache misses before reserving shared provider quota",()=>{
+ const cacheRead=workerSource.indexOf("const cached = await cache.match(cacheKey)");
+ const coalesce=workerSource.indexOf("return await coalesceResponse(cacheKey.url, async () => {");
+ const quota=workerSource.indexOf("// Shared server-side guard: protect the single API-Football key");
+ assert.ok(cacheRead>=0&&coalesce>cacheRead&&quota>coalesce);
+ assert.match(workerSource,/import \{ coalesceResponse \} from "\.\/upstream-coalescer\.js"/);
+ assert.match(workerSource,/\}, cors\);/);
 });
