@@ -20,8 +20,9 @@ export function prepareVerifiedPairs(records){
  }
  return {rows,excluded};
 }
-export function backtest(records,{requireProvenance=false}={}){
- const provenance=requireProvenance?auditPredictionProvenance(records):null;
+export function backtest(records,{requireProvenance=true}={}){
+ if(requireProvenance!==true)throw new Error('Historical prediction provenance cannot be disabled');
+ const provenance=auditPredictionProvenance(records);
  const {rows,excluded}=prepareVerifiedPairs(provenance?provenance.accepted:records);
  if(!rows.length)return {status:'insufficient_verified_data',verifiedPairedMatches:0,excluded:excluded+(provenance?.rejectedCount??0),provenanceRejected:provenance?.rejectedCount??0,comparison:null};
  return {status:'evaluated',verifiedPairedMatches:rows.length,excluded:excluded+(provenance?.rejectedCount??0),provenanceRejected:provenance?.rejectedCount??0,comparison:comparePairedModels(rows,names),chronologicalHoldout:evaluateChronologicalHoldout(rows)};
