@@ -36,7 +36,7 @@ jobs:
               if not result.get('result') or result['result'][0].get('success') is False: raise RuntimeError('D1 SQL execution failed')
               return result['result'][0].get('results',[])
           schema=pathlib.Path('research/isolated-statistics-acceptance-schema.sql').read_text()
-          statements=[s.strip() for s in schema.split(';') if s.strip()]
+          statements=[s.strip() for s in schema.split(';') if s.strip() and any(line.strip() and not line.lstrip().startswith('--') for line in s.splitlines())]
           assert len(statements)==2,'Unexpected schema statement count'
           for stmt in statements:
               assert 'CREATE TABLE IF NOT EXISTS' in stmt,'Only idempotent CREATE TABLE is permitted'
