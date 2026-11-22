@@ -70,3 +70,38 @@ test('wrong fixture, missing score proof, late prediction and duplicate results 
   await assert.rejects(verifier.append(prediction()),/Late or unproven/);
  }finally{raw.close();}
 });
+
+test('tampered indexed prediction columns are rejected even when JSON hash remains intact',async()=>{
+ const {raw,db}=dbFactory();
+ try{
+  const store=createIsolatedD1Store({db,now:early});
+  await store.append(prediction());
+  raw.exec('DROP TRIGGER isolated_predictions_no_update');
+  raw.exec("UPDATE isolated_prediction_evidence SET league_id='wrong'");
+  await assert.rejects(store.read('espn-1'),/provenance mismatch/);
+ }finally{raw.close();}
+});
+test('tampered indexed result provenance is rejected independently of prediction',async()=>{
+ const {raw,db}=dbFactory();
+ try{
+  const writer=createIsolatedD1Store({db,now:early});
+  await writer.append(prediction());
+  const verifier=createIsolatedD1Store({db,now:late});
+  await verifier.saveVerifiedResult('espn-1',result(),{evidenceId:'source-1'});
+  raw.exec('DROP TRIGGER isolated_results_no_update');
+  raw.exec("UPDATE isolated_verified_results SET evidence_id='wrong'");
+  await assert.rejects(verifier.readVerifiedResult('espn-1'),/identity mismatch/);
+  await assert.rejects(verifier.pair('espn-1'),/identity mismatch/);
+ }finally{raw.close();}
+});
+test('concurrent verified result writes accept only one immutable result',async()=>{
+ const {raw,db}=dbFactory();
+ try{
+  await createIsolatedD1Store({db,now:early}).append(prediction());
+  const writers=Array.from({length:24},()=>createIsolatedD1Store({db,now:late}));
+  const outcomes=await Promise.allSettled(writers.map(store=>store.saveVerifiedResult('espn-1',result(),{evidenceId:'source-1'})));
+  assert.equal(outcomes.filter(x=>x.status==='fulfilled').length,1);
+  assert.equal(outcomes.filter(x=>x.status==='rejected').length,23);
+  assert.equal(raw.prepare('SELECT count(*) AS n FROM isolated_verified_results').get().n,1);
+ }finally{raw.close();}
+});
