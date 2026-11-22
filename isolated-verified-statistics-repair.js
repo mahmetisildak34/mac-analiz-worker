@@ -2,12 +2,14 @@
 // No network requests. Caller must provide raw fixture and statistics provider responses.
 // Never accept caller-provided provider_verified or identity_verified flags as evidence.
 import { verifyStatisticsCandidate } from './verified-statistics-candidate.js';
+import { hasApiFootballIdentity } from './statistics-api-backfill.js';
 
 const id = x => /^[1-9]\d*$/.test(String(x ?? ''));
 const normalizedTime = x => { const t = Date.parse(x); return Number.isFinite(t) ? t : NaN; };
 export function deriveVerifiedApiSportsEvidence(fixture, fixtureResponse, statisticsResponse) {
   const reject = reason => ({state:'rejected',reason});
   if (!fixture || !['api-football','API-Football','api_sports','app'].includes(fixture.source) || !id(fixture.fixture_id)) return reject('unsupported_fixture_source');
+  if (fixture.source === 'app' && !hasApiFootballIdentity(fixture)) return reject('app_provider_identity_unproven');
   if (!fixtureResponse || !statisticsResponse || !Array.isArray(fixtureResponse.response) || fixtureResponse.response.length !== 1 || !Array.isArray(statisticsResponse.response) || statisticsResponse.response.length !== 2) return reject('provider_payload_required');
   const event = fixtureResponse.response[0];
   if (String(event?.fixture?.id) !== String(fixture.fixture_id) || !['FT','AET','PEN'].includes(event?.fixture?.status?.short)) return reject('provider_fixture_not_final');
@@ -31,6 +33,6 @@ export async function persistIsolatedVerifiedStatistics(env,fixture,fixtureRespo
   const again = deriveVerifiedApiSportsEvidence(current,fixtureResponse,statisticsResponse);
   if (again.state !== 'verified') return {state:'stale_or_conflicting'};
   if (current.statistics_json != null && !['','{}','[]','null'].includes(String(current.statistics_json).trim())) return {state:'already_populated'};
-  const write = await db.prepare("UPDATE matches SET statistics_json=? WHERE source=? AND fixture_id=? AND kickoff=? AND status IN ('FT','AET','PEN') AND home_team_id=? AND away_team_id=? AND home_goals=? AND away_goals=? AND (statistics_json IS NULL OR trim(statistics_json) IN ('','{}','[]','null'))").bind(again.statistics_json,current.source,current.fixture_id,current.kickoff,current.home_team_id,current.away_team_id,current.home_goals,current.away_goals).run();
+  const write = await db.prepare("UPDATE matches SET statistics_json=? WHERE source=? AND fixture_id=? AND kickoff=? AND status IN ('FT','AET','PEN') AND home_team_id=? AND away_team_id=? AND home_team=? AND away_team=? AND home_goals=? AND away_goals=? AND (statistics_json IS NULL OR trim(statistics_json) IN ('','{}','[]','null'))").bind(again.statistics_json,current.source,current.fixture_id,current.kickoff,current.home_team_id,current.away_team_id,current.home_team,current.away_team,current.home_goals,current.away_goals).run();
   return {state:Number(write.meta?.changes) === 1 ? 'saved' : 'not_written'};
 }
