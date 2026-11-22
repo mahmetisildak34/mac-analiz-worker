@@ -36,3 +36,15 @@ jobs:
         run: node --expose-gc research/benchmark-coordinator.mjs
       - name: Run offline Worker regression tests (no production bindings)
         run: node --test tests/*.test.mjs
+      - name: Capture public ESPN scoreboards for all configured leagues (read-only)
+        if: github.event_name == 'push'
+        continue-on-error: true
+        run: node research/capture-public-espn.mjs research/espn-captures
+      - name: Upload raw ESPN capture and admission evidence
+        if: always() && github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: independent-espn-pre-match-capture
+          path: research/espn-captures
+          if-no-files-found: warn
+          retention-days: 7
