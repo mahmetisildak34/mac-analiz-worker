@@ -16,3 +16,16 @@ test('rejects late, unverified, and duplicate evidence',()=>{
  assert.throws(()=>calibrateVerifiedLeagues([{...pair,models:{...pair.models,'v1.4':{...model,predictedAt:pair.date}}}]),/late/);
  assert.equal(calibrateVerifiedLeagues([]).totalVerifiedPairs,0);
 });
+
+test('flags statistically supported overconfidence without promoting tiny bins',()=>{
+ const bad=Array.from({length:30},(_,i)=>({
+  ...pair,fixtureId:'bad-'+i,homeGoals:0,awayGoals:1,
+  models:Object.fromEntries(['v1.2','v1.3','v1.4'].map(v=>[v,{...model,home:.95,draw:.03,away:.02}]))
+ }));
+ const r=calibrateVerifiedLeagues(bad,{minSamples:30,bins:10});
+ const bin=r.leagues['tur.1'].models['v1.2'].reliability.find(b=>b.count===30);
+ assert.equal(bin.overconfidenceStatus,'overconfident');
+ assert.ok(bin.accuracy95CI.upper<bin.confidence);
+ const small=calibrateVerifiedLeagues(bad.slice(0,5),{minSamples:30});
+ assert.equal(small.leagues['tur.1'].models['v1.2'].reliability.find(b=>b.count===5).overconfidenceStatus,'insufficient_sample');
+});
