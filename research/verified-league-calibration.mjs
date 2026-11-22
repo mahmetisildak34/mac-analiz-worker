@@ -11,7 +11,9 @@ export function calibrateVerifiedLeagues(pairs,{minSamples=30,bins=10}={}){
    !/^[a-f0-9]{64}$/.test(row.predictionEvidenceSha256??'')||!Number.isInteger(row.homeGoals)||row.homeGoals<0||
    !Number.isInteger(row.awayGoals)||row.awayGoals<0||!Number.isFinite(Date.parse(row.date))||
    !versions.every(v=>row.models?.[v]&&Number.isFinite(Date.parse(row.models[v].predictedAt))&&Date.parse(row.models[v].predictedAt)<Date.parse(row.date)))throw new Error('Unverified or late prediction pair');
-  if(seen.has(row.fixtureId))throw new Error('Duplicate fixture');seen.add(row.fixtureId);
+  // ESPN fixture identifiers may be reused across independent competitions.
+  const identity=String(row.leagueId)+'\u0000'+String(row.fixtureId);
+  if(seen.has(identity))throw new Error('Duplicate fixture');seen.add(identity);
   const outcome=row.homeGoals>row.awayGoals?'home':row.homeGoals<row.awayGoals?'away':'draw';
   if(!groups.has(row.leagueId))groups.set(row.leagueId,[]);
   groups.get(row.leagueId).push({outcome,models:row.models});
