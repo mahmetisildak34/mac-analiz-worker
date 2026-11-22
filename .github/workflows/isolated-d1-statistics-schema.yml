@@ -1,0 +1,49 @@
+name: Isolated D1 statistics schema acceptance
+on:
+  push:
+    branches: [fix/verified-statistics-gap-audit-20261122]
+    paths: ['.github/workflows/isolated-d1-statistics-schema.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-schema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_ISOLATED_D1_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: '640bfb6a538ee57864281941b14dbc55'
+      D1_DATABASE_ID: 'fb9b42cc-8d96-4911-b193-0983527ee593'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install and verify isolated-only statistics schema
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          python3 - <<'PY'
+          import os,json,urllib.request,urllib.error,pathlib
+          assert os.environ['D1_DATABASE_ID']=='fb9b42cc-8d96-4911-b193-0983527ee593','wrong D1 database'
+          assert os.environ['CLOUDFLARE_ACCOUNT_ID']=='640bfb6a538ee57864281941b14dbc55','wrong account'
+          url=f"https://api.cloudflare.com/client/v4/accounts/{os.environ['CLOUDFLARE_ACCOUNT_ID']}/d1/database/{os.environ['D1_DATABASE_ID']}/query"
+          def query(sql):
+              req=urllib.request.Request(url,data=json.dumps({'sql':sql}).encode(),headers={'Authorization':'Bearer '+os.environ['CLOUDFLARE_API_TOKEN'],'Content-Type':'application/json'})
+              try:
+                  with urllib.request.urlopen(req,timeout=25) as r: result=json.load(r)
+              except urllib.error.HTTPError as e:
+                  result=json.load(e)
+              if not result.get('success'): raise RuntimeError('Isolated D1 SQL error codes: '+str([x.get('code') for x in result.get('errors',[])]))
+              if not result.get('result') or result['result'][0].get('success') is False: raise RuntimeError('D1 SQL execution failed')
+              return result['result'][0].get('results',[])
+          schema=pathlib.Path('research/isolated-statistics-acceptance-schema.sql').read_text()
+          statements=[s.strip() for s in schema.split(';') if s.strip()]
+          assert len(statements)==2,'Unexpected schema statement count'
+          for stmt in statements:
+              assert 'CREATE TABLE IF NOT EXISTS' in stmt,'Only idempotent CREATE TABLE is permitted'
+              query(stmt)
+          tables={r['name'] for r in query("SELECT name FROM sqlite_master WHERE type='table'")}
+          assert {'matches','mam_api_quota_guard'}.issubset(tables),'Schema tables missing'
+          cols={r['name'] for r in query('PRAGMA table_info(matches)')}
+          assert {'source','fixture_id','kickoff','status','home_team_id','away_team_id','statistics_json','raw_json'}.issubset(cols),'Statistics columns missing'
+          print('Isolated-only D1 statistics schema installed and verified; no production/preview operations')
+          PY
