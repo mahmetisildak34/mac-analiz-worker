@@ -16,7 +16,7 @@ export function sealMarketEvidence(input){
  const normalized={};
  for(const v of V){
   const m=models[v];
-  if(!m||!id(m.codeVersion)||m.predictedAt!==recordedAt||!triple(m.firstHalf1X2)||!m.totalGoals||!Number.isFinite(m.totalGoals.line)||m.totalGoals.line<0||!Number.isInteger(m.totalGoals.line*2)||Math.floor(m.totalGoals.line)!==m.totalGoals.line||!probability(m.totalGoals.over)||!probability(m.totalGoals.under)||Math.abs(m.totalGoals.over+m.totalGoals.under-1)>1e-8)
+  if(!m||!id(m.codeVersion)||m.predictedAt!==recordedAt||!triple(m.firstHalf1X2)||!m.totalGoals||!Number.isFinite(m.totalGoals.line)||m.totalGoals.line<0||!Number.isInteger(m.totalGoals.line*2)||Math.floor(m.totalGoals.line)===m.totalGoals.line||!probability(m.totalGoals.over)||!probability(m.totalGoals.under)||Math.abs(m.totalGoals.over+m.totalGoals.under-1)>1e-8)
    throw new Error('Invalid pre-match market probabilities');
   normalized[v]={codeVersion:m.codeVersion,predictedAt:m.predictedAt,firstHalf1X2:{...m.firstHalf1X2},totalGoals:{line:m.totalGoals.line,over:m.totalGoals.over,under:m.totalGoals.under}};
  }
