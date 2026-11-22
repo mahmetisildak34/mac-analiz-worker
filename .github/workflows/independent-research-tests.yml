@@ -31,7 +31,7 @@ jobs:
           node --check statistics-api-cron.js
           node --check statistics-api-persistence.js
       - name: Run independent research tests
-        run: node --experimental-sqlite --test research/calibration-metrics.test.mjs research/verified-source-fallback.test.mjs research/request-coordinator.test.mjs research/run-paired-backtest.test.mjs research/chronological-holdout.test.mjs research/league-backtest.test.mjs research/verified-espn-audit.test.mjs research/poisson-v14.test.mjs research/prediction-provenance.test.mjs research/isolated-prediction-ledger.test.mjs research/concurrent-safety.test.mjs research/isolated-prediction-store.test.mjs research/replay-isolated-predictions.test.mjs research/isolated-d1-adapter.test.mjs research/evidence-reliability.test.mjs research/supplementary-market-evidence.test.mjs
+        run: node --experimental-sqlite --test research/calibration-metrics.test.mjs research/verified-source-fallback.test.mjs research/request-coordinator.test.mjs research/run-paired-backtest.test.mjs research/chronological-holdout.test.mjs research/league-backtest.test.mjs research/verified-espn-audit.test.mjs research/poisson-v14.test.mjs research/prediction-provenance.test.mjs research/isolated-prediction-ledger.test.mjs research/concurrent-safety.test.mjs research/isolated-prediction-store.test.mjs research/replay-isolated-predictions.test.mjs research/isolated-d1-adapter.test.mjs research/evidence-reliability.test.mjs research/supplementary-market-evidence.test.mjs research/espn-pre-match-admission.test.mjs
       - name: Benchmark offline request coordination
         run: node --expose-gc research/benchmark-coordinator.mjs
       - name: Run offline Worker regression tests (no production bindings)
