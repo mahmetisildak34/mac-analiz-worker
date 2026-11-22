@@ -6,6 +6,8 @@ on:
       - 'research/verified-league-calibration.mjs'
       - 'research/request-coordinator.mjs'
       - 'research/fixture-read-check-executor.mjs'
+      - 'research/fixture-health-readonly.mjs'
+      - 'research/espn-raw-conflict-health.test.mjs'
       - 'research/fixture-check-planner.mjs'
       - '.github/workflows/seven-task-readonly-acceptance.yml'
   workflow_dispatch:
@@ -13,7 +15,7 @@ permissions:
   contents: read
 jobs:
   safety-and-model-acceptance:
-    if: github.event_name != 'pull_request' || github.head_ref == 'fix/seven-task-offline-acceptance-20261122'
+    if: github.event_name != 'pull_request' || github.head_ref == 'fix/seven-task-offline-acceptance-20261122' || github.head_ref == 'fix/worker-espn-raw-conflict-health-20261122'
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
