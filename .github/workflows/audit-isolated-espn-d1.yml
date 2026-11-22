@@ -1,0 +1,22 @@
+name: Audit isolated ESPN evidence (read-only)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/verified-statistics-gap-audit-20261122
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate audit safeguards offline
+        run: node --test research/audit-isolated-espn-d1.test.mjs research/ingest-espn-statistics-d1.test.mjs research/isolated-espn-admission-hardening.test.mjs
+      - name: Read and validate isolated D1 evidence without writes
+        env:
+          CLOUDFLARE_ISOLATED_D1_TOKEN: ${{ secrets.CLOUDFLARE_ISOLATED_D1_TOKEN }}
+        run: node research/audit-isolated-espn-d1.mjs
