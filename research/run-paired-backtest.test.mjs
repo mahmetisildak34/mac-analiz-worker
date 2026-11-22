@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {backtest,prepareVerifiedPairs} from './run-paired-backtest.mjs';
-const p=(home,draw,away)=>({home,draw,away});
+const p=(home,draw,away)=>({home,draw,away,predictedAt:'2024-12-31T12:00:00Z'});
 const models={'v1.2':p(.5,.3,.2),'v1.3':p(.7,.2,.1),'v1.4':p(.9,.05,.05)};
 test('only identity and score verified fixtures are evaluated',()=>{
  const good={fixtureId:'match-1',date:'2025-01-01T00:00:00Z',identity_verified:true,score_verified:true,homeGoals:2,awayGoals:1,models};
@@ -28,4 +28,11 @@ test('backtest preserves dates for chronological holdout and rejects missing dat
  assert.equal(result.chronologicalHoldout.status,'evaluated');
  assert.equal(result.chronologicalHoldout.holdoutCount,10);
  assert.equal(backtest([{...rows[0],date:null}]).status,'insufficient_verified_data');
+});
+
+test('backtest fails closed when model prediction timestamps are absent or late',()=>{
+ const row={fixtureId:'unsafe',date:'2025-01-01T00:00:00Z',identity_verified:true,score_verified:true,homeGoals:1,awayGoals:0,models:{'v1.2':{home:.5,draw:.3,away:.2},'v1.3':models['v1.3'],'v1.4':models['v1.4']}};
+ assert.equal(backtest([row]).status,'insufficient_verified_data');
+ assert.equal(backtest([row]).provenanceRejected,1);
+ assert.throws(()=>backtest([row],{requireProvenance:false}),/cannot be disabled/);
 });
