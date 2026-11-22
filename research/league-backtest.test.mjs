@@ -28,3 +28,10 @@ test('league evaluation rejects fixtures without pre-match evidence',()=>{
  assert.equal(result.leagues['tur.1'].verifiedPairedMatches,0);
  assert.equal(result.leagues['tur.1'].eligibleForRanking,false);
 });
+
+test('each fixture owns independent prediction evidence',()=>{
+ const first=row(1,'tur.1'),second=row(2,'tur.1');
+ delete first.models['v1.3'].predictedAt;
+ assert.equal(typeof second.models['v1.3'].predictedAt,'string');
+ assert.equal(backtestByLeague([first,second]).leagues['tur.1'].verifiedPairedMatches,1);
+});
