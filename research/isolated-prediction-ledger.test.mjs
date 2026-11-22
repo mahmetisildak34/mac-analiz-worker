@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createPredictionLedger} from './isolated-prediction-ledger.mjs';
+import {createPredictionLedger,pairPredictionWithVerifiedResult} from './isolated-prediction-ledger.mjs';
 const versions=()=>Object.fromEntries(['v1.2','v1.3','v1.4'].map(v=>[v,{home:.5,draw:.3,away:.2,codeVersion:'sha-'+v}]));
 const row=()=>({fixtureId:'espn-1',leagueId:'tur.1',homeTeamId:'team-1',awayTeamId:'team-2',kickoff:'2026-11-23T15:00:00Z',featureSnapshotId:'snapshot-1',featureAvailableAt:'2026-11-22T10:00:00Z',sourceEvidenceId:'espn-proof-1',models:versions()});
 const clock=()=> '2026-11-22T11:00:00Z';
@@ -40,4 +40,23 @@ test('same-fixture versions are paired and ledger never accepts result scores',(
  assert.equal('homeGoals' in saved,false);
  assert.deepEqual(Object.keys(saved.models),['v1.2','v1.3','v1.4']);
  assert.equal(ledger.list().length,1);
+});
+
+test('verified score join preserves paired provenance without outcome leakage',()=>{
+ const ledger=createPredictionLedger({now:clock});
+ const prediction=ledger.append(row());
+ const result={fixtureId:'espn-1',leagueId:'tur.1',homeTeamId:'team-1',awayTeamId:'team-2',
+  date:'2026-11-23T15:00:00Z',identity_verified:true,score_verified:true,homeGoals:2,awayGoals:1};
+ const paired=pairPredictionWithVerifiedResult(ledger,'espn-1',result);
+ assert.equal(paired.predictionEvidenceSha256,prediction.sha256);
+ assert.equal(paired.models['v1.3'].predictedAt,clock());
+ assert.equal(paired.homeGoals,2);
+ assert.equal('homeGoals' in ledger.get('espn-1'),false);
+ paired.models['v1.3'].home=0;
+ assert.equal(ledger.get('espn-1').models['v1.3'].home,.5);
+ for(const altered of [{...result,homeTeamId:'wrong'},{...result,leagueId:'wrong'},
+  {...result,date:'2026-11-23T16:00:00Z'},{...result,score_verified:false},
+  {...result,homeGoals:null}])
+  assert.throws(()=>pairPredictionWithVerifiedResult(ledger,'espn-1',altered),/mismatched/);
+ assert.throws(()=>pairPredictionWithVerifiedResult(ledger,'missing',result),/Missing/);
 });
