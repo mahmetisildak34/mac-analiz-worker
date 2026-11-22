@@ -17,6 +17,10 @@ test('offline capture manifest admits two leagues but never invents predictions'
   assert.equal(report.leagues['tur.1'].eligible,1);
   assert.equal(report.leagues['eng.1'].eligible,1);
   assert.equal(report.realPredictionCount,0);
+  assert.equal(report.evidence.length,2);
+  assert.equal(report.evidence[0].leagueId,'tur.1');
+  assert.match(report.evidence[0].scoreboardSha256,/^[a-f0-9]{64}$/);
+  assert.notEqual(report.evidence[0].scoreboardSha256,report.evidence[1].scoreboardSha256);
   assert.equal(report.modelComparison.status,'insufficient_verified_pre_match_predictions');
   await writeFile(join(dir,'eng.json'),JSON.stringify({leagues:[{slug:'eng.1'}],events:[fixture('100')]}));
   await assert.rejects(inspectCapturedScoreboards(join(dir,'manifest.json'),{now:capturedAt}),/Cross-league fixture identity collision/);
