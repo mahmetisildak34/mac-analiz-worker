@@ -18,7 +18,10 @@ export async function inspectCapturedScoreboards(manifestPath,{now=new Date().to
   const path=resolve(dirname(absolute),league.scoreboardFile);
   const raw=await readFile(path);
   const payload=JSON.parse(raw.toString('utf8'));
-  evidence.push({leagueId:league.leagueId,scoreboardSha256:createHash('sha256').update(raw).digest('hex')});
+  const scoreboardSha256=createHash('sha256').update(raw).digest('hex');
+  if(league.expectedSha256!==undefined&&(!/^[a-f0-9]{64}$/.test(league.expectedSha256)||league.expectedSha256!==scoreboardSha256))
+   throw new Error('ESPN capture digest mismatch for '+league.leagueId);
+  evidence.push({leagueId:league.leagueId,scoreboardSha256});
   inputs.push({leagueId:league.leagueId,capturedAt:manifest.capturedAt,payload});
  }
  const report=reportLeagueAdmissions(inputs,{now});
