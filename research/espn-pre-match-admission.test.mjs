@@ -45,3 +45,16 @@ test('rejects interrupted pre-state ESPN fixtures and conflicting league metadat
  assert.equal(result.eligible,0);
  assert.equal(result.rejected.league_mismatch,1);
 });
+
+test('pre-state alone cannot override final or unknown provider status',()=>{
+ for(const name of ['STATUS_FINAL','STATUS_IN_PROGRESS','STATUS_HALFTIME','STATUS_UNKNOWN',undefined]){
+  const fixture={...event('status'+String(name)),status:{type:{state:'pre',completed:false,name}}};
+  const report=admitEspnScoreboard(payload([fixture]),{leagueId:'tur.1',capturedAt,now:capturedAt});
+  assert.equal(report.eligible,0,String(name));
+  assert.equal(report.rejected.not_scheduled,1,String(name));
+ }
+ for(const name of ['STATUS_SCHEDULED','STATUS_NOT_STARTED','STATUS_PRE_GAME','STATUS_PREGAME']){
+  const fixture={...event('status'+name),status:{type:{state:'pre',completed:false,name}}};
+  assert.equal(admitEspnScoreboard(payload([fixture]),{leagueId:'tur.1',capturedAt,now:capturedAt}).eligible,1,name);
+ }
+});
