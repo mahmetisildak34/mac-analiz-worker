@@ -15,7 +15,7 @@ function extract(event){
  const homeTeamId=String(home.team?.id??''),awayTeamId=String(away.team?.id??'');
  if(!validId(homeTeamId)||!validId(awayTeamId)||homeTeamId===awayTeamId)throw new Error('Invalid team identities');
  const homeGoals=Number(home.score),awayGoals=Number(away.score);
- if(!score(homeGoals)||!score(awayGoals)||!/^\\d+$/.test(String(home.score))||!/^\\d+$/.test(String(away.score)))throw new Error('Invalid final scores');
+ if(!score(homeGoals)||!score(awayGoals)||!/^\d+$/.test(String(home.score))||!/^\d+$/.test(String(away.score)))throw new Error('Invalid final scores');
  if(typeof event.date!=='string'||!Number.isFinite(Date.parse(event.date)))throw new Error('Invalid kickoff');
  return {fixtureId:String(event.id),homeTeamId,awayTeamId,homeGoals,awayGoals,date:event.date};
 }
