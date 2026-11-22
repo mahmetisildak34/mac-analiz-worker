@@ -63,3 +63,24 @@ test('batch summary counts raw-data conflicts',()=>{
  const all=summarizeFixtureHealth([match(),match({raw_json:JSON.stringify(event({id:'bad'}))}),match({raw_json:'{bad'})],{nowMs:Date.parse('2026-11-22T20:00:00Z')});
  assert.equal(all.total,3);assert.equal(all.error,2);assert.equal(all.review,1);
 });
+
+test('same match across two source IDs is reported but never removed',()=>{
+ const a=match({league_id:'203',home_team:'Trabzonspor',away_team:'Eyüpspor',fixture_id:'espn-tur.1-401888249'});
+ const b={...a,source:'TFF',fixture_id:'tff-99',raw_json:null,kickoff:'2026-11-22T19:00:00+03:00'};
+ const summary=summarizeFixtureHealth([a,b],{nowMs:Date.parse('2026-11-22T20:00:00Z')});
+ assert.equal(summary.total,2);
+ assert.ok(summary.fixtures.every(f=>f.issues.includes('potential_cross_source_duplicate')));
+});
+test('duplicate audit never merges different leagues',()=>{
+ const a=match({league_id:'203',home_team:'Trabzonspor',away_team:'Eyüpspor'});
+ const b={...a,league_id:'39',source:'TFF',raw_json:null};
+ const result=summarizeFixtureHealth([a,b]);
+ assert.ok(result.fixtures.every(f=>!f.issues.includes('potential_cross_source_duplicate')));
+});
+test('duplicate audit never flags different opponents or distant kickoff',()=>{
+ const a=match({league_id:'203',home_team:'Trabzonspor',away_team:'Eyüpspor'});
+ const b={...a,source:'TFF',raw_json:null,away_team:'Fenerbahçe'};
+ const c={...a,source:'TFF',raw_json:null,kickoff:'2026-11-22T16:12:00Z'};
+ const result=summarizeFixtureHealth([a,b,c]);
+ assert.ok(result.fixtures.every(f=>!f.issues.includes('potential_cross_source_duplicate')));
+});
