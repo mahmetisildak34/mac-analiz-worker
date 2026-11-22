@@ -16,7 +16,7 @@ export function prepareVerifiedPairs(records){
   if(r?.identity_verified!==true||r?.score_verified!==true||typeof r.fixtureId!=='string'||!r.fixtureId||typeof r.date!=='string'||!Number.isFinite(Date.parse(r.date))||!Number.isInteger(r.homeGoals)||r.homeGoals<0||!Number.isInteger(r.awayGoals)||r.awayGoals<0||!r.models||!names.every(n=>r.models[n])){excluded++;continue;}
   if(seen.has(r.fixtureId))throw new Error('Duplicate verified fixture: '+r.fixtureId);
   seen.add(r.fixtureId);
-  rows.push({fixtureId:r.fixtureId,date:r.date,outcome:r.homeGoals>r.awayGoals?'home':r.homeGoals===r.awayGoals?'draw':'away',models:r.models});
+  rows.push({fixtureId:r.fixtureId,date:r.date,outcome:r.homeGoals>r.awayGoals?'home':r.homeGoals===r.awayGoals?'draw':'away',models:Object.fromEntries(names.map(name=>[name,{...r.models[name]}]))});
  }
  return {rows,excluded};
 }
