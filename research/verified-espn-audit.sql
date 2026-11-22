@@ -21,6 +21,8 @@ WHERE lower(source) = 'espn'
   AND length(trim(CAST(json_extract(raw_json,'$.competitions[0].competitors[1].score') AS TEXT))) > 0
   AND CAST(json_extract(raw_json,'$.competitions[0].competitors[0].score') AS INTEGER) >= 0
   AND CAST(json_extract(raw_json,'$.competitions[0].competitors[1].score') AS INTEGER) >= 0
+  AND CAST(home_team_id AS TEXT) = CAST(json_extract(raw_json,'$.competitions[0].competitors[0].id') AS TEXT)
+  AND CAST(away_team_id AS TEXT) = CAST(json_extract(raw_json,'$.competitions[0].competitors[1].id') AS TEXT)
   AND home_goals = CAST(json_extract(raw_json,'$.competitions[0].competitors[0].score') AS INTEGER)
   AND away_goals = CAST(json_extract(raw_json,'$.competitions[0].competitors[1].score') AS INTEGER)
   AND julianday(kickoff) <= julianday('now')
