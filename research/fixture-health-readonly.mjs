@@ -16,9 +16,34 @@ export function classifyFixtureHealth(row,{nowMs=Date.now(),staleAfterMs=15*60*1
   try{stats=typeof row.statistics_json==='string'?JSON.parse(row.statistics_json):row.statistics_json;if(!stats||typeof stats!=='object'||Array.isArray(stats))throw Error('invalid');}
   catch{issues.push('invalid_statistics_json');}
  }
+ // Reconcile stored ESPN rows with the immutable raw scoreboard snapshot when available.
+ // This is a read-only consistency check, not independent cross-source validation.
+ if(String(row.source??'').toLowerCase()==='espn'&&row.raw_json!=null&&String(row.raw_json).trim()!==''){
+  let raw=null;
+  try{
+   raw=typeof row.raw_json==='string'?JSON.parse(row.raw_json):row.raw_json;
+   if(!raw||typeof raw!=='object'||Array.isArray(raw))throw Error('bad raw');
+  }catch{issues.push('invalid_raw_json');}
+  if(raw){
+   const rawId=String(raw.id??'');
+   const storedId=String(row.fixture_id??'');
+   if(rawId&&storedId.startsWith('espn-')&&!storedId.endsWith('-'+rawId))issues.push('raw_fixture_id_mismatch');
+   const originalTime=asTime(raw.date);
+   if(kickoff!==null&&originalTime!==null&&Math.abs(kickoff-originalTime)>60000)issues.push('raw_kickoff_mismatch');
+   const sides=raw.competitions?.[0]?.competitors;
+   if(Array.isArray(sides)){
+    const home=sides.find(x=>x?.homeAway==='home'),away=sides.find(x=>x?.homeAway==='away');
+    const score=x=>x?.score===null||x?.score===undefined||x?.score===''?null:Number(x.score);
+    const h=score(home),a=score(away);
+    if(home&&away&&Number.isSafeInteger(h)&&h>=0&&Number.isSafeInteger(a)&&a>=0&&
+      Number.isSafeInteger(row.home_goals)&&Number.isSafeInteger(row.away_goals)&&
+      (row.home_goals!==h||row.away_goals!==a))issues.push('raw_score_mismatch');
+   }
+  }
+ }
  if(FINAL.has(status)&&!stats)issues.push('final_statistics_missing_or_unverified');
  if(stats&&stats.independentCrossSourceVerification!==true)issues.push('not_independently_verified');
- const priority=issues.some(x=>x==='missing_identity'||x==='invalid_kickoff'||x==='final_score_missing_or_invalid'||x==='invalid_statistics_json')?'error':issues.length?'review':'ok';
+ const priority=issues.some(x=>x==='missing_identity'||x==='invalid_kickoff'||x==='final_score_missing_or_invalid'||x==='invalid_statistics_json'||x==='invalid_raw_json'||x==='raw_fixture_id_mismatch'||x==='raw_kickoff_mismatch'||x==='raw_score_mismatch')?'error':issues.length?'review':'ok';
  return {fixtureId:row.fixture_id??null,status,priority,issues,requiresProviderCheck:issues.length>0};
 }
 export function summarizeFixtureHealth(rows,options={}){
