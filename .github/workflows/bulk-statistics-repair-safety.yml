@@ -14,6 +14,8 @@ on:
       - "trusted-goal-poisson.js"
       - "archive-poisson-client.js"
       - "tests/archive-poisson-client.test.mjs"
+      - "scripts/poisson-archive-backtest.mjs"
+      - "tests/poisson-archive-backtest.test.mjs"
       - "tests/trusted-goal-poisson.test.mjs"
       - "tests/archive-provider-proof.test.mjs"
       - "tests/statistics-data-quality.test.mjs"
@@ -101,7 +103,7 @@ jobs:
       - name: Run trusted goal Poisson tests
         run: node tests/trusted-goal-poisson.test.mjs
       - name: Run verified archive full-time and half-time Poisson acceptance tests
-        run: node --test tests/archive-poisson-client.test.mjs
+        run: node --test tests/archive-poisson-client.test.mjs tests/poisson-archive-backtest.test.mjs
       - name: Run strict data quality tests
         run: node tests/statistics-data-quality.test.mjs
       - name: Run repair safety tests

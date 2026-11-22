@@ -8,17 +8,16 @@ const poisson = (lambda, goals) => {
   return p;
 };
 const sum = values => values.reduce((total, value) => total + value, 0);
-const rate = values => values.length ? sum(values) / values.length : null;
 
 export function predictTrustedGoals(matches, {
   home_team, away_team, as_of, league_average_home_goals, league_average_away_goals,
-  min_matches = 5, max_matches = 10, max_goals = 10
+  min_matches = 5, max_matches = 10, max_goals = 10, model_version = "1.2"
 } = {}) {
   const counts = { total: Array.isArray(matches) ? matches.length : 0, used: 0, excluded: 0, reasons: {} };
   const exclude = reason => { counts.excluded++; counts.reasons[reason] = (counts.reasons[reason] || 0) + 1; };
   const unavailable = (reason, extra = {}) => ({ available: false, reason, ...counts, ...extra });
   if (!Array.isArray(matches) || !home_team || !away_team || !Number.isFinite(Date.parse(as_of)) ||
-      !Number.isSafeInteger(min_matches) || min_matches < 1 ||
+      !["1.2", "1.3"].includes(model_version) || !Number.isSafeInteger(min_matches) || min_matches < 1 ||
       !Number.isSafeInteger(max_matches) || max_matches < min_matches || max_matches > 10 ||
       !Number.isSafeInteger(max_goals) || max_goals < 5 || max_goals > 20) return unavailable("invalid_request");
   const home = norm(home_team), away = norm(away_team);
@@ -81,8 +80,14 @@ export function predictTrustedGoals(matches, {
     return unavailable("insufficient_verified_venue_sample", { home_samples: homeSample.length, away_samples: awaySample.length,
       required_per_team: min_matches, max_matches_per_team: max_matches });
   }
-  const homeGF = rate(homeSample.map(row => row.gf)), homeGA = rate(homeSample.map(row => row.ga));
-  const awayGF = rate(awaySample.map(row => row.gf)), awayGA = rate(awaySample.map(row => row.ga));
+  // Experimental v1.3 shrinks short venue samples toward the observed league mean.
+  const prior = model_version === "1.3" ? 3 : 0;
+  const venueRate = (rows, field, leagueAverage) =>
+    (sum(rows.map(row => row[field])) + prior * leagueAverage) / (rows.length + prior);
+  const homeGF = venueRate(homeSample, "gf", leagueHome);
+  const homeGA = venueRate(homeSample, "ga", leagueAway);
+  const awayGF = venueRate(awaySample, "gf", leagueAway);
+  const awayGA = venueRate(awaySample, "ga", leagueHome);
   // Attack strength = team's venue GF / league venue average.
   // Defensive weakness = opponent venue GA / league venue average.
   const lambdaHome = leagueHome * (homeGF / leagueHome) * (awayGA / leagueHome);
