@@ -105,3 +105,46 @@ test('concurrent verified result writes accept only one immutable result',async(
   assert.equal(raw.prepare('SELECT count(*) AS n FROM isolated_verified_results').get().n,1);
  }finally{raw.close();}
 });
+
+const marketInput=()=>({fixtureId:'espn-1',leagueId:'tur.1',kickoff:'2026-11-23T15:00:00Z',
+ recordedAt:early(),featureAvailableAt:'2026-11-22T10:00:00Z',featureSnapshotId:'snapshot-1',sourceEvidenceId:'espn-source-1',
+ models:Object.fromEntries(['v1.2','v1.3','v1.4'].map(v=>[v,{codeVersion:'commit-'+v,predictedAt:early(),
+ firstHalf1X2:{home:.5,draw:.3,away:.2},totalGoals:{line:2.5,over:.4,under:.6}}]))});
+test('SQLite market evidence persists separately and cannot be rewritten or deleted',async()=>{
+ const {raw,db}=dbFactory();
+ try{
+  const store=createIsolatedD1Store({db,now:early});
+  await store.append(prediction());
+  const saved=await store.appendMarkets(marketInput());
+  assert.deepEqual(await store.readMarkets('espn-1'),saved);
+  assert.equal(await store.readVerifiedResult('espn-1'),null);
+  assert.equal(raw.prepare('SELECT count(*) AS n FROM isolated_market_evidence').get().n,1);
+  assert.throws(()=>raw.exec('DELETE FROM isolated_market_evidence'),/immutable market/);
+  assert.throws(()=>raw.exec("UPDATE isolated_market_evidence SET recorded_at='fake'"),/immutable market/);
+  await assert.rejects(store.appendMarkets(marketInput()),/already exists/);
+ }finally{raw.close();}
+});
+test('24 simultaneous market writes yield one winner and reject mismatched provenance',async()=>{
+ const {raw,db}=dbFactory();
+ try{
+  await createIsolatedD1Store({db,now:early}).append(prediction());
+  const writers=Array.from({length:24},()=>createIsolatedD1Store({db,now:early}));
+  const outcomes=await Promise.allSettled(writers.map(w=>w.appendMarkets(marketInput())));
+  assert.equal(outcomes.filter(x=>x.status==='fulfilled').length,1);
+  assert.equal(outcomes.filter(x=>x.status==='rejected').length,23);
+  await assert.rejects(writers[0].appendMarkets({...marketInput(),sourceEvidenceId:'other'}),/provenance mismatch/);
+ }finally{raw.close();}
+});
+test('market JSON and indexed-column corruption fail closed',async()=>{
+ const {raw,db}=dbFactory();
+ try{
+  const store=createIsolatedD1Store({db,now:early});
+  await store.append(prediction());
+  await store.appendMarkets(marketInput());
+  raw.exec('DROP TRIGGER isolated_markets_no_update');
+  raw.exec("UPDATE isolated_market_evidence SET recorded_at='2000-01-01T00:00:00Z'");
+  await assert.rejects(store.readMarkets('espn-1'),/provenance mismatch/);
+  raw.exec("UPDATE isolated_market_evidence SET payload_json='{}'");
+  await assert.rejects(store.readMarkets('espn-1'),/integrity mismatch/);
+ }finally{raw.close();}
+});
