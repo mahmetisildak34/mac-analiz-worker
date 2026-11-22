@@ -27,7 +27,7 @@ export function createPredictionLedger({now=()=>new Date().toISOString()}={}){
   return structuredClone(frozen);
  }
  function get(fixtureId){const r=entries.get(fixtureId);return r?structuredClone(r):null;}
- function list(){return [...entries.values()].map(structuredClone);}
+ function list(){return [...entries.values()].map(entry=>structuredClone(entry));}
  function verify(record){if(!record||typeof record!=='object')return false;const {sha256,...payload}=record;return typeof sha256==='string'&&sha256===digest(payload);}
  return {append,get,list,verify,size:()=>entries.size};
 }
