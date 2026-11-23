@@ -44,7 +44,11 @@ export function scoreGrid(home, away, rho = 0) {
 }
 
 export function exactScoreProbability(home, away, rho, homeGoals, awayGoals) {
-  if (![homeGoals, awayGoals].every(value => Number.isSafeInteger(value) && value >= 0)) return null;
+  // Missing score evidence is unavailable. Present scores must be valid counts.
+  if ([homeGoals, awayGoals].some(value => value != null && (!Number.isSafeInteger(value) || value < 0))) {
+    throw new RangeError('Invalid score');
+  }
+  if (homeGoals == null || awayGoals == null) return null;
   if (!validRates(home, away) || !Number.isFinite(rho) ||
       rho < Math.max(-1 / home, -1 / away) || rho > Math.min(1, 1 / (home * away))) {
     throw new RangeError('Invalid model parameters');

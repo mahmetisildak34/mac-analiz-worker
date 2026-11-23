@@ -45,3 +45,41 @@ test('invalid rate and exact-score inputs fail closed',()=>{
  for(const args of [[0,1,0,0,0],[1,1,0,-1,0],[1,1,0,0,1.5]])assert.throws(()=>exactScoreProbability(...args),RangeError);
  assert.throws(()=>scoreGrid(1,1,NaN),RangeError);
 });
+
+test('exact score preserves missing evidence and rejects malformed counts in either slot', () => {
+  assert.equal(exactScoreProbability(1, 1, 0, undefined, 0), null);
+  assert.equal(exactScoreProbability(1, 1, 0, 0, null), null);
+  for (const invalid of [NaN, Infinity, '0', false, Number.MAX_SAFE_INTEGER + 1]) {
+    assert.throws(() => exactScoreProbability(1, 1, 0, invalid, 0), /Invalid score/);
+    assert.throws(() => exactScoreProbability(1, 1, 0, null, invalid), /Invalid score/);
+  }
+  assert.equal(exactScoreProbability(1, 1, 0, 0, Number.MAX_SAFE_INTEGER), 0);
+});
+
+test('half-time rates and probabilities use complete half-time evidence only', () => {
+  const history = Array.from({ length: 24 }, (_, i) => ({
+    kickoff: new Date(Date.UTC(2025, 0, i + 1)).toISOString(),
+    home_team: 'A', away_team: 'B',
+    home_goals: 3, away_goals: 2, ht_home: 1, ht_away: 1,
+    status: 'FT', identity_verified: true, score_verified: true, completed: true
+  }));
+  const target = { kickoff: '2025-02-01', home_team: 'A', away_team: 'B' };
+  const half = estimateRates(history, target, { period: 'half' });
+  const full = estimateRates(history, target);
+  const h = scoreGrid(half.home, half.away);
+  const f = scoreGrid(full.home, full.away);
+  assert.ok(Math.abs(h.home + h.draw + h.away - 1) < 1e-12);
+  assert.ok(Math.abs(f.home + f.draw + f.away - 1) < 1e-12);
+  assert.ok(h.over25 < f.over25 && h.btts < f.btts);
+  assert.equal(estimateRates(history.map(row => ({ ...row, ht_home: -1 })), target, { period: 'half' }), null);
+  assert.equal(estimateRates(history.map(({ ht_away, ...row }) => row), target, { period: 'half' }), null);
+});
+
+test('very small and high rates remain finite within supported market bounds', () => {
+  for (const [home, away] of [[1e-12, 2e-12], [20, 20]]) {
+    const p = scoreGrid(home, away, -0.04);
+    assert.ok(Object.values(p).every(value => Number.isFinite(value) && value >= 0 && value <= 1));
+    assert.ok(Math.abs(p.home + p.draw + p.away - 1) < 1e-12);
+    assert.ok(p.over15 >= p.over25 && p.over25 >= p.over35 && p.over35 > 0);
+  }
+});
