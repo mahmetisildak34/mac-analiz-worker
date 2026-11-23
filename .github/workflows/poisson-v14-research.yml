@@ -1,0 +1,24 @@
+name: Poisson v1.4 offline research
+
+on:
+  push:
+    branches: [feature/poisson-v14-score-contract-20261123]
+
+permissions:
+  contents: read
+
+jobs:
+  offline-poisson:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify offline research and full-time and half-time Poisson contracts
+        run: >-
+          node --test research/poisson-v14*.test.mjs
+          research/calibration-metrics.test.mjs research/prediction-provenance.test.mjs
+          research/run-paired-backtest.test.mjs tests/trusted-goal-poisson.test.mjs
+          tests/archive-poisson-client.test.mjs
