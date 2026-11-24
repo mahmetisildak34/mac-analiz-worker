@@ -71,6 +71,8 @@ test("per-user quota is unique per match, allows duplicates and blocks new match
   assert.deepEqual(await recordSuccessfulAnalysis(env, { userId: "u2", matchKey: "m2", limit: 2, day: "2026-11-25" }), { allowed: true, duplicate: false });
   assert.deepEqual(await recordSuccessfulAnalysis(env, { userId: "u1", matchKey: "m3", limit: 2, day: "2026-11-25" }), { allowed: true, duplicate: false });
   assert.deepEqual(await recordSuccessfulAnalysis(env, { userId: "u1", matchKey: "m4", limit: 2, day: "2026-11-25" }), { allowed: false, duplicate: false, used: 2, limit: 2 });
+  assert.deepEqual(await recordSuccessfulAnalysis(env, { userId: "u2", matchKey: "m5", limit: 2, day: "2026-11-25" }), { allowed: true, duplicate: false });
+  assert.deepEqual(await recordSuccessfulAnalysis(env, { userId: "u1", matchKey: "m4", limit: 2, day: "2026-11-26" }), { allowed: true, duplicate: false });
 });
 
 test("match key normalizes teams and Türkiye-local kickoff across provider IDs", () => {
@@ -377,6 +379,101 @@ test("concurrent distinct analysis requests cannot exceed the configured fake-D1
   assert.equal(results.filter(result => result.allowed && !result.duplicate).length, 5);
   assert.equal(results.filter(result => !result.allowed).length, 15);
   assert.equal(DB.rows.size, 5);
+});
+
+test("Supabase email confirmation is required before membership, analysis, or coupon access", async () => {
+  const DB = fakeDb();
+  const env = { ...authEnv, DB, SUPABASE_URL: "https://project.test", SUPABASE_ANON_KEY: "test-anon" };
+  let confirmed = false;
+  const fetcher = async () => new Response(JSON.stringify({ id: baseClaims.sub, email_confirmed_at: confirmed ? "2026-01-01T00:00:00Z" : null, confirmed_at: null }), { status: 200, headers: { "Content-Type": "application/json" } });
+  const token = tokenFor(baseClaims);
+  const options = { fetcher };
+  const requests = [
+    new Request("https://worker.test/membership/me", { headers: { Authorization: `Bearer ${token}` } }),
+    new Request("https://worker.test/membership/analysis", { method: "POST", headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }, body: JSON.stringify({ fixtureId: "unverified", kickoff: "2026-11-26T19:00:00Z", homeName: "Home", awayName: "Away", modelInput: analysisStats }) }),
+    new Request("https://worker.test/membership/coupon", { headers: { Authorization: `Bearer ${token}` } })
+  ];
+  for (const request of requests) {
+    const response = await handleMembershipRequest(request, env, options);
+    assert.equal(response.status, 403, new URL(request.url).pathname);
+    assert.match((await response.json()).error, /E-posta doğrulaması gerekli/);
+  }
+  assert.equal(DB.rows.size, 0);
+  confirmed = true;
+  const verified = await handleMembershipRequest(new Request("https://worker.test/membership/me", { headers: { Authorization: `Bearer ${token}` } }), env, options);
+  assert.equal(verified.status, 200);
+  assert.equal((await verified.json()).role, "FREE");
+});
+
+test("missing, expired, and reused Turnstile tokens fail closed before Supabase Auth", async () => {
+  const env = { SUPABASE_URL: "https://project.test", SUPABASE_ANON_KEY: "test-anon", TURNSTILE_SECRET: "test-only-secret" };
+  let siteverifyCalls = 0, providerCalls = 0;
+  const fetcher = async url => {
+    if (String(url).includes("siteverify")) {
+      siteverifyCalls++;
+      return new Response(JSON.stringify({ success: false, "error-codes": ["timeout-or-duplicate"] }), { status: 200 });
+    }
+    providerCalls++;
+    return new Response("{}", { status: 200 });
+  };
+  for (const token of [null, "expired-test-token-123", "reused-test-token-123"]) {
+    const body = { email: "test@example.com", password: "very-long-test-password", ...(token ? { turnstileToken: token } : {}) };
+    const before = siteverifyCalls;
+    const response = await handleMembershipRequest(new Request("https://worker.test/membership/auth/signup", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }), env, { fetcher });
+    assert.equal(response.status, 403);
+    assert.equal(siteverifyCalls, before + (token ? 1 : 0));
+    assert.equal(providerCalls, 0);
+  }
+});
+
+test("refresh and logout proxy session tokens to the expected Supabase Auth routes", async () => {
+  const calls = [];
+  const env = { SUPABASE_URL: "https://project.test", SUPABASE_ANON_KEY: "test-anon" };
+  const fetcher = async (url, init = {}) => {
+    calls.push({ url: String(url), init });
+    return new Response(JSON.stringify({ access_token: "refreshed-access", refresh_token: "rotated-refresh" }), { status: 200, headers: { "Content-Type": "application/json" } });
+  };
+  const refresh = await handleMembershipRequest(new Request("https://worker.test/membership/auth/refresh", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ refresh_token: "old-refresh" }) }), env, { fetcher });
+  assert.equal(refresh.status, 200);
+  assert.deepEqual(await refresh.json(), { access_token: "refreshed-access", refresh_token: "rotated-refresh" });
+  assert.match(calls[0].url, /\/auth\/v1\/token\?grant_type=refresh_token$/);
+  assert.deepEqual(JSON.parse(calls[0].init.body), { refresh_token: "old-refresh" });
+  const logout = await handleMembershipRequest(new Request("https://worker.test/membership/auth/logout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ access_token: "refreshed-access" }) }), env, { fetcher });
+  assert.equal(logout.status, 200);
+  assert.equal(new URL(calls[1].url).pathname, "/auth/v1/logout");
+  assert.equal(calls[1].init.headers.Authorization, "Bearer refreshed-access");
+});
+
+test("users behind the same IP retain separate per-account analysis quotas", async () => {
+  const env = premiumEnv({ limit: 1 });
+  for (const userId of ["household-user-a", "household-user-b"]) {
+    const request = new Request("https://worker.test/membership/analysis", { method: "POST", headers: { Authorization: "Bearer test-token", "Content-Type": "application/json", "CF-Connecting-IP": "198.51.100.42" }, body: JSON.stringify({ fixtureId: userId, kickoff: "2026-11-26T19:00:00Z", homeName: "Shared Home Fixture", awayName: "Shared Away Fixture", modelInput: analysisStats }) });
+    const response = await handlePremiumAnalysisRequest(request, env, { getClaims: async () => ({ sub: userId }), getVerifiedUser: async () => ({ id: userId, email_confirmed_at: "2026-01-01T00:00:00Z" }), now: new Date("2026-11-24T00:00:00Z") });
+    assert.equal(response.status, 200, userId);
+  }
+  assert.equal(env.DB.rows.size, 2);
+});
+
+test("quota-rejected Premium analysis makes no upstream fetch and writes no extra ledger row", async () => {
+  const env = premiumEnv({ limit: 1 });
+  let upstreamCalls = 0;
+  const options = { getClaims: async () => ({ sub: "premium-user" }), getVerifiedUser: async () => ({ id: "premium-user", email_confirmed_at: "2026-01-01T00:00:00Z" }), now: new Date("2026-11-24T00:00:00Z"), fetcher: async () => { upstreamCalls++; throw new Error("unexpected upstream request"); } };
+  const first = await handlePremiumAnalysisRequest(analysisRequest({ fixtureId: "quota-first" }), env, options);
+  const denied = await handlePremiumAnalysisRequest(analysisRequest({ fixtureId: "quota-second", homeName: "Different Home" }), env, options);
+  assert.equal(first.status, 200);
+  assert.equal(denied.status, 429);
+  assert.equal(upstreamCalls, 0);
+  assert.equal(env.DB.rows.size, 1);
+});
+
+test("configured ADMIN can use the Premium coupon API without a client admin claim", async () => {
+  const DB = serviceDb(), env = { DB, MAM_ADMIN_USER_ID: "configured-admin" };
+  const request = new Request("https://worker.test/membership/coupon", { method: "POST", headers: { Authorization: "Bearer token", "Content-Type": "application/json" }, body: JSON.stringify({ action: "build", mode: "safe", candidates: [{ id: "admin-match", home: "Home", away: "Away", market: "1X", date: "2026-11-26", probability: 0.8 }] }) });
+  const response = await handlePremiumCouponRequest(request, env, identityOptions("configured-admin", "FREE"));
+  assert.equal(response.status, 200);
+  const result = await response.json();
+  assert.equal(result.role, "ADMIN");
+  assert.equal(result.items[0].id, "admin-match");
 });
 
 test("configured ADMIN analysis skips the daily quota ledger", async () => {
