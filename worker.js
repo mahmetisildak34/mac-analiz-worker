@@ -1433,6 +1433,13 @@ export default {
 
     const headers = { ...cors, "Content-Type": "application/json; charset=utf-8" };
     const url = new URL(request.url);
+    if (url.pathname.startsWith("/membership/") && request.method !== "OPTIONS") {
+      const { handleMembershipRequest } = await import("./membership.mjs");
+      const result = await handleMembershipRequest(request, env);
+      const responseHeaders = new Headers(result.headers);
+      for (const [name, value] of Object.entries(cors)) responseHeaders.set(name, value);
+      return new Response(result.body, { status: result.status, headers: responseHeaders });
+    }
     if (url.pathname === "/auth/login" && request.method === "POST") {
       if (!env.SITE_PASSWORD || !env.SESSION_SECRET) {
         return new Response(JSON.stringify({ error: "Authentication secrets are not configured" }), { status: 503, headers });
@@ -1505,11 +1512,16 @@ export default {
         });
       }
 
-      // Read-only match archive and aggregate diagnostics are public.
-      // Writes and all other private routes still require a signed-in session.
+      // Public access is limited to explicit read-only match, fixture, and statistics routes.
+      // Writes, diagnostics, and all other private routes still require the existing signed session.
+      const publicDataPath = new Set([
+        "archive/d1-status", "archive/sync-status", "archive/matches", "archive/upcoming", "archive/half-goals", "archive/live",
+        "fixtures", "fixtures/events", "fixtures/lineups", "fixtures/players", "fixtures/statistics",
+        "injuries", "leagues", "standings", "teams", "superlig/fixtures"
+      ]).has(path) || /^football-data\/(?:competitions\/[A-Z0-9]+(?:\/matches)?|matches|teams\/[0-9]+)$/.test(path);
       const publicArchiveRead = request.method === "GET" &&
-        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/priority-league-status" || path === "archive/quality-check" || path === "archive/live" ||
-         isESPN || isFixtureDownload || isSportScore);
+        (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/live" ||
+         path === "archive/half-goals" || publicDataPath || isESPN || isFixtureDownload || isSportScore);
       if (!publicArchiveRead) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
         if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
