@@ -263,6 +263,145 @@ async function membershipSummary(request, env, options = {}) {
   return jsonResponse(200, { role: membership.role, premiumEndsAt: membership.premiumEndsAt, day, quota: membership.role === "ADMIN" ? { unlimited: true } : { used, limit, remaining: Math.max(0, limit - used) } });
 }
 
+async function authorizeMembershipRequest(request, env, options = {}) {
+  const token = (request.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
+  const fetcher = options.fetcher || fetch;
+  const claims = options.getClaims ? await options.getClaims(token, env) : await verifySupabaseAccessToken(token, env, { fetcher });
+  if (!claims) return { response: jsonResponse(401, { error: "Geçerli oturum gerekli." }) };
+  const user = options.getVerifiedUser ? await options.getVerifiedUser(claims, token, env) : await getConfirmedSupabaseUser(claims, token, env, fetcher);
+  if (!user) return { response: jsonResponse(403, { error: "E-posta doğrulaması gerekli." }) };
+  let membership;
+  try { membership = await resolveMembership(claims, env); }
+  catch (_) { return { response: jsonResponse(503, { error: "Üyelik deposu kullanılamıyor." }) }; }
+  return { claims, user, membership };
+}
+
+function normalizeCouponItem(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const id = String(value.id ?? "").trim(), home = String(value.home ?? "").trim(), away = String(value.away ?? "").trim(), market = String(value.market ?? "").trim();
+  const date = String(value.date ?? "").trim();
+  const probability = value.probability == null ? null : Number(value.probability);
+  const odds = value.odds == null || value.odds === "" ? null : Number(value.odds);
+  if (!id || id.length > 128 || !home || home.length > 120 || !away || away.length > 120 || !market || market.length > 120 || date.length > 64) return null;
+  if (probability !== null && (!Number.isFinite(probability) || probability < 0 || probability > 1)) return null;
+  if (odds !== null && (!Number.isFinite(odds) || odds <= 1 || odds > 100000)) return null;
+  return { id, home, away, date, market, probability, odds };
+}
+
+async function readCouponItems(env, userId) {
+  const row = await env.DB.prepare("SELECT items_json FROM mam_user_coupons WHERE user_id = ? LIMIT 1").bind(userId).first();
+  try {
+    const parsed = JSON.parse(row?.items_json || "[]");
+    return Array.isArray(parsed) ? parsed.map(normalizeCouponItem).filter(Boolean).slice(0, 20) : [];
+  } catch (_) { return []; }
+}
+
+async function writeCouponItems(env, userId, items) {
+  const json = JSON.stringify(items);
+  if (json.length > 32768) throw new RangeError("Coupon data too large");
+  await env.DB.prepare(
+    "INSERT INTO mam_user_coupons (user_id, items_json, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP) " +
+    "ON CONFLICT(user_id) DO UPDATE SET items_json = excluded.items_json, updated_at = CURRENT_TIMESTAMP"
+  ).bind(userId, json).run();
+}
+
+export async function handlePremiumCouponRequest(request, env, options = {}) {
+  const auth = await authorizeMembershipRequest(request, env, options);
+  if (auth.response) return auth.response;
+  if (auth.membership.role === "FREE") return jsonResponse(403, { error: "Kupon oluşturmak için Premium üyelik gerekli.", role: "FREE" });
+  if (!env.DB) return jsonResponse(503, { error: "Kupon deposu kullanılamıyor." });
+  if (request.method !== "GET" && request.method !== "POST") return jsonResponse(405, { error: "Method not allowed." });
+  let items;
+  try { items = await readCouponItems(env, auth.membership.userId); }
+  catch (_) { return jsonResponse(503, { error: "Kupon deposu okunamadı." }); }
+  if (request.method === "GET") return jsonResponse(200, { items, role: auth.membership.role });
+  const length = Number(request.headers.get("Content-Length") || 0);
+  if (length > 32768) return jsonResponse(413, { error: "Kupon isteği çok büyük." });
+  let body;
+  try {
+    const raw = await request.text();
+    if (raw.length > 32768) return jsonResponse(413, { error: "Kupon isteği çok büyük." });
+    body = JSON.parse(raw);
+  } catch (_) { return jsonResponse(400, { error: "Geçersiz kupon isteği." }); }
+  const action = body?.action;
+  if (action === "build") {
+    if (!["safe", "risky"].includes(body.mode) || !Array.isArray(body.candidates) || body.candidates.length > 200) return jsonResponse(400, { error: "Kupon önerisi için geçerli maç listesi gerekli." });
+    const safe = body.mode === "safe";
+    const pool = body.candidates.map(normalizeCouponItem).filter(item => item && item.probability > 0 && (safe ? item.probability >= .65 : item.probability >= .35 && item.probability < .65))
+      .sort((a, b) => safe ? b.probability - a.probability : a.probability - b.probability);
+    const picks = [], seen = new Set();
+    for (const item of pool) {
+      if (seen.has(item.id)) continue;
+      seen.add(item.id); picks.push({ ...item, odds: null });
+      if (picks.length === (safe ? 10 : 6)) break;
+    }
+    items = picks;
+  } else if (action === "add") {
+    const item = normalizeCouponItem(body.item);
+    if (!item) return jsonResponse(400, { error: "Geçerli maç ve market seçimi gerekli." });
+    const index = items.findIndex(current => current.id === item.id && current.market === item.market);
+    if (index >= 0) items[index] = item;
+    else if (items.length >= 20) return jsonResponse(413, { error: "Bir kupona en fazla 20 seçim eklenebilir." });
+    else items.push(item);
+  } else if (action === "remove") {
+    if (!Number.isInteger(body.index) || body.index < 0 || body.index >= items.length) return jsonResponse(400, { error: "Kupon seçimi bulunamadı." });
+    items.splice(body.index, 1);
+  } else if (action === "set-odds") {
+    if (!Number.isInteger(body.index) || body.index < 0 || body.index >= items.length) return jsonResponse(400, { error: "Kupon seçimi bulunamadı." });
+    const odds = body.odds == null || body.odds === "" ? null : Number(body.odds);
+    if (odds !== null && (!Number.isFinite(odds) || odds <= 1 || odds > 100000)) return jsonResponse(400, { error: "Oran 1.00'dan büyük ve en fazla 100000 olmalı." });
+    items[body.index] = { ...items[body.index], odds };
+  } else if (action === "clear") items = [];
+  else return jsonResponse(400, { error: "Bilinmeyen kupon işlemi." });
+  try { await writeCouponItems(env, auth.membership.userId, items); }
+  catch (error) { return jsonResponse(error instanceof RangeError ? 413 : 503, { error: error instanceof RangeError ? "Kupon verisi çok büyük." : "Kupon kaydedilemedi." }); }
+  return jsonResponse(200, { items, role: auth.membership.role });
+}
+
+export async function handleAdminMembershipRequest(request, env, options = {}) {
+  const auth = await authorizeMembershipRequest(request, env, options);
+  if (auth.response) return auth.response;
+  if (auth.membership.role !== "ADMIN") return jsonResponse(403, { error: "Yönetici yetkisi gerekli." });
+  if (!env.DB) return jsonResponse(503, { error: "Üyelik deposu kullanılamıyor." });
+  const url = new URL(request.url);
+  if (request.method === "GET") {
+    const userId = String(url.searchParams.get("userId") || "");
+    if (!userId || userId.length > 128) return jsonResponse(400, { error: "Geçerli kullanıcı kimliği gerekli." });
+    try {
+      const row = await env.DB.prepare("SELECT tier, starts_at, ends_at FROM mam_memberships WHERE user_id = ? LIMIT 1").bind(userId).first();
+      return jsonResponse(200, { userId, tier: row?.tier === "PREMIUM" ? "PREMIUM" : "FREE", startsAt: row?.starts_at || null, endsAt: row?.ends_at || null });
+    } catch (_) { return jsonResponse(503, { error: "Üyelik deposu sorgulanamadı." }); }
+  }
+  if (request.method !== "POST") return jsonResponse(405, { error: "Method not allowed." });
+  let body;
+  try {
+    const raw = await request.text();
+    if (raw.length > 8192) return jsonResponse(413, { error: "Yönetici isteği çok büyük." });
+    body = JSON.parse(raw);
+  } catch (_) { return jsonResponse(400, { error: "Geçersiz yönetici isteği." }); }
+  const userId = String(body?.userId || "").trim();
+  if (!userId || userId.length > 128 || userId === auth.membership.userId) return jsonResponse(400, { error: "Farklı ve geçerli bir kullanıcı kimliği gerekli." });
+  if (body.action === "revoke") {
+    try {
+      const result = await env.DB.prepare("DELETE FROM mam_memberships WHERE user_id = ?").bind(userId).run();
+      if (result?.success === false) throw new Error("D1 delete failed");
+    } catch (_) { return jsonResponse(503, { error: "Premium üyelik sonlandırılamadı." }); }
+    return jsonResponse(200, { userId, tier: "FREE", endsAt: null });
+  }
+  if (body.action !== "grant" || (body.endsAt != null && (typeof body.endsAt !== "string" || !Number.isFinite(Date.parse(body.endsAt)) || Date.parse(body.endsAt) <= Date.now()))) {
+    return jsonResponse(400, { error: "Grant için geçerli ve gelecekteki bitiş zamanı veya null gerekli." });
+  }
+  const startsAt = new Date().toISOString();
+  try {
+    const result = await env.DB.prepare(
+      "INSERT INTO mam_memberships (user_id, tier, starts_at, ends_at, updated_at) VALUES (?, 'PREMIUM', ?, ?, CURRENT_TIMESTAMP) " +
+      "ON CONFLICT(user_id) DO UPDATE SET tier = 'PREMIUM', starts_at = excluded.starts_at, ends_at = excluded.ends_at, updated_at = CURRENT_TIMESTAMP"
+    ).bind(userId, startsAt, body.endsAt || null).run();
+    if (result?.success === false) throw new Error("D1 upsert failed");
+  } catch (_) { return jsonResponse(503, { error: "Premium üyelik güncellenemedi." }); }
+  return jsonResponse(200, { userId, tier: "PREMIUM", startsAt, endsAt: body.endsAt || null });
+}
+
 export async function handleMembershipRequest(request, env, options = {}) {
   const url = new URL(request.url);
   const fetcher = options.fetcher || fetch;
@@ -271,6 +410,8 @@ export async function handleMembershipRequest(request, env, options = {}) {
   }
   if (url.pathname === "/membership/analysis" && request.method === "POST") return handlePremiumAnalysisRequest(request, env, options);
   if (url.pathname === "/membership/me" && request.method === "GET") return membershipSummary(request, env, options);
+  if (url.pathname === "/membership/coupon") return handlePremiumCouponRequest(request, env, options);
+  if (url.pathname === "/membership/admin/membership") return handleAdminMembershipRequest(request, env, options);
   if (!url.pathname.startsWith("/membership/auth/") || request.method !== "POST") return jsonResponse(404, { error: "Membership route not found." });
   const contentLength = Number(request.headers.get("Content-Length") || 0);
   if (contentLength > 16384) return jsonResponse(413, { error: "Kimlik isteği çok büyük." });

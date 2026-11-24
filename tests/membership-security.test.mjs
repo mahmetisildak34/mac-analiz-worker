@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { createHmac } from "node:crypto";
-import { analysisMatchKey, handleMembershipRequest, istanbulDayKey, recordSuccessfulAnalysis, resolveMembership, verifySupabaseAccessToken } from "../membership.mjs";
+import { analysisMatchKey, handleAdminMembershipRequest, handleMembershipRequest, handlePremiumCouponRequest, istanbulDayKey, recordSuccessfulAnalysis, resolveMembership, verifySupabaseAccessToken } from "../membership.mjs";
 
 function tokenFor(claims, secret = "test-only-secret") {
   const encode = value => Buffer.from(JSON.stringify(value)).toString("base64url");
@@ -256,4 +256,137 @@ test("public auth config never returns Supabase credentials", async () => {
   assert.equal(body.turnstileSiteKey, "site-key");
   assert.equal(JSON.stringify(body).includes("must-not-return"), false);
   assert.equal(JSON.stringify(body).includes("project.test"), false);
+});
+
+function serviceDb() {
+  const memberships = new Map(), coupons = new Map();
+  return {
+    memberships, coupons,
+    prepare(sql) { return { bind(...values) { return {
+      async first() {
+        if (sql.includes("FROM mam_memberships")) return memberships.get(values[0]) || null;
+        if (sql.includes("FROM mam_user_coupons")) return coupons.has(values[0]) ? { items_json: coupons.get(values[0]) } : null;
+        return null;
+      },
+      async run() {
+        if (sql.startsWith("INSERT INTO mam_user_coupons")) coupons.set(values[0], values[1]);
+        else if (sql.startsWith("DELETE FROM mam_memberships")) memberships.delete(values[0]);
+        else if (sql.startsWith("INSERT INTO mam_memberships")) memberships.set(values[0], { tier: "PREMIUM", starts_at: values[1], ends_at: values[2] });
+        return { success: true };
+      }
+    }; } }; }
+  };
+}
+
+function identityOptions(userId, tokenRole) {
+  return {
+    getClaims: async () => ({ sub: userId, role: tokenRole }),
+    getVerifiedUser: async () => ({ id: userId, email_confirmed_at: "2026-01-01T00:00:00Z" })
+  };
+}
+
+test("coupon endpoint denies FREE direct requests and stores Premium builds per authenticated user", async () => {
+  const DB = serviceDb(), env = { DB, MAM_ADMIN_USER_ID: "admin-1" };
+  const body = { action: "build", mode: "safe", candidates: [
+    { id: "m1", home: "Home", away: "Away", market: "1X", date: "2026-11-26", probability: .8 },
+    { id: "m1", home: "Home", away: "Away", market: "Over 1.5", date: "2026-11-26", probability: .9 },
+    { id: "m2", home: "Other", away: "Guest", market: "1X", date: "2026-11-26", probability: .7 },
+    { id: "m3", home: "Third", away: "Fourth", market: "1X", date: "2026-11-26", probability: .64 }
+  ] };
+  const request = userId => new Request("https://worker.test/membership/coupon", { method: "POST", headers: { Authorization: "Bearer test-token", "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const free = await handlePremiumCouponRequest(request("free-1"), env, identityOptions("free-1", "ADMIN"));
+  assert.equal(free.status, 403);
+  assert.equal(DB.coupons.size, 0);
+  DB.memberships.set("premium-1", { tier: "PREMIUM", starts_at: "2026-01-01T00:00:00Z", ends_at: "2030-01-01T00:00:00Z" });
+  const built = await handlePremiumCouponRequest(request("premium-1"), env, identityOptions("premium-1"));
+  assert.equal(built.status, 200);
+  const result = await built.json();
+  assert.deepEqual(result.items.map(item => item.id), ["m1", "m2"]);
+  assert.equal(result.items[0].market, "Over 1.5");
+  const read = await handlePremiumCouponRequest(new Request("https://worker.test/membership/coupon", { headers: { Authorization: "Bearer test-token" } }), env, identityOptions("premium-1"));
+  assert.deepEqual((await read.json()).items, result.items);
+  const outsider = await handlePremiumCouponRequest(new Request("https://worker.test/membership/coupon", { headers: { Authorization: "Bearer test-token" } }), env, identityOptions("free-2"));
+  assert.equal(outsider.status, 403);
+});
+
+test("coupon endpoint bounds candidates, item fields, and stored selections", async () => {
+  const DB = serviceDb(), env = { DB };
+  DB.memberships.set("premium-user", { tier: "PREMIUM", starts_at: "2026-01-01T00:00:00Z", ends_at: "2030-01-01T00:00:00Z" });
+  const post = payload => handlePremiumCouponRequest(new Request("https://worker.test/membership/coupon", { method: "POST", headers: { Authorization: "Bearer token", "Content-Type": "application/json" }, body: JSON.stringify(payload) }), env, identityOptions("premium-user"));
+  const excessiveCandidates = await post({ action: "build", mode: "safe", candidates: Array.from({ length: 201 }, (_, i) => ({ id: String(i), home: "H", away: "A", market: "1X", probability: .8 })) });
+  assert.equal(excessiveCandidates.status, 400);
+  const oversizedField = await post({ action: "add", item: { id: "m", home: "H".repeat(121), away: "A", market: "1X" } });
+  assert.equal(oversizedField.status, 400);
+  const seeded = Array.from({ length: 20 }, (_, i) => ({ id: `m${i}`, home: "H", away: "A", market: "1X", date: "2026-11-26", probability: .8, odds: null }));
+  DB.coupons.set("premium-user", JSON.stringify(seeded));
+  const overflow = await post({ action: "add", item: { id: "extra", home: "H", away: "A", market: "1X" } });
+  assert.equal(overflow.status, 413);
+  assert.equal(JSON.parse(DB.coupons.get("premium-user")).length, 20);
+});
+
+test("admin membership API ignores client role claims and permits only configured admin to grant or revoke Premium", async () => {
+  const DB = serviceDb(), env = { DB, MAM_ADMIN_USER_ID: "verified-admin" };
+  const forged = identityOptions("ordinary-user", "ADMIN");
+  const denied = await handleAdminMembershipRequest(new Request("https://worker.test/membership/admin/membership?userId=target", { headers: { Authorization: "Bearer token" } }), env, forged);
+  assert.equal(denied.status, 403);
+  const admin = identityOptions("verified-admin", "FREE");
+  const grant = () => handleAdminMembershipRequest(new Request("https://worker.test/membership/admin/membership", { method: "POST", headers: { Authorization: "Bearer token", "Content-Type": "application/json" }, body: JSON.stringify({ action: "grant", userId: "target-user", endsAt: "2030-01-01T00:00:00.000Z" }) }), env, admin);
+  const granted = await grant();
+  assert.equal(granted.status, 200);
+  assert.equal((await resolveMembership({ sub: "target-user" }, env)).role, "PREMIUM");
+  const status = await handleAdminMembershipRequest(new Request("https://worker.test/membership/admin/membership?userId=target-user", { headers: { Authorization: "Bearer token" } }), env, admin);
+  assert.equal((await status.json()).tier, "PREMIUM");
+  const selfGrant = await handleAdminMembershipRequest(new Request("https://worker.test/membership/admin/membership", { method: "POST", headers: { Authorization: "Bearer token", "Content-Type": "application/json" }, body: JSON.stringify({ action: "grant", userId: "verified-admin" }) }), env, admin);
+  assert.equal(selfGrant.status, 400);
+  const revoked = await handleAdminMembershipRequest(new Request("https://worker.test/membership/admin/membership", { method: "POST", headers: { Authorization: "Bearer token", "Content-Type": "application/json" }, body: JSON.stringify({ action: "revoke", userId: "target-user" }) }), env, admin);
+  assert.equal(revoked.status, 200);
+  assert.equal((await resolveMembership({ sub: "target-user" }, env)).role, "FREE");
+});
+
+test("admin membership API returns 503 instead of throwing when target membership D1 operations fail", async () => {
+  const DB = serviceDb(), env = { DB, MAM_ADMIN_USER_ID: "verified-admin" }, admin = identityOptions("verified-admin");
+  const basePrepare = DB.prepare.bind(DB);
+  DB.prepare = sql => {
+    const statement = basePrepare(sql);
+    return { bind(...values) {
+      const bound = statement.bind(...values);
+      return {
+        async first() {
+          if (sql.includes("FROM mam_memberships") && values[0] === "target-user") throw new Error("simulated D1 read failure");
+          return bound.first();
+        },
+        async run() {
+          if (sql.includes("mam_memberships") && values[0] === "target-user") throw new Error("simulated D1 write failure");
+          return bound.run();
+        }
+      };
+    } };
+  };
+  const status = await handleAdminMembershipRequest(new Request("https://worker.test/membership/admin/membership?userId=target-user", { headers: { Authorization: "Bearer token" } }), env, admin);
+  assert.equal(status.status, 503);
+  const grant = await handleAdminMembershipRequest(new Request("https://worker.test/membership/admin/membership", { method: "POST", headers: { Authorization: "Bearer token", "Content-Type": "application/json" }, body: JSON.stringify({ action: "grant", userId: "target-user" }) }), env, admin);
+  assert.equal(grant.status, 503);
+  const revoke = await handleAdminMembershipRequest(new Request("https://worker.test/membership/admin/membership", { method: "POST", headers: { Authorization: "Bearer token", "Content-Type": "application/json" }, body: JSON.stringify({ action: "revoke", userId: "target-user" }) }), env, admin);
+  assert.equal(revoke.status, 503);
+});
+
+
+test("concurrent distinct analysis requests cannot exceed the configured fake-D1 quota", async () => {
+  const DB = fakeDb({ limit: 5 });
+  const results = await Promise.all(Array.from({ length: 20 }, (_, index) => recordSuccessfulAnalysis({ DB }, { userId: "parallel-user", matchKey: `match-${index}`, limit: 5, day: "2026-11-25" })));
+  assert.equal(results.filter(result => result.allowed && !result.duplicate).length, 5);
+  assert.equal(results.filter(result => !result.allowed).length, 15);
+  assert.equal(DB.rows.size, 5);
+});
+
+test("configured ADMIN analysis skips the daily quota ledger", async () => {
+  const DB = fakeDb({ limit: 1 });
+  const response = await handlePremiumAnalysisRequest(analysisRequest(), { DB, MAM_ADMIN_USER_ID: "admin-user", MAM_PREMIUM_DAILY_LIMIT: "1" }, {
+    getClaims: async () => ({ sub: "admin-user" }),
+    getVerifiedUser: async () => ({ id: "admin-user", email_confirmed_at: "2026-01-01" }),
+    now: new Date("2026-11-24T00:00:00Z")
+  });
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).role, "ADMIN");
+  assert.equal(DB.rows.size, 0);
 });

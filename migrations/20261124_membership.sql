@@ -20,3 +20,9 @@ CREATE TABLE IF NOT EXISTS mam_user_daily_analyses (
 
 CREATE INDEX IF NOT EXISTS mam_user_daily_analyses_day_idx
   ON mam_user_daily_analyses (user_id, day_tr);
+
+CREATE TABLE IF NOT EXISTS mam_user_coupons (
+  user_id TEXT PRIMARY KEY,
+  items_json TEXT NOT NULL DEFAULT '[]' CHECK (length(items_json) <= 32768),
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
