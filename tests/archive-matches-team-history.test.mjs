@@ -57,14 +57,17 @@ function fakeDb(rows) {
       return {
         bind(...nextValues) {
           values = nextValues;
-          return {
-            async all() {
-            calls.push({ sql, values });
-            const [leagueId, before] = values;
+              return {
+                async all() {
+                  calls.push({ sql, values });
+                  const [leagueId, before] = values;
               let eligible = rows.filter(item => item.league_id === leagueId && item.kickoff < before);
               if (sql.includes("home_team COLLATE NOCASE IN")) {
-                const nameCount = (values.length - 3) / 2;
-                const names = new Set(values.slice(2, 2 + nameCount).map(value => String(value).toLowerCase()));
+                const nameCount = (values.length - 5) / 2;
+                const names = new Set([
+                  ...values.slice(2, 2 + nameCount),
+                  ...values.slice(nameCount + 4, nameCount * 2 + 4)
+                ].map(value => String(value).toLowerCase()));
                 eligible = eligible.filter(item => names.has(String(item.home_team).toLowerCase()) || names.has(String(item.away_team).toLowerCase()));
               }
               return { results: eligible.sort(newestFirst).slice(0, values.at(-1)) };
@@ -83,7 +86,7 @@ function request(query) {
   });
 }
 
-test("teamNames uses the indexed team predicate and finds older fixtures without unrelated-row paging", async () => {
+test("teamNames uses two selective indexed branches and finds older fixtures without unrelated-row paging", async () => {
   const newestKickoff = "2026-11-24T12:00:00.000Z";
   const rows = Array.from({ length: 2600 }, (_, index) => row({
     fixtureId: "z" + String(index).padStart(5, "0"),
@@ -110,8 +113,11 @@ test("teamNames uses the indexed team predicate and finds older fixtures without
   assert.equal(DB.calls.length, 1, "team history should be read through one indexed name predicate, not unrelated-row pages");
   assert.ok(DB.calls[0].sql.includes("home_team COLLATE NOCASE IN"));
   assert.ok(DB.calls[0].sql.includes("away_team COLLATE NOCASE IN"));
+  assert.equal((DB.calls[0].sql.match(/FROM matches/g) || []).length, 2);
+  assert.ok(DB.calls[0].sql.includes("UNION"));
   assert.match(source, /idx_matches_league_home_team_kickoff ON matches \(league_id, home_team COLLATE NOCASE, kickoff DESC\)/);
   assert.match(source, /idx_matches_league_away_team_kickoff ON matches \(league_id, away_team COLLATE NOCASE, kickoff DESC\)/);
+  assert.match(source, /mam:d1-maintenance-last:v4/);
 });
 
 test("unfiltered archive reads keep the existing single bounded query behavior", async () => {

@@ -1260,7 +1260,7 @@ export default {
       // Maintenance is optional and must NEVER prevent the archive/summary worker
       // from running. D1 quota errors in maintenance are isolated from ingestion.
       try {
-        const maintenanceKey = "mam:d1-maintenance-last:v3";
+        const maintenanceKey = "mam:d1-maintenance-last:v4";
         const lastMaintenanceAt = Number(env.MAM_KV ? await env.MAM_KV.get(maintenanceKey) : 0);
         if (!lastMaintenanceAt || Date.now() - lastMaintenanceAt >= 24 * 60 * 60 * 1000) {
           await ensureArchiveIndexes(env);
@@ -2255,9 +2255,9 @@ export default {
         let scannedRows = 0;
         let scanLimitReached = false;
         try {
-          // Keep the indexed league/kickoff range predicate. Team-filtered reads
-          // page through that range until enough exact team rows are found, rather
-          // than filtering only the newest LIMIT rows and losing older fixtures.
+          // Team-filtered reads use two indexed branches rather than one OR across
+          // both sides; this lets SQLite select the matching team index even before
+          // ANALYZE statistics exist and avoids paging unrelated league rows.
           if (!requestedTeamNames.size) {
             const result = await env.DB.prepare(`
               SELECT source, fixture_id, league_id, league_name, country, kickoff, status,
@@ -2279,16 +2279,30 @@ export default {
               SELECT source, fixture_id, league_id, league_name, country, kickoff, status,
                      home_team_id, home_team, away_team_id, away_team, home_goals, away_goals,
                      statistics_json, raw_json
-              FROM matches
-              WHERE league_id = ?
-                AND kickoff < ?
-                AND home_goals IS NOT NULL
-                AND away_goals IS NOT NULL
-                AND ((home_team COLLATE NOCASE IN (${placeholders}))
-                  OR (away_team COLLATE NOCASE IN (${placeholders})))
+              FROM (
+                SELECT source, fixture_id, league_id, league_name, country, kickoff, status,
+                       home_team_id, home_team, away_team_id, away_team, home_goals, away_goals,
+                       statistics_json, raw_json
+                FROM matches
+                WHERE league_id = ?
+                  AND kickoff < ?
+                  AND home_goals IS NOT NULL
+                  AND away_goals IS NOT NULL
+                  AND home_team COLLATE NOCASE IN (${placeholders})
+                UNION
+                SELECT source, fixture_id, league_id, league_name, country, kickoff, status,
+                       home_team_id, home_team, away_team_id, away_team, home_goals, away_goals,
+                       statistics_json, raw_json
+                FROM matches
+                WHERE league_id = ?
+                  AND kickoff < ?
+                  AND home_goals IS NOT NULL
+                  AND away_goals IS NOT NULL
+                  AND away_team COLLATE NOCASE IN (${placeholders})
+              )
               ORDER BY kickoff DESC, source DESC, fixture_id DESC
               LIMIT ?
-            `).bind(leagueId, before, ...requestedTeamNameValues, ...requestedTeamNameValues, limit).all();
+            `).bind(leagueId, before, ...requestedTeamNameValues, leagueId, before, ...requestedTeamNameValues, limit).all();
             const candidateRows = Array.isArray(result?.results) ? result.results : [];
             scannedRows = candidateRows.length;
             archivedRows = candidateRows.filter(matchesRequestedTeam);
