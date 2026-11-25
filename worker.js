@@ -432,6 +432,12 @@ async function ensureArchiveIndexes(env) {
   await env.DB.prepare(
     "CREATE INDEX IF NOT EXISTS idx_matches_source_kickoff_fixture ON matches (source, kickoff, fixture_id)"
   ).run();
+  await env.DB.prepare(
+    "CREATE INDEX IF NOT EXISTS idx_matches_league_home_team_kickoff ON matches (league_id, home_team COLLATE NOCASE, kickoff DESC)"
+  ).run();
+  await env.DB.prepare(
+    "CREATE INDEX IF NOT EXISTS idx_matches_league_away_team_kickoff ON matches (league_id, away_team COLLATE NOCASE, kickoff DESC)"
+  ).run();
 }
 
 // KV archive writes are intentionally disabled on the free tier.
@@ -2227,31 +2233,70 @@ export default {
             status: 400, headers: { ...cors, "Content-Type": "application/json" }
           });
         }
-        const requestedTeamNames = new Set(
-          String(url.searchParams.get("teamNames") || "")
-            .split(",").map(value => normalizeTeamName(value)).filter(Boolean)
-        );
-        let archived;
+        const archiveTeamKeys = value => {
+          const normalized = normalizeTeamName(value);
+          const relaxed = normalized
+            .replace(/(?:^|-)(?:football|club|de|the|a-s|as|anonim-sirketi|sirketi)(?=-|$)/g, "-")
+            .replace(/-{2,}/g, "-").replace(/^-|-$/g, "");
+          return [normalized, relaxed].filter(Boolean);
+        };
+        const requestedTeamNameValues = [...new Set(
+          url.searchParams.getAll("teamNames")
+            .flatMap(value => String(value || "").split(","))
+            .map(value => String(value || "").trim())
+            .filter(Boolean)
+        )].slice(0, 40);
+        const requestedTeamNames = new Set(requestedTeamNameValues.flatMap(archiveTeamKeys));
+        const matchesRequestedTeam = row => {
+          const matches = value => archiveTeamKeys(value).some(key => requestedTeamNames.has(key));
+          return matches(row.home_team) || matches(row.away_team);
+        };
+        let archivedRows = [];
+        let scannedRows = 0;
+        let scanLimitReached = false;
         try {
-          // kickoff is stored as an ISO date/time string. A direct range predicate
-          // allows idx_matches_league_kickoff to serve this read instead of applying
-          // date() to every row in the selected league.
-          archived = await env.DB.prepare(`
-            SELECT source, fixture_id, league_id, league_name, country, kickoff, status,
-                   home_team_id, home_team, away_team, home_goals, away_goals,
-                   statistics_json, raw_json
-            FROM matches
-            WHERE league_id = ?
-              AND kickoff < ?
-              AND home_goals IS NOT NULL
-              AND away_goals IS NOT NULL
-            ORDER BY kickoff DESC
-            LIMIT ?
-          `).bind(leagueId, before, limit).all();
+          // Keep the indexed league/kickoff range predicate. Team-filtered reads
+          // page through that range until enough exact team rows are found, rather
+          // than filtering only the newest LIMIT rows and losing older fixtures.
+          if (!requestedTeamNames.size) {
+            const result = await env.DB.prepare(`
+              SELECT source, fixture_id, league_id, league_name, country, kickoff, status,
+                     home_team_id, home_team, away_team, home_goals, away_goals,
+                     statistics_json, raw_json
+              FROM matches
+              WHERE league_id = ?
+                AND kickoff < ?
+                AND home_goals IS NOT NULL
+                AND away_goals IS NOT NULL
+              ORDER BY kickoff DESC
+              LIMIT ?
+            `).bind(leagueId, before, limit).all();
+            archivedRows = Array.isArray(result?.results) ? result.results : [];
+            scannedRows = archivedRows.length;
+          } else {
+            const placeholders = requestedTeamNameValues.map(() => "?").join(",");
+            const result = await env.DB.prepare(`
+              SELECT source, fixture_id, league_id, league_name, country, kickoff, status,
+                     home_team_id, home_team, away_team_id, away_team, home_goals, away_goals,
+                     statistics_json, raw_json
+              FROM matches
+              WHERE league_id = ?
+                AND kickoff < ?
+                AND home_goals IS NOT NULL
+                AND away_goals IS NOT NULL
+                AND ((home_team COLLATE NOCASE IN (${placeholders}))
+                  OR (away_team COLLATE NOCASE IN (${placeholders})))
+              ORDER BY kickoff DESC, source DESC, fixture_id DESC
+              LIMIT ?
+            `).bind(leagueId, before, ...requestedTeamNameValues, ...requestedTeamNameValues, limit).all();
+            const candidateRows = Array.isArray(result?.results) ? result.results : [];
+            scannedRows = candidateRows.length;
+            archivedRows = candidateRows.filter(matchesRequestedTeam);
+          }
         } catch (archiveReadError) {
           const detail = String(archiveReadError?.message || archiveReadError);
           console.error("D1 archive/matches read failed", {
-            leagueId, before, limit, teamFilterCount: requestedTeamNames.size, detail
+            leagueId, before, limit, teamFilterCount: requestedTeamNames.size, scannedRows, detail
           });
           return new Response(JSON.stringify({
             error: "D1 archive query failed",
@@ -2262,17 +2307,7 @@ export default {
             headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
           });
         }
-        const archivedRows = Array.isArray(archived?.results) ? archived.results : [];
-        // Apply the requested team filter before shaping the response. Previously the
-        // browser sent teamNames but this route ignored them and returned the league's
-        // first 2,000 rows, so a team's older fixtures could be pushed out by other clubs.
-        const filteredRows = requestedTeamNames.size
-          ? archivedRows.filter(row =>
-              requestedTeamNames.has(normalizeTeamName(row.home_team)) ||
-              requestedTeamNames.has(normalizeTeamName(row.away_team))
-            )
-          : archivedRows;
-        const matches = filteredRows.map(row => {
+        const matches = archivedRows.map(row => {
           let statistics = null;
           let raw = null;
           try { statistics = row.statistics_json ? JSON.parse(row.statistics_json) : null; } catch (_) {}
@@ -2280,6 +2315,8 @@ export default {
           const halftime = raw?.score?.halftime || raw?.score?.halfTime || null;
           return {
             source: row.source || "app",
+            mamSource: String(row.source || "app").toLowerCase(),
+            mamArchiveOnly: true,
             fixture: { id: row.fixture_id, date: row.kickoff, status: { short: row.status || "FT" } },
             league: { id: String(row.league_id), name: row.league_name || "", country: canonicalLeagueCountry(row.source, row.league_id, row.league_name, row.country) },
             teams: {
@@ -2293,8 +2330,9 @@ export default {
         });
         return new Response(JSON.stringify({
           ok: true, leagueId, count: matches.length,
-          rawCount: archivedRows.length,
+          rawCount: scannedRows,
           teamFilterApplied: requestedTeamNames.size > 0,
+          scanLimitReached,
           response: matches
         }), {
           status: 200,
