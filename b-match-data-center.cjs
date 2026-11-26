@@ -52,7 +52,8 @@ function summarize(teamId, identity, cutoffDate, history) {
       : null;
     return { archiveRef: eventKey(row), kickoff: row.kickoff, competitionId: String(row.competitionId || ""),
       opponentTeamId: isHome ? row.awayTeamId : row.homeTeamId, venue: isHome ? "home" : "away",
-      goalsFor, goalsAgainst, halftime, statistics: safeStats(row.statistics) };
+      goalsFor, goalsAgainst, halftime, statistics: safeStats(row.statistics),
+      verificationSource: row.verificationSource || null };
   });
   const metricCounts = {};
   let matchesWithVerifiedStatistics = 0;

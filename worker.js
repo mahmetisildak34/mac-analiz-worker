@@ -1256,17 +1256,26 @@ export default {
   // Daily TFF fixture sync: one KV write per run, keeping free-tier writes low.
   async scheduled(event, env, ctx) {
     if (event?.cron === bAdapter.DAILY_B_CRON_UTC) {
+      if (!(await bAdapter.isDataCenterEnabled(env))) {
+        console.log("B daily preparation disabled; existing archive and live path remains active");
+        return;
+      }
       if (!env.DB) return;
+      const preparationStartedAt = performance.now();
       try {
         const layer = bAdapter.createWorkerBLayer({ DB: env.DB, core: bCore, identityApi: bIdentity });
         const result = await layer.prepareFromD1Upcoming();
         console.log("B daily preparation completed", JSON.stringify({ noOp: !!result.noOp,
-          readyFixtures: result.readyFixtures || 0, changes: result.changes || null }));
+          readyFixtures: result.readyFixtures || 0, changes: result.changes || null,
+          archiveFixtureCount: result.archiveFixtureCount ?? null, stagedFixtureCount: result.stagedFixtureCount ?? null,
+          elapsedMs: Number((performance.now() - preparationStartedAt).toFixed(3)),
+          d1Metrics: result.d1Metrics || { statementCount: 0, rowsRead: 0, rowsWritten: 0, durationMs: 0 } }));
       } catch (error) {
         // B is optional: absent B schema, incomplete A snapshot, or a failed
         // candidate must not alter the prior B generation or the 5-minute path.
         console.log("B daily preparation skipped; existing data path remains active",
-          String(error?.message || error).slice(0, 300));
+          JSON.stringify({ error: String(error?.message || error).slice(0, 300),
+            elapsedMs: Number((performance.now() - preparationStartedAt).toFixed(3)) }));
       }
       return;
     }
@@ -1545,6 +1554,9 @@ export default {
       }
 
       if (path === "data-center/fixture-bundle" && request.method === "GET") {
+        if (!(await bAdapter.isDataCenterEnabled(env))) return new Response(JSON.stringify({ error: "B snapshot is unavailable" }), {
+          status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+        });
         const provider = String(url.searchParams.get("provider") || "").toLowerCase();
         const fixtureId = String(url.searchParams.get("fixtureId") || "");
         if (!/^[a-z0-9._-]{1,40}$/.test(provider) || !/^[a-zA-Z0-9._:-]{1,100}$/.test(fixtureId)) {
@@ -1553,7 +1565,7 @@ export default {
           });
         }
         if (!env.DB) return new Response(JSON.stringify({ error: "B snapshot is unavailable" }), {
-          status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+          status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
         });
         try {
           const layer = bAdapter.createWorkerBLayer({ DB: env.DB, core: bCore, identityApi: bIdentity });
@@ -1565,7 +1577,7 @@ export default {
             headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
         } catch (_) {
           return new Response(JSON.stringify({ error: "B snapshot is unavailable" }), {
-            status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+            status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
           });
         }
       }

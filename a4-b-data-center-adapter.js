@@ -1,11 +1,22 @@
 "use strict";
 
-// Isolated Stage 4 integration adapter. Not imported by worker.js and not enabled
-// by wrangler.jsonc. Production use requires separately approved D1 migrations.
+// B data-center adapter. The Worker must fail closed until both release gates are
+// explicitly enabled and the separately approved additive D1 migrations exist.
 const DAILY_B_CRON_UTC = "1 21 * * *";
+const B_RELEASE_GATE_ENV = "MAM_DATA_CENTER_B_RELEASE_GATE";
+const B_RUNTIME_SWITCH_KEY = "mam:feature:data-center-b";
 const FINAL_STATUSES = new Set(["FT", "AET", "PEN", "COMPLETED", "FINISHED", "FULL TIME"]);
 const safeJson = value => { try { return value ? JSON.parse(value) : null; } catch (_) { return null; } };
 const hasScore = value => Number.isInteger(value) && value >= 0;
+
+async function isDataCenterEnabled(env) {
+  if (env?.[B_RELEASE_GATE_ENV] !== "true" || typeof env?.MAM_KV?.get !== "function") return false;
+  try {
+    return await env.MAM_KV.get(B_RUNTIME_SWITCH_KEY) === "on";
+  } catch (_) {
+    return false;
+  }
+}
 
 function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toISOString() }) {
   if (!DB || !core || typeof core.prepareDataCenter !== "function" ||
@@ -13,17 +24,28 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
     throw new TypeError("D1, the B core, and the team identity resolver are required.");
   }
   let expectedActiveId = null;
+  let d1Metrics = { statementCount: 0, rowsRead: 0, rowsWritten: 0, durationMs: 0 };
+
+  function resetD1Metrics() {
+    d1Metrics = { statementCount: 0, rowsRead: 0, rowsWritten: 0, durationMs: 0 };
+  }
+  function recordD1Meta(meta) {
+    if (!meta) return;
+    d1Metrics.statementCount++;
+    d1Metrics.rowsRead += Number(meta.rows_read) || 0;
+    d1Metrics.rowsWritten += Number(meta.rows_written) || 0;
+    d1Metrics.durationMs += Number(meta.duration ?? meta.timings?.sql_duration_ms) || 0;
+  }
+  function d1MetricsSnapshot() { return { ...d1Metrics }; }
 
   async function rows(sql, ...values) {
     let statement = DB.prepare(sql);
     if (values.length) statement = statement.bind(...values);
     const result = await statement.all();
+    recordD1Meta(result?.meta);
     return Array.isArray(result?.results) ? result.results : [];
   }
   async function row(sql, ...values) {
-    let statement = DB.prepare(sql);
-    if (values.length) statement = statement.bind(...values);
-    if (typeof statement.first === "function") return statement.first();
     return (await rows(sql, ...values))[0] || null;
   }
 
@@ -56,14 +78,19 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
     };
   }
 
-  // Query only history with two persisted, approved side-to-team links. There is
-  // intentionally no league filter: a canonical team can use verified history
-  // from any competition. The team/date link index bounds each per-team read.
+  // Query legacy history only with two persisted, approved side-to-team links.
+  // Separately verified provider history is read from its own additive table;
+  // it must agree with the stored canonical team/opponent side assignment.
+  // There is intentionally no league filter: a canonical team can use verified
+  // history from any competition. Team/date indexes bound the per-team reads.
   async function loadHistoryForTeam(teamId, before) {
     const sql = `
+      WITH history AS (
       SELECT DISTINCT m.source, m.fixture_id, m.league_id, m.kickoff, m.status,
              m.home_goals, m.away_goals, m.statistics_json, m.raw_json,
-             h.team_id AS canonical_home_team_id, a.team_id AS canonical_away_team_id
+             h.team_id AS canonical_home_team_id, a.team_id AS canonical_away_team_id,
+             'matches' AS history_source, NULL AS verified_team_id, NULL AS verified_opponent_team_id,
+             NULL AS verification_source
       FROM mam_team_match_links selected
       JOIN matches m ON m.source=selected.provider AND m.fixture_id=selected.provider_fixture_id
       JOIN mam_team_match_links h ON h.provider=m.source AND h.provider_fixture_id=m.fixture_id AND h.side='home'
@@ -74,7 +101,9 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
       UNION
       SELECT DISTINCT m.source, m.fixture_id, m.league_id, m.kickoff, m.status,
              m.home_goals, m.away_goals, m.statistics_json, m.raw_json,
-             h.team_id AS canonical_home_team_id, a.team_id AS canonical_away_team_id
+             h.team_id AS canonical_home_team_id, a.team_id AS canonical_away_team_id,
+             'matches' AS history_source, NULL AS verified_team_id, NULL AS verified_opponent_team_id,
+             NULL AS verification_source
       FROM mam_team_match_links selected
       JOIN matches m ON m.source=selected.provider AND m.fixture_id=selected.provider_fixture_id
       JOIN mam_team_match_links h ON h.provider=m.source AND h.provider_fixture_id=m.fixture_id AND h.side='home'
@@ -82,9 +111,34 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
       WHERE selected.team_id=? AND selected.side='away' AND selected.match_date < substr(?,1,10)
         AND m.kickoff < ? AND upper(m.status) IN ('FT','AET','PEN','COMPLETED','FINISHED','FULL TIME')
         AND m.home_goals IS NOT NULL AND m.away_goals IS NOT NULL
-      ORDER BY kickoff DESC LIMIT 100`;
-    const found = await rows(sql, teamId, before, before, teamId, before, before);
-    return found.filter(item => hasScore(Number(item.home_goals)) && hasScore(Number(item.away_goals)))
+      UNION
+      SELECT v.provider, v.provider_fixture_id, v.competition_id, v.kickoff, v.status,
+             v.home_score, v.away_score, NULL, NULL, v.home_team_id, v.away_team_id,
+             'verified' AS history_source, v.team_id, v.opponent_team_id, v.source
+      FROM mam_verified_history_matches v
+      WHERE v.team_id=? AND v.kickoff<? AND v.status='completed' AND v.verified=1
+        AND v.home_score IS NOT NULL AND v.away_score IS NOT NULL
+      )
+      SELECT DISTINCT source, fixture_id, league_id, kickoff, status, home_goals, away_goals,
+             statistics_json, raw_json, canonical_home_team_id, canonical_away_team_id,
+             history_source, verified_team_id, verified_opponent_team_id, verification_source
+      FROM history ORDER BY kickoff DESC LIMIT 100`;
+    const found = await rows(sql, teamId, before, before, teamId, before, before, teamId, before);
+    return found.filter(item => {
+      if (!item.source || !item.fixture_id || !item.league_id || !item.kickoff ||
+          !item.canonical_home_team_id || !item.canonical_away_team_id ||
+          item.canonical_home_team_id === item.canonical_away_team_id ||
+          !hasScore(Number(item.home_goals)) || !hasScore(Number(item.away_goals))) return false;
+      if (item.history_source !== "verified") return true;
+      if (!String(item.verification_source || "").trim()) return false;
+      const selectedTeam = String(item.verified_team_id || "");
+      const opponentTeam = String(item.verified_opponent_team_id || "");
+      const homeTeam = String(item.canonical_home_team_id || "");
+      const awayTeam = String(item.canonical_away_team_id || "");
+      return selectedTeam === String(teamId) && opponentTeam &&
+        ((homeTeam === selectedTeam && awayTeam === opponentTeam) ||
+         (awayTeam === selectedTeam && homeTeam === opponentTeam));
+    })
       .map(item => {
         const raw = safeJson(item.raw_json);
         const rawHalf = raw?.score?.halftime || raw?.score?.halfTime || raw?.halftime || null;
@@ -100,7 +154,8 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
           kickoff: item.kickoff, competitionId: String(item.league_id),
           homeTeamId: item.canonical_home_team_id, awayTeamId: item.canonical_away_team_id,
           homeScore: Number(item.home_goals), awayScore: Number(item.away_goals),
-          status: "completed", verified: true, halftime, statistics };
+          status: "completed", verified: true, halftime, statistics,
+          verificationSource: item.history_source === "verified" ? String(item.verification_source) : null };
       });
   }
 
@@ -118,7 +173,11 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
 
   async function atomicCommit({ generationId, manifest, items }) {
     const createdAt = manifest.generatedAt || now();
-    const writeBatch = async statements => { if (statements.length) await DB.batch(statements); };
+    const writeBatch = async statements => {
+      if (!statements.length) return;
+      const results = await DB.batch(statements);
+      if (Array.isArray(results)) for (const result of results) recordD1Meta(result?.meta);
+    };
     const bound = (sql, ...values) => DB.prepare(sql).bind(...values);
     await writeBatch([bound("INSERT INTO mam_b_generations(generation_id,created_at,status,manifest_json) VALUES(?,?,'staging',?)",
       generationId, createdAt, JSON.stringify(manifest))]);
@@ -169,6 +228,7 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
         WHERE excluded.observed_at>mam_b_live_overlay.observed_at`)
         .bind(update.fixtureKey, update.provider, update.status, update.observedAt, update.homeScore, update.awayScore,
           update.minuteLabel, update.elapsedSeconds, Number(update.clockPrecise), JSON.stringify(update.statistics), `fixture:${update.fixtureKey}`).run();
+      recordD1Meta(result?.meta);
       return { accepted: Number(result?.meta?.changes || 0) > 0, reason: "stale_or_fixture_not_active" };
     }
   };
@@ -244,31 +304,47 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
   async function publish(input) {
     const batch = await prepareByCompetition(input);
     const result = await core.publishDataCenter(storageAdapter, batch);
-    return { ...result, outcomes: batch.outcomes, preservedCompetitions: batch.preservedCompetitions };
+    return { ...result, outcomes: batch.outcomes, preservedCompetitions: batch.preservedCompetitions,
+      d1Metrics: d1MetricsSnapshot() };
   }
 
   async function prepareFromD1Upcoming() {
+    resetD1Metrics();
     const generatedAt = now();
+    const hasFixtureStaging = await row("SELECT 1 AS present FROM sqlite_master WHERE type='table' AND name='mam_b_fixture_staging'");
+    const stagingWatermark = hasFixtureStaging
+      ? await row("SELECT MAX(verified_at) AS updated_at FROM mam_b_fixture_staging WHERE verified=1 AND status='scheduled'")
+      : null;
     const sourceRows = await Promise.all([
       row(`SELECT MAX(updated_at) AS updated_at FROM matches
         WHERE (status IN ('NS','TBD','SCHEDULED') AND datetime(kickoff)>=datetime(?) AND datetime(kickoff)<=datetime(?,'+30 days'))
            OR (status IN ('FT','AET','PEN','FINISHED','COMPLETED') AND datetime(kickoff)>=datetime(?,'-365 days'))`, generatedAt, generatedAt, generatedAt),
       row("SELECT MAX(updated_at) AS updated_at FROM mam_team_identities"),
       row("SELECT MAX(verified_at) AS updated_at FROM mam_team_names WHERE verified=1"),
-      row("SELECT MAX(verified_at) AS updated_at FROM mam_team_provider_ids WHERE verified=1")
+      row("SELECT MAX(verified_at) AS updated_at FROM mam_team_provider_ids WHERE verified=1"),
+      Promise.resolve(stagingWatermark)
     ]);
     const sourceWatermark = sourceRows.map(item => item?.updated_at || "").join("|");
     const activeManifest = await row(`SELECT g.manifest_json FROM mam_b_active_generation a
       JOIN mam_b_generations g ON g.generation_id=a.generation_id WHERE a.singleton=1`);
     if (safeJson(activeManifest?.manifest_json)?.sourceWatermark === sourceWatermark) {
-      return { noOp: true, reason: "source_watermark_unchanged", fixtureCount: 0, sourceWatermark };
+      return { noOp: true, reason: "source_watermark_unchanged", fixtureCount: 0, sourceWatermark,
+        d1Metrics: d1MetricsSnapshot() };
     }
-    const upcoming = await rows(`SELECT source, fixture_id, league_id, country, kickoff, status,
-        home_team_id, home_team, away_team_id, away_team, raw_json
-      FROM matches WHERE status IN ('NS','TBD','SCHEDULED')
-        AND datetime(kickoff)>=datetime(?) AND datetime(kickoff)<=datetime(?,'+30 days')
-      ORDER BY datetime(kickoff) LIMIT 1500`, generatedAt, generatedAt);
-    const fixtures = upcoming.map(item => {
+    const upcomingUntil = new Date(Date.parse(generatedAt) + 30 * 24 * 60 * 60 * 1000).toISOString();
+    const [upcoming, stagedUpcoming] = await Promise.all([
+      rows(`SELECT source, fixture_id, league_id, country, kickoff, status,
+          home_team_id, home_team, away_team_id, away_team, raw_json
+        FROM matches WHERE status IN ('NS','TBD','SCHEDULED')
+          AND datetime(kickoff)>=datetime(?) AND datetime(kickoff)<=datetime(?,'+30 days')
+        ORDER BY datetime(kickoff) LIMIT 1500`, generatedAt, generatedAt),
+      hasFixtureStaging ? rows(`SELECT provider, provider_fixture_id, competition_id, kickoff, status,
+          home_provider_team_id, home_team_name, home_country_code,
+          away_provider_team_id, away_team_name, away_country_code
+        FROM mam_b_fixture_staging WHERE verified=1 AND status='scheduled' AND kickoff>=? AND kickoff<=?
+        ORDER BY kickoff LIMIT 1500`, generatedAt, upcomingUntil) : Promise.resolve([])
+    ]);
+    const archiveFixtures = upcoming.map(item => {
       const raw = safeJson(item.raw_json) || {};
       const home = raw.teams?.home || raw.home || {};
       const away = raw.teams?.away || raw.away || {};
@@ -280,10 +356,25 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
         away: { provider: String(item.source), providerTeamId: item.away_team_id ?? away.id ?? null,
           name: item.away_team || away.name || "", countryCode } };
     }).filter(item => item.provider && item.providerFixtureId && item.competitionId && item.kickoff);
+    const stagedFixtures = stagedUpcoming.map(item => ({
+      provider: String(item.provider), providerFixtureId: String(item.provider_fixture_id),
+      competitionId: String(item.competition_id), kickoff: item.kickoff, status: "scheduled",
+      home: { provider: String(item.provider), providerTeamId: String(item.home_provider_team_id),
+        name: String(item.home_team_name), countryCode: String(item.home_country_code || "") },
+      away: { provider: String(item.provider), providerTeamId: String(item.away_provider_team_id),
+        name: String(item.away_team_name), countryCode: String(item.away_country_code || "") }
+    })).filter(item => item.provider && item.providerFixtureId && item.competitionId && item.kickoff);
+    const fixturesByKey = new Map();
+    const keyOf = fixture => `${fixture.provider.toLowerCase()}:${fixture.providerFixtureId}`;
+    for (const fixture of archiveFixtures) fixturesByKey.set(keyOf(fixture), fixture);
+    for (const fixture of stagedFixtures) if (!fixturesByKey.has(keyOf(fixture))) fixturesByKey.set(keyOf(fixture), fixture);
+    const fixtures = [...fixturesByKey.values()];
     const competitions = [...new Set(fixtures.map(item => item.competitionId))].sort();
-    if (!competitions.length) return { noOp: true, reason: "no_upcoming_A_snapshot", fixtureCount: 0 };
-    return publish({ generatedAt, sourceWatermark, scopeComplete: true, expectedCompetitionIds: competitions,
-      loadedCompetitionIds: competitions, fixtures });
+    if (!competitions.length) return { noOp: true, reason: "no_upcoming_A_snapshot", fixtureCount: 0, sourceWatermark,
+      d1Metrics: d1MetricsSnapshot(), archiveFixtureCount: 0, stagedFixtureCount: 0 };
+    return { ...await publish({ generatedAt, sourceWatermark, scopeComplete: true, expectedCompetitionIds: competitions,
+      loadedCompetitionIds: competitions, fixtures }), archiveFixtureCount: archiveFixtures.length,
+      stagedFixtureCount: stagedFixtures.length };
   }
 
   async function readFixture(key) {
@@ -330,4 +421,4 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
     applyLiveUpdate: update => core.applyLiveUpdate(storageAdapter, update), storageAdapter };
 }
 
-module.exports = { DAILY_B_CRON_UTC, createWorkerBLayer };
+module.exports = { DAILY_B_CRON_UTC, B_RELEASE_GATE_ENV, B_RUNTIME_SWITCH_KEY, isDataCenterEnabled, createWorkerBLayer };

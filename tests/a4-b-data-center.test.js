@@ -8,6 +8,7 @@ if (!appRoot) throw new Error("Set MAM_APP_ROOT to the PR #98 app checkout for t
 const core = require(path.join(appRoot, "match-data-center.js"));
 const identityApi = require(path.join(appRoot, "team-identity-registry.js"));
 const { loadPreparedAnalysis } = require(path.join(appRoot, "data-center-client.js"));
+const workerCore = require("../b-match-data-center.cjs");
 const { DAILY_B_CRON_UTC, createWorkerBLayer } = require("../a4-b-data-center-adapter.js");
 const stamp = "2026-11-26T21:02:00.000Z";
 
@@ -20,13 +21,17 @@ class LocalD1 {
       bind(...args) { values = args; return stmt; },
       all() {
         if (owner.failNextRead) { owner.failNextRead = false; throw Error("injected D1 read failure"); }
-        return { results: owner.db.prepare(sql).all(...values) };
+        const results = owner.db.prepare(sql).all(...values);
+        return { results, meta: { rows_read: results.length, rows_written: 0, duration: 0 } };
       },
       first() {
         if (owner.failNextRead) { owner.failNextRead = false; throw Error("injected D1 read failure"); }
         return owner.db.prepare(sql).get(...values) || null;
       },
-      run() { return { meta: { changes: Number(owner.db.prepare(sql).run(...values).changes) } }; }
+      run() {
+        const changes = Number(owner.db.prepare(sql).run(...values).changes);
+        return { meta: { changes, rows_read: 0, rows_written: changes, duration: 0 } };
+      }
     };
     Object.defineProperty(stmt, "sql", { value: sql });
     Object.defineProperty(stmt, "values", { get: () => values });
@@ -38,7 +43,8 @@ class LocalD1 {
     try {
       const results = statements.map(statement => {
         const result = this.db.prepare(statement.sql).run(...statement.values);
-        return { meta: { changes: Number(result.changes) } };
+        const changes = Number(result.changes);
+        return { meta: { changes, rows_read: 0, rows_written: changes, duration: 0 } };
       });
       this.db.exec("COMMIT");
       return results;
@@ -48,16 +54,40 @@ class LocalD1 {
 
 function setup() {
   const db = new DatabaseSync(":memory:");
-  for (const file of ["team-identity-v1.sql", "daily-history-v1.sql", "match-data-center-v1.sql"])
-    db.exec(fs.readFileSync(path.join(appRoot, "schema", file), "utf8"));
+  db.exec("PRAGMA foreign_keys = ON;");
   db.exec(`CREATE TABLE matches (
     source TEXT NOT NULL, fixture_id TEXT NOT NULL, league_id TEXT NOT NULL, league_name TEXT,
     country TEXT, kickoff TEXT NOT NULL, status TEXT NOT NULL, home_team_id TEXT, home_team TEXT,
     away_team_id TEXT, away_team TEXT, home_goals INTEGER, away_goals INTEGER,
     statistics_json TEXT, raw_json TEXT, updated_at TEXT, PRIMARY KEY(source,fixture_id)
   );`);
+  db.prepare(`INSERT INTO matches(source,fixture_id,league_id,kickoff,status,home_team,away_team,updated_at)
+    VALUES('LEGACY','untouched','test','2020-01-01T12:00:00Z','FT','Home','Away',?)`).run(stamp);
+  const legacyBefore = legacyArchiveSnapshot(db);
+  const applyMigrations = () => {
+    const directory = path.join(__dirname, "..", "migrations");
+    const files = fs.readdirSync(directory).filter(file => /^\d+_.*\.sql$/.test(file)).sort();
+    for (const file of files) db.exec(fs.readFileSync(path.join(directory, file), "utf8"));
+  };
+  applyMigrations();
+  assert.deepEqual(legacyArchiveSnapshot(db), legacyBefore, "Worker migrations must not alter legacy matches schema or rows");
+  const schemaAfterFirstApply = db.prepare(`SELECT type,name,tbl_name,sql FROM sqlite_master
+    WHERE type IN ('table','index') AND name NOT LIKE 'sqlite_%' ORDER BY type,name`).all();
+  applyMigrations();
+  assert.deepEqual(db.prepare(`SELECT type,name,tbl_name,sql FROM sqlite_master
+    WHERE type IN ('table','index') AND name NOT LIKE 'sqlite_%' ORDER BY type,name`).all(), schemaAfterFirstApply,
+    "Worker migrations must be idempotent");
   const d1 = new LocalD1(db);
   return { db, d1, layer: createWorkerBLayer({ DB: d1, core, identityApi, now: () => stamp }) };
+}
+
+function legacyArchiveSnapshot(db) {
+  return {
+    createSql: db.prepare("SELECT sql FROM sqlite_master WHERE type='table' AND name='matches'").get().sql,
+    columns: JSON.stringify(db.prepare("PRAGMA table_info(matches)").all()),
+    rowCount: db.prepare("SELECT COUNT(*) AS n FROM matches").get().n,
+    sentinel: JSON.stringify(db.prepare("SELECT * FROM matches WHERE source='LEGACY' AND fixture_id='untouched'").get())
+  };
 }
 
 function addIdentity(db, teamId, currentName, alternateName, providerTeamId) {
@@ -132,6 +162,76 @@ function seedAll(db) {
 function input(extra = {}) { return { generatedAt: stamp, scopeComplete: true,
   expectedCompetitionIds: ["3", "39", "203"], loadedCompetitionIds: ["3", "39", "203"], fixtures: fixtures(), ...extra }; }
 
+test("Worker core keeps verified-history citations in prepared analysis payloads", () => {
+  const makeIdentity = (teamId, providerTeamId, displayName) => ({ teamId, countryCode: "GB",
+    names: [{ displayName, normalizedName: identityApi.normalizeTeamName(displayName), nameType: "current", verified: true }],
+    providerIds: [{ provider: "ESPN", providerTeamId, verified: true }] });
+  const identities = [makeIdentity("team:core-home", "home-id", "Synthetic Core Home"),
+    makeIdentity("team:core-away", "away-id", "Synthetic Core Away")];
+  const makeHistory = (teamId, opponentId) => Array.from({ length: 10 }, (_, index) => {
+    const date = new Date(Date.UTC(2026, 10, 15 - index)).toISOString().slice(0, 10);
+    const isHome = teamId === "team:core-home";
+    return { provider: "FAF", providerFixtureId: `composite:${teamId}:${index}`, kickoff: `${date}T15:00:00.000Z`,
+      competitionId: "test-league", homeTeamId: isHome ? teamId : opponentId, awayTeamId: isHome ? opponentId : teamId,
+      homeScore: 1, awayScore: 0, status: "completed", verified: true, statistics: [],
+      verificationSource: "official provider page; synthetic test row" };
+  });
+  const prepared = workerCore.prepareDataCenter({ generatedAt: stamp, scopeComplete: true,
+    expectedCompetitionIds: ["test"], loadedCompetitionIds: ["test"], identities,
+    fixtures: [{ provider: "ESPN", providerFixtureId: "synthetic-core-fixture", competitionId: "test",
+      kickoff: "2026-11-26T20:00:00.000Z", status: "scheduled",
+      home: { provider: "ESPN", providerTeamId: "home-id" }, away: { provider: "ESPN", providerTeamId: "away-id" } }],
+    historiesByTeam: { "team:core-home": makeHistory("team:core-home", "team:core-away"),
+      "team:core-away": makeHistory("team:core-away", "team:core-home") } });
+  const analysis = prepared.records.find(item => item.kind === "team_analysis" && item.payload.teamId === "team:core-home");
+  assert.ok(analysis);
+  assert.equal(analysis.payload.historyCount, 10);
+  assert.ok(analysis.payload.history.every(item => item.verificationSource === "official provider page; synthetic test row"));
+});
+
+// Synthetic-only fixture set for adapter safety tests; it is not real-data acceptance.
+function seedInterFafCase(db) {
+  addIdentity(db, "team:inter", "Inter Club d'Escaldes", "Inter Club Escaldes", "20703");
+  addIdentity(db, "team:inter-opponent", "Atlètic Club Escaldes", null, null);
+  addIdentity(db, "team:wrong-side", "Wrong canonical side", null, null);
+  db.prepare(`INSERT INTO mam_team_provider_ids
+    (provider,provider_team_id,team_id,verified,source,valid_from,valid_to,verified_at,approved_by)
+    VALUES('FAF','1770','team:inter',1,'official FAF fixture-test evidence','2000-01-01',NULL,?,'test-reviewer')`).run(stamp);
+  seedTeamHistory(db, { id: "team:cph", slug: "cph", name: "F.C. København", alias: "FC Copenhagen", providerId: "909",
+    opponentId: "team:cph-opponent", opponentName: "Synthetic Copenhagen Opponent" });
+
+  const insert = db.prepare(`INSERT INTO mam_verified_history_matches
+    (provider,provider_fixture_id,team_id,opponent_team_id,kickoff,competition_id,home_team_id,away_team_id,
+     home_score,away_score,status,verified,source,verified_at)
+    VALUES(?,?,?,?,?,?,?,?,?,?,'completed',1,?,?)`);
+  const dates = ["2026-05-10", "2026-04-25", "2026-04-19", "2026-04-12", "2026-03-22",
+    "2026-03-08", "2026-03-01", "2026-02-14", "2026-02-08", "2026-02-01"];
+  dates.forEach((day, index) => {
+    const homeId = index % 2 === 0 ? "team:inter" : "team:inter-opponent";
+    const awayId = index % 2 === 0 ? "team:inter-opponent" : "team:inter";
+    insert.run("FAF", `composite:672722:${day}:1770:1763`, "team:inter", "team:inter-opponent",
+      `${day}T15:00:00.000Z`, "faf-league-672722", homeId, awayId, index % 3, (index + 1) % 3,
+      "official FAF results page; synthetic test row", stamp);
+  });
+  // Wrong side assignment is structurally insertable, so the adapter must reject it.
+  insert.run("FAF", "composite:bad-side", "team:inter", "team:inter-opponent", "2026-11-20T15:00:00.000Z",
+    "faf-league-672722", "team:wrong-side", "team:inter", 1, 0, "synthetic bad-side row", stamp);
+  // A valid post-cutoff row must not enter the pre-match history.
+  insert.run("FAF", "composite:future", "team:inter", "team:inter-opponent", "2026-11-27T15:00:00.000Z",
+    "faf-league-672722", "team:inter", "team:inter-opponent", 1, 0, "synthetic future row", stamp);
+  insert.run("FAF", "composite:no-source", "team:inter", "team:inter-opponent", "2026-11-21T15:00:00.000Z",
+    "faf-league-672722", "team:inter", "team:inter-opponent", 1, 0, "", stamp);
+  // This legacy row duplicates a verified provider result exactly; core dedup must keep one event.
+  addArchiveMatch(db, { source: "ESPN", fixtureId: "legacy-faf-duplicate", leagueId: "faf-league-672722",
+    kickoff: "2026-05-10T15:00:00.000Z", homeId: "team:inter", awayId: "team:inter-opponent",
+    homeName: "Inter Club d'Escaldes", awayName: "Atlètic Club Escaldes", homeScore: 0, awayScore: 1 });
+  return { generatedAt: stamp, scopeComplete: true, expectedCompetitionIds: ["uefa"], loadedCompetitionIds: ["uefa"],
+    fixtures: [{ provider: "ESPN", providerFixtureId: "inter-cph-2026", competitionId: "uefa",
+      kickoff: "2026-11-26T20:00:00.000Z", status: "scheduled",
+      home: { provider: "ESPN", providerTeamId: "20703", name: "Inter Club d'Escaldes" },
+      away: { provider: "ESPN", providerTeamId: "909", name: "F.C. København" } }] };
+}
+
 test("isolated Worker adapter reads approved A links across leagues and prepares Bournemouth, Plzen, and Mjällby", async () => {
   assert.equal(DAILY_B_CRON_UTC, "1 21 * * *");
   const { db, layer } = setup();
@@ -151,6 +251,44 @@ test("isolated Worker adapter reads approved A links across leagues and prepares
     const bournemouth = prepared.records.find(item => item.key.startsWith("team-analysis:team:bournemouth:"));
     assert.equal(bournemouth.payload.history[0].halftime.homeScore, 1);
     assert.ok(bournemouth.payload.history[0].statistics.some(item => item.name === "corners"));
+  } finally { db.close(); }
+});
+
+test("verified FAF history is bounded, identity-consistent, deduplicated, and stats-empty", async () => {
+  const { db, layer } = setup();
+  try {
+    const prepared = await layer.prepareByCompetition(seedInterFafCase(db));
+    assert.equal(prepared.outcomes[0].readyFixtures, 1);
+    const inter = prepared.records.find(item => item.kind === "team_analysis" && item.payload.teamId === "team:inter");
+    assert.ok(inter);
+    assert.equal(inter.payload.historyCount, 10);
+    assert.equal(new Set(inter.payload.history.map(item => item.kickoff.slice(0, 10))).size, 10,
+      "the exact-match legacy duplicate must not count twice");
+    assert.ok(inter.payload.history.filter(item => item.archiveRef.startsWith("faf:")).length >= 9);
+    assert.equal(inter.payload.history.some(item => item.archiveRef.includes("bad-side")), false);
+    assert.equal(inter.payload.history.some(item => item.archiveRef.includes("future")), false);
+    assert.equal(inter.payload.history.some(item => item.archiveRef.includes("no-source")), false);
+    assert.ok(inter.payload.history.filter(item => item.archiveRef.startsWith("faf:"))
+      .every(item => item.verificationSource === "official FAF results page; synthetic test row"),
+      JSON.stringify(inter.payload.history.map(item => ({ ref: item.archiveRef, source: item.verificationSource }))));
+    assert.equal(inter.payload.statisticsCoverage.matchesWithVerifiedStatistics, 0);
+    assert.ok(inter.payload.history.every(item => item.statistics.length === 0), "missing FAF stats stay empty");
+    assert.ok(inter.payload.verifiedProviderIds.some(item => item.provider === "FAF" && item.providerTeamId === "1770"));
+    const copenhagen = prepared.records.find(item => item.kind === "team_analysis" && item.payload.teamId === "team:cph");
+    assert.equal(copenhagen.payload.historyCount, 10);
+  } finally { db.close(); }
+});
+
+test("conflicting legacy and verified-provider scores quarantine the fixture", async () => {
+  const { db, layer } = setup();
+  try {
+    const request = seedInterFafCase(db);
+    addArchiveMatch(db, { source: "ESPN", fixtureId: "legacy-faf-score-conflict", leagueId: "faf-league-672722",
+      kickoff: "2026-05-10T15:00:00.000Z", homeId: "team:inter", awayId: "team:inter-opponent",
+      homeName: "Inter Club d'Escaldes", awayName: "Atlètic Club Escaldes", homeScore: 4, awayScore: 0 });
+    const prepared = await layer.prepareByCompetition(request);
+    assert.equal(prepared.records.some(item => item.kind === "fixture"), false);
+    assert.ok(prepared.quarantined.some(item => /history_conflict/.test(item.reason)));
   } finally { db.close(); }
 });
 
@@ -199,6 +337,45 @@ test("daily B preparation reads an upcoming A fixture without provider calls and
     const second = await layer.prepareFromD1Upcoming();
     assert.equal(second.noOp, true);
     assert.equal(db.prepare("SELECT COUNT(*) AS n FROM mam_b_generations").get().n, 1);
+  } finally { db.close(); }
+});
+
+test("daily B preparation consumes verified staged fixtures without changing matches and prefers matching archive rows", async () => {
+  const { db, layer } = setup();
+  try {
+    seedAll(db);
+    const archiveBefore = legacyArchiveSnapshot(db);
+    db.prepare(`INSERT INTO mam_b_fixture_staging(provider,provider_fixture_id,competition_id,kickoff,status,
+      home_provider_team_id,home_team_name,home_country_code,away_provider_team_id,away_team_name,away_country_code,
+      verified,verification_source,verified_at,approved_by)
+      VALUES('ESPN','bournemouth-next','3','2026-11-27T15:00:00Z','scheduled',
+        '349','Bournemouth','GB','301','Viktoria Plzeň','GB',1,'synthetic fixture source',?,'test-reviewer')`)
+      .run(stamp);
+
+    const stagedResult = await layer.prepareFromD1Upcoming();
+    assert.equal(stagedResult.readyFixtures, 1);
+    assert.equal(stagedResult.archiveFixtureCount, 0);
+    assert.equal(stagedResult.stagedFixtureCount, 1);
+    assert.ok(stagedResult.d1Metrics.rowsRead > 0);
+    assert.ok(stagedResult.d1Metrics.rowsWritten > 0);
+    const stagedBundle = await layer.readFixtureBundle("espn:bournemouth-next");
+    assert.equal(stagedBundle.analyses.home.payload.historyCount, 10);
+    assert.equal(stagedBundle.analyses.away.payload.historyCount, 10);
+    assert.deepEqual(legacyArchiveSnapshot(db), archiveBefore, "staging-only preparation must not write to matches");
+
+    db.prepare(`INSERT INTO matches(source,fixture_id,league_id,league_name,country,kickoff,status,home_team_id,home_team,
+      away_team_id,away_team,raw_json,updated_at) VALUES('ESPN','bournemouth-next','archive-league','Archive League','England',
+      '2026-11-28T15:00:00Z','NS','349','Bournemouth','301','Viktoria Plzeň',?,?)`)
+      .run(JSON.stringify({ teams: { home: { id: "349", name: "Bournemouth" },
+        away: { id: "301", name: "Viktoria Plzeň" } } }), "2026-11-26T21:03:00.000Z");
+    const preferredArchive = await layer.prepareFromD1Upcoming();
+    assert.equal(preferredArchive.archiveFixtureCount, 1);
+    assert.equal(preferredArchive.stagedFixtureCount, 1);
+    const archivePreferredBundle = await layer.readFixtureBundle("espn:bournemouth-next");
+    assert.match(archivePreferredBundle.fixture.kickoff, /^2026-11-28/);
+    assert.equal(legacyArchiveSnapshot(db).rowCount, archiveBefore.rowCount + 1,
+      "only the explicit test insertion changes matches; B preparation must not write there");
+    assert.equal((await layer.prepareFromD1Upcoming()).noOp, true);
   } finally { db.close(); }
 });
 
