@@ -105,13 +105,15 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
   }
 
   async function loadActiveItems() {
-    const active = await row("SELECT generation_id FROM mam_b_active_generation WHERE singleton=1");
+    const active = await row(`SELECT g.generation_id, g.manifest_json FROM mam_b_active_generation a
+      JOIN mam_b_generations g ON g.generation_id=a.generation_id WHERE a.singleton=1`);
     expectedActiveId = active?.generation_id || null;
-    if (!expectedActiveId) return { generationId: null, items: [] };
+    if (!expectedActiveId) return { generationId: null, manifest: null, items: [] };
     const items = await rows(`SELECT i.item_key AS key, i.item_kind AS kind, i.readiness,
         p.payload_hash AS hash, p.payload_json FROM mam_b_generation_items i
       JOIN mam_b_payloads p ON p.payload_hash=i.payload_hash WHERE i.generation_id=?`, expectedActiveId);
-    return { generationId: expectedActiveId, items: items.map(item => ({ ...item, payload: safeJson(item.payload_json) })) };
+    return { generationId: expectedActiveId, manifest: safeJson(active.manifest_json),
+      items: items.map(item => ({ ...item, payload: safeJson(item.payload_json) })) };
   }
 
   async function atomicCommit({ generationId, manifest, items }) {
@@ -233,7 +235,8 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
       if (old?.payload) records.set(key, { key: old.key, kind: old.kind, readiness: old.readiness, payload: old.payload });
     }
 
-    return { generatedAt: input.generatedAt || now(), scopeComplete: true, expectedCompetitionIds: expected,
+    return { generatedAt: input.generatedAt || now(), sourceWatermark: input.sourceWatermark || null,
+      scopeComplete: true, expectedCompetitionIds: expected,
       loadedCompetitionIds: expected, records: [...records.values()], quarantined, minimumHistory: core.MIN_HISTORY,
       outcomes, preservedCompetitions: [...failed] };
   }
@@ -246,6 +249,20 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
 
   async function prepareFromD1Upcoming() {
     const generatedAt = now();
+    const sourceRows = await Promise.all([
+      row(`SELECT MAX(updated_at) AS updated_at FROM matches
+        WHERE (status IN ('NS','TBD','SCHEDULED') AND datetime(kickoff)>=datetime(?) AND datetime(kickoff)<=datetime(?,'+30 days'))
+           OR (status IN ('FT','AET','PEN','FINISHED','COMPLETED') AND datetime(kickoff)>=datetime(?,'-365 days'))`, generatedAt, generatedAt, generatedAt),
+      row("SELECT MAX(updated_at) AS updated_at FROM mam_team_identities"),
+      row("SELECT MAX(verified_at) AS updated_at FROM mam_team_names WHERE verified=1"),
+      row("SELECT MAX(verified_at) AS updated_at FROM mam_team_provider_ids WHERE verified=1")
+    ]);
+    const sourceWatermark = sourceRows.map(item => item?.updated_at || "").join("|");
+    const activeManifest = await row(`SELECT g.manifest_json FROM mam_b_active_generation a
+      JOIN mam_b_generations g ON g.generation_id=a.generation_id WHERE a.singleton=1`);
+    if (safeJson(activeManifest?.manifest_json)?.sourceWatermark === sourceWatermark) {
+      return { noOp: true, reason: "source_watermark_unchanged", fixtureCount: 0, sourceWatermark };
+    }
     const upcoming = await rows(`SELECT source, fixture_id, league_id, country, kickoff, status,
         home_team_id, home_team, away_team_id, away_team, raw_json
       FROM matches WHERE status IN ('NS','TBD','SCHEDULED')
@@ -265,7 +282,7 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
     }).filter(item => item.provider && item.providerFixtureId && item.competitionId && item.kickoff);
     const competitions = [...new Set(fixtures.map(item => item.competitionId))].sort();
     if (!competitions.length) return { noOp: true, reason: "no_upcoming_A_snapshot", fixtureCount: 0 };
-    return publish({ generatedAt, scopeComplete: true, expectedCompetitionIds: competitions,
+    return publish({ generatedAt, sourceWatermark, scopeComplete: true, expectedCompetitionIds: competitions,
       loadedCompetitionIds: competitions, fixtures });
   }
 

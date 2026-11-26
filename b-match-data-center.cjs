@@ -147,7 +147,8 @@ function prepareDataCenter(input) {
     const fixtureRecordKey = `fixture:${key}`;
     records.set(fixtureRecordKey, { key: fixtureRecordKey, kind: "fixture", readiness: "analysis_ready", payload: fixturePayload });
   }
-  return { generatedAt, scopeComplete: true, expectedCompetitionIds: expectedCompetitions, records: [...records.values()], quarantined,
+  return { generatedAt, sourceWatermark: input.sourceWatermark || null, scopeComplete: true,
+    expectedCompetitionIds: expectedCompetitions, records: [...records.values()], quarantined,
     fixtureCount: fixtureKeys.size, readyFixtures: [...records.values()].filter(row => row.kind === "fixture").length,
     readyTeams: new Set([...records.values()].filter(row => row.kind === "team_analysis").map(row => row.payload.teamId)).size,
     minimumHistory: MIN_HISTORY };
@@ -188,13 +189,16 @@ async function publishDataCenter(adapter, batch) {
     else changes.updated++;
   }
   changes.removed = [...oldByKey.keys()].filter(key => !newByKey.has(key)).length;
-  if (active?.generationId && changes.inserted === 0 && changes.updated === 0 && changes.removed === 0) {
+  const sourceWatermark = batch.sourceWatermark || null;
+  if (active?.generationId && changes.inserted === 0 && changes.updated === 0 && changes.removed === 0 &&
+      (active.manifest?.sourceWatermark || null) === sourceWatermark) {
     return { generationId: active.generationId, changes, readyFixtures: newItems.filter(row => row.kind === "fixture").length,
       quarantined: batch.quarantined || [], preservedPrevious, noOp: true };
   }
   const readyFixtures = newItems.filter(row => row.kind === "fixture").length;
   const manifest = { generatedAt: batch.generatedAt, recordCount: newItems.length, readyFixtures,
     minimumHistory: MIN_HISTORY, scopeComplete: true, expectedCompetitionIds: batch.expectedCompetitionIds,
+    sourceWatermark,
     digest: await contentHash(newItems.map(({key,hash}) => ({key,hash}))) };
   const generationId = `${Date.parse(batch.generatedAt)}:${manifest.digest.slice(0,12)}:${globalThis.crypto.randomUUID()}`;
   await adapter.atomicCommit({ generationId, manifest, items: newItems, changes });
