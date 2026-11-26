@@ -1,3 +1,7 @@
+import bCore from "./b-match-data-center.cjs";
+import bIdentity from "./b-team-identity-registry.cjs";
+import bAdapter from "./a4-b-data-center-adapter.js";
+
 // Deployment refresh: publish the reviewed Worker configuration and cache policy.
 // Audit trigger: deploy this verified revision so the post-deploy archive audit runs.
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
@@ -1251,6 +1255,21 @@ async function buildPriorityLeagueStatus(env) {
 export default {
   // Daily TFF fixture sync: one KV write per run, keeping free-tier writes low.
   async scheduled(event, env, ctx) {
+    if (event?.cron === bAdapter.DAILY_B_CRON_UTC) {
+      if (!env.DB) return;
+      try {
+        const layer = bAdapter.createWorkerBLayer({ DB: env.DB, core: bCore, identityApi: bIdentity });
+        const result = await layer.prepareFromD1Upcoming();
+        console.log("B daily preparation completed", JSON.stringify({ noOp: !!result.noOp,
+          readyFixtures: result.readyFixtures || 0, changes: result.changes || null }));
+      } catch (error) {
+        // B is optional: absent B schema, incomplete A snapshot, or a failed
+        // candidate must not alter the prior B generation or the 5-minute path.
+        console.log("B daily preparation skipped; existing data path remains active",
+          String(error?.message || error).slice(0, 300));
+      }
+      return;
+    }
     // Single 15-minute cron trigger avoids account-wide trigger limits. Keep daily
     // maintenance on the 03:00 UTC quarter-hour invocation.
     const scheduledAt = new Date();
@@ -1515,12 +1534,38 @@ export default {
       // Writes and all other private routes still require a signed-in session.
       const publicArchiveRead = request.method === "GET" &&
         (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/priority-league-status" || path === "archive/quality-check" || path === "archive/live" ||
-         isESPN || isFixtureDownload || isSportScore);
+         path === "data-center/fixture-bundle" || isESPN || isFixtureDownload || isSportScore);
       if (!publicArchiveRead) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
         if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
           return new Response(JSON.stringify({ error: "Authentication required" }), {
             status: 401, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+          });
+        }
+      }
+
+      if (path === "data-center/fixture-bundle" && request.method === "GET") {
+        const provider = String(url.searchParams.get("provider") || "").toLowerCase();
+        const fixtureId = String(url.searchParams.get("fixtureId") || "");
+        if (!/^[a-z0-9._-]{1,40}$/.test(provider) || !/^[a-zA-Z0-9._:-]{1,100}$/.test(fixtureId)) {
+          return new Response(JSON.stringify({ error: "Invalid fixture identity" }), {
+            status: 400, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+          });
+        }
+        if (!env.DB) return new Response(JSON.stringify({ error: "B snapshot is unavailable" }), {
+          status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+        });
+        try {
+          const layer = bAdapter.createWorkerBLayer({ DB: env.DB, core: bCore, identityApi: bIdentity });
+          const bundle = await layer.readFixtureBundle(`${provider}:${fixtureId}`);
+          if (!bundle) return new Response(JSON.stringify({ error: "Prepared bundle not found" }), {
+            status: 404, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+          });
+          return new Response(JSON.stringify(bundle), { status: 200,
+            headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
+        } catch (_) {
+          return new Response(JSON.stringify({ error: "B snapshot is unavailable" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
           });
         }
       }
