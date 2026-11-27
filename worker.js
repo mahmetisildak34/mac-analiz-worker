@@ -1,3 +1,7 @@
+import bCore from "./b-match-data-center.cjs";
+import bIdentity from "./b-team-identity-registry.cjs";
+import bAdapter from "./a4-b-data-center-adapter.js";
+
 // Deployment refresh: publish the reviewed Worker configuration and cache policy.
 // Audit trigger: deploy this verified revision so the post-deploy archive audit runs.
 const ALLOWED_ORIGIN = "https://mahmetisildak34.github.io";
@@ -762,7 +766,7 @@ async function syncEspnFixturesToD1(env, lookBackDays = 45, lookAheadDays = 14, 
     await Promise.all(jobsToFetch.slice(i, i + 4).map(fetchJob));
   }
 
-  const sql = "INSERT INTO matches (source, fixture_id, league_id, league_name, country, kickoff, status, home_team_id, home_team, away_team_id, away_team, home_goals, away_goals, statistics_json, raw_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(source, fixture_id) DO UPDATE SET league_id=excluded.league_id, league_name=excluded.league_name, country=excluded.country, kickoff=excluded.kickoff, status=excluded.status, home_team_id=excluded.home_team_id, home_team=excluded.home_team, away_team_id=excluded.away_team_id, away_team=excluded.away_team, home_goals=excluded.home_goals, away_goals=excluded.away_goals, raw_json=excluded.raw_json, updated_at=CURRENT_TIMESTAMP WHERE matches.league_id IS NOT excluded.league_id OR matches.league_name IS NOT excluded.league_name OR matches.country IS NOT excluded.country OR matches.kickoff IS NOT excluded.kickoff OR matches.status IS NOT excluded.status OR matches.home_team_id IS NOT excluded.home_team_id OR matches.home_team IS NOT excluded.home_team OR matches.away_team_id IS NOT excluded.away_team_id OR matches.away_team IS NOT excluded.away_team OR matches.home_goals IS NOT excluded.home_goals OR matches.away_goals IS NOT excluded.away_goals";
+  const sql = "INSERT INTO matches (source, fixture_id, league_id, league_name, country, kickoff, status, home_team_id, home_team, away_team_id, away_team, home_goals, away_goals, statistics_json, raw_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(source, fixture_id) DO UPDATE SET league_id=COALESCE(NULLIF(excluded.league_id,''),matches.league_id), league_name=COALESCE(NULLIF(excluded.league_name,''),matches.league_name), country=COALESCE(NULLIF(excluded.country,''),matches.country), kickoff=COALESCE(NULLIF(excluded.kickoff,''),matches.kickoff), status=CASE WHEN matches.status IN ('FT','AET','PEN','FINISHED','COMPLETED') AND excluded.status NOT IN ('FT','AET','PEN','FINISHED','COMPLETED') THEN matches.status WHEN matches.status IN ('LIVE','1H','2H','HT','ET','P','INT') AND excluded.status IN ('NS','TBD','SCHEDULED') THEN matches.status ELSE excluded.status END, home_team_id=COALESCE(NULLIF(excluded.home_team_id,''),matches.home_team_id), home_team=COALESCE(NULLIF(excluded.home_team,''),matches.home_team), away_team_id=COALESCE(NULLIF(excluded.away_team_id,''),matches.away_team_id), away_team=COALESCE(NULLIF(excluded.away_team,''),matches.away_team), home_goals=COALESCE(excluded.home_goals,matches.home_goals), away_goals=COALESCE(excluded.away_goals,matches.away_goals), raw_json=COALESCE(NULLIF(excluded.raw_json,''),matches.raw_json), updated_at=CURRENT_TIMESTAMP WHERE matches.league_id IS NOT excluded.league_id OR matches.league_name IS NOT excluded.league_name OR matches.country IS NOT excluded.country OR matches.kickoff IS NOT excluded.kickoff OR matches.status IS NOT excluded.status OR matches.home_team_id IS NOT excluded.home_team_id OR matches.home_team IS NOT excluded.home_team OR matches.away_team_id IS NOT excluded.away_team_id OR matches.away_team IS NOT excluded.away_team OR matches.home_goals IS NOT excluded.home_goals OR matches.away_goals IS NOT excluded.away_goals";
   let saved = 0;
   let archiveWriteBlocked = false;
   for (let i = 0; i < rows.length; i += 50) {
@@ -1248,15 +1252,104 @@ async function buildPriorityLeagueStatus(env) {
   };
 }
 
+const WORKER_SYNC_LEASE_KEY = "mam:worker-lease:espn-sync:v1";
+const WORKER_B_LEASE_KEY = "mam:worker-lease:b-daily:v1";
+const WORKER_LEASE_TTL_MS = 8 * 60 * 1000;
+
+function newLeaseToken() {
+  try { return crypto.randomUUID(); } catch (_) {
+    return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  }
+}
+
+async function acquireD1Lease(env, leaseKey, ttlMs = WORKER_LEASE_TTL_MS) {
+  if (!env?.DB) return { acquired: false, reason: "db_unavailable" };
+  const ownerToken = newLeaseToken();
+  const acquiredAt = new Date().toISOString();
+  const expiresAt = new Date(Date.now() + ttlMs).toISOString();
+  try {
+    await env.DB.prepare(`
+      INSERT INTO mam_worker_leases (lease_key, owner_token, acquired_at, expires_at)
+      VALUES (?, ?, ?, ?)
+      ON CONFLICT(lease_key) DO UPDATE SET
+        owner_token=excluded.owner_token,
+        acquired_at=excluded.acquired_at,
+        expires_at=excluded.expires_at
+      WHERE mam_worker_leases.expires_at <= excluded.acquired_at
+    `).bind(leaseKey, ownerToken, acquiredAt, expiresAt).run();
+    const current = await env.DB.prepare(
+      "SELECT owner_token, expires_at FROM mam_worker_leases WHERE lease_key = ?"
+    ).bind(leaseKey).first();
+    return {
+      acquired: current?.owner_token === ownerToken,
+      ownerToken,
+      expiresAt: current?.expires_at || expiresAt,
+      reason: current?.owner_token === ownerToken ? "acquired" : "held"
+    };
+  } catch (error) {
+    // Missing migration or a transient D1 error must fail closed, never run both jobs.
+    console.log("D1 lease acquisition failed", leaseKey, String(error?.message || error));
+    return { acquired: false, ownerToken, reason: "lease_error" };
+  }
+}
+
+async function releaseD1Lease(env, leaseKey, ownerToken) {
+  if (!env?.DB || !ownerToken) return;
+  try {
+    await env.DB.prepare(
+      "DELETE FROM mam_worker_leases WHERE lease_key = ? AND owner_token = ?"
+    ).bind(leaseKey, ownerToken).run();
+  } catch (error) {
+    console.log("D1 lease release failed", leaseKey, String(error?.message || error));
+  }
+}
+
 export default {
   // Daily TFF fixture sync: one KV write per run, keeping free-tier writes low.
   async scheduled(event, env, ctx) {
+    if (event?.cron === bAdapter.DAILY_B_CRON_UTC) {
+      if (!(await bAdapter.isDataCenterEnabled(env))) {
+        console.log("B daily preparation disabled; existing archive and live path remains active");
+        return;
+      }
+      if (!env.DB) return;
+      const bLease = await acquireD1Lease(env, WORKER_B_LEASE_KEY);
+      if (!bLease.acquired) {
+        console.log("B daily preparation skipped; another scheduled job owns the D1 lease", bLease.reason);
+        return;
+      }
+      const preparationStartedAt = performance.now();
+      try {
+        const layer = bAdapter.createWorkerBLayer({ DB: env.DB, core: bCore, identityApi: bIdentity });
+        const result = await layer.prepareFromD1Upcoming();
+        console.log("B daily preparation completed", JSON.stringify({ noOp: !!result.noOp,
+          readyFixtures: result.readyFixtures || 0, changes: result.changes || null,
+          archiveFixtureCount: result.archiveFixtureCount ?? null, stagedFixtureCount: result.stagedFixtureCount ?? null,
+          elapsedMs: Number((performance.now() - preparationStartedAt).toFixed(3)),
+          d1Metrics: result.d1Metrics || { statementCount: 0, rowsRead: 0, rowsWritten: 0, durationMs: 0 } }));
+      } catch (error) {
+        // B is optional: absent B schema, incomplete A snapshot, or a failed
+        // candidate must not alter the prior B generation or the 5-minute path.
+          console.log("B daily preparation skipped; existing data path remains active",
+          JSON.stringify({ error: String(error?.message || error).slice(0, 300),
+            elapsedMs: Number((performance.now() - preparationStartedAt).toFixed(3)) }));
+      } finally {
+        await releaseD1Lease(env, WORKER_B_LEASE_KEY, bLease.ownerToken);
+      }
+      return;
+    }
     // Single 15-minute cron trigger avoids account-wide trigger limits. Keep daily
     // maintenance on the 03:00 UTC quarter-hour invocation.
     const scheduledAt = new Date();
     const isDailySync = scheduledAt.getUTCHours() === 3 && scheduledAt.getUTCMinutes() === 0;
     const isHourlySync = !isDailySync;
     if (env.DB) {
+      const syncLease = await acquireD1Lease(env, WORKER_SYNC_LEASE_KEY);
+      if (!syncLease.acquired) {
+        console.log("ESPN archive/summary sync skipped; another scheduled job owns the D1 lease", syncLease.reason);
+        return;
+      }
+      try {
       // Maintenance is optional and must NEVER prevent the archive/summary worker
       // from running. D1 quota errors in maintenance are isolated from ingestion.
       try {
@@ -1310,6 +1403,9 @@ export default {
           await env.MAM_KV.put("mam:cross-source-enrichment-last:v8", String(Date.now()), { expirationTtl: 60 * 60 * 48 });
         }
         console.log("Cross-source statistics enrichment failed", report);
+      }
+      } finally {
+        await releaseD1Lease(env, WORKER_SYNC_LEASE_KEY, syncLease.ownerToken);
       }
     }
     if (isHourlySync || !env.MAM_KV) return;
@@ -1476,6 +1572,37 @@ export default {
       return new Response(null, { status: 204, headers: cors });
     }
 
+    // Isolated Stage 7 acceptance hook. It is unavailable unless a temporary
+    // Preview-only variable and matching token are both present; production
+    // config keeps the variable absent, so this route cannot be enabled there.
+    if (request.method === "POST" && requestUrl.pathname === "/__stage7/scheduled") {
+      if (env.MAM_STAGE7_ACCEPTANCE_HOOK !== "true" ||
+          request.headers.get("X-Stage7-Test-Token") !== env.MAM_STAGE7_ACCEPTANCE_TOKEN) {
+        return new Response(JSON.stringify({ error: "Not found" }), { status: 404, headers });
+      }
+      const cron = requestUrl.searchParams.get("cron") || "*/5 * * * *";
+      const startedAt = performance.now();
+      const isB = cron === bAdapter.DAILY_B_CRON_UTC;
+      const leaseKey = isB ? WORKER_B_LEASE_KEY : WORKER_SYNC_LEASE_KEY;
+      const lease = await acquireD1Lease(env, leaseKey);
+      if (!lease.acquired) return new Response(JSON.stringify({ ok: false, locked: true, reason: lease.reason }), {
+        status: 409, headers
+      });
+      try {
+        let result;
+        if (isB) {
+          const layer = bAdapter.createWorkerBLayer({ DB: env.DB, core: bCore, identityApi: bIdentity });
+          result = await layer.prepareFromD1Upcoming();
+        } else {
+          result = await syncEspnFixturesToD1(env, 1, 2, 4);
+        }
+        return new Response(JSON.stringify({ ok: true, cron, leaseKey, result,
+          elapsedMs: Number((performance.now() - startedAt).toFixed(3)) }), { status: 200, headers });
+      } finally {
+        await releaseD1Lease(env, leaseKey, lease.ownerToken);
+      }
+    }
+
     if (request.method !== "GET" && !(request.method === "POST" && requestUrl.pathname === "/api/archive/matches")) {
       return new Response(JSON.stringify({ error: "Method not allowed" }), {
         status: 405,
@@ -1515,12 +1642,41 @@ export default {
       // Writes and all other private routes still require a signed-in session.
       const publicArchiveRead = request.method === "GET" &&
         (path === "archive/d1-status" || path === "archive/sync-status" || path === "archive/matches" || path === "archive/upcoming" || path === "archive/priority-league-status" || path === "archive/quality-check" || path === "archive/live" ||
-         isESPN || isFixtureDownload || isSportScore);
+         path === "data-center/fixture-bundle" || isESPN || isFixtureDownload || isSportScore);
       if (!publicArchiveRead) {
         const sessionToken = request.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") || "";
         if (!(await verifySessionToken(sessionToken, env.SESSION_SECRET))) {
           return new Response(JSON.stringify({ error: "Authentication required" }), {
             status: 401, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+          });
+        }
+      }
+
+      if (path === "data-center/fixture-bundle" && request.method === "GET") {
+        if (!(await bAdapter.isDataCenterEnabled(env))) return new Response(JSON.stringify({ error: "B snapshot is unavailable" }), {
+          status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+        });
+        const provider = String(url.searchParams.get("provider") || "").toLowerCase();
+        const fixtureId = String(url.searchParams.get("fixtureId") || "");
+        if (!/^[a-z0-9._-]{1,40}$/.test(provider) || !/^[a-zA-Z0-9._:-]{1,100}$/.test(fixtureId)) {
+          return new Response(JSON.stringify({ error: "Invalid fixture identity" }), {
+            status: 400, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" }
+          });
+        }
+        if (!env.DB) return new Response(JSON.stringify({ error: "B snapshot is unavailable" }), {
+          status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+        });
+        try {
+          const layer = bAdapter.createWorkerBLayer({ DB: env.DB, core: bCore, identityApi: bIdentity });
+          const bundle = await layer.readFixtureBundle(`${provider}:${fixtureId}`);
+          if (!bundle) return new Response(JSON.stringify({ error: "Prepared bundle not found" }), {
+            status: 404, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
+          });
+          return new Response(JSON.stringify(bundle), { status: 200,
+            headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
+        } catch (_) {
+          return new Response(JSON.stringify({ error: "B snapshot is unavailable" }), {
+            status: 503, headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
           });
         }
       }
