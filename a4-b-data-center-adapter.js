@@ -78,19 +78,58 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
     };
   }
 
+  // The statistics table is an optional additive migration. Read it only when
+  // it exists so the adapter keeps working on a target that has 0001-0004.
+  let verifiedStatisticsTable = null;
+  let verifiedHalftimeTable = null;
+  async function hasVerifiedStatisticsTable() {
+    if (verifiedStatisticsTable === null) {
+      verifiedStatisticsTable = !!(await row("SELECT 1 AS present FROM sqlite_master WHERE type='table' AND name='mam_verified_history_statistics'"));
+    }
+    return verifiedStatisticsTable;
+  }
+
+  // Verified halftime scores arrived with migration 0006. Older databases (and
+  // the current production D1 until that migration is approved there) do not
+  // have the table, so the read degrades to archive raw scores instead.
+  async function hasVerifiedHalftimeTable() {
+    if (verifiedHalftimeTable === null) {
+      verifiedHalftimeTable = !!(await row("SELECT 1 AS present FROM sqlite_master WHERE type='table' AND name='mam_verified_history_halftime'"));
+    }
+    return verifiedHalftimeTable;
+  }
+
   // Query legacy history only with two persisted, approved side-to-team links.
   // Separately verified provider history is read from its own additive table;
   // it must agree with the stored canonical team/opponent side assignment.
   // There is intentionally no league filter: a canonical team can use verified
   // history from any competition. Team/date indexes bound the per-team reads.
   async function loadHistoryForTeam(teamId, before) {
+    // Correlated scalar subquery instead of a join: the statistics table is
+    // read only for rows that already matched a verified history row of the
+    // selected team, so no extra bindings shift the history parameters.
+    const statisticsSelect = (await hasVerifiedStatisticsTable()) ? `,
+             (SELECT json_group_array(json_object('name', metric, 'value', value, 'unit', unit,
+                       'provider', provider, 'verified', json('true')))
+              FROM mam_verified_history_statistics s
+              WHERE s.provider=history.source AND s.provider_fixture_id=history.fixture_id
+                AND s.team_id=history.verified_team_id) AS verified_statistics_json` : `,
+             NULL AS verified_statistics_json`;
+    const verifiedHalfColumns = (await hasVerifiedHalftimeTable()) ? `,
+             (SELECT h.halftime_home FROM mam_verified_history_halftime h
+              WHERE h.provider=v.provider AND h.provider_fixture_id=v.provider_fixture_id
+                AND h.team_id=v.team_id) AS halftime_home,
+             (SELECT h.halftime_away FROM mam_verified_history_halftime h
+              WHERE h.provider=v.provider AND h.provider_fixture_id=v.provider_fixture_id
+                AND h.team_id=v.team_id) AS halftime_away` : ", NULL AS halftime_home, NULL AS halftime_away";
+    const archiveHalfColumns = "NULL AS halftime_home, NULL AS halftime_away";
     const sql = `
       WITH history AS (
       SELECT DISTINCT m.source, m.fixture_id, m.league_id, m.kickoff, m.status,
              m.home_goals, m.away_goals, m.statistics_json, m.raw_json,
              h.team_id AS canonical_home_team_id, a.team_id AS canonical_away_team_id,
              'matches' AS history_source, NULL AS verified_team_id, NULL AS verified_opponent_team_id,
-             NULL AS verification_source
+             NULL AS verification_source, ${archiveHalfColumns}
       FROM mam_team_match_links selected
       JOIN matches m ON m.source=selected.provider AND m.fixture_id=selected.provider_fixture_id
       JOIN mam_team_match_links h ON h.provider=m.source AND h.provider_fixture_id=m.fixture_id AND h.side='home'
@@ -103,7 +142,7 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
              m.home_goals, m.away_goals, m.statistics_json, m.raw_json,
              h.team_id AS canonical_home_team_id, a.team_id AS canonical_away_team_id,
              'matches' AS history_source, NULL AS verified_team_id, NULL AS verified_opponent_team_id,
-             NULL AS verification_source
+             NULL AS verification_source, ${archiveHalfColumns}
       FROM mam_team_match_links selected
       JOIN matches m ON m.source=selected.provider AND m.fixture_id=selected.provider_fixture_id
       JOIN mam_team_match_links h ON h.provider=m.source AND h.provider_fixture_id=m.fixture_id AND h.side='home'
@@ -114,15 +153,18 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
       UNION
       SELECT v.provider, v.provider_fixture_id, v.competition_id, v.kickoff, v.status,
              v.home_score, v.away_score, NULL, NULL, v.home_team_id, v.away_team_id,
-             'verified' AS history_source, v.team_id, v.opponent_team_id, v.source
+             'verified' AS history_source, v.team_id, v.opponent_team_id, v.source${verifiedHalfColumns}
       FROM mam_verified_history_matches v
       WHERE v.team_id=? AND v.kickoff<? AND v.status='completed' AND v.verified=1
         AND v.home_score IS NOT NULL AND v.away_score IS NOT NULL
       )
-      SELECT DISTINCT source, fixture_id, league_id, kickoff, status, home_goals, away_goals,
-             statistics_json, raw_json, canonical_home_team_id, canonical_away_team_id,
-             history_source, verified_team_id, verified_opponent_team_id, verification_source
-      FROM history ORDER BY kickoff DESC LIMIT 100`;
+      SELECT DISTINCT history.source, history.fixture_id, history.league_id, history.kickoff, history.status,
+             history.home_goals, history.away_goals, history.statistics_json, history.raw_json,
+             history.canonical_home_team_id, history.canonical_away_team_id,
+             history.history_source, history.verified_team_id, history.verified_opponent_team_id,
+             history.verification_source, history.halftime_home, history.halftime_away${statisticsSelect}
+      FROM history
+      ORDER BY history.kickoff DESC LIMIT 100`;
     const found = await rows(sql, teamId, before, before, teamId, before, before, teamId, before);
     return found.filter(item => {
       if (!item.source || !item.fixture_id || !item.league_id || !item.kickoff ||
@@ -142,14 +184,25 @@ function createWorkerBLayer({ DB, core, identityApi, now = () => new Date().toIS
       .map(item => {
         const raw = safeJson(item.raw_json);
         const rawHalf = raw?.score?.halftime || raw?.score?.halfTime || raw?.halftime || null;
-        const halfHome = rawHalf?.homeScore ?? rawHalf?.home;
-        const halfAway = rawHalf?.awayScore ?? rawHalf?.away;
-        const halftime = hasScore(Number(halfHome)) && hasScore(Number(halfAway))
+        // Verified columns win over archive raw scores: they are the separately
+        // captured values written with migration 0006.
+        const verifiedHalfHome = item.halftime_home === null || item.halftime_home === undefined ? null : Number(item.halftime_home);
+        const verifiedHalfAway = item.halftime_away === null || item.halftime_away === undefined ? null : Number(item.halftime_away);
+        const halfHome = hasScore(verifiedHalfHome) && hasScore(verifiedHalfAway) ? verifiedHalfHome : (rawHalf?.homeScore ?? rawHalf?.home);
+        const halfAway = hasScore(verifiedHalfHome) && hasScore(verifiedHalfAway) ? verifiedHalfAway : (rawHalf?.awayScore ?? rawHalf?.away);
+        const fullHome = Number(item.home_goals), fullAway = Number(item.away_goals);
+        // A halftime score can never exceed the full-time score of either side.
+        const halftime = hasScore(Number(halfHome)) && hasScore(Number(halfAway)) &&
+          Number(halfHome) <= fullHome && Number(halfAway) <= fullAway
           ? { homeScore: Number(halfHome), awayScore: Number(halfAway), provider: String(item.source) } : null;
-        const stats = safeJson(item.statistics_json);
-        // Statistics are passed through only when the source stored explicit
-        // per-value verification; the core applies its own verified filter too.
-        const statistics = Array.isArray(stats) ? stats.filter(value => value?.verified === true) : [];
+        // Prefer the separately double-captured statistics table; fall back to
+        // the legacy archive column only when it stores explicit per-value
+        // verification. The core applies its own verified filter too.
+        const capturedStats = safeJson(item.verified_statistics_json);
+        const legacyStats = safeJson(item.statistics_json);
+        const statistics = Array.isArray(capturedStats) && capturedStats.length
+          ? capturedStats.filter(value => value?.verified === true)
+          : (Array.isArray(legacyStats) ? legacyStats.filter(value => value?.verified === true) : []);
         return { provider: String(item.source), providerFixtureId: String(item.fixture_id),
           kickoff: item.kickoff, competitionId: String(item.league_id),
           homeTeamId: item.canonical_home_team_id, awayTeamId: item.canonical_away_team_id,

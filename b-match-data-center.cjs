@@ -19,8 +19,11 @@ function safeStats(raw) {
   return raw.filter(item => item && item.verified === true && item.provider && item.name &&
     (Number.isFinite(item.value) || typeof item.value === "string") &&
     (typeof item.value !== "number" || item.value >= 0))
+    // Keep the per-value verification marker: the app consumer only accepts
+    // statistics that carry it, so dropping it here would silently empty the
+    // prepared statistics even when the source verified them.
     .map(item => ({ name: String(item.name), value: item.value, unit: item.unit || null,
-      provider: String(item.provider), source: item.source || null }));
+      provider: String(item.provider), source: item.source || null, verified: true }));
 }
 function validateHistory(rawRows, beforeDate) {
   const unique = new Map(), conflicts = new Set();

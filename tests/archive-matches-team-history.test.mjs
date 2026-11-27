@@ -1,27 +1,15 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { runInNewContext } from "node:vm";
 import test from "node:test";
-import { webcrypto } from "node:crypto";
-import { TextEncoder } from "node:util";
 
 const source = readFileSync(new URL("../worker.js", import.meta.url), "utf8");
-const context = {
-  Response,
-  Request,
-  Headers,
-  URL,
-  URLSearchParams,
-  TextEncoder,
-  crypto: webcrypto,
-  fetch,
-  console,
-  setTimeout,
-  clearTimeout,
-  atob,
-  btoa
-};
-runInNewContext(source.replace("export default {", "globalThis.worker = {"), context);
+// Load the Worker the way the runtime does: as an ES module with its real
+// import graph (b-match-data-center.cjs, b-team-identity-registry.cjs,
+// a4-b-data-center-adapter.js). The previous vm.Script evaluation only worked
+// while worker.js had no static imports; vm cannot parse `import` syntax, so the
+// route silently stopped being exercised once the isolated B layer was wired in.
+// Dynamic import keeps full fidelity instead of stripping imports or stubbing.
+const worker = (await import(new URL("../worker.js", import.meta.url).href)).default;
 
 const compareText = (a, b) => String(a) === String(b) ? 0 : String(a) < String(b) ? -1 : 1;
 const compareTuple = (a, b) => compareText(a.kickoff, b.kickoff) ||
@@ -98,7 +86,7 @@ test("teamNames uses two selective indexed branches and finds older fixtures wit
     row({ fixtureId: "target-1", kickoff: "2026-10-19T12:00:00.000Z", home: "TSG 1899 Hoffenheim", away: "Dortmund" })
   );
   const DB = fakeDb(rows);
-  const response = await context.worker.fetch(request(
+  const response = await worker.fetch(request(
     "league=39&before=2026-11-25&limit=10&teamNames=Hoffenheim%2CTSG%201899%20Hoffenheim"
   ), { DB });
   assert.equal(response.status, 200);
@@ -125,7 +113,7 @@ test("unfiltered archive reads keep the existing single bounded query behavior",
     fixtureId: String(index).padStart(4, "0"),
     kickoff: "2026-11-24T12:00:00.000Z"
   })));
-  const response = await context.worker.fetch(request("league=39&before=2026-11-25&limit=25"), { DB });
+  const response = await worker.fetch(request("league=39&before=2026-11-25&limit=25"), { DB });
   assert.equal(response.status, 200);
   const payload = await response.json();
   assert.equal(payload.teamFilterApplied, false);
@@ -141,7 +129,7 @@ test("team-filter miss returns from a selective query without scanning unrelated
     kickoff: "2026-11-24T12:00:00.000Z",
     home: "Different Club " + index
   })));
-  const response = await context.worker.fetch(request(
+  const response = await worker.fetch(request(
     "league=39&before=2026-11-25&limit=10&teamNames=Never%20Played%20Here"
   ), { DB });
   assert.equal(response.status, 200);
@@ -186,7 +174,7 @@ test("real D1 matches from six leagues and tournaments resolve through the same 
       limit: "10",
       teamNames: check.teamNames.join(",")
     });
-    const response = await context.worker.fetch(request(query.toString()), { DB });
+    const response = await worker.fetch(request(query.toString()), { DB });
     assert.equal(response.status, 200, "league " + check.league);
     const payload = await response.json();
     assert.equal(payload.count, check.ids.length, "league " + check.league);

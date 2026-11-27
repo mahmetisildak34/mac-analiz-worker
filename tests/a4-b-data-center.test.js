@@ -292,6 +292,141 @@ test("conflicting legacy and verified-provider scores quarantine the fixture", a
   } finally { db.close(); }
 });
 
+// Synthetic double-capture rows for the additive statistics migration.
+function seedStatisticsCase(db, { withStatistics = true } = {}) {
+  addIdentity(db, "team:stats-home", "Statistics Home", null, "501");
+  addIdentity(db, "team:stats-away", "Statistics Away", null, "502");
+  const insert = db.prepare(`INSERT INTO mam_verified_history_matches
+    (provider,provider_fixture_id,team_id,opponent_team_id,kickoff,competition_id,home_team_id,away_team_id,
+     home_score,away_score,status,verified,source,verified_at)
+    VALUES('ESPN',?,?,?,?,?,?,?,?,?,'completed',1,'ESPN event page; synthetic test row',?)`);
+  const stats = withStatistics ? db.prepare(`INSERT INTO mam_verified_history_statistics
+    (provider,provider_fixture_id,team_id,metric,value,unit,provider_metric,capture_hash_a,capture_hash_b,
+     source_url,verified,verified_at)
+    VALUES('ESPN',?,?,?,?,NULL,?,?,?,'https://sports.core.api.espn.com/.../statistics',1,?)`) : null;
+  const hash = "c".repeat(64);
+  for (let i = 0; i < 10; i++) {
+    const kickoff = `2026-11-${String(20 - i).padStart(2, "0")}T15:00:00Z`;
+    const fixtureId = `stats-${i}`;
+    const homeId = i % 2 === 0 ? "team:stats-home" : "team:stats-away";
+    const awayId = i % 2 === 0 ? "team:stats-away" : "team:stats-home";
+    insert.run(fixtureId, "team:stats-home", "team:stats-away", kickoff, "test-league", homeId, awayId, 2, 1, stamp);
+    insert.run(fixtureId, "team:stats-away", "team:stats-home", kickoff, "test-league", homeId, awayId, 2, 1, stamp);
+    if (withStatistics) {
+      stats.run(fixtureId, "team:stats-home", "corners", 4 + i, "wonCorners", hash, hash, stamp);
+      stats.run(fixtureId, "team:stats-away", "corners", 3 + i, "wonCorners", hash, hash, stamp);
+    }
+  }
+  return { generatedAt: stamp, scopeComplete: true, expectedCompetitionIds: ["test-league"],
+    loadedCompetitionIds: ["test-league"],
+    fixtures: [{ provider: "ESPN", providerFixtureId: "stats-next", competitionId: "test-league",
+      kickoff: "2026-12-13T17:30:00Z", status: "scheduled",
+      home: { provider: "ESPN", providerTeamId: "501", name: "Statistics Home" },
+      away: { provider: "ESPN", providerTeamId: "502", name: "Statistics Away" } }] };
+}
+
+test("double-captured verified statistics reach the prepared payload and the app consumer", async () => {
+  const { db, layer } = setup();
+  try {
+    const published = await layer.publish(seedStatisticsCase(db));
+    assert.equal(published.readyFixtures, 1);
+    const bundle = await layer.readFixtureBundle("espn:stats-next");
+    assert.ok(bundle);
+    for (const side of ["home", "away"]) {
+      const payload = bundle.analyses[side].payload;
+      assert.equal(payload.statisticsCoverage.matchesWithVerifiedStatistics, 10);
+      assert.equal(payload.statisticsCoverage.verifiedMetricCounts.corners, 10);
+      assert.ok(payload.history.every(item => item.statistics.length === 1 && item.statistics[0].verified === true),
+        "verified statistics must keep their per-value marker in the payload");
+    }
+    const consumer = await loadPreparedAnalysis(async () => bundle, { provider: "espn", fixtureId: "stats-next",
+      kickoff: "2026-12-13T17:30:00Z", homeTeamId: 501, awayTeamId: 502 });
+    assert.ok(consumer, "the real app consumer must accept a bundle that carries verified statistics");
+    const mapped = consumer.homeHistory[0].statistics[0].statistics;
+    assert.equal(mapped.length, 1);
+    assert.equal(mapped[0].type, "corners");
+    assert.equal(typeof mapped[0].value, "number");
+  } finally { db.close(); }
+});
+
+test("a target without the statistics migration still prepares with empty statistics", async () => {
+  const db = new DatabaseSync(":memory:");
+  try {
+    db.exec("PRAGMA foreign_keys = ON;");
+    db.exec(`CREATE TABLE matches (
+      source TEXT NOT NULL, fixture_id TEXT NOT NULL, league_id TEXT NOT NULL, league_name TEXT,
+      country TEXT, kickoff TEXT NOT NULL, status TEXT NOT NULL, home_team_id TEXT, home_team TEXT,
+      away_team_id TEXT, away_team TEXT, home_goals INTEGER, away_goals INTEGER,
+      statistics_json TEXT, raw_json TEXT, updated_at TEXT, PRIMARY KEY(source,fixture_id)
+    );`);
+    const directory = path.join(__dirname, "..", "migrations");
+    for (const file of fs.readdirSync(directory).filter(name => /^\d+_.*\.sql$/.test(name) && !name.startsWith("0005")).sort())
+      db.exec(fs.readFileSync(path.join(directory, file), "utf8"));
+    const layer = createWorkerBLayer({ DB: new LocalD1(db), core, identityApi, now: () => stamp });
+    const prepared = await layer.prepareByCompetition(seedStatisticsCase(db, { withStatistics: false }));
+    assert.equal(prepared.records.filter(item => item.kind === "fixture").length, 1);
+    const analysis = prepared.records.find(item => item.kind === "team_analysis");
+    assert.equal(analysis.payload.statisticsCoverage.matchesWithVerifiedStatistics, 0);
+  } finally { db.close(); }
+});
+
+// Synthetic rows for migration 0006: verified halftime columns.
+function seedHalftimeCase(db) {
+  addIdentity(db, "team:half-home", "Halftime Home", null, "601");
+  addIdentity(db, "team:half-away", "Halftime Away", null, "602");
+  const insert = db.prepare(`INSERT INTO mam_verified_history_matches
+    (provider,provider_fixture_id,team_id,opponent_team_id,kickoff,competition_id,home_team_id,away_team_id,
+     home_score,away_score,status,verified,source,verified_at)
+    VALUES('ESPN',?,?,?,?,?,?,?,?,?,'completed',1,'ESPN event page; synthetic test row',?)`);
+  const half = db.prepare(`INSERT INTO mam_verified_history_halftime
+    (provider,provider_fixture_id,team_id,halftime_home,halftime_away,verified,source,verified_at)
+    VALUES('ESPN',?,?,?,?,1,'ESPN linescore; synthetic test row',?)`);
+  const add = (fixtureId, kickoff, homeScore, awayScore, halfHome, halfAway) => {
+    insert.run(fixtureId, "team:half-home", "team:half-away", kickoff, "test-league",
+      "team:half-home", "team:half-away", homeScore, awayScore, stamp);
+    insert.run(fixtureId, "team:half-away", "team:half-home", kickoff, "test-league",
+      "team:half-home", "team:half-away", homeScore, awayScore, stamp);
+    half.run(fixtureId, "team:half-home", halfHome, halfAway, stamp);
+    half.run(fixtureId, "team:half-away", halfHome, halfAway, stamp);
+  };
+  // One row whose halftime exceeds the full-time score must be rejected.
+  add("half-overflow", "2026-11-25T15:00:00Z", 2, 1, 3, 0);
+  for (let i = 0; i < 10; i++) {
+    const kickoff = `2026-11-${String(20 - i).padStart(2, "0")}T15:00:00Z`;
+    add(`half-${i}`, kickoff, 2, 1, 1, 0);
+  }
+  return { generatedAt: stamp, scopeComplete: true, expectedCompetitionIds: ["test-league"],
+    loadedCompetitionIds: ["test-league"],
+    fixtures: [{ provider: "ESPN", providerFixtureId: "half-next", competitionId: "test-league",
+      kickoff: "2026-12-13T17:30:00Z", status: "scheduled",
+      home: { provider: "ESPN", providerTeamId: "601", name: "Halftime Home" },
+      away: { provider: "ESPN", providerTeamId: "602", name: "Halftime Away" } }] };
+}
+
+test("verified halftime columns reach the payload and stay bounded by the full-time score", async () => {
+  const { db, layer } = setup();
+  try {
+    const published = await layer.publish(seedHalftimeCase(db));
+    assert.equal(published.readyFixtures, 1);
+    const bundle = await layer.readFixtureBundle("espn:half-next");
+    assert.ok(bundle);
+    for (const side of ["home", "away"]) {
+      const history = bundle.analyses[side].payload.history;
+      const withHalftime = history.filter(item => item.halftime);
+      assert.equal(withHalftime.length, 9, "nine valid rows keep halftime, the overflow row must not");
+      assert.ok(withHalftime.every(item => item.halftime.homeScore === 1 && item.halftime.awayScore === 0));
+      const overflow = history.find(item => item.archiveRef.includes("half-overflow"));
+      assert.equal(overflow.halftime, null);
+    }
+    const consumer = await loadPreparedAnalysis(async () => bundle, { provider: "espn", fixtureId: "half-next",
+      kickoff: "2026-12-13T17:30:00Z", homeTeamId: 601, awayTeamId: 602 });
+    assert.ok(consumer);
+    const halves = consumer.homeHistory.filter(item => item.score?.halftime);
+    assert.equal(halves.length, 9);
+    assert.deepEqual(halves[0].score.halftime, { home: 1, away: 0 });
+  } finally { db.close(); }
+});
+
 test("active B bundle read returns only the exact fixture and its two referenced ten-match analyses", async () => {
   const { db, layer } = setup();
   try {
