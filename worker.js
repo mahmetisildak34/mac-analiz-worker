@@ -1572,6 +1572,37 @@ export default {
       return new Response(null, { status: 204, headers: cors });
     }
 
+    // Isolated Stage 7 acceptance hook. It is unavailable unless a temporary
+    // Preview-only variable and matching token are both present; production
+    // config keeps the variable absent, so this route cannot be enabled there.
+    if (request.method === "POST" && requestUrl.pathname === "/__stage7/scheduled") {
+      if (env.MAM_STAGE7_ACCEPTANCE_HOOK !== "true" ||
+          request.headers.get("X-Stage7-Test-Token") !== env.MAM_STAGE7_ACCEPTANCE_TOKEN) {
+        return new Response(JSON.stringify({ error: "Not found" }), { status: 404, headers });
+      }
+      const cron = requestUrl.searchParams.get("cron") || "*/5 * * * *";
+      const startedAt = performance.now();
+      const isB = cron === bAdapter.DAILY_B_CRON_UTC;
+      const leaseKey = isB ? WORKER_B_LEASE_KEY : WORKER_SYNC_LEASE_KEY;
+      const lease = await acquireD1Lease(env, leaseKey);
+      if (!lease.acquired) return new Response(JSON.stringify({ ok: false, locked: true, reason: lease.reason }), {
+        status: 409, headers
+      });
+      try {
+        let result;
+        if (isB) {
+          const layer = bAdapter.createWorkerBLayer({ DB: env.DB, core: bCore, identityApi: bIdentity });
+          result = await layer.prepareFromD1Upcoming();
+        } else {
+          result = await syncEspnFixturesToD1(env, 1, 2, 4);
+        }
+        return new Response(JSON.stringify({ ok: true, cron, leaseKey, result,
+          elapsedMs: Number((performance.now() - startedAt).toFixed(3)) }), { status: 200, headers });
+      } finally {
+        await releaseD1Lease(env, leaseKey, lease.ownerToken);
+      }
+    }
+
     if (request.method !== "GET" && !(request.method === "POST" && requestUrl.pathname === "/api/archive/matches")) {
       return new Response(JSON.stringify({ error: "Method not allowed" }), {
         status: 405,
@@ -1581,37 +1612,6 @@ export default {
 
     try {
       const url = new URL(request.url);
-
-      // Isolated Stage 7 acceptance hook. It is unavailable unless a temporary
-      // Preview-only variable and matching token are both present; production
-      // config keeps the variable absent, so this route cannot be enabled there.
-      if (request.method === "POST" && url.pathname === "/__stage7/scheduled") {
-        if (env.MAM_STAGE7_ACCEPTANCE_HOOK !== "true" ||
-            request.headers.get("X-Stage7-Test-Token") !== env.MAM_STAGE7_ACCEPTANCE_TOKEN) {
-          return new Response(JSON.stringify({ error: "Not found" }), { status: 404, headers });
-        }
-        const cron = url.searchParams.get("cron") || "*/5 * * * *";
-        const startedAt = performance.now();
-        const isB = cron === bAdapter.DAILY_B_CRON_UTC;
-        const leaseKey = isB ? WORKER_B_LEASE_KEY : WORKER_SYNC_LEASE_KEY;
-        const lease = await acquireD1Lease(env, leaseKey);
-        if (!lease.acquired) return new Response(JSON.stringify({ ok: false, locked: true, reason: lease.reason }), {
-          status: 409, headers
-        });
-        try {
-          let result;
-          if (isB) {
-            const layer = bAdapter.createWorkerBLayer({ DB: env.DB, core: bCore, identityApi: bIdentity });
-            result = await layer.prepareFromD1Upcoming();
-          } else {
-            result = await syncEspnFixturesToD1(env, 1, 2, 4);
-          }
-          return new Response(JSON.stringify({ ok: true, cron, leaseKey, result,
-            elapsedMs: Number((performance.now() - startedAt).toFixed(3)) }), { status: 200, headers });
-        } finally {
-          await releaseD1Lease(env, leaseKey, lease.ownerToken);
-        }
-      }
 
       if (!url.pathname.startsWith("/api/")) {
         return new Response("Invalid API path", {
