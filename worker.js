@@ -1252,6 +1252,58 @@ async function buildPriorityLeagueStatus(env) {
   };
 }
 
+const WORKER_SYNC_LEASE_KEY = "mam:worker-lease:espn-sync:v1";
+const WORKER_B_LEASE_KEY = "mam:worker-lease:b-daily:v1";
+const WORKER_LEASE_TTL_MS = 8 * 60 * 1000;
+
+function newLeaseToken() {
+  try { return crypto.randomUUID(); } catch (_) {
+    return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  }
+}
+
+async function acquireD1Lease(env, leaseKey, ttlMs = WORKER_LEASE_TTL_MS) {
+  if (!env?.DB) return { acquired: false, reason: "db_unavailable" };
+  const ownerToken = newLeaseToken();
+  const acquiredAt = new Date().toISOString();
+  const expiresAt = new Date(Date.now() + ttlMs).toISOString();
+  try {
+    await env.DB.prepare(`
+      INSERT INTO mam_worker_leases (lease_key, owner_token, acquired_at, expires_at)
+      VALUES (?, ?, ?, ?)
+      ON CONFLICT(lease_key) DO UPDATE SET
+        owner_token=excluded.owner_token,
+        acquired_at=excluded.acquired_at,
+        expires_at=excluded.expires_at
+      WHERE mam_worker_leases.expires_at <= excluded.acquired_at
+    `).bind(leaseKey, ownerToken, acquiredAt, expiresAt).run();
+    const current = await env.DB.prepare(
+      "SELECT owner_token, expires_at FROM mam_worker_leases WHERE lease_key = ?"
+    ).bind(leaseKey).first();
+    return {
+      acquired: current?.owner_token === ownerToken,
+      ownerToken,
+      expiresAt: current?.expires_at || expiresAt,
+      reason: current?.owner_token === ownerToken ? "acquired" : "held"
+    };
+  } catch (error) {
+    // Missing migration or a transient D1 error must fail closed, never run both jobs.
+    console.log("D1 lease acquisition failed", leaseKey, String(error?.message || error));
+    return { acquired: false, ownerToken, reason: "lease_error" };
+  }
+}
+
+async function releaseD1Lease(env, leaseKey, ownerToken) {
+  if (!env?.DB || !ownerToken) return;
+  try {
+    await env.DB.prepare(
+      "DELETE FROM mam_worker_leases WHERE lease_key = ? AND owner_token = ?"
+    ).bind(leaseKey, ownerToken).run();
+  } catch (error) {
+    console.log("D1 lease release failed", leaseKey, String(error?.message || error));
+  }
+}
+
 export default {
   // Daily TFF fixture sync: one KV write per run, keeping free-tier writes low.
   async scheduled(event, env, ctx) {
@@ -1261,6 +1313,11 @@ export default {
         return;
       }
       if (!env.DB) return;
+      const bLease = await acquireD1Lease(env, WORKER_B_LEASE_KEY);
+      if (!bLease.acquired) {
+        console.log("B daily preparation skipped; another scheduled job owns the D1 lease", bLease.reason);
+        return;
+      }
       const preparationStartedAt = performance.now();
       try {
         const layer = bAdapter.createWorkerBLayer({ DB: env.DB, core: bCore, identityApi: bIdentity });
@@ -1273,9 +1330,11 @@ export default {
       } catch (error) {
         // B is optional: absent B schema, incomplete A snapshot, or a failed
         // candidate must not alter the prior B generation or the 5-minute path.
-        console.log("B daily preparation skipped; existing data path remains active",
+          console.log("B daily preparation skipped; existing data path remains active",
           JSON.stringify({ error: String(error?.message || error).slice(0, 300),
             elapsedMs: Number((performance.now() - preparationStartedAt).toFixed(3)) }));
+      } finally {
+        await releaseD1Lease(env, WORKER_B_LEASE_KEY, bLease.ownerToken);
       }
       return;
     }
@@ -1285,6 +1344,12 @@ export default {
     const isDailySync = scheduledAt.getUTCHours() === 3 && scheduledAt.getUTCMinutes() === 0;
     const isHourlySync = !isDailySync;
     if (env.DB) {
+      const syncLease = await acquireD1Lease(env, WORKER_SYNC_LEASE_KEY);
+      if (!syncLease.acquired) {
+        console.log("ESPN archive/summary sync skipped; another scheduled job owns the D1 lease", syncLease.reason);
+        return;
+      }
+      try {
       // Maintenance is optional and must NEVER prevent the archive/summary worker
       // from running. D1 quota errors in maintenance are isolated from ingestion.
       try {
@@ -1338,6 +1403,9 @@ export default {
           await env.MAM_KV.put("mam:cross-source-enrichment-last:v8", String(Date.now()), { expirationTtl: 60 * 60 * 48 });
         }
         console.log("Cross-source statistics enrichment failed", report);
+      }
+      } finally {
+        await releaseD1Lease(env, WORKER_SYNC_LEASE_KEY, syncLease.ownerToken);
       }
     }
     if (isHourlySync || !env.MAM_KV) return;

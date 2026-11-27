@@ -14,7 +14,8 @@ const expectedFiles = [
   "0003_match_data_center.sql",
   "0004_b_fixture_staging.sql",
   "0005_verified_history_statistics.sql",
-  "0006_verified_history_halftime.sql"
+  "0006_verified_history_halftime.sql",
+  "0007_worker_leases.sql"
 ];
 
 function applyAll(db) {
@@ -55,7 +56,7 @@ test("ordered Worker migrations are additive, contain no archive backfill, and r
     assert.deepEqual(tables, [
       "mam_b_active_generation", "mam_b_fixture_staging", "mam_b_generation_items", "mam_b_generations", "mam_b_live_overlay",
       "mam_b_payloads", "mam_daily_history_retry_state", "mam_team_identities", "mam_team_identity_review_queue", "mam_team_match_links",
-      "mam_team_names", "mam_team_provider_ids", "mam_verified_history_halftime", "mam_verified_history_matches", "mam_verified_history_statistics"
+      "mam_team_names", "mam_team_provider_ids", "mam_verified_history_halftime", "mam_verified_history_matches", "mam_verified_history_statistics", "mam_worker_leases"
     ]);
     assert.deepEqual(db.prepare("PRAGMA foreign_key_check").all(), []);
 
