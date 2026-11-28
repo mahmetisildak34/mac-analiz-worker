@@ -28,6 +28,96 @@ async function verifySessionToken(token, secret) {
   return crypto.subtle.verify("HMAC", key, sig, new TextEncoder().encode(payload));
 }
 
+const VERIFY_FINAL_LEAGUE_SLUGS = Object.freeze({
+  "1":"fifa.world", "2":"uefa.champions", "3":"uefa.europa", "4":"uefa.euro", "5":"uefa.nations",
+  "39":"eng.1", "40":"eng.2", "61":"fra.1", "78":"ger.1", "88":"ned.1", "94":"por.1",
+  "135":"ita.1", "140":"esp.1", "203":"tur.1", "204":"tur.2", "848":"uefa.europa.conf"
+});
+const VERIFY_FINAL_SOURCES = new Set(["ESPN", "API-FOOTBALL", "FOOTBALL-DATA", "SPORTSCORE", "TFF", "APP"]);
+const completedArchiveStatus = value => ["FT","AET","PEN","AWD","WO","FINISHED","COMPLETED"].includes(String(value || "").toUpperCase());
+const verifiedNameKey = value => bIdentity.canonicalKey(value);
+async function verifyArchiveFinal(env, body, cors) {
+  const headers = { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" };
+  if (!env.DB) return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), { status: 503, headers });
+  const leagueId = String(body?.leagueId || "").trim();
+  const source = String(body?.source || "").trim().toUpperCase();
+  const fixtureId = String(body?.fixtureId || "").trim();
+  if (!Object.hasOwn(VERIFY_FINAL_LEAGUE_SLUGS, leagueId) || !VERIFY_FINAL_SOURCES.has(source) ||
+      !fixtureId || fixtureId.length > 120 || !/^[a-zA-Z0-9._:-]+$/.test(fixtureId)) {
+    return new Response(JSON.stringify({ error: "Invalid match reference" }), { status: 400, headers });
+  }
+  const slug = VERIFY_FINAL_LEAGUE_SLUGS[leagueId];
+  const urlDay = value => {
+    const stamp = Date.parse(value || "");
+    return Number.isFinite(stamp) ? new Date(stamp).toISOString().slice(0, 10).replace(/-/g, "") : "";
+  };
+  try {
+    const row = await env.DB.prepare(`SELECT source,fixture_id,league_id,kickoff,status,home_team,away_team,home_goals,away_goals
+      FROM matches WHERE UPPER(source)=? AND fixture_id=? AND league_id=? LIMIT 1`).bind(source, fixtureId, leagueId).first();
+    if (!row) return new Response(JSON.stringify({ ok: true, verified: false, reason: "archive_reference_not_found" }), { status: 200, headers });
+    const priorCorrection = await env.DB.prepare("SELECT new_home_goals,new_away_goals,evidence_json FROM mam_archive_corrections WHERE source=? AND fixture_id=? LIMIT 1").bind(row.source, fixtureId).first();
+    if (priorCorrection) return new Response(JSON.stringify({ ok: true, verified: true, cached: true, source: "ESPN", score: [priorCorrection.new_home_goals, priorCorrection.new_away_goals] }), { status: 200, headers });
+    const names = [verifiedNameKey(row.home_team), verifiedNameKey(row.away_team)];
+    const day = urlDay(row.kickoff);
+    if (!day || names.some(name => !name)) return new Response(JSON.stringify({ ok: true, verified: false, reason: "ambiguous_archive_identity" }), { status: 200, headers });
+    const now = new Date().toISOString();
+    const utcDay = now.slice(0, 10);
+    await env.DB.prepare("INSERT OR IGNORE INTO mam_archive_verify_quota(day,used) VALUES(?,0)").bind(utcDay).run();
+    const budget = await env.DB.prepare("UPDATE mam_archive_verify_quota SET used=used+1 WHERE day=? AND used<50 RETURNING used").bind(utcDay).first();
+    if (!budget) return new Response(JSON.stringify({ error: "Daily verification budget exhausted" }), { status: 429, headers });
+    const utcDays = [day];
+    for (const offset of [-1, 1]) {
+      const stamp = Date.parse(String(row.kickoff).slice(0, 10) + "T00:00:00Z") + offset * 86400000;
+      const candidate = new Date(stamp).toISOString().slice(0, 10).replace(/-/g, "");
+      if (!utcDays.includes(candidate)) utcDays.push(candidate);
+    }
+    const events = [];
+    for (const date of utcDays) {
+      const response = await fetch(ESPN_BASE + "/" + slug + "/scoreboard?dates=" + date, {
+        headers: { "User-Agent": "MAM-archive-final-verification/1.0" },
+        signal: AbortSignal.timeout(2500)
+      });
+      if (!response.ok) continue;
+      const data = await response.json();
+      events.push(...(Array.isArray(data?.events) ? data.events : []));
+    }
+    const matches = events.flatMap(event => {
+      const competition = event?.competitions?.[0];
+      const competitors = competition?.competitors || [];
+      const home = competitors.find(team => team.homeAway === "home");
+      const away = competitors.find(team => team.homeAway === "away");
+      const eventDay = urlDay(event?.date || competition?.date);
+      const pair = [verifiedNameKey(home?.team?.displayName || home?.team?.name), verifiedNameKey(away?.team?.displayName || away?.team?.name)];
+      const homeGoals = Number(home?.score), awayGoals = Number(away?.score);
+      const complete = event?.status?.type?.completed === true || competition?.status?.type?.completed === true;
+      if (eventDay && Math.abs(Date.parse(eventDay.slice(0,4)+"-"+eventDay.slice(4,6)+"-"+eventDay.slice(6)+"T00:00:00Z") - Date.parse(String(row.kickoff).slice(0,10)+"T00:00:00Z")) <= 86400000 &&
+          pair[0] === names[0] && pair[1] === names[1] && complete && Number.isSafeInteger(homeGoals) && homeGoals >= 0 && Number.isSafeInteger(awayGoals) && awayGoals >= 0) {
+        return [{ eventId: String(event.id || ""), homeGoals, awayGoals, eventDate: event.date || competition?.date || "", completed: true }];
+      }
+      return [];
+    });
+    if (matches.length !== 1 || !matches[0].eventId) return new Response(JSON.stringify({ ok: true, verified: false, reason: matches.length ? "ambiguous_provider_match" : "no_completed_provider_match" }), { status: 200, headers });
+    const final = matches[0];
+    const oldStatus = String(row.status || "");
+    const oldHome = row.home_goals == null ? null : Number(row.home_goals);
+    const oldAway = row.away_goals == null ? null : Number(row.away_goals);
+    const audit = JSON.stringify({ provider: "ESPN", eventId: final.eventId, eventDate: final.eventDate, completed: final.completed, canonicalTeams: names });
+    const update = env.DB.prepare(`UPDATE matches SET status='FT',home_goals=?,away_goals=?,updated_at=CURRENT_TIMESTAMP
+      WHERE source=? AND fixture_id=? AND league_id=? AND status IS ? AND home_goals IS ? AND away_goals IS ?`)
+      .bind(final.homeGoals, final.awayGoals, row.source, fixtureId, leagueId, row.status, row.home_goals, row.away_goals);
+    const record = env.DB.prepare(`INSERT INTO mam_archive_corrections
+      (source,fixture_id,league_id,old_status,old_home_goals,old_away_goals,new_status,new_home_goals,new_away_goals,evidence_json,verified_at)
+      SELECT ?,?,?,?,?,?,'FT',?,?,?,? WHERE changes()=1`)
+      .bind(row.source, fixtureId, leagueId, oldStatus, oldHome, oldAway, final.homeGoals, final.awayGoals, audit, now);
+    await env.DB.batch([update, record]);
+    return new Response(JSON.stringify({ ok: true, verified: true, source: "ESPN", eventId: final.eventId, score: [final.homeGoals, final.awayGoals] }), { status: 200, headers });
+  } catch (error) {
+    const detail = String(error?.message || error);
+    const missingTable = /no such table/i.test(detail);
+    return new Response(JSON.stringify({ error: missingTable ? "Add-only verification migration is required" : "Provider verification failed", retryable: !missingTable && /timeout|temporar|network/i.test(detail) }), { status: missingTable ? 503 : 502, headers });
+  }
+}
+
 async function createSessionToken(secret) {
   const payload = btoa(JSON.stringify({ v: 1, exp: Date.now() + 90 * 24 * 60 * 60 * 1000 }))
     .replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
@@ -66,8 +156,18 @@ const TEAM_NAME_ALIASES = Object.freeze({
   "borac":"borac-banja-luka"
 });
 
+function canonicalArchiveSource(value) {
+  const key = String(value || "").trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
+  const allowed = {
+    "espn": "ESPN", "api-football": "API-FOOTBALL", "apifootball": "API-FOOTBALL",
+    "football-data": "FOOTBALL-DATA", "football-data-org": "FOOTBALL-DATA",
+    "sportscore": "SPORTSCORE", "tff": "TFF"
+  };
+  return allowed[key] || "APP";
+}
 function normalizeTeamName(value) {
-  const normalized = String(value || "").toLowerCase()
+  const repaired = bIdentity.repairMojibake(value);
+  const normalized = String(repaired || "").toLowerCase()
     .replace(/[ıİ]/g, "i").replace(/[şŞ]/g, "s").replace(/[ğĞ]/g, "g")
     .replace(/[çÇ]/g, "c").replace(/[öÖ]/g, "o").replace(/[üÜ]/g, "u")
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -1603,7 +1703,7 @@ export default {
       }
     }
 
-    if (request.method !== "GET" && !(request.method === "POST" && requestUrl.pathname === "/api/archive/matches")) {
+    if (request.method !== "GET" && !(request.method === "POST" && ["/api/archive/matches", "/api/archive/verify-final", "/api/archive/statistics"].includes(requestUrl.pathname))) {
       return new Response(JSON.stringify({ error: "Method not allowed" }), {
         status: 405,
         headers: { ...cors, "Content-Type": "application/json" }
@@ -2182,10 +2282,7 @@ export default {
           const value = String(source || "").toLowerCase();
           return value === "espn" ? 4 : value.includes("football-data") ? 3 : value === "api-football" ? 2 : 1;
         };
-        const normalizeTeam = value => String(value || "").normalize("NFD").toLowerCase()
-          .replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i")
-          .replace(/\b(football club|fc|afc|sk|fk|as|a\.s\.|cf|sc|club|calcio)\b/g, "")
-          .replace(/[^a-z0-9]+/g, "").trim();
+        const normalizeTeam = value => normalizeTeamName(value).replace(/-/g, "");
         const countryForLeague = (leagueId, leagueName, country, source) => canonicalLeagueCountry(source, leagueId, leagueName, country);
         const uniqueRows = new Map();
         const candidateRows = (Array.isArray(result?.results) ? result.results : []).filter(row => {
@@ -2207,11 +2304,18 @@ export default {
           const dateKey = Number.isFinite(time)
             ? new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(time))
             : String(row.kickoff || "").slice(0, 10);
-          const signature = home && away
+          let signature = home && away
             ? [row.league_id, dateKey, home, away].join("|")
             : String(row.source) + "|" + String(row.fixture_id);
           const previous = uniqueRows.get(signature);
-          if (!previous || sourcePriority(row.source) > sourcePriority(previous.source)) uniqueRows.set(signature, row);
+          const finished = value => ["FT","AET","PEN","AWD","WO","FINISHED","COMPLETED"].includes(String(value?.status || "").toUpperCase());
+          if (previous && String(previous.source || "").toLowerCase() === String(row.source || "").toLowerCase() &&
+              String(previous.fixture_id || "") !== String(row.fixture_id || "")) {
+            signature += "|provider-id:" + String(row.fixture_id || "");
+          }
+          const current = uniqueRows.get(signature);
+          if (!current || Number(finished(row)) > Number(finished(current)) ||
+              (finished(row) === finished(current) && sourcePriority(row.source) > sourcePriority(current.source))) uniqueRows.set(signature, row);
         }
         const deduplicatedRows = Array.from(uniqueRows.values());
         const matches = deduplicatedRows.map(row => ({
@@ -2510,6 +2614,33 @@ export default {
         });
       }
 
+      if (path === "archive/verify-final" && request.method === "POST") {
+        let body;
+        try { body = await request.json(); } catch (_) {
+          return new Response(JSON.stringify({ error: "Invalid JSON body" }), { status: 400, headers: { ...cors, "Content-Type": "application/json" } });
+        }
+        if (!body || Object.keys(body).some(key => !["leagueId", "source", "fixtureId"].includes(key))) {
+          return new Response(JSON.stringify({ error: "Only leagueId, source, and fixtureId are accepted" }), { status: 400, headers: { ...cors, "Content-Type": "application/json" } });
+        }
+        return verifyArchiveFinal(env, body, cors);
+      }
+      if (path === "archive/statistics" && request.method === "POST") {
+        if (!env.DB) return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), { status: 503, headers: { ...cors, "Content-Type": "application/json" } });
+        let body;
+        try { body = await request.json(); } catch (_) { return new Response(JSON.stringify({ error: "Invalid JSON body" }), { status: 400, headers: { ...cors, "Content-Type": "application/json" } }); }
+        if (!body || Object.keys(body).some(key => !["source", "fixtureId", "statistics"].includes(key)) ||
+            !body.source || !body.fixtureId || !body.statistics || typeof body.statistics !== "object" ||
+            String(body.fixtureId).length > 120 || !/^[a-zA-Z0-9._:-]+$/.test(String(body.fixtureId))) {
+          return new Response(JSON.stringify({ error: "Only a source, fixtureId, and statistics payload are accepted" }), { status: 400, headers: { ...cors, "Content-Type": "application/json" } });
+        }
+        const source = canonicalArchiveSource(body.source), fixtureId = String(body.fixtureId);
+        let statisticsJson;
+        try { statisticsJson = JSON.stringify(body.statistics); } catch (_) { statisticsJson = ""; }
+        if (!statisticsJson || statisticsJson.length > 65536) return new Response(JSON.stringify({ error: "Invalid or oversized statistics payload" }), { status: 413, headers: { ...cors, "Content-Type": "application/json" } });
+        const result = await env.DB.prepare("UPDATE matches SET statistics_json=?,updated_at=CURRENT_TIMESTAMP WHERE UPPER(source)=? AND fixture_id=?")
+          .bind(statisticsJson, source, fixtureId).run();
+        return new Response(JSON.stringify({ ok: true, updated: Number(result?.meta?.changes || 0) }), { status: 200, headers: { ...cors, "Content-Type": "application/json" } });
+      }
       if (path === "archive/matches" && request.method === "POST") {
         if (!env.DB) {
           return new Response(JSON.stringify({ error: "D1 binding DB is missing" }), {
@@ -2535,12 +2666,22 @@ export default {
            statistics_json, raw_json)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           ON CONFLICT(source, fixture_id) DO UPDATE SET
-           league_id=excluded.league_id, league_name=excluded.league_name,
-           country=excluded.country, kickoff=excluded.kickoff, status=excluded.status,
-           home_team_id=excluded.home_team_id, home_team=excluded.home_team,
-           away_team_id=excluded.away_team_id, away_team=excluded.away_team,
-           home_goals=excluded.home_goals, away_goals=excluded.away_goals,
-           statistics_json=excluded.statistics_json, raw_json=excluded.raw_json,
+           league_id=COALESCE(NULLIF(excluded.league_id,''),matches.league_id),
+           league_name=COALESCE(NULLIF(excluded.league_name,''),matches.league_name),
+           country=COALESCE(NULLIF(excluded.country,''),matches.country),
+           kickoff=COALESCE(NULLIF(excluded.kickoff,''),matches.kickoff),
+           status=CASE
+             WHEN matches.status IN ('FT','AET','PEN','AWD','WO','FINISHED','COMPLETED') THEN matches.status
+             WHEN matches.status IN ('LIVE','1H','2H','HT','ET','P','INT') AND excluded.status IN ('NS','TBD','SCHEDULED') THEN matches.status
+             ELSE excluded.status END,
+           home_team_id=COALESCE(NULLIF(excluded.home_team_id,''),matches.home_team_id),
+           home_team=COALESCE(NULLIF(excluded.home_team,''),matches.home_team),
+           away_team_id=COALESCE(NULLIF(excluded.away_team_id,''),matches.away_team_id),
+           away_team=COALESCE(NULLIF(excluded.away_team,''),matches.away_team),
+           home_goals=CASE WHEN matches.status IN ('FT','AET','PEN','AWD','WO','FINISHED','COMPLETED') THEN matches.home_goals ELSE COALESCE(excluded.home_goals,matches.home_goals) END,
+           away_goals=CASE WHEN matches.status IN ('FT','AET','PEN','AWD','WO','FINISHED','COMPLETED') THEN matches.away_goals ELSE COALESCE(excluded.away_goals,matches.away_goals) END,
+           statistics_json=COALESCE(excluded.statistics_json,matches.statistics_json),
+           raw_json=COALESCE(NULLIF(excluded.raw_json,''),matches.raw_json),
            updated_at=CURRENT_TIMESTAMP`;
         const statements = [];
         let skipped = 0;
@@ -2551,12 +2692,12 @@ export default {
           const away = teams.away || {};
           const league = m?.league || {};
           const kickoff = String(fixture.date || m?.kickoff || "");
-          const homeName = String(home.name || m?.home_team || "").trim();
-          const awayName = String(away.name || m?.away_team || "").trim();
+          const homeName = bIdentity.repairMojibake(home.name || m?.home_team || "").trim();
+          const awayName = bIdentity.repairMojibake(away.name || m?.away_team || "").trim();
           if (!kickoff || !homeName || !awayName) { skipped++; continue; }
           const rawId = fixture.id ?? m?.fixture_id ?? "";
           const fixtureId = String(rawId || (kickoff + "-" + normalizeTeamName(homeName) + "-" + normalizeTeamName(awayName))).slice(0, 120);
-          const source = String(m?.mamSource || m?._source || m?.source || "app").slice(0, 60);
+          const source = canonicalArchiveSource(m?.mamSource || m?._source || m?.source);
           const leagueId = String(league.id ?? body?.leagueId ?? "unknown").slice(0, 40);
           const status = String(fixture.status?.short || m?.status || "UNK").slice(0, 30);
           const homeGoals = m?.goals?.home == null ? null : Number(m.goals.home);
