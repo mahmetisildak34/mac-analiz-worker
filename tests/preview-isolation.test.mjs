@@ -4,6 +4,7 @@ import { test } from "node:test";
 
 const config = JSON.parse(readFileSync(new URL("../wrangler.jsonc", import.meta.url), "utf8"));
 const worker = readFileSync(new URL("../worker.js", import.meta.url), "utf8");
+const workflow = readFileSync(new URL("../.github/workflows/deploy-worker.yml", import.meta.url), "utf8");
 
 test("Worker Preview uses the isolated D1/KV bindings and the Pages Preview CORS origin only", () => {
   assert.equal(config.preview_urls, true);
@@ -17,4 +18,15 @@ test("Worker Preview uses the isolated D1/KV bindings and the Pages Preview CORS
   assert.equal(config.previews.vars.MAM_PREVIEW_ORIGIN, "https://repair-team-identity-history-20261128.mam-iphone-preview.pages.dev");
   assert.match(worker, /typeof env\.MAM_PREVIEW_ORIGIN === "string"/);
   assert.match(worker, /\.\.\(previewOrigin \? \[previewOrigin\] : \[\]\)/);
+});
+
+test("only the authorized PR branch invokes Wrangler Preview; production deploy remains main-only", () => {
+  const previewJob = workflow.split("\n  preview:\n")[1]?.split("\n  deploy:\n")[0] || "";
+  const productionJob = workflow.split("\n  deploy:\n")[1] || "";
+  assert.match(previewJob, /github\.event_name == 'pull_request'/);
+  assert.match(previewJob, /head\.ref == 'repair\/worker-archive-guards-20261128'/);
+  assert.match(previewJob, /head\.repo\.full_name == github\.repository/);
+  assert.match(previewJob, /wrangler@4\.135\.0 preview --name repair-worker-archive-guards-20261128/);
+  assert.doesNotMatch(previewJob, /wrangler(?:@[^\s]+)? deploy/);
+  assert.match(productionJob, /github\.ref == 'refs\/heads\/main'/);
 });

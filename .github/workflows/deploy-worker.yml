@@ -136,6 +136,27 @@ jobs:
       - name: Run Paris FC / PSG alias collision regression test
         run: node tests/paris-team-alias-collision.test.mjs
 
+  preview:
+    needs: validate
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'repair/worker-archive-guards-20261128' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Deploy isolated Worker Preview only
+        run: npx --yes wrangler@4.135.0 preview --name repair-worker-archive-guards-20261128
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: "640bfb6a538ee57864281941b14dbc55"
+
   deploy:
     needs: validate
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
