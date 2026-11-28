@@ -3,6 +3,7 @@
   "name": "odd-sunset-6c83",
   "main": "worker.js",
   "compatibility_date": "2026-11-12",
+  "preview_urls": true,
   "observability": {
     "enabled": true
   },
@@ -38,7 +39,8 @@
     ],
     "vars": {
       "HISTORY_BACKFILL_PILOT_ENABLED": "true",
-      "MAM_DATA_CENTER_B_RELEASE_GATE": "false"
+      "MAM_DATA_CENTER_B_RELEASE_GATE": "false",
+      "MAM_PREVIEW_ORIGIN": "https://repair-team-identity-history-20261128.mam-iphone-preview.pages.dev"
     }
   },
   "triggers": {

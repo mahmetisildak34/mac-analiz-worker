@@ -1618,8 +1618,10 @@ export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
     // Allow the production GitHub Pages app and Cloudflare's own dashboard
-    // HTTP test panel. All other browser origins remain blocked.
-    const allowedOrigins = new Set([ALLOWED_ORIGIN, "https://dash.cloudflare.com"]);
+    // HTTP test panel. A Preview origin is accepted only when its separate
+    // Preview environment explicitly configures MAM_PREVIEW_ORIGIN.
+    const previewOrigin = typeof env.MAM_PREVIEW_ORIGIN === "string" ? env.MAM_PREVIEW_ORIGIN.trim() : "";
+    const allowedOrigins = new Set([ALLOWED_ORIGIN, "https://dash.cloudflare.com", ...(previewOrigin ? [previewOrigin] : [])]);
     const cors = {
       "Access-Control-Allow-Origin": origin && allowedOrigins.has(origin) ? origin : ALLOWED_ORIGIN,
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
