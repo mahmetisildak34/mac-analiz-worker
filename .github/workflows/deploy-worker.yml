@@ -56,6 +56,26 @@ jobs:
 
       - name: Run archive upsert regression test
         run: node tests/archive-upsert-guard.test.mjs
+      - name: Run actual archive POST monotonic SQLite regression test
+        run: node --test tests/archive-post-monotonic.test.mjs
+      - name: Run authenticated archive final-verification SQLite regression
+        run: node --test tests/archive-verify-final.test.mjs
+      - name: Run archive monotonic guard regression
+        run: node --test tests/archive-monotonic-guard.test.mjs
+      - name: Run archive team-history query regression
+        run: node --test tests/archive-matches-team-history.test.mjs
+      - name: Run D1 lease regression
+        run: node --test tests/worker-d1-lease.test.mjs
+      - name: Check out the reviewed frontend baseline for B integration tests
+        uses: actions/checkout@v4
+        with:
+          repository: mahmetisildak34/mac-analiz-merkezi
+          ref: b3713906543de51f9e80375ed7383fa21be5ae07
+          path: _mam-app
+      - name: Run B data-center regression suite
+        run: node --test tests/a4-b-data-center.test.js
+        env:
+          MAM_APP_ROOT: ${{ github.workspace }}/_mam-app
 
       - name: Run cross-source matching regression test
         run: node tests/cross-source-enrichment.test.mjs
@@ -115,6 +135,27 @@ jobs:
 
       - name: Run Paris FC / PSG alias collision regression test
         run: node tests/paris-team-alias-collision.test.mjs
+
+  preview:
+    needs: validate
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'repair/worker-archive-guards-20261128' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Deploy isolated Worker Preview only
+        run: npx --yes wrangler@4.135.0 preview --name repair-worker-archive-guards-20261128
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: "640bfb6a538ee57864281941b14dbc55"
 
   deploy:
     needs: validate
